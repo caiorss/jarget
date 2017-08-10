@@ -302,6 +302,8 @@ object Main{
     case List("-clip", "-show") => showPomData(getPackMaven())
     case List("-clip", "-get")  => Packget.downloadPackage(getPackMaven(), "./lib")
 
+    case List("-mvn")           => Utils.openUrl("https://mvnrepository.com")
+
     case _ => println("Error: Invalid option")
     }
   
