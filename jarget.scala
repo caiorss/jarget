@@ -253,10 +253,13 @@ object Main{
     val pom = Packget.getPomXML(pack)
     val dat = Packget.getPomData(pom)
     println( "Package:      " + dat.name)
-    println( "Packagin      " + dat.packaging)
+    println( "Packaging:    " + dat.packaging)
     println(s"Coordinates:  group = ${dat.group} artifact = ${dat.artifact} version = ${dat.version}")        
     println( "Url:          " + dat.url)
     println( "Description:  " + dat.description)
+
+    println("Dependencies: ")
+    Packget.getPomDependencies(pom) foreach println
   }
 
   def showPom(pack: PackData) = {
