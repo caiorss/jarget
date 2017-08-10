@@ -107,6 +107,10 @@ object Packget {
     }
   }
 
+  def formatPack(pack: PackData) = {
+    s"${pack.group}/${pack.artifact}/${pack.version}"
+  }
+
   /**  Extract package data from Maven XML like this: 
 
     <!-- https://mvnrepository.com/artifact/org.json4s/json4s-native_2.11 -->
