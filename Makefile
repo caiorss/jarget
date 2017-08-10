@@ -14,6 +14,9 @@ bin/jarget-fat.jar: jarget.jar
 bin/jarget.sh: bin/jarget-fat.jar
 	jar-tools.sh -jar-to-sh bin/jarget-fat.jar bin/jarget.sh
 
+install: bin/jarget.sh
+	cp bin/jarget.sh ~/bin
+
 clean:
 	rm -rf jarget.jar 
 
