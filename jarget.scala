@@ -271,11 +271,11 @@ object Main{
   def main(args: Array[String]) : Unit = args.toList match {
 
     case List("-pom", pstr)  => showPom(parsePack(pstr))
-    case List("-pack", pstr) => showPomData(parsePack(pstr))
     case List("-get", pstr)  => Packget.downloadPackage(parsePack(pstr), "./lib")
+    case List("-show", pstr)   => showPomData(parsePack(pstr))
 
     case List("-clip", "-pom")  => showPom(getPackMaven())
-    case List("-clip", "-pack") => showPomData(getPackMaven())
+    case List("-clip", "-show") => showPomData(getPackMaven())
     case List("-clip", "-get")  => Packget.downloadPackage(getPackMaven(), "./lib")
 
     case _ => println("Error: Invalid option")
