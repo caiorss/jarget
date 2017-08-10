@@ -49,9 +49,19 @@ object Utils{
       if data.isDataFlavorSupported(DataFlavor.getTextPlainUnicodeFlavor())
       text = data.getTransferData(DataFlavor.stringFlavor).asInstanceOf[String]
     } yield text
-  }  
+  }
 
-}
+  def openUrl(uri: String){
+    import java.awt.Desktop
+    import java.io.IOException
+    import java.net.URI
+    import java.net.URISyntaxException
+    val u = new URI(uri)
+    val desktop = Desktop.getDesktop()
+    desktop.browse(u)
+  }
+
+} /* ---- End of object Utils ------- */
 
 
 object JarTools{
