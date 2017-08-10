@@ -276,6 +276,12 @@ object Main{
     println(Packget.getPomXML(pack))
   }
 
+  def openUrl(pack: PackData) = {
+    val url = s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
+    println("Opening package: " + url)
+    Utils.openUrl(url)
+  }
+
 
 
   def main(args: Array[String]) : Unit = args.toList match {
