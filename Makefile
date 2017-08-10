@@ -5,14 +5,18 @@ sh: bin/jarget.sh
 
 SCALA_XML=/home/archbox/opt/scala-2.12.3/lib/scala-xml_2.12-1.0.6.jar
 
-jarget.jar : jarget.scala 
+jar-tools.sh:
+	curl -O -L https://raw.githubusercontent.com/caiorss/build-fat-jar/master/jar-tools.sh
+	chmod +x jar-tools.sh
+
+jarget.jar : jar-tools.sh jarget.scala 
 	scalac jarget.scala -d jarget.jar
 
-bin/jarget-fat.jar: jarget.jar 
-	jar-tools.sh -scala-build-jar bin/jarget-fat.jar jarget.jar $(SCALA_XML)
+bin/jarget-fat.jar: jar-tools.sh jarget.jar 
+	./jar-tools.sh -scala-build-jar bin/jarget-fat.jar jarget.jar $(SCALA_XML)
 
 bin/jarget.sh: bin/jarget-fat.jar
-	jar-tools.sh -jar-to-sh bin/jarget-fat.jar bin/jarget
+	./jar-tools.sh -jar-to-sh bin/jarget-fat.jar bin/jarget
 
 install: bin/jarget
 	cp bin/jarget ~/bin
