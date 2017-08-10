@@ -12,14 +12,20 @@ bin/jarget-fat.jar: jarget.jar
 	jar-tools.sh -scala-build-jar bin/jarget-fat.jar jarget.jar $(SCALA_XML)
 
 bin/jarget.sh: bin/jarget-fat.jar
-	jar-tools.sh -jar-to-sh bin/jarget-fat.jar bin/jarget.sh
+	jar-tools.sh -jar-to-sh bin/jarget-fat.jar bin/jarget
 
-install: bin/jarget.sh
-	cp bin/jarget.sh ~/bin
+install: bin/jarget
+	cp bin/jarget ~/bin
 
 clean:
 	rm -rf jarget.jar 
 
-test1:
+# -------- Test Commands ----------- #
+
+
+test1: jarget.jar 
 	echo "Downloading JFreechart"
 	scala jarget.jar -get org.jfree/jfreechart/1.0.19 
+
+test2: jarget.jar 
+	scala jarget.jar -get org.jmdns/jmdns/3.5.1
