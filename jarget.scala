@@ -272,8 +272,10 @@ object Main{
     println( "Url:          " + dat.url)
     println( "Description:  " + dat.description)
 
-    println("Dependencies: ")
-    Packget.getPomDependencies(pom) foreach println
+    println("\nDependencies:\n")
+    Packget.getPomDependencies(pom) foreach { p =>
+      println("  - " + Packget.formatPack(p))
+    }
   }
 
   def showPom(pack: PackData) = {
