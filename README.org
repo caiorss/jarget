@@ -1,0 +1,322 @@
+#+TITLE:  Jarget - Command Line Tool to download jar packages. 
+#+AUTHOR:   Caio Rodrigues
+#+KEYWORDS: jarget jar tool java scala automation deployment 
+#+STARTUP: contents 
+
+* Jarget 
+** Overview 
+
+Jarget is a command line application to download java libraries or jar
+files from Maven Central in a easy and fast way without the need to
+set up a project. It is useful to experiment java libraries with
+languages hosted in JVM such as Jython (Python implemented in Java),
+Scala or Clojure. 
+
+** Usage 
+*** Show user help 
+
+#+BEGIN_SRC sh 
+$ jarget
+jarget - Tool to download jar packages.
+
+ -show [package]                 - Show package's information
+
+ -pom  [package]                 - Show package's pom file
+
+ -get  [package]                 - Download package and dependencies to ./lib
+
+ -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
+
+ -browse [package]               - Open package official website.
+
+ -mvn                            - Open web site https://mvnrepository.com
+ -mvn  [package]                 - Open package mvnrepository url.
+
+ -clip -show                     - Extract package from XML in clipboard and show its information.
+ -clip -pom                      - Extract package from XML in clipboard and show its Pom file.
+ -clip -get                      - Extract package from XML in clipboard and download it to ./lib 
+
+Note: [package] is <group>/<artifact>/<version>.
+Examples of valid packages:
+
+  - org.scalaz/scalaz-core_2.11/7.3.0-M15
+
+  - org.jfree/jfreechart/1.0.17
+
+Note: The XML in the clipboard is a maven coordinate: 
+
+    <!-- https://mvnrepository.com/artifact/org.scalaz/scalaz-core_2.11 -->
+    <dependency>
+        <groupId>org.scalaz</groupId>
+        <artifactId>scalaz-core_2.11</artifactId>
+        <version>7.3.0-M15</version>
+    </dependency>
+#+END_SRC
+*** Show package information 
+
+ - =$ jarget -show org.jfree/jfreechart/1.0.17=
+
+#+BEGIN_SRC sh 
+  $ jarget -show org.jfree/jfreechart/1.0.17
+  Package:         JFreeChart
+  Packaging:       jar
+  Coordinates[1]:  group = org.jfree artifact = jfreechart version = 1.0.17
+  Coordinates[2]:  org.jfree/jfreechart/1.0.17
+  Url:             http://www.jfree.org/jfreechart/
+  Description:     
+      JFreeChart is a class library, written in Java, for generating charts. 
+      Utilising the Java2D APIs, it currently supports bar charts, pie charts, 
+      line charts, XY-plots and time series plots.
+      
+
+  Dependencies:
+
+    - org.jfree/jcommon/1.0.21
+
+    - xml-apis/xml-apis/1.3.04
+
+#+END_SRC
+*** Show package's POM file 
+
+ - =$ jarget -pom org.jfree/jfreechart/1.0.17=
+
+#+BEGIN_SRC sh 
+$ jarget -pom org.jfree/jfreechart/1.0.17
+
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0  ... 
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>JFreeChart</name>
+
+    <artifactId>jfreechart</artifactId>
+    <groupId>org.jfree</groupId>
+    <version>1.0.17</version>
+    <packaging>jar</packaging>
+
+    
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
+    <organization>
+        <name>JFree.org</name>
+        <url>http://www.jfree.org/</url>
+    </organization>
+    <inceptionYear>2001</inceptionYear>
+
+    <description>
+    JFreeChart is a class library, written in Java, for generating charts. 
+    Utilising the Java2D APIs, it currently supports bar charts, pie charts, 
+    line charts, XY-plots and time series plots.
+    </description>
+
+... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.source.level>1.6</project.source.level>
+        <project.target.level>1.6</project.target.level>
+    </properties>
+</project>
+
+#+END_SRC
+*** Open package Maven URL 
+ 
+ = =$ jarget -mvn org.jfree/jfreechart/1.0.17= 
+
+It will open the Mvn site of the package JFreeChart or:
+ - https://mvnrepository.com/artifact/org.jfree/jfreechart/1.0.17  
+
+
+
+*** Open Maven Central 
+
+ - =$ jarget -mvn=
+
+*** Install jar files 
+
+It will install the JFreeChart jar files into ./lib directories. 
+
+ - =$ jarget -get org.jfree/jfreechart/1.0.17=
+
+#+BEGIN_SRC sh 
+$ jarget -get org.jfree/jfreechart/1.0.17
+
+Downloading package PackData(org.jfree,jfreechart,1.0.17)
+Downloading file ./lib/jfreechart-1.0.17.pom.
+Downloading package PackData(org.jfree,jcommon,1.0.21)
+Downloading package PackData(xml-apis,xml-apis,1.3.04)
+Downloading file ./lib/jcommon-1.0.21.pom.
+Downloading file ./lib/xml-apis-1.3.04.pom.
+File ./lib/jfreechart-1.0.17.pom downloaded. Ok.
+Downloading file ./lib/jfreechart-1.0.17.jar.
+File ./lib/xml-apis-1.3.04.pom downloaded. Ok.
+Downloading file ./lib/xml-apis-1.3.04.jar.
+File ./lib/jcommon-1.0.21.pom downloaded. Ok.
+Downloading file ./lib/jcommon-1.0.21.jar.
+File ./lib/xml-apis-1.3.04.jar downloaded. Ok.
+File ./lib/jcommon-1.0.21.jar downloaded. Ok.
+File ./lib/jfreechart-1.0.17.jar downloaded. Ok.
+Download Successful
+
+$ ls lib/
+jcommon-1.0.21.jar  jfreechart-1.0.17.jar  xml-apis-1.3.04.jar
+jcommon-1.0.21.pom  jfreechart-1.0.17.pom  xml-apis-1.3.04.pom
+
+#+END_SRC
+
+Testing with Scala:  
+
+#+BEGIN_SRC scala 
+  $ scala -cp lib/jcommon-1.0.21.jar:lib/jfreechart-1.0.17.jar
+
+  :paste
+  import org.jfree.chart.{ChartPanel, ChartFactory, JFreeChart, ChartUtilities}
+  import org.jfree.data.general.DefaultPieDataset
+
+  val dataset = new DefaultPieDataset()
+
+  dataset.setValue("A", 75)
+  dataset.setValue("B", 10)
+  dataset.setValue("C", 10)
+  dataset.setValue("D", 5)
+
+  val chart = ChartFactory.createPieChart(
+    "Sample Pie Chart", // Title
+    dataset,            // Dataset 
+    true,               // Show legend
+    true,               // Tooltips on
+    false 
+  )
+
+  // Save chart to a png file 
+  //---------------------------
+  ChartUtilities.saveChartAsPNG(new java.io.File("mychart.png"), chart, 500, 500)
+
+  // Show Chart in a Java Swing Frame
+  //--------------------------------------
+  val frame = new javax.swing.JFrame()
+  frame.add(new ChartPanel(chart))
+  frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE)
+  frame.setSize(693, 513)
+  frame.setTitle("Sample Pie Chart")
+  frame.setVisible(true)
+#+END_SRC
+** Build Instructions 
+*** Requirements
+
+It requires java 8, Scala version > 2.12 and the script [[https://github.com/caiorss/build-fat-jar/blob/master/jar-tools.sh][ jar-tools.sh]]
+that is downloaded automatically by the Makefile. 
+
+*** Building 
+**** Building with Makefile 
+
+1. Download or clone this repository. 
+
+2. Get into the top level directory:
+
+   + To build a fat-jar (application packed with all dependencies) run
+     =$ make fatjar=
+
+   + To build an executable named _jarget.sh_ run =$ make sh=.
+
+3. Install in ~/bin as ~/bin/jarget run =$ make install= 
+
+**** Building manually 
+
+Download the utility script 
+
+#+BEGIN_SRC sh 
+  $ curl -O -L https://raw.githubusercontent.com/caiorss/build-fat-jar/master/jar-tools.sh
+  chmod +x jar-tools.sh
+#+END_SRC
+
+Compile the application
+
+#+BEGIN_SRC sh 
+  $ scalac jarget.scala -d jarget.jar
+#+END_SRC
+
+Check where are Scala's libraries.
+
+#+BEGIN_SRC sh  
+  $ ./jar-tools.sh -scala-lib
+  Scala library path = /home/archbox/opt/scala-2.12.3/lib
+
+  Scala run-time lib = /home/archbox/opt/scala-2.12.3/lib/scala-library.jar
+
+  /home/archbox/opt/scala-2.12.3/lib/jline-2.14.4.jar
+  /home/archbox/opt/scala-2.12.3/lib/scala-compiler.jar
+  /home/archbox/opt/scala-2.12.3/lib/scala-library.jar
+  /home/archbox/opt/scala-2.12.3/lib/scalap-2.12.3.jar
+  /home/archbox/opt/scala-2.12.3/lib/scala-parser-combinators_2.12-1.0.6.jar
+  /home/archbox/opt/scala-2.12.3/lib/scala-reflect.jar
+  /home/archbox/opt/scala-2.12.3/lib/scala-swing_2.12-2.0.0.jar
+  /home/archbox/opt/scala-2.12.3/lib/scala-xml_2.12-1.0.6.jar
+                                
+#+END_SRC
+
+Build a fat jar 
+
+#+BEGIN_SRC sh 
+  SCALA_XML=/home/archbox/opt/scala-2.12.3/lib/scala-xml_2.12-1.0.6.jar
+  ./jar-tools.sh -scala-build-jar bin/jarget-fat.jar jarget.jar $(SCALA_XML)
+#+END_SRC
+
+Run the fat-jar or ubber jar application.
+
+#+BEGIN_SRC text 
+  $ java -jar bin/jarget-fat.jar 
+
+  jarget - Tool to download jar packages.
+
+   -show [package]                 - Show package's information
+
+   -pom  [package]                 - Show package's pom file
+
+   -get  [package]                 - Download package and dependencies to ./lib
+
+   -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
+
+  ... ... ... 
+#+END_SRC
+
+Build a sh file from the fat jar
+
+#+BEGIN_SRC sh 
+  $ ./jar-tools.sh -jar-to-sh bin/jarget-fat.jar bin/jarget
+  Build jar-executable bin/jarget
+  Run it with ./bin/jarget   
+#+END_SRC
+
+Run the executable file:
+
+#+BEGIN_SRC sh 
+
+  $ file ./bin/jarget 
+  ./bin/jarget: a /usr/bin/env sh  script executable (binary data)
+
+  $ head -n 3 ./bin/jarget 
+  #!/usr/bin/env sh 
+  java -jar $0 $@
+  exit 0
+
+  $ ./bin/jarget 
+  jarget - Tool to download jar packages.
+
+   -show [package]                 - Show package's information
+
+   -pom  [package]                 - Show package's pom file
+
+   -get  [package]                 - Download package and dependencies to ./lib
+
+  ... ... 
+
+
+#+END_SRC
+
+Install it: Just add this file to any directory in $PATH variable. It
+can be ~/bin.
