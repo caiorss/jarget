@@ -85,6 +85,9 @@ object Packget {
     s"http://central.maven.org/maven2/${gpath}/${artifact}/${version}/${artifact}-${version}.${ext}"
   }
 
+  def getMavenPackgeURL(pack: PackData) = {
+    s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
+  }
 
   val getJarUrl  = getCentralMavenArtifactURL("jar")
   val getPomUrl  = getCentralMavenArtifactURL("pom")
