@@ -209,23 +209,41 @@ object Packget {
     import concurrent.ExecutionContext.Implicits.global
     import scala.concurrent.duration.Duration
 
+    def downloadJarFile(p: PackData) = {
+      val file = Utils.join(path, getFileNameFull(p, "jar"))
+      val url  = getJarUrl(p)
+      println(s"Downloading file ${file}.")            
+      Utils.downloadFile(url, file)
+      println(s"File ${file} downloaded. Ok.")
+    }
+
+    def downloadPomFile(p: PackData) = {
+      val file = Utils.join(path, getFileNameFull(p, "pom"))
+      val url  = getPomUrl(p)
+      println(s"Downloading file ${file}.")            
+      Utils.downloadFile(url, file)
+      println(s"File ${file} downloaded. Ok.")      
+    }
+
     Utils.mkdir(path)
 
     val packlist = getAllDependencies(pack) filter { p =>
-      !Utils.fileExists(Utils.join(path, getJarNameFull(p)))
+      !Utils.fileExists(Utils.join(path, getFileNameFull(p, "jar")))
     }
 
     //println(packlist)
 
     val result = Future.traverse(packlist){ p =>
-      println("Download package " + p)
+      println("Downloading package " + p)
 
-      val file = Utils.join(path, getJarNameFull(p))
-      val url  = getJarUrl(p)
       //println(s"Downloading file ${file} / ${pack.group} - ${pack.artifact} - ${pack.version} ... ")
-      val fut = Utils.downloadFile(url, file)
-      fut onSuccess { case _ => println(s"File ${file} download Ok.") }
-      fut onFailure { case _ => println(s"File ${file} download Failed.")}
+      val fut = Future {
+        downloadPomFile(p)
+        downloadJarFile(p)
+      }
+
+      //fut onSuccess { case _ => println(s"File ${file} download Ok.") }
+      //fut onFailure { case _ => println(s"File ${file} download Failed.")}
       fut 
     }
 
