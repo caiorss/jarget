@@ -259,8 +259,6 @@ object Packget {
 
 
 object Main{
-  val packJFree = PackData("org.jfree", "jfreechart", "1.0.17")
-  val packGUava = PackData("com.google.guava", "guava", "23.0")
 
   def parsePack(pstr: String) = {
     val p = Packget.readPack(pstr)
