@@ -310,6 +310,31 @@ object Main{
     Utils.openUrl(url)
   }
 
+  def showHelp() = println("""jarget - Tool to download jar packages.
+
+ -show [package]                 - Show package's information
+
+ -pom  [package]                 - Show package's pom file
+
+ -get  [package]                 - Download package and dependencies to ./lib
+
+ -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
+
+ -browse [package]               - Open package official website.
+
+ -mvn                            - Open web site https://mvnrepository.com
+ -mvn  [package]                 - Open package mvnrepository url.
+
+
+Note: [package] is <group>/<artifact>/<version>.
+Examples of valid packages:
+
+  - org.scalaz/scalaz-core_2.11/7.3.0-M15
+
+  - org.jfree/jfreechart/1.0.17
+
+"""
+  )
 
 
   def main(args: Array[String]) : Unit = args.toList match {
