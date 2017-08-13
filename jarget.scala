@@ -325,6 +325,9 @@ object Main{
  -mvn                            - Open web site https://mvnrepository.com
  -mvn  [package]                 - Open package mvnrepository url.
 
+ -clip -show                     - Extract package from XML in clipboard and show its information.
+ -clip -pom                      - Extract package from XML in clipboard and show its Pom file.
+ -clip -get                      - Extract package from XML in clipboard and download it to ./lib 
 
 Note: [package] is <group>/<artifact>/<version>.
 Examples of valid packages:
@@ -332,6 +335,16 @@ Examples of valid packages:
   - org.scalaz/scalaz-core_2.11/7.3.0-M15
 
   - org.jfree/jfreechart/1.0.17
+
+Note: The XML in the clipboard is a maven coordinate: 
+
+    <!-- https://mvnrepository.com/artifact/org.scalaz/scalaz-core_2.11 -->
+    <dependency>
+        <groupId>org.scalaz</groupId>
+        <artifactId>scalaz-core_2.11</artifactId>
+        <version>7.3.0-M15</version>
+    </dependency>
+
 
 """
   )
