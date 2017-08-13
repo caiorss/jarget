@@ -78,16 +78,16 @@ object JarTools{
 
 object Packget { 
 
-  def centralMavenURL(ext: String) = (pack: PackData) => { 
+  def getCentralMavenArtifactURL(ext: String) = (pack: PackData) => {
     val gpath    = pack.group.replaceAll("\\.", "/")
     val artifact = pack.artifact
     val version  = pack.version
     s"http://central.maven.org/maven2/${gpath}/${artifact}/${version}/${artifact}-${version}.${ext}"
   }
 
-  val getJarUrl = centralMavenURL("jar")
 
-  val getPomUrl  = centralMavenURL("pom")
+  val getJarUrl  = getCentralMavenArtifactURL("jar")
+  val getPomUrl  = getCentralMavenArtifactURL("pom")
 
   def getJarNameFull(pack: PackData) = {
     s"${pack.artifact}-${pack.version}.jar"
