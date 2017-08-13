@@ -3,6 +3,8 @@ all: jarget.jar
 
 sh: bin/jarget.sh 
 
+fatjar: bin/jarget-fat.jar
+
 SCALA_XML=/home/archbox/opt/scala-2.12.3/lib/scala-xml_2.12-1.0.6.jar
 
 jar-tools.sh:
@@ -19,6 +21,7 @@ bin/jarget.sh: bin/jarget-fat.jar
 	./jar-tools.sh -jar-to-sh bin/jarget-fat.jar bin/jarget
 
 install: bin/jarget
+	mkdir -p ~/
 	cp bin/jarget ~/bin
 
 clean:
