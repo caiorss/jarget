@@ -348,9 +348,17 @@ Examples of valid packages:
     case List("-get", pstr)
         => Packget.downloadPackage(parsePack(pstr), "./lib")
 
+    case List("-path", path, "-get", pstr)
+        => Packget.downloadPackage(parsePack(pstr), path)
+
     case List("-browse", pstr)
         =>   openUrl(parsePack(pstr))
 
+    case List("-mvn")
+        => Utils.openUrl("https://mvnrepository.com")
+
+    case List("-mvn", pstr)
+        => Utils.openUrl(Packget.getMavenPackgeURL(parsePack(pstr)))
 
     case List("-clip", "-pom")
         => showPom(getPackMaven())
@@ -361,10 +369,8 @@ Examples of valid packages:
     case List("-clip", "-get")
         => Packget.downloadPackage(getPackMaven(), "./lib")
 
-    case List("-mvn")
-        => Utils.openUrl("https://mvnrepository.com")
-
-    case _ => println("Error: Invalid option")
+ 
+    case _ => showHelp()
     }
   
 } // ------- End of object Main -------- //
