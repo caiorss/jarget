@@ -6,3 +6,5 @@
 *.bin
 bin/*
 /jar-tools.sh
+lib/*
+/Notes.org
