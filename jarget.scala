@@ -92,8 +92,8 @@ object Packget {
   val getJarUrl  = getCentralMavenArtifactURL("jar")
   val getPomUrl  = getCentralMavenArtifactURL("pom")
 
-  def getJarNameFull(pack: PackData) = {
-    s"${pack.artifact}-${pack.version}.jar"
+  def getFileNameFull(pack: PackData, ext: String) = {
+    s"${pack.artifact}-${pack.version}.${ext}"
   }
 
   def getPomXML(pack: PackData): scala.xml.Node = {
