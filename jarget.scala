@@ -61,6 +61,8 @@ object Utils{
     desktop.browse(u)
   }
 
+  def getScalaVersion() = util.Properties.versionNumberString
+
 } /* ---- End of object Utils ------- */
 
 
