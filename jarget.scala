@@ -32,7 +32,7 @@ object Utils{
   }
 
 
-  def downloadFile(fileUrl: String, file: String) = Future {
+  def downloadFile(fileUrl: String, file: String) = {
     val url = new java.net.URL(fileUrl)
     val rbc = java.nio.channels.Channels.newChannel(url.openStream())
     val fos = new java.io.FileOutputStream(file)
