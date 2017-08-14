@@ -88,6 +88,74 @@ object Utils{
 
   def getScalaVersion() = util.Properties.versionNumberString
 
+  /**  Pretty print a collection of tuples as a table.
+    Parameters:
+    @rows     - Collection of tuples to be printed.
+    @title    - Tuple containing the titles of left and right side.
+    @line     - Flag that if set to true, prints a new line between each row.
+    @margin   - Margin from left side of screen as number of spaces.
+    @sep      - Number of spaces between left side and right side
+    @maxRside - Maximum number of characters to printed on right side.
+    */
+  def printTupleAsTable(
+    rows:   Seq[(String, String)],
+    title:  (String, String) = ("", ""),
+    line:   Boolean = false,
+    margin: Int = 0,
+    sep:    Int = 4,
+    maxRside: Int = 100
+  ) = {
+
+    def printRow(wmax1: Int, clamp: Boolean = true) = (row: (String, String)) => {
+      val (lside, rside) = row
+
+      // print left margin
+      for (a <- 0 to margin) print(' ')
+
+      print(lside)
+
+      // Print spaces
+      for (a <- 0 to wmax1 - lside.length + sep) print(' ')
+
+      if (rside.length <= maxRside) {
+        println(rside)
+      } else if (clamp){
+        val dots = "..."
+        println(rside.take(maxRside - dots.length) + dots)
+      } else {
+        println(rside.take(maxRside))
+      }
+
+      // Print line between rows
+      if (line) println()
+    }
+
+    def printDashes(wmax1: Int) = {
+      printRow(wmax1, false)("-" * wmax1, "-" * maxRside)
+    }
+
+    val (title1, title2) = title
+
+    // Maximum length of left side column
+    val wmax1 = title1.length max rows.map(row => row._1.length).max
+
+    printRow(wmax1)(title)
+    printDashes(wmax1)
+    rows foreach printRow(wmax1)
+    printDashes(wmax1)
+  }
+
+
+  def showEnvironmentVars() {
+    import scala.collection.JavaConverters._
+    printTupleAsTable(
+      rows     = System.getenv.asScala.toSeq,
+      title    = ("Environment Variable", "Value"),
+      margin   = 2,
+      maxRside = 50
+    )
+  }
+
 } /* ---- End of object Utils ------- */
 
 
