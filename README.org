@@ -273,6 +273,41 @@ $ jarget -system env
 
 #+END_SRC
 
+**** Show PATH Environment Variable 
+
+ - =$ jarget -system path=
+
+#+BEGIN_SRC sh
+  $ jarget -system path
+  /usr/local/sbin
+  /usr/local/bin
+  /usr/bin
+  /usr/lib/jvm/default/bin
+  /usr/bin/site_perl
+  /usr/bin/vendor_perl
+  /usr/bin/core_perl
+  /home/archbox/opt/java/bin
+  /home/archbox/opt/scala-2.11.8/bin/
+  /home/archbox/bin
+  /home/archbox/.local/bin
+  /home/archbox/opt/cling/bin
+  /home/archbox/opt/cling2
+  /home/archbox/opt/eclipse
+  /home/archbox/opt/fsformatting
+  /home/archbox/opt/gambit-4.8.4/bin
+  /home/archbox/opt/groovy-2.4.11/bin
+  /home/archbox/opt/jars
+  /home/archbox/opt/java/bin
+  /home/archbox/opt/jdk/bin
+  /home/archbox/opt/jdk1.8.0_20/bin
+  /home/archbox/opt/maven/bin
+  /home/archbox/opt/mobac
+  /home/archbox/opt/scala/bin
+  /home/archbox/opt/scala-2.12.3/bin
+  /home/archbox/opt/vivaldi
+  /home/archbox/opt/vscode
+#+END_SRC
+
 **** Show Java Properties 
 
  - =$ jarget -system prop=
