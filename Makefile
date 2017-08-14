@@ -26,6 +26,9 @@ install: bin/jarget
 clean:
 	rm -rf bin/jarget bin/jarget-fat.jar
 
+upload: bin/jarget
+	cd bin && git add jarget && git commit -a -m "Update release" && git push 
+
 # -------- Test Commands ----------- #
 
 
