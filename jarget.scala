@@ -156,6 +156,16 @@ object Utils{
     )
   }
 
+  def showJavaProperties() {
+    import scala.collection.JavaConverters._
+    printTupleAsTable(
+      rows     = System.getProperties.asScala.toSeq,
+      title    = ("Java Property", "Value"),
+      margin   = 2,
+      maxRside = 50
+    )
+  }
+
 } /* ---- End of object Utils ------- */
 
 
