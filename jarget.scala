@@ -432,6 +432,9 @@ object Main{
  -clip -pom                      - Extract package from XML in clipboard and show its Pom file.
  -clip -get                      - Extract package from XML in clipboard and download it to ./lib 
 
+ -system env                     - Show environment variables
+ -system prop                    - Show java properties
+
 Note: [package] is <group>/<artifact>/<version>.
 Examples of valid packages:
 
