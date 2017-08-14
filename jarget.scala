@@ -488,6 +488,13 @@ Note: The XML in the clipboard is a maven coordinate:
     case List("-clip", "-get")
         => Packget.downloadPackage(getPackMaven(), "./lib")
 
+    // Show environment variable
+    case List("-system", "env")
+        => Utils.showEnvironmentVars()
+
+    // Show Java properties
+    case List("-system", "prop")
+        => Utils.showJavaProperties()
  
     case _ => showHelp()
     }
