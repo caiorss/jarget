@@ -86,6 +86,7 @@ object Utils{
     desktop.browse(u)
   }
 
+
   def getScalaVersion() = util.Properties.versionNumberString
 
   /**  Pretty print a collection of tuples as a table.
@@ -433,6 +434,7 @@ object Main{
  -clip -get                      - Extract package from XML in clipboard and download it to ./lib 
 
  -system env                     - Show environment variables
+ -system path                    - Show PATH environment variable
  -system prop                    - Show java properties
 
 Note: [package] is <group>/<artifact>/<version>.
@@ -495,6 +497,14 @@ Note: The XML in the clipboard is a maven coordinate:
     // Show Java properties
     case List("-system", "prop")
         => Utils.showJavaProperties()
+
+    // Show PATH enviroment variable
+    case List("-system", "path")
+        => for {
+          pvar   <- Option(System.getenv("PATH"))
+          sep    <- Option(System.getProperty("path.separator"))
+          paths  = pvar.split(sep)
+        } paths foreach println                  
  
     case _ => showHelp()
     }
