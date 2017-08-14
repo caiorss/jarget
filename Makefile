@@ -1,7 +1,7 @@
 
 all: jarget.jar
 
-sh: bin/jarget.sh 
+sh: bin/jarget 
 
 fatjar: bin/jarget-fat.jar
 
@@ -17,15 +17,14 @@ jarget.jar : jar-tools.sh jarget.scala
 bin/jarget-fat.jar: jar-tools.sh jarget.jar 
 	./jar-tools.sh -scala-build-jar bin/jarget-fat.jar jarget.jar $(SCALA_XML)
 
-bin/jarget.sh: bin/jarget-fat.jar
+bin/jarget: bin/jarget-fat.jar
 	./jar-tools.sh -jar-to-sh bin/jarget-fat.jar bin/jarget
 
 install: bin/jarget
-	mkdir -p ~/
-	cp bin/jarget ~/bin
+	cp -v bin/jarget ~/bin
 
 clean:
-	rm -rf jarget.jar 
+	rm -rf bin/jarget bin/jarget-fat.jar
 
 # -------- Test Commands ----------- #
 
