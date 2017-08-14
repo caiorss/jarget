@@ -1,7 +1,7 @@
 #+TITLE:  Jarget - Command Line Tool to download jar packages. 
 #+AUTHOR:   Caio Rodrigues
 #+KEYWORDS: jarget jar tool java scala automation deployment 
-#+STARTUP: contents 
+#+STARTUP: content
 
 * Jarget 
 ** Overview 
@@ -131,7 +131,6 @@ It will open the Mvn site of the package JFreeChart or:
  - https://mvnrepository.com/artifact/org.jfree/jfreechart/1.0.17  
 
 
-
 *** Open Maven Central 
 
  - =$ jarget -mvn=
@@ -204,6 +203,56 @@ Testing with Scala:
   frame.setSize(693, 513)
   frame.setTitle("Sample Pie Chart")
   frame.setVisible(true)
+#+END_SRC
+** Getting a Binary Release 
+
+An fat-jar executable binary release can be downloaded from this link:
+
+ - [[https://github.com/caiorss/jarget/raw/gh-pages/jarget][jarget Download]]
+
+Or it can be downloaded with those shell commands below: 
+
+#+BEGIN_SRC sh
+$ curl -O -L https://github.com/caiorss/jarget/raw/gh-pages/jarget
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   130  100   130    0     0     28      0  0:00:04  0:00:04 --:--:--    32
+100 5675k  100 5675k    0     0   490k      0  0:00:11  0:00:11 --:--:-- 1011k
+
+$ chmod +x jarget
+
+$ ./jarget 
+jarget - Tool to download jar packages.
+
+ -show [package]                 - Show package's information
+
+ -pom  [package]                 - Show package's pom file
+
+... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... 
+#+END_SRC
+
+Or 
+
+#+BEGIN_SRC sh 
+$ curl -O -L https://github.com/caiorss/jarget/raw/gh-pages/jarget && chmod +x jarget && ./jarget 
+#+END_SRC
+
+On Windows the application can be executed with: 
+
+#+BEGIN_SRC sh 
+$ java -jar jarget 
+
+jarget - Tool to download jar packages.
+
+ -show [package]                 - Show package's information
+
+ -pom  [package]                 - Show package's pom file
+
+ -get  [package]                 - Download package and dependencies to ./lib
+
+ -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
+
+... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... 
 #+END_SRC
 ** Build Instructions 
 *** Requirements
