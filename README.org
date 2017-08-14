@@ -130,7 +130,6 @@ $ jarget -pom org.jfree/jfreechart/1.0.17
 It will open the Mvn site of the package JFreeChart or:
  - https://mvnrepository.com/artifact/org.jfree/jfreechart/1.0.17  
 
-
 *** Open Maven Central 
 
  - =$ jarget -mvn=
@@ -204,6 +203,142 @@ Testing with Scala:
   frame.setTitle("Sample Pie Chart")
   frame.setVisible(true)
 #+END_SRC
+*** System Information 
+**** Show Enviroment Variables 
+
+ - =$ jarget -system env=
+
+#+BEGIN_SRC sh 
+$ jarget -system env
+   Environment Variable         Value
+   ------------------------     --------------------------------------------------
+   PATH                         /usr/local/sbin:/usr/local/bin:/usr/bin:/usr/li...
+   XAUTHORITY                   /home/archbox/.Xauthority
+   LC_MEASUREMENT               pt_BR.UTF-8
+   LC_TELEPHONE                 pt_BR.UTF-8
+   GDMSESSION                   xfce
+   XDG_DATA_DIRS                /usr/local/share:/usr/share
+   LC_TIME                      pt_BR.UTF-8
+   DBUS_SESSION_BUS_ADDRESS     unix:path=/run/user/1001/bus
+   XDG_CURRENT_DESKTOP          XFCE
+   MAIL                         /var/spool/mail/archbox
+   SSH_AGENT_PID                29199
+   MOZ_PLUGIN_PATH              /usr/lib/mozilla/plugins
+   COLORTERM                    truecolor
+   SESSION_MANAGER              local/ghostpc:@/tmp/.ICE-unix/29194,unix/ghostp...
+   LC_PAPER                     pt_BR.UTF-8
+   LOGNAME                      archbox
+   PWD                          /home/archbox/Documents/projects/jarget.scala
+   WINDOWID                     73927890
+   SHELL                        /bin/bash
+   LC_ADDRESS                   pt_BR.UTF-8
+   OLDPWD                       /home/archbox/test
+   VISUAL                       emacs -Q -nw --no-site -eval "(progn (setq  inh...
+   GTK_MODULES                  canberra-gtk-module
+   XDG_SESSION_PATH             /org/freedesktop/DisplayManager/Session2
+   XDG_SESSION_DESKTOP          xfce
+   SHLVL                        3
+   LC_IDENTIFICATION            pt_BR.UTF-8
+   GLADE_CATALOG_PATH           :
+   LC_MONETARY                  pt_BR.UTF-8
+   DOCKER_HOST                  tcp://127.0.0.1:4243
+   TERM                         xterm-256color
+   XFILESEARCHPATH              /usr/dt/app-defaults/%L/Dt
+   XDG_CONFIG_DIRS              /etc/xdg
+   GLADE_PIXMAP_PATH            :
+   XDG_SEAT_PATH                /org/freedesktop/DisplayManager/Seat0
+   LANG                         en_US.utf8
+   XDG_SESSION_TYPE             x11
+   XDG_SESSION_ID               c87
+   DISPLAY                      :0.0
+   LC_NAME                      pt_BR.UTF-8
+   _                            /usr/lib/jvm/default/bin/java
+   XDG_GREETER_DATA_DIR         /var/lib/lightdm-data/archbox
+   DESKTOP_SESSION              xfce
+   USER                         archbox
+   XDG_MENU_PREFIX              xfce-
+   VTE_VERSION                  4803
+   LC_NUMERIC                   pt_BR.UTF-8
+   XDG_SEAT                     seat0
+   SSH_AUTH_SOCK                /tmp/ssh-kO5hsOw4FbVp/agent.29198
+   GLADE_MODULE_PATH            :
+   EDITOR                       emacs -Q -nw --no-site -eval "(progn (setq  inh...
+   NLSPATH                      /usr/dt/lib/nls/msg/%L/%N.cat
+   QT_QPA_PLATFORMTHEME         qt5ct
+   XDG_RUNTIME_DIR              /run/user/1001
+   XDG_VTNR                     7
+   HOME                         /home/archbox
+   ------------------------     --------------------------------------------------
+
+
+#+END_SRC
+
+**** Show Java Properties 
+
+ - =$ jarget -system prop=
+
+Show all Java properties from System.getProperties().
+
+#+BEGIN_SRC sh 
+$ jarget -system prop
+   Java Property                     Value
+   -----------------------------     --------------------------------------------------
+   java.runtime.name                 OpenJDK Runtime Environment
+   sun.boot.library.path             /usr/lib/jvm/java-8-openjdk/jre/lib/amd64
+   java.vm.version                   25.141-b15
+   java.vm.vendor                    Oracle Corporation
+   java.vendor.url                   http://java.oracle.com/
+   path.separator                    :
+   java.vm.name                      OpenJDK 64-Bit Server VM
+   file.encoding.pkg                 sun.io
+   user.country                      US
+   sun.java.launcher                 SUN_STANDARD
+   sun.os.patch.level                unknown
+   java.vm.specification.name        Java Virtual Machine Specification
+   user.dir                          /home/archbox/Documents/projects/jarget.scala
+   java.runtime.version              1.8.0_141-b15
+   java.awt.graphicsenv              sun.awt.X11GraphicsEnvironment
+   java.endorsed.dirs                /usr/lib/jvm/java-8-openjdk/jre/lib/endorsed
+   os.arch                           amd64
+   java.io.tmpdir                    /tmp
+   line.separator                    
+
+   java.vm.specification.vendor      Oracle Corporation
+   os.name                           Linux
+   sun.jnu.encoding                  UTF-8
+   java.library.path                 /usr/java/packages/lib/amd64:/usr/lib64:/lib64:...
+   java.specification.name           Java Platform API Specification
+   java.class.version                52.0
+   sun.management.compiler           HotSpot 64-Bit Tiered Compilers
+   os.version                        4.9.31-1-MANJARO
+   user.home                         /home/archbox
+   user.timezone                     
+   java.awt.printerjob               sun.print.PSPrinterJob
+   file.encoding                     UTF-8
+   java.specification.version        1.8
+   java.class.path                   /home/archbox/bin/jarget
+   user.name                         archbox
+   java.vm.specification.version     1.8
+   sun.java.command                  /home/archbox/bin/jarget -system prop
+   java.home                         /usr/lib/jvm/java-8-openjdk/jre
+   sun.arch.data.model               64
+   user.language                     en
+   java.specification.vendor         Oracle Corporation
+   awt.toolkit                       sun.awt.X11.XToolkit
+   java.vm.info                      mixed mode
+   java.version                      1.8.0_141
+   java.ext.dirs                     /usr/lib/jvm/java-8-openjdk/jre/lib/ext:/usr/ja...
+   sun.boot.class.path               /usr/lib/jvm/java-8-openjdk/jre/lib/resources.j...
+   java.vendor                       Oracle Corporation
+   file.separator                    /
+   java.vendor.url.bug               http://bugreport.sun.com/bugreport/
+   sun.io.unicode.encoding           UnicodeLittle
+   sun.cpu.endian                    little
+   sun.cpu.isalist                   
+   -----------------------------     --------------------------------------------------
+
+#+END_SRC
+
 ** Getting a Binary Release 
 
 An fat-jar executable binary release can be downloaded from this link:
