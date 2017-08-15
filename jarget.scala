@@ -524,53 +524,88 @@ Note: The XML in the clipboard is a maven coordinate:
 
   def main(args: Array[String]) : Unit = args.toList match {
 
-    case List("-pom", pstr)
+    case List() | List("-h") | List("-help")
+        => showHelp()
+
+    case List("mvn", "-pom", pstr)
         => showPom(parsePack(pstr))
 
-    case List("-show", pstr)
+    case List("mvn", "-show", pstr)
         => showPomData(parsePack(pstr))
 
-    case List("-get", pstr)
+    case List("mvn", "-get", pstr)
         => Packget.downloadPackage(parsePack(pstr), "./lib")
 
-    case List("-path", path, "-get", pstr)
+    case List("mvn", "-path", path, "-get", pstr)
         => Packget.downloadPackage(parsePack(pstr), path)
 
-    case List("-browse", pstr)
+    case List("mvn", "-browse", pstr)
         =>   openUrl(parsePack(pstr))
 
-    case List("-mvn")
+    case List("mvn", "-go")
         => Utils.openUrl("https://mvnrepository.com")
 
-    case List("-mvn", pstr)
+    case List("mvn", "-go", pstr)
         => Utils.openUrl(Packget.getMavenPackgeURL(parsePack(pstr)))
 
-    case List("-clip", "-pom")
+    case List("mvn", "-clip", "-pom")
         => showPom(getPackMaven())
 
-    case List("-clip", "-show")
+    case List("mvn", "-clip", "-show")
         => showPomData(getPackMaven())
 
-    case List("-clip", "-get")
+    case List("mvn", "-clip", "-get")
         => Packget.downloadPackage(getPackMaven(), "./lib")
 
+    // --------  System Commands ------------------- //
+
     // Show environment variable
-    case List("-system", "env")
+    case List("sys", "-env")
         => Utils.showEnvironmentVars()
 
     // Show Java properties
-    case List("-system", "prop")
+    case List("sys", "-prop")
         => Utils.showJavaProperties()
 
     // Show PATH enviroment variable
-    case List("-system", "path")
+    case List("sys", "-path")
         => for {
           pvar   <- Option(System.getenv("PATH"))
           sep    <- Option(System.getProperty("path.separator"))
           paths  = pvar.split(sep)
         } paths foreach println                  
- 
-    case _ => showHelp()
+
+
+    // -----------  Jar files  ------------------- //
+
+    // Print Jar manifest file or "META-INF/MANIFEST.MF"
+    case List("jar", "-manifest", jarFile)
+        =>  JarUtils.withJarException{
+          JarUtils.printFile(jarFile, "META-INF/MANIFEST.MF")
+        }
+
+    // Show only asset files ignoring class files.
+    case List("jar", "-assets", jarFile)
+        => JarUtils.withJarException{
+          JarUtils.getAssetFiles(jarFile) foreach println
+        }
+
+    case List("jar", "-cat", jarFile, file)
+        => JarUtils.withJarException{
+          JarUtils.printFile(jarFile, file)
+        }
+
+    case List("jar", "-extract", jarFile, file)
+        => JarUtils.withJarException{
+          JarUtils.extractFile(jarFile, file, ".")
+        }
+
+    case List("jar", "-extract", jarFile, file, path)
+        => JarUtils.withJarException{
+          JarUtils.extractFile(jarFile, file, path)
+        }
+
+    case _ => println("Error: Invalid command")
     }
   
 } // ------- End of object Main -------- //
