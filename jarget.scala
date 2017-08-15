@@ -439,6 +439,23 @@ object Main{
     p.get 
   }
 
+  def parseScalaPack(pstr: String, scalaVersion: String) = {
+    val fields = pstr.split("/").map(_.trim)
+    val p = fields match {
+      case Array(group, artifact, version)
+          => Some(PackData(group, artifact + "_" + scalaVersion, version))
+      case _
+          => None
+    }
+
+    if (p.isEmpty) {
+      println("Error: Invalid package format")
+      System.exit(1)
+    }
+    p.get
+  }
+
+
   /// Get package from maven XML in the clipboard.
   def getPackMaven() = {
     val p = Utils.getClipboardText()
