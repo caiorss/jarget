@@ -480,26 +480,40 @@ object Main{
 
   def showHelp() = println("""jarget - Tool to download jar packages.
 
- -show [package]                 - Show package's information
+Maven Packages / Jar Packages
 
- -pom  [package]                 - Show package's pom file
+ mvn -show [package]                 - Show package's information
 
- -get  [package]                 - Download package and dependencies to ./lib
+ mvn -pom  [package]                 - Show package's pom file
 
- -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
+ mvn -get  [package]                 - Download package and dependencies to ./lib
 
- -browse [package]               - Open package official website.
+ mvn -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
 
- -mvn                            - Open web site https://mvnrepository.com
- -mvn  [package]                 - Open package mvnrepository url.
+ mvn -browse [package]               - Open package official website.
 
- -clip -show                     - Extract package from XML in clipboard and show its information.
- -clip -pom                      - Extract package from XML in clipboard and show its Pom file.
- -clip -get                      - Extract package from XML in clipboard and download it to ./lib 
+ mvn -go                             - Open web site https://mvnrepository.com
+ mvn -go [package]                   - Open package mvnrepository url.
 
- -system env                     - Show environment variables
- -system path                    - Show PATH environment variable
- -system prop                    - Show java properties
+ mvn -clip -show                     - Extract package from XML in clipboard and show its information.
+ mvn -clip -pom                      - Extract package from XML in clipboard and show its Pom file.
+ mvn -clip -get                      - Extract package from XML in clipboard and download it to ./lib
+
+Jar Files Inspection
+
+ jar -manifest [jar]                - Show manifest.
+
+ jar -assets                        - Show all asset files disregarding *.class files.
+
+ jar -extract [jar] [file]          - Extract [file] from [jar] package to current directory.
+
+ jar -extract [jar] [file] [path]   - Extract [file] from [jar] package to [path] directory.
+
+System Information
+
+ sys -env                            - Show environment variables
+ sys -path                           - Show PATH environment variable
+ sys -prop                           - Show java properties
 
 Note: [package] is <group>/<artifact>/<version>.
 Examples of valid packages:
