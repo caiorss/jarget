@@ -191,6 +191,14 @@ object JarUtils{
   }  
 
 }
+  def getFilesAsList(jarFile: String) = {
+    import scala.collection.JavaConverters._
+    val jar = new java.util.jar.JarFile(jarFile)
+    val files = jar.entries().asScala.toList
+    jar.close()
+    files
+  }
+
 
 
 object Packget { 
