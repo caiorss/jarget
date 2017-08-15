@@ -172,6 +172,17 @@ object Utils{
 
 object JarUtils{
 
+  //import scala.collection.JavaConversions._
+
+  def withJarException[A](comp: => Unit) = {
+    try comp
+    catch {
+      case ex: java.util.zip.ZipException
+          => println("Error, not a zip file")
+      case ex: java.io.FileNotFoundException
+          => println("Error: file not found.")
+    }
+  }
 
   def showManifest(file: String) = {
     val jar = new java.util.jar.JarFile(file)
