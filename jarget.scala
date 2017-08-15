@@ -249,9 +249,11 @@ object JarUtils{
       .listFiles()
       .toStream
       .filter(_.getName().endsWith(".jar"))
+    
+    val sep = System.getProperty("path.separator")
 
     files.foldLeft("."){ (acc: String, file: java.io.File) =>
-       file.getPath() + ":" + acc
+       file.getPath() + sep + acc
     }
   }
 
