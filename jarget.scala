@@ -170,8 +170,8 @@ object Utils{
 } /* ---- End of object Utils ------- */
 
 
-object JarTools{
-  import scala.collection.JavaConversions._ 
+object JarUtils{
+
 
   def showManifest(file: String) = {
     val jar = new java.util.jar.JarFile(file)
