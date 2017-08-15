@@ -534,6 +534,11 @@ System Information
  sys -path                           - Show PATH environment variable
  sys -prop                           - Show java properties
 
+Misc
+
+ doc                                 - Open jarget's website - https://github.com/caiorss/jarget
+
+
 Note: [package] is <group>/<artifact>/<version>.
 Examples of valid packages:
 
@@ -559,6 +564,9 @@ Note: The XML in the clipboard is a maven coordinate:
 
     case List() | List("-h") | List("-help")
         => showHelp()
+
+    case List("doc")
+        => Utils.openUrl("https://github.com/caiorss/jarget")
 
     case List("mvn", "-pom", pstr)
         => showPom(parsePack(pstr))
