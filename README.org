@@ -416,6 +416,31 @@ Implementation-Version: 1.0.17
 Implementation-Vendor: jfree.org
 
 #+END_SRC
+**** Get classpath 
+
+ - =$ jarget jar -cpath=
+
+Get class file of all jar files in ./lib directory.
+
+#+BEGIN_SRC sh 
+$ ./bin/jarget jar -cpath
+./lib/scala-library-2.12.1.jar:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
+
+$ scala -cp $(./bin/jarget jar -cpath)
+Welcome to Scala 2.12.3 (OpenJDK 64-Bit Server VM, Java 1.8.0_141).
+Type in expressions for evaluation. Or try :help.
+
+#+END_SRC
+
+ - =$ jarget jar -cpath [dir]=
+
+Get class file of all jar files in a given directory.
+
+#+BEGIN_SRC sh 
+$ ./bin/jarget jar -cpath ./lib
+./lib/scala-library-2.12.1.jar:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
+
+#+END_SRC
 *** System Information 
 **** Show Enviroment Variables 
 
