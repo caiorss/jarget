@@ -188,15 +188,15 @@ object JarUtils{
     val jar = new java.util.jar.JarFile(file)
     val man = jar.getManifest()
     man.write(System.out)
-  }  
+  }
 
-}
   def getFilesAsList(jarFile: String) = {
     import scala.collection.JavaConverters._
     val jar = new java.util.jar.JarFile(jarFile)
     val files = jar.entries().asScala.toList
     jar.close()
     files
+  }
 
   /** Get only asset files, disregarding all *.class files and directory entries. */
   def getAssetFiles(jarFile: String) = {
