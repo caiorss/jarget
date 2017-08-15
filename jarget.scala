@@ -564,8 +564,13 @@ Note: The XML in the clipboard is a maven coordinate:
     case List("mvn", "-show", pstr)
         => showPomData(parsePack(pstr))
 
+    // Download a package and its dependencies
     case List("mvn", "-get", pstr)
         => Packget.downloadPackage(parsePack(pstr), "./lib")
+
+    // Download a Scala package  
+    case List("mvn", "-get", "scala", pstr, version)
+        => Packget.downloadPackage(parseScalaPack(pstr, version), "./lib")
 
     case List("mvn", "-path", path, "-get", pstr)
         => Packget.downloadPackage(parsePack(pstr), path)
