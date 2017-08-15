@@ -220,6 +220,30 @@ object JarUtils{
     jar.close()
   }
 
+  /** Extract jar file to a given directory */
+  def extractFile(jarFile: String, file: String, dest: String) = {
+    val jar   = new java.util.jar.JarFile(jarFile)
+    val entry = Option(jar.getEntry(file))
+
+    entry match {
+      case None    => println("Error: File not found.")
+      case Some(e) => {
+        val is = jar.getInputStream(e)
+        val fileObj = new java.io.File(file)
+        val fout = new java.io.File(dest, fileObj.getName())
+        val os = new java.io.FileOutputStream(fout)
+        while(is.available() > 0){
+          os.write(is.read())
+        }
+        is.close()
+        os.close()
+      }
+    }
+
+    jar.close()
+  }
+
+} // -------- End of object JarUtils ------------ //
 
 
 object Packget { 
