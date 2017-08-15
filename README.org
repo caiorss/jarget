@@ -224,6 +224,65 @@ Testing with Scala:
   frame.setTitle("Sample Pie Chart")
   frame.setVisible(true)
 #+END_SRC
+**** Install a Scala package jar file
+
+ - =$ jarget mvn -get scala [scala version] [package]=
+
+Example: It will download the scala package [[https://mvnrepository.com/artifact/org.typelevel/cats-core_2.12/0.9.0][cats-core]] for scala version
+2.12 and all its dependencies to directory ./lib.
+
+#+BEGIN_SRC sh 
+  $ jarget mvn -get scala 2.12 org.typelevel/cats-core/0.9.0
+
+  Downloading package PackData(org.typelevel,cats-macros_2.12,0.9.0)
+  Downloading file ./lib/cats-macros_2.12-0.9.0.pom.
+  Downloading package PackData(org.typelevel,cats-kernel_2.12,0.9.0)
+  Downloading package PackData(org.typelevel,cats-core_2.12,0.9.0)
+  Downloading file ./lib/cats-kernel_2.12-0.9.0.pom.
+  Downloading package PackData(com.github.mpilquist,simulacrum_2.12,0.10.0)
+  Downloading file ./lib/cats-core_2.12-0.9.0.pom.
+  Downloading package PackData(org.typelevel,machinist_2.12,0.6.1)
+  Downloading package PackData(org.scala-lang,scala-library,2.12.1)
+  Downloading file ./lib/simulacrum_2.12-0.10.0.pom.
+  File ./lib/cats-macros_2.12-0.9.0.pom downloaded. Ok.
+  Downloading file ./lib/cats-macros_2.12-0.9.0.jar.
+  File ./lib/cats-core_2.12-0.9.0.pom downloaded. Ok.
+  Downloading file ./lib/cats-core_2.12-0.9.0.jar.
+  File ./lib/simulacrum_2.12-0.10.0.pom downloaded. Ok.
+  Downloading file ./lib/simulacrum_2.12-0.10.0.jar.
+  File ./lib/cats-kernel_2.12-0.9.0.pom downloaded. Ok.
+  Downloading file ./lib/cats-kernel_2.12-0.9.0.jar.
+  File ./lib/cats-macros_2.12-0.9.0.jar downloaded. Ok.
+  Downloading file ./lib/machinist_2.12-0.6.1.pom.
+  File ./lib/machinist_2.12-0.6.1.pom downloaded. Ok.
+  Downloading file ./lib/machinist_2.12-0.6.1.jar.
+  File ./lib/simulacrum_2.12-0.10.0.jar downloaded. Ok.
+  Downloading file ./lib/scala-library-2.12.1.pom.
+  File ./lib/machinist_2.12-0.6.1.jar downloaded. Ok.
+  File ./lib/scala-library-2.12.1.pom downloaded. Ok.
+  Downloading file ./lib/scala-library-2.12.1.jar.
+  File ./lib/scala-library-2.12.1.jar downloaded. Ok.
+  File ./lib/cats-core_2.12-0.9.0.jar downloaded. Ok.
+  File ./lib/cats-kernel_2.12-0.9.0.jar downloaded. Ok.
+  Download Successful
+
+
+  $ ls -l lib/
+  total 12084
+  -rw-r--r-- 1 archbox archbox 2696252 ago 15 16:34 cats-core_2.12-0.9.0.jar
+  -rw-r--r-- 1 archbox archbox    4592 ago 15 16:34 cats-core_2.12-0.9.0.pom
+  -rw-r--r-- 1 archbox archbox 4241540 ago 15 16:35 cats-kernel_2.12-0.9.0.jar
+  -rw-r--r-- 1 archbox archbox    3665 ago 15 16:34 cats-kernel_2.12-0.9.0.pom
+  -rw-r--r-- 1 archbox archbox    6438 ago 15 16:34 cats-macros_2.12-0.9.0.jar
+  -rw-r--r-- 1 archbox archbox    4028 ago 15 16:34 cats-macros_2.12-0.9.0.pom
+  -rw-r--r-- 1 archbox archbox   33650 ago 15 16:34 machinist_2.12-0.6.1.jar
+  -rw-r--r-- 1 archbox archbox    1780 ago 15 16:34 machinist_2.12-0.6.1.pom
+  -rw-r--r-- 1 archbox archbox 5272325 ago 15 16:34 scala-library-2.12.1.jar
+  -rw-r--r-- 1 archbox archbox    1587 ago 15 16:34 scala-library-2.12.1.pom
+  -rw-r--r-- 1 archbox archbox   81815 ago 15 16:34 simulacrum_2.12-0.10.0.jar
+  -rw-r--r-- 1 archbox archbox    2068 ago 15 16:34 simulacrum_2.12-0.10.0.pom
+#+END_SRC
+
 *** Jar Files Commands 
 **** Show manifest file 
 
