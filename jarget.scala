@@ -507,6 +507,8 @@ Maven Packages / Jar Packages
 
  mvn -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
 
+ mvn -get scala [version] [package]  - Download a Scala package for an specific Scala version.
+
  mvn -browse [package]               - Open package official website.
 
  mvn -go                             - Open web site https://mvnrepository.com
@@ -569,7 +571,7 @@ Note: The XML in the clipboard is a maven coordinate:
         => Packget.downloadPackage(parsePack(pstr), "./lib")
 
     // Download a Scala package  
-    case List("mvn", "-get", "scala", pstr, version)
+    case List("mvn", "-get", "scala", version, pstr)
         => Packget.downloadPackage(parseScalaPack(pstr, version), "./lib")
 
     case List("mvn", "-path", path, "-get", pstr)
