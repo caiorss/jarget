@@ -197,6 +197,13 @@ object JarUtils{
     val files = jar.entries().asScala.toList
     jar.close()
     files
+
+  /** Get only asset files, disregarding all *.class files and directory entries. */
+  def getAssetFiles(jarFile: String) = {
+    val files = getFilesAsList(jarFile)
+    files filter (f => !f.isDirectory() && !f.getName().endsWith(".class"))
+  }
+
   }
 
 
