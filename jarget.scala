@@ -204,6 +204,20 @@ object JarUtils{
     files filter (f => !f.isDirectory() && !f.getName().endsWith(".class"))
   }
 
+  def printFile(jarFile: String, file: String) = {
+    val jar = new java.util.jar.JarFile(jarFile)
+    val is = for {
+      entry <- Option(jar.getEntry(file))
+      is    =  jar.getInputStream(entry)
+    } yield is
+
+    is foreach { ist =>
+      while(ist.available() > 0 ){
+        System.out.write(ist.read())
+      }
+      ist.close()
+    }
+    jar.close()
   }
 
 
