@@ -243,6 +243,18 @@ object JarUtils{
     jar.close()
   }
 
+
+  def getClasspath(path: String): String = {
+    val files = new java.io.File(path)
+      .listFiles()
+      .toStream
+      .filter(_.getName().endsWith(".jar"))
+
+    files.foldLeft("."){ (acc: String, file: java.io.File) =>
+       file.getPath() + ":" + acc
+    }
+  }
+
 } // -------- End of object JarUtils ------------ //
 
 
