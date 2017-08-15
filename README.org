@@ -16,25 +16,43 @@ Scala or Clojure.
 *** Show user help 
 
 #+BEGIN_SRC sh 
-$ jarget
+$ jarget 
 jarget - Tool to download jar packages.
 
- -show [package]                 - Show package's information
+Maven Packages / Jar Packages
 
- -pom  [package]                 - Show package's pom file
+ mvn -show [package]                 - Show package's information
 
- -get  [package]                 - Download package and dependencies to ./lib
+ mvn -pom  [package]                 - Show package's pom file
 
- -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
+ mvn -get  [package]                 - Download package and dependencies to ./lib
 
- -browse [package]               - Open package official website.
+ mvn -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
 
- -mvn                            - Open web site https://mvnrepository.com
- -mvn  [package]                 - Open package mvnrepository url.
+ mvn -browse [package]               - Open package official website.
 
- -clip -show                     - Extract package from XML in clipboard and show its information.
- -clip -pom                      - Extract package from XML in clipboard and show its Pom file.
- -clip -get                      - Extract package from XML in clipboard and download it to ./lib 
+ mvn -go                             - Open web site https://mvnrepository.com
+ mvn -go [package]                   - Open package mvnrepository url.
+
+ mvn -clip -show                     - Extract package from XML in clipboard and show its information.
+ mvn -clip -pom                      - Extract package from XML in clipboard and show its Pom file.
+ mvn -clip -get                      - Extract package from XML in clipboard and download it to ./lib
+
+Jar Files Inspection
+
+ jar -manifest [jar]                - Show manifest.
+
+ jar -assets                        - Show all asset files disregarding *.class files.
+
+ jar -extract [jar] [file]          - Extract [file] from [jar] package to current directory.
+
+ jar -extract [jar] [file] [path]   - Extract [file] from [jar] package to [path] directory.
+
+System Information
+
+ sys -env                            - Show environment variables
+ sys -path                           - Show PATH environment variable
+ sys -prop                           - Show java properties
 
 Note: [package] is <group>/<artifact>/<version>.
 Examples of valid packages:
@@ -51,13 +69,16 @@ Note: The XML in the clipboard is a maven coordinate:
         <artifactId>scalaz-core_2.11</artifactId>
         <version>7.3.0-M15</version>
     </dependency>
-#+END_SRC
-*** Show package information 
 
- - =$ jarget -show org.jfree/jfreechart/1.0.17=
+#+END_SRC
+
+*** Maven / Packages Commands
+**** Show package information 
+
+ - =$ jarget mvn -show org.jfree/jfreechart/1.0.17=
 
 #+BEGIN_SRC sh 
-  $ jarget -show org.jfree/jfreechart/1.0.17
+  $ jarget mvn -show org.jfree/jfreechart/1.0.17
   Package:         JFreeChart
   Packaging:       jar
   Coordinates[1]:  group = org.jfree artifact = jfreechart version = 1.0.17
@@ -76,9 +97,9 @@ Note: The XML in the clipboard is a maven coordinate:
     - xml-apis/xml-apis/1.3.04
 
 #+END_SRC
-*** Show package's POM file 
+**** Show package's POM file 
 
- - =$ jarget -pom org.jfree/jfreechart/1.0.17=
+ - =$ jarget mvn -pom org.jfree/jfreechart/1.0.17=
 
 #+BEGIN_SRC sh 
 $ jarget -pom org.jfree/jfreechart/1.0.17
@@ -123,25 +144,25 @@ $ jarget -pom org.jfree/jfreechart/1.0.17
 </project>
 
 #+END_SRC
-*** Open package Maven URL 
+**** Open package Maven URL 
  
- = =$ jarget -mvn org.jfree/jfreechart/1.0.17= 
+ = =$ jarget mvn -go org.jfree/jfreechart/1.0.17= 
 
 It will open the Mvn site of the package JFreeChart or:
  - https://mvnrepository.com/artifact/org.jfree/jfreechart/1.0.17  
 
-*** Open Maven Central 
+**** Open Maven Central 
 
- - =$ jarget -mvn=
+  - =$ jarget mvn -go=
 
-*** Install jar files 
+**** Install jar files 
 
 It will install the JFreeChart jar files into ./lib directories. 
 
- - =$ jarget -get org.jfree/jfreechart/1.0.17=
+ - =$ jarget mvn -get org.jfree/jfreechart/1.0.17=
 
 #+BEGIN_SRC sh 
-$ jarget -get org.jfree/jfreechart/1.0.17
+$ jarget mvn -get org.jfree/jfreechart/1.0.17
 
 Downloading package PackData(org.jfree,jfreechart,1.0.17)
 Downloading file ./lib/jfreechart-1.0.17.pom.
@@ -203,13 +224,146 @@ Testing with Scala:
   frame.setTitle("Sample Pie Chart")
   frame.setVisible(true)
 #+END_SRC
+*** Jar Files Commands 
+**** Show manifest file 
+
+ - =$ jarget jar [jar]=
+
+#+BEGIN_SRC sh 
+$ jarget jar -manifest lib/jfreechart-1.0.17.jar 
+
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.2
+Created-By: 1.7.0_21-b12 (Oracle Corporation)
+Specification-Title: JFreeChart
+Specification-Version: 1.0.17
+Specification-Vendor: jfree.org
+Implementation-Title: JFreeChart
+Implementation-Version: 1.0.17
+Implementation-Vendor: jfree.org
+
+#+END_SRC
+
+**** Show file 
+
+ - =$ jarget jar -cat [jar] [file]=
+
+#+BEGIN_SRC sh 
+  $ jarget jar -cat lib/jfreechart-1.0.17.jar META-INF/MANIFEST.MF
+
+  Manifest-Version: 1.0
+  Ant-Version: Apache Ant 1.8.2
+  Created-By: 1.7.0_21-b12 (Oracle Corporation)
+  Specification-Title: JFreeChart
+  Specification-Version: 1.0.17
+  Specification-Vendor: jfree.org
+  Implementation-Title: JFreeChart
+  Implementation-Version: 1.0.17
+  Implementation-Vendor: jfree.org
+
+  ... .... ... .... ... .... ... .... ... ....
+
+  $ jarget jar -cat lib/jfreechart-1.0.17.jar org/jfree/chart/plot/LocalizationBundle_pt_PT.properties
+  # org.jfree.chart.ChartPanel ResourceBundle properties file - portuguese version
+  # 
+  # Changes (from 09-Set-2003)
+  # --------------------------
+  # 09-Set-2003 : Initial version (Eduardo Ramalho);
+  #
+
+  Category_Plot=Barras
+  Combined_Domain_XYPlot=Curvas combinadas pela abcissa
+  Combined_Range_XYPlot=Curvas combinadas pela ordenada
+  Compass_Plot=Compasso
+  Contour_Plot=Contours
+  Fast_Scatter_Plot=Dispers\u00E3o
+  Meter_Plot=N\u00EDvel
+  Period_Marker_Plot=Period Marker Plot
+  Pie_Plot=Sectores
+  Thermometer_Plot=Term\u00a2metro
+  XY_Plot=Curvas
+  Pie_3D_Plot=Sectores 3D
+  Too_many_elements=Too many elements
+
+  # points of the compass
+  N=N
+  E=E
+  S=S
+  W=W
+
+
+#+END_SRC
+
+**** List asset files 
+
+ - =$ jarget jar -assets [jar]=
+
+#+BEGIN_SRC sh 
+$ jarget jar -assets lib/jfreechart-1.0.17.jar 
+META-INF/MANIFEST.MF
+org/jfree/chart/LocalizationBundle.properties
+org/jfree/chart/LocalizationBundle_cs.properties
+org/jfree/chart/LocalizationBundle_de.properties
+org/jfree/chart/LocalizationBundle_es.properties
+org/jfree/chart/LocalizationBundle_fr.properties
+org/jfree/chart/LocalizationBundle_it.properties
+
+ ... ... ... ...  ... ... ... ...  ... ... ... ... 
+
+org/jfree/chart/plot/LocalizationBundle_ru.properties
+org/jfree/chart/plot/LocalizationBundle_zh_CN.properties
+#+END_SRC
+
+**** Extract file to current directory
+
+ - =jarget jar -extract [jar] [file]=
+
+Extract file from jar to current directory.
+
+#+BEGIN_SRC sh 
+$ jarget jar -extract lib/jfreechart-1.0.17.jar META-INF/MANIFEST.MF
+
+$ cat MANIFEST.MF 
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.2
+Created-By: 1.7.0_21-b12 (Oracle Corporation)
+Specification-Title: JFreeChart
+Specification-Version: 1.0.17
+Specification-Vendor: jfree.org
+Implementation-Title: JFreeChart
+Implementation-Version: 1.0.17
+Implementation-Vendor: jfree.org
+
+
+#+END_SRC
+**** Extract file to a directory 
+
+ - =jarget jar -extract [jar] [file] [path]=
+
+Extract file META-INF/MANIFEST.MF from jfreechart-1.0.17.jar to path ./lib.
+
+#+BEGIN_SRC sh 
+$ jarget jar -extract lib/jfreechart-1.0.17.jar META-INF/MANIFEST.MF lib
+
+$ cat lib/MANIFEST.MF 
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.2
+Created-By: 1.7.0_21-b12 (Oracle Corporation)
+Specification-Title: JFreeChart
+Specification-Version: 1.0.17
+Specification-Vendor: jfree.org
+Implementation-Title: JFreeChart
+Implementation-Version: 1.0.17
+Implementation-Vendor: jfree.org
+
+#+END_SRC
 *** System Information 
 **** Show Enviroment Variables 
 
- - =$ jarget -system env=
+ - =$ jarget sys -env=
 
 #+BEGIN_SRC sh 
-$ jarget -system env
+$ jarget sys -env
    Environment Variable         Value
    ------------------------     --------------------------------------------------
    PATH                         /usr/local/sbin:/usr/local/bin:/usr/bin:/usr/li...
@@ -275,7 +429,7 @@ $ jarget -system env
 
 **** Show PATH Environment Variable 
 
- - =$ jarget -system path=
+ - =$ jarget sys -path=
 
 #+BEGIN_SRC sh
   $ jarget -system path
@@ -310,12 +464,12 @@ $ jarget -system env
 
 **** Show Java Properties 
 
- - =$ jarget -system prop=
+ - =$ jarget sys -prop=
 
 Show all Java properties from System.getProperties().
 
 #+BEGIN_SRC sh 
-$ jarget -system prop
+$ jarget sys -prop
    Java Property                     Value
    -----------------------------     --------------------------------------------------
    java.runtime.name                 OpenJDK Runtime Environment
