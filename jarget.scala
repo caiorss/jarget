@@ -730,11 +730,19 @@ Note: The XML in the clipboard is a maven coordinate:
     case List("jar", "-extract-all", jarFile, path)
         => JarUtils.extract(jarFile, path, true)
 
-    case List("jar", "-cpath")
+    // ------- Class Path  ----------------- //
+
+    case List("cpath", "-show")
         => println(JarUtils.getClasspath("./lib"))
 
-    case List("jar", "-cpath", path)
+    case List("cpath", "-show", path)
         => println(JarUtils.getClasspath(path))
+
+    case List("cpath", "-scala")
+        => println(JarUtils.runScalaClasspath("./lib"))
+
+    case List("cpath", "-scala", path)
+        => println(JarUtils.runScalaClasspath(path))
 
     case _ => println("Error: Invalid command")
     }
