@@ -587,6 +587,8 @@ Jar Files Inspection
  jar -extract [jar] [file]          - Extract [file] from [jar] package to current directory.
  jar -extract [jar] [file] [path]   - Extract [file] from [jar] package to [path] directory.
 
+ jar -extract-all [jar] [path]      - Extract all files from package to [path] directory.
+
  jar -cpath                         - Get classpath from ./lib directory
  jar -cpath [path]                  - Get classpath from [path] directory
 
@@ -712,6 +714,9 @@ Note: The XML in the clipboard is a maven coordinate:
         => JarUtils.withJarException{
           JarUtils.extractFile(jarFile, file, path)
         }
+
+    case List("jar", "-extract-all", jarFile, path)
+        => JarUtils.extract(jarFile, path, true)
 
     case List("jar", "-cpath")
         => println(JarUtils.getClasspath("./lib"))
