@@ -601,8 +601,13 @@ Jar Files Inspection
 
  jar -extract-all [jar] [path]      - Extract all files from package to [path] directory.
 
- jar -cpath                         - Get classpath from ./lib directory
- jar -cpath [path]                  - Get classpath from [path] directory
+Classpath
+
+ cpath -show                        - Get classpath from ./lib directory
+ cpath -show [path]                 - Get classpath from [path] directory
+
+ cpath -scala                       - Run Scala REPL with classpath built from all jars in ./lib 
+ cpath -scala [path]                - Run Scala REPL with classpath built from all jars in [path]
 
 System Information
 
