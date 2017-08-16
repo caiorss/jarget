@@ -244,6 +244,52 @@ object JarUtils{
   }
 
 
+  def extract(jarFile: String, dest: String, verbose: Boolean = false) = {
+    import scala.collection.JavaConverters._
+
+    val jar = new java.util.jar.JarFile(jarFile)
+
+    def extractFile(file: String) = {
+      val is = jar.getInputStream(jar.getEntry(file))
+      val fout = new java.io.File(dest, file)
+      val os = new java.io.FileOutputStream(fout)
+      while(is.available() > 0){
+        os.write(is.read())
+      }
+      is.close()
+      os.close()
+    }
+
+    def mkdir(path: String) = {
+      new java.io.File(path).mkdirs()
+    }
+
+    def joinPath(path1: String, path2: String) = {
+      new java.io.File(path1, path2).getPath
+    }
+
+    // Create directories
+    jar.entries().asScala
+      .toStream
+      .filter (_.isDirectory)
+      .map(_.getName())
+      .foreach{ p => mkdir(joinPath(dest, p)) }
+
+    // Copy files
+    jar.entries().asScala
+      .toStream
+      .filter(!_.isDirectory)
+      .map(_.getName())
+      .foreach{ p =>
+      if (verbose) println("Extracting file: " + p)
+      extractFile(p)
+    }
+
+    jar.close()
+
+  } // --- End of function extract ------- //
+
+
   def getClasspath(path: String): String = {
     val files = new java.io.File(path)
       .listFiles()
