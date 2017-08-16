@@ -416,31 +416,42 @@ Implementation-Version: 1.0.17
 Implementation-Vendor: jfree.org
 
 #+END_SRC
-**** Get classpath 
+*** Classpath 
+**** Get classpath from all jars in directory
 
- - =$ jarget jar -cpath=
+ - =$ jarget cpath -show=
 
 Get class file of all jar files in ./lib directory.
 
 #+BEGIN_SRC sh 
-$ ./bin/jarget jar -cpath
+$ ./bin/jarget cpath -show
 ./lib/scala-library-2.12.1.jar:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
 
-$ scala -cp $(./bin/jarget jar -cpath)
+$ scala -cp $(./bin/jarget cpath -show)
 Welcome to Scala 2.12.3 (OpenJDK 64-Bit Server VM, Java 1.8.0_141).
 Type in expressions for evaluation. Or try :help.
 
 #+END_SRC
 
- - =$ jarget jar -cpath [dir]=
+ - =$ jarget cpath -show [dir]=
 
 Get class file of all jar files in a given directory.
 
 #+BEGIN_SRC sh 
-$ ./bin/jarget jar -cpath ./lib
+$ ./bin/jarget cpath -show ./lib
 ./lib/scala-library-2.12.1.jar:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
 
 #+END_SRC
+**** Run Scala repl with all jars from directory in classpath
+
+ - =$ jarget cpath -scala=
+
+Run Scala REPL with all jars from ./lib directory in classpath. 
+
+ - =$ jarget cpath -scala [path]=
+
+Run Scala REPL with all jars from [path] directory in classpath.
+
 *** System Information 
 **** Show Enviroment Variables 
 
