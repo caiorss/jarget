@@ -303,6 +303,18 @@ object JarUtils{
     }
   }
 
+  def runScalaClasspath(path: String) = {
+    def execl(program: String, args: Array[String]) = {
+      val builder = new java.lang.ProcessBuilder()
+      builder.command(program)
+      args foreach builder.command.add
+      val iostat = builder.inheritIO().start()
+      iostat.waitFor()
+    }
+    val cpath = getClasspath(path)
+    execl("scala", Array("-cp", cpath))
+  }
+
 } // -------- End of object JarUtils ------------ //
 
 
