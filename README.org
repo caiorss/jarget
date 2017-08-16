@@ -12,7 +12,139 @@ set up a project. It is useful to experiment java libraries with
 languages hosted in JVM such as Jython (Python implemented in Java),
 Scala or Clojure. 
 
-** Usage 
+Features: 
+
+ + Download Scala and Java libraries from https://mvnrepository.com/
+   without creating a project. It is useful for quick experiments and
+   library evaluation.
+
+ + Display information about Java packages.
+
+ + Start Scala with all jar files from directory loaded in Classpath. 
+
+ + Inspect and extract data from jar files.
+
+** Use Case Example 
+
+Evaluation of Scala cats library, based on [[https://medium.com/@abu_nadhr/scala-cats-library-for-dummies-part-1-8ec47af7a144][Scala Cats library for dummies — part 1]]
+
+Jarget allows evaluation of Scala libraries without the need to
+create a project or complicated Maven directory structure. 
+
+Instead of creating a SBT project with:
+
+#+BEGIN_SRC text
+libraryDependencies += "org.typelevel" %% "cats" % "0.7.2"
+#+END_SRC
+
+It is possible to: 
+
+ 1. Get information about the library. Note: 2.11 is the Scala version.
+
+#+BEGIN_SRC sh 
+$ jarget mvn -show org.typelevel/cats_2.11/0.7.2
+Package:         catsJVM
+Packaging:       jar
+Coordinates[1]:  group = org.typelevel artifact = cats_2.11 version = 0.7.2
+Coordinates[2]:  org.typelevel/cats_2.11/0.7.2
+Url:             https://github.com/typelevel/cats
+Description:     catsJVM
+
+Dependencies:
+
+  - org.scala-lang/scala-library/2.11.8
+
+  - org.typelevel/cats-macros_2.11/0.7.2
+
+  - org.typelevel/cats-kernel_2.11/0.7.2
+
+  - org.typelevel/cats-kernel-laws_2.11/0.7.2
+
+  - org.typelevel/cats-core_2.11/0.7.2
+
+  - org.typelevel/cats-laws_2.11/0.7.2
+
+  - org.typelevel/cats-free_2.11/0.7.2
+
+  - org.typelevel/cats-jvm_2.11/0.7.2
+
+  - com.github.mpilquist/simulacrum_2.11/0.8.0
+
+  - org.typelevel/machinist_2.11/0.4.1
+
+#+END_SRC
+
+ 2. Install it.
+
+#+BEGIN_SRC sh
+$ jarget mvn -get scala 2.11 org.typelevel/cats/0.7.2
+
+Downloading package PackData(org.typelevel,machinist_2.11,0.4.1)
+Downloading file ./lib/machinist_2.11-0.4.1.pom.
+
+ ... ... ... ... ... ... ... ... ... ... ... ... 
+
+File ./lib/cats-free_2.11-0.7.2.jar downloaded. Ok.
+Downloading file ./lib/cats-laws_2.11-0.7.2.pom.
+File ./lib/cats-laws_2.11-0.7.2.pom downloaded. Ok.
+Downloading file ./lib/cats-laws_2.11-0.7.2.jar.
+File ./lib/cats-laws_2.11-0.7.2.jar downloaded. Ok.
+
+$ ls lib
+cats_2.11-0.7.2.jar       cats-kernel_2.11-0.7.2.jar       machinist_2.11-0.4.1.jar
+cats_2.11-0.7.2.pom       cats-kernel_2.11-0.7.2.pom       machinist_2.11-0.4.1.pom
+cats-core_2.11-0.7.2.jar  cats-kernel-laws_2.11-0.7.2.jar  scala-library-2.11.8.jar
+cats-core_2.11-0.7.2.pom  cats-kernel-laws_2.11-0.7.2.pom  scala-library-2.11.8.pom
+cats-free_2.11-0.7.2.jar  cats-laws_2.11-0.7.2.jar         simulacrum_2.11-0.8.0.jar
+cats-free_2.11-0.7.2.pom  cats-laws_2.11-0.7.2.pom         simulacrum_2.11-0.8.0.pom
+cats-jvm_2.11-0.7.2.jar   cats-macros_2.11-0.7.2.jar
+cats-jvm_2.11-0.7.2.pom   cats-macros_2.11-0.7.2.pom
+
+#+END_SRC
+
+It also could be done with: 
+
+#+BEGIN_SRC sh
+$ jarget mvn -get org.typelevel/cats_2.11/0.7.2
+Download Successful
+#+END_SRC
+
+Show class path with all jars from directory ./lib 
+
+#+BEGIN_SRC sh 
+$ jarget cpath -show
+./lib/cats-free_2.11-0.7.2.jar:./lib/machinist_2.11-0.4.1.jar:./lib/cats-core_2.11-0.7.2.jar...
+
+#+END_SRC
+
+Load Scala REPL with all jars from ./lib in classpath and test the
+package: 
+
+#+BEGIN_SRC scala 
+$ jarget cpath -scala
+Welcome to Scala 2.12.3 (Java HotSpot(TM) 64-Bit Server VM, Java 9).
+Type in expressions for evaluation. Or try :help.
+
+scala> 
+$ jarget cpath -scala
+Welcome to Scala 2.12.3 (Java HotSpot(TM) 64-Bit Server VM, Java 9).
+Type in expressions for evaluation. Or try :help.
+
+scala> import cats._, cats.instances.all._ 
+import cats._
+import cats.instances.all._
+
+scala> val len: String => Int = _.length
+len: String => Int = $$Lambda$1089/1057262726@255d9277
+
+scala> Functor[List].map(List("scala", "cats")) (len)
+res0: List[Int] = List(5, 4)
+
+scala> 
+
+#+END_SRC
+
+** User Guide
 *** Show user help 
 
 #+BEGIN_SRC sh 
