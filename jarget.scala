@@ -594,7 +594,7 @@ Jar Files Inspection
 
  jar -manifest [jar]                - Show manifest.
 
- jar -assets                        - Show all asset files disregarding *.class files.
+ jar -assets [jar]                  - Show all asset files disregarding *.class files.
 
  jar -extract [jar] [file]          - Extract [file] from [jar] package to current directory.
  jar -extract [jar] [file] [path]   - Extract [file] from [jar] package to [path] directory.
