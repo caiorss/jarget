@@ -728,6 +728,11 @@ Note: The XML in the clipboard is a maven coordinate:
           JarUtils.printFile(jarFile, "META-INF/MANIFEST.MF")
         }
 
+    case List("jar", "-show", jarFile)
+        =>  JarUtils.withJarException{
+          JarUtils.showFiles(jarFile)
+        }
+
     // Show only asset files ignoring class files.
     case List("jar", "-assets", jarFile)
         => JarUtils.withJarException{
