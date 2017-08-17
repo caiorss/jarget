@@ -611,20 +611,30 @@ Jar Files Inspection
 
  jar -manifest [jar]                - Show manifest.
 
+ jar -show [jar]                    - Show all files.
+
  jar -assets [jar]                  - Show all asset files disregarding *.class files.
 
  jar -extract [jar] [file]          - Extract [file] from [jar] package to current directory.
  jar -extract [jar] [file] [path]   - Extract [file] from [jar] package to [path] directory.
 
- jar -extract-all [jar] [path]      - Extract all files from package to [path] directory.
+ jar -extract-all [jar] [path]      - Extract all files from jar package to [path] directory.
 
+ jar -extract-all [jar]             - Extract jar file to directory with same name of jar file 
+                                      at current directory. If file is lib/chart.jar it will 
+                                      extract to ./chart 
 Classpath
 
  cpath -show                        - Get classpath from ./lib directory
  cpath -show [path]                 - Get classpath from [path] directory
 
- cpath -scala                       - Run Scala REPL with classpath built from all jars in ./lib 
- cpath -scala [path]                - Run Scala REPL with classpath built from all jars in [path]
+ scala                              - Run Scala REPL with classpath built from all jars in ./lib 
+ scala -- arg1 arg2 arg2 ...        - Run Scala passing arguments with class path set to ./lib  
+ scala [path]                       - Run Scala REPL with classpath built from all jars in [path]
+ scala [path] -- arg1 arg2 ...
+
+ scalac -- arg1 arg2 ...            - Run Scala compiler with classpath set to all jars in ./lib 
+ scalac [path] -- arg1 arg2 ...     - Run Scala compiler with classpath set to all jars in [path]
 
 System Information
 
