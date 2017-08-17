@@ -752,11 +752,23 @@ Note: The XML in the clipboard is a maven coordinate:
     case List("cpath", "-show", path)
         => println(JarUtils.getClasspath(path))
 
-    case List("cpath", "-scala")
-        => println(JarUtils.runScalaClasspath("./lib"))
+    //-------- Scala Commands -----------------//
 
-    case List("cpath", "-scala", path)
-        => println(JarUtils.runScalaClasspath(path))
+    // Launch Scala REPL with class path set to all jars in ./lib
+    case List("scala")
+        => JarUtils.runScalaClasspath("./lib")
+
+    case "scala"::"--"::args
+        => JarUtils.runScalaClasspath("./lib", args)
+
+    // Launch Scala REPL with class path set to all jars in [path]
+    case List("scala", path)
+        => JarUtils.runScalaClasspath(path)
+
+    case "scala"::path::"--"::args
+        => JarUtils.runScalaClasspath(path, args)
+
+
 
     case _ => println("Error: Invalid command")
     }
