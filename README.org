@@ -20,9 +20,13 @@ Features:
 
  + Display information about Java packages.
 
- + Start Scala with all jar files from directory loaded in Classpath. 
+ + Start Scala with all jar files from directory loaded in Classpath.
+
+ + Run scala compiler with all jars from some directory in classpath.
 
  + Inspect and extract data from jar files.
+
+ + Parallallel download 
 
 ** Use Case Example 
 
@@ -121,12 +125,7 @@ Load Scala REPL with all jars from ./lib in classpath and test the
 package: 
 
 #+BEGIN_SRC scala 
-$ jarget cpath -scala
-Welcome to Scala 2.12.3 (Java HotSpot(TM) 64-Bit Server VM, Java 9).
-Type in expressions for evaluation. Or try :help.
-
-scala> 
-$ jarget cpath -scala
+$ jarget scala 
 Welcome to Scala 2.12.3 (Java HotSpot(TM) 64-Bit Server VM, Java 9).
 Type in expressions for evaluation. Or try :help.
 
@@ -148,7 +147,7 @@ scala>
 *** Show user help 
 
 #+BEGIN_SRC sh 
-$ jarget 
+$ jarget
 jarget - Tool to download jar packages.
 
 Maven Packages / Jar Packages
@@ -160,6 +159,8 @@ Maven Packages / Jar Packages
  mvn -get  [package]                 - Download package and dependencies to ./lib
 
  mvn -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
+
+ mvn -get scala [version] [package]  - Download a Scala package for an specific Scala version.
 
  mvn -browse [package]               - Open package official website.
 
@@ -174,17 +175,41 @@ Jar Files Inspection
 
  jar -manifest [jar]                - Show manifest.
 
- jar -assets                        - Show all asset files disregarding *.class files.
+ jar -show [jar]                    - Show all files.
+
+ jar -assets [jar]                  - Show all asset files disregarding *.class files.
 
  jar -extract [jar] [file]          - Extract [file] from [jar] package to current directory.
-
  jar -extract [jar] [file] [path]   - Extract [file] from [jar] package to [path] directory.
+
+ jar -extract-all [jar] [path]      - Extract all files from jar package to [path] directory.
+
+ jar -extract-all [jar]             - Extract jar file to directory with same name of jar file 
+                                      at current directory. If file is lib/chart.jar it will 
+                                      extract to ./chart 
+Classpath
+
+ cpath -show                        - Get classpath from ./lib directory
+ cpath -show [path]                 - Get classpath from [path] directory
+
+ scala                              - Run Scala REPL with classpath built from all jars in ./lib 
+ scala -- arg1 arg2 arg2 ...        - Run Scala passing arguments with class path set to ./lib  
+ scala [path]                       - Run Scala REPL with classpath built from all jars in [path]
+ scala [path] -- arg1 arg2 ...
+
+ scalac -- arg1 arg2 ...            - Run Scala compiler with classpath set to all jars in ./lib 
+ scalac [path] -- arg1 arg2 ...     - Run Scala compiler with classpath set to all jars in [path]
 
 System Information
 
  sys -env                            - Show environment variables
  sys -path                           - Show PATH environment variable
  sys -prop                           - Show java properties
+
+Misc
+
+ doc                                 - Open jarget's website - https://github.com/caiorss/jarget
+
 
 Note: [package] is <group>/<artifact>/<version>.
 Examples of valid packages:
@@ -201,8 +226,7 @@ Note: The XML in the clipboard is a maven coordinate:
         <artifactId>scalaz-core_2.11</artifactId>
         <version>7.3.0-M15</version>
     </dependency>
-
-#+END_SRC
+#+END_SRC   
 
 *** Maven / Packages Commands
 **** Show package information 
@@ -435,7 +459,7 @@ Implementation-Vendor: jfree.org
 
 #+END_SRC
 
-**** Show file 
+**** Show contents of single file 
 
  - =$ jarget jar -cat [jar] [file]=
 
@@ -482,6 +506,31 @@ Implementation-Vendor: jfree.org
   S=S
   W=W
 
+
+#+END_SRC
+
+**** List all files 
+ 
+ - =$ jarget jar -show [jar]=
+
+#+BEGIN_SRC sh 
+$ jarget jar -show jarget.jar 
+
+META-INF/MANIFEST.MF
+PackData.class
+PackData$.class
+PomData.class
+PomData$.class
+Utils.class
+Utils$.class
+JarUtils.class
+JarUtils$.class
+Packget.class
+Packget$.class
+Main.class
+Main$.class
+Packget$$anonfun$downloadPackage$4.class
+Packget$$anonfun$downloadPackage$5.class
 
 #+END_SRC
 
@@ -549,7 +598,7 @@ Implementation-Vendor: jfree.org
 
 #+END_SRC
 *** Classpath 
-**** Get classpath from all jars in directory
+
 
  - =$ jarget cpath -show=
 
@@ -574,16 +623,92 @@ $ ./bin/jarget cpath -show ./lib
 ./lib/scala-library-2.12.1.jar:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
 
 #+END_SRC
-**** Run Scala repl with all jars from directory in classpath
+*** Scala 
+**** Run Scala repl with classpath set to ./lib 
 
- - =$ jarget cpath -scala=
+ - =$ jarget scala=
 
 Run Scala REPL with all jars from ./lib directory in classpath. 
 
- - =$ jarget cpath -scala [path]=
+ - =$ jarget scala -- arg1 arg2 arg3 ...=
+
+Run Scala REPL with all jars from ./lib directory in classpath
+passing arguments arg1, arg2 and arg3 to scala program.
+
+*Example:* 
+
+1. Install JFreeChart: 
+
+#+BEGIN_SRC sh 
+$ jarget mvn -get org.jfree/jfreechart/1.0.17
+#+END_SRC
+
+2. Run the script: [[file:sample-scripts/chartTest.scala][file:sample-scripts/chartTest.scala]]
+
+#+BEGIN_SRC sh
+$ jarget scala -- -save sample-scripts/chartTest.scala
+#+END_SRC
+
+Running the command above is equivalent to run: 
+
+#+BEGIN_SRC sh 
+$ scala -cp lib/jcommon-1.0.21.jar:lib/jfreechart-1.0.17.jar:lib/xml-apis-1.3.04.jar sample-scripts/chartTest.scala 
+#+END_SRC
+
+The classpath is 
+
+**** Run Scala repl with classpath set to some path 
+
+ - =$ jarget scala [path]=
 
 Run Scala REPL with all jars from [path] directory in classpath.
 
+ - =$ jarget scala -- arg1 arg2 arg3 ...=
+
+Run Scala REPL with all jars from [path] directory in classpath
+passing arguments arg1, arg2 and arg3 to scala program.
+
+**** Run Scala compiler 
+
+ - =$ jarget scalac -- arg1 arg2 arg3 ...=
+
+Run Scala compiler with all jars from ./lib directory in classpath
+passing parameters arg1, arg2, ... arg3 to scalac.
+
+ - =$ jarget scalac [path] -- arg1 arg2 arg3 ...=
+
+Run Scala compiler with all jars from [path] directory in classpath
+
+
+*Example* 
+
+Compile the file  [[file:sample-scripts/chartTest.scala][file:sample-scripts/chartTest.scala]]
+
+1. Install: JFreechart 
+
+#+BEGIN_SRC sh
+$ scala jarget.jar mvn -get org.jfree/jfreechart/1.0.17
+#+END_SRC
+
+2. Compile 
+
+#+BEGIN_SRC sh 
+$ jarget scalac -- sample-scripts/chartTest.scala -d chartTest.jar
+#+END_SRC
+
+It could also be compiled with: 
+
+#+BEGIN_SRC sh 
+$ jarget scalac ./lib -- sample-scripts/chartTest.scala -d chartTest.jar
+#+END_SRC
+
+3. Run 
+
+#+BEGIN_SRC sh 
+jarget scala -- chartTest.jar
+#+END_SRC
+
+**** Run Scala compiler with classpath set to ./lib 
 *** System Information 
 **** Show Enviroment Variables 
 
