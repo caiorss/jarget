@@ -208,6 +208,14 @@ object JarUtils{
     files
   }
 
+  def showFiles(jarFile: String) = {
+    import scala.collection.JavaConverters._
+    val jar = new java.util.jar.JarFile(jarFile)
+    jar.entries().asScala filter(!_.isDirectory) foreach println
+    jar.close()
+  }
+
+
   /** Get only asset files, disregarding all *.class files and directory entries. */
   def getAssetFiles(jarFile: String) = {
     val files = getFilesAsList(jarFile)
