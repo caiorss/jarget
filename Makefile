@@ -24,7 +24,7 @@ install: bin/jarget
 	cp -v bin/jarget ~/bin
 
 clean:
-	rm -rf bin/jarget bin/jarget-fat.jar
+	rm -rf jarget.jar bin/jarget bin/jarget-fat.jar
 
 upload: bin/jarget
 	cd bin && git add jarget && git commit -a -m "Update release" && git push 
