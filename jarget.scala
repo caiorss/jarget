@@ -628,10 +628,14 @@ Classpath
  cpath -show                        - Get classpath from ./lib directory
  cpath -show [path]                 - Get classpath from [path] directory
 
+Scala REPL 
+
  scala                              - Run Scala REPL with classpath built from all jars in ./lib 
  scala -- arg1 arg2 arg2 ...        - Run Scala passing arguments with class path set to ./lib  
  scala [path]                       - Run Scala REPL with classpath built from all jars in [path]
  scala [path] -- arg1 arg2 ...
+
+Scala Compiler 
 
  scalac -- arg1 arg2 ...            - Run Scala compiler with classpath set to all jars in ./lib 
  scalac [path] -- arg1 arg2 ...     - Run Scala compiler with classpath set to all jars in [path]
@@ -786,7 +790,7 @@ Note: The XML in the clipboard is a maven coordinate:
     case List("cpath", "-show", path)
         => println(JarUtils.getClasspath(path))
 
-    //-------- Scala Commands -----------------//
+    //-------- Scala REPL Commands -----------------//
 
     // Launch Scala REPL with class path set to all jars in ./lib
     case List("scala")
@@ -803,7 +807,7 @@ Note: The XML in the clipboard is a maven coordinate:
         => JarUtils.runScalaClasspath(path, args)
 
 
-    //----- Scalac Commands -------------------//
+    //----- Scalac Compiler Commands -------------------//
 
     case "scalac"::"--"::args
         => JarUtils.runScalaCompilerClasspath("./lib", args)
