@@ -769,6 +769,13 @@ Note: The XML in the clipboard is a maven coordinate:
         => JarUtils.runScalaClasspath(path, args)
 
 
+    //----- Scalac Commands -------------------//
+
+    case "scalac"::"--"::args
+        => JarUtils.runScalaCompilerClasspath("./lib", args)
+
+    case "scalac"::path::"--"::args
+        => JarUtils.runScalaCompilerClasspath(path, args)
 
     case _ => println("Error: Invalid command")
     }
