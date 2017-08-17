@@ -167,6 +167,16 @@ object Utils{
     )
   }
 
+  /** Emulate Unix system call execl */
+  def execl(program: String, args: List[String]) = {
+    val builder = new java.lang.ProcessBuilder()
+    builder.command(program)
+    args foreach builder.command.add
+    val iostat = builder.inheritIO().start()
+    System.exit(iostat.waitFor())
+  }
+
+
 } /* ---- End of object Utils ------- */
 
 
