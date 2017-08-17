@@ -754,6 +754,17 @@ Note: The XML in the clipboard is a maven coordinate:
           JarUtils.extractFile(jarFile, file, path)
         }
 
+    case List("jar", "-extract-all", jarFile)
+        => {
+          val path = new java.io.File(jarFile)
+            .getName()
+            .stripSuffix(".jar")
+          Utils.mkdir(path)
+          JarUtils.withJarException{
+            JarUtils.extract(jarFile, path, true)
+          }
+        }
+
     case List("jar", "-extract-all", jarFile, path)
         => JarUtils.extract(jarFile, path, true)
 
