@@ -1045,3 +1045,10 @@ Run the executable file:
 
 Install it: Just add this file to any directory in $PATH variable. It
 can be ~/bin.
+** TODO Tasks 
+
+ - [ ]  - Update documentation. 
+ - [ ]  - Add search features.  
+ - [ ]  - Add package cache 
+ - [ ]  - Improve command line handling 
+ - [ ]  - Improve error handling. 
