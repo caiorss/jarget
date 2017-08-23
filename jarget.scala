@@ -371,6 +371,21 @@ object JarUtils{
     }
   }
 
+  /** Run a program with a given set of arguments by
+      setting the CLASSPATH enviroment variable with
+      all jars from the 'path' directory.
+
+      Example: if the directory path is 'app/lib' and
+      contains the files lib1.jar, lib2.jar and lib3.jar
+      it will run the 'program' with CLASSPATH enviroment
+      variable set to 'app/lib/lib1.jar:app/lib/lib2.jar...'
+
+    */
+  def runWithClassPath(program: String)(args: List[String], path: String) = {
+    val cpath = getClasspath(path)
+    Utils.execl(program, args, List(("CLASSPATH", cpath)))
+  }
+
   def runScalaClasspath(path: String, args: List[String] = List()) = {
     val cpath = getClasspath(path)
     Utils.execl("scala", List("-cp", cpath) ++ args)
