@@ -789,6 +789,9 @@ Note: The XML in the clipboard is a maven coordinate:
     case List("sys", "-env")
         => Utils.showEnvironmentVars()
 
+    case List("sys", "-env", evar)
+        => for { v <- Option(System.getenv(evar)) } println(v)
+
     // Show Java properties
     case List("sys", "-prop")
         => Utils.showJavaProperties()
