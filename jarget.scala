@@ -236,6 +236,18 @@ object JarUtils{
     files filter (f => !f.isDirectory() && !f.getName().endsWith(".class"))
   }
 
+  /** Returns 'Main-Class' parameter from jar file */
+  def getMainClass(jarFile: String): Option[String] = {
+    val jar = new java.util.jar.JarFile(jarFile)
+    val cls = Option(
+      jar.getManifest()
+        .getMainAttributes()
+        .getValue("Main-Class")
+    )
+    jar.close()
+    cls
+  }
+
   def printFile(jarFile: String, file: String) = {
     val jar = new java.util.jar.JarFile(jarFile)
     val is = for {
