@@ -46,7 +46,7 @@ object Utils{
   import concurrent.ExecutionContext.Implicits.global
 
   def mkdir(path: String) = {
-    new java.io.File(path).mkdir()
+    new java.io.File(path).mkdirs()
   }
 
   def join(path1: String, path2: String) = {
