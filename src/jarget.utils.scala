@@ -108,6 +108,7 @@ object Utils{
   }
 
 
+  /** Show system's enviroment variables in tabular form */
   def showEnvironmentVars() {
     import scala.collection.JavaConverters._
     printTupleAsTable(
@@ -118,6 +119,7 @@ object Utils{
     )
   }
 
+  /** Show java properties in tabular format */
   def showJavaProperties() {
     import scala.collection.JavaConverters._
     printTupleAsTable(
@@ -136,6 +138,13 @@ object Utils{
     for {
       appPath <-  paths find { p => new java.io.File(p, program).exists }
     } yield new java.io.File(appPath, program)
+  }
+
+  /** Get path to scala home, directory where scala is installed */
+  def getScalaHome(): Option[String] = {
+    val p1 = Option(System.getenv("SCALA_HOME"))
+    val p2 = getProgramPath("scala").map(_.getParentFile.getParent)
+    p1 orElse p2 
   }
 
   /** Emulate Unix system call execl */
