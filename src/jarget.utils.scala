@@ -385,9 +385,9 @@ object JarUtils{
 
 object JarBuilder{
   import Utils.copyStream
+  import java.util.jar.{JarOutputStream, JarEntry, JarFile}
 
-
-  def addFile(zos: java.util.jar.JarOutputStream, entry: String, file: String){
+  def addFile(zos: JarOutputStream, entry: String, file: String){
     import java.io._
     val is = new BufferedInputStream(new FileInputStream(file))
     val e = new java.util.jar.JarEntry(entry)
@@ -397,7 +397,7 @@ object JarBuilder{
   }
 
 
-  def addDirectory(zos: java.util.jar.JarOutputStream, path: String){
+  def addDirectory(zos: JarOutputStream, path: String){
     import java.nio.file.{Paths, Path, Files}
     val root = Paths.get(path)
     val name = new java.io.File(path).getName()
@@ -409,7 +409,7 @@ object JarBuilder{
 
 
   def addJarContent(
-    zos:         java.util.jar.JarOutputStream,
+    zos:         JarOutputStream,
     jarFile:     String,
     addManifest: Boolean = false
   ){
@@ -434,7 +434,7 @@ object JarBuilder{
 
 
   def addJarsFromDir(
-    zos:   java.util.jar.JarOutputStream,
+    zos:   JarOutputStream,
     path:  String
   ) = {
     new java.io.File(path)
