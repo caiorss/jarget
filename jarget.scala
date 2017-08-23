@@ -195,10 +195,13 @@ object JarUtils{
     }
   }
 
-  def showManifest(file: String) = {
+
+  /** Show jar's META-INF/MANIFEST.MF file*/
+  def showManifest(file: String): Unit = {
     val jar = new java.util.jar.JarFile(file)
     val man = jar.getManifest()
     man.write(System.out)
+    jar.close()
   }
 
   def getFilesAsList(jarFile: String) = {
