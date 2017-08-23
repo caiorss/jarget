@@ -854,42 +854,12 @@ Note: The XML in the clipboard is a maven coordinate:
     case List("cpath", "-show", path)
         => println(JarUtils.getClasspath(path))
 
-    //-------- Scala REPL Commands -----------------//
-
-    // Launch Scala REPL with class path set to all jars in ./lib
-    case List("scala")
-        => JarUtils.runWithClassPath("scala", List(), "./lib")
-
-    case "scala"::"--"::args
-        => JarUtils.runWithClassPath("scala", args, "./lib")
-
-    // Launch Scala REPL with class path set to all jars in [path]
-    case List("scala", path)
-        => JarUtils.runWithClassPath("scala", List(), path)
-
-    case "scala"::path::"--"::args
-        => JarUtils.runWithClassPath("scala", args, path)
-
-    //----- Scalac Compiler Commands -------------------//
-
-    case "scalac"::"--"::args
-        => JarUtils.runWithClassPath("scalac", List(), "./lib")
-
-    case "scalac"::path::"--"::args
-        => JarUtils.runWithClassPath("scalac", args, path)
 
 
-  //----- Scalac Compiler Daemon Commands -------------------//
-
-    case "fsc"::"--"::args
-        => JarUtils.runWithClassPath("fsc", List(), "./lib")
-
-    case "fsc"::path::"--"::args
-        => JarUtils.runWithClassPath("fsc", args, path)
 
 
-    case _ => println("Error: Invalid command")
-  }
+
+
 
   
 } // ------- End of object Main -------- //
