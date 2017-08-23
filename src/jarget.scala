@@ -503,6 +503,14 @@ Note: The XML in the clipboard is a maven coordinate:
     case List("jar", "-extract-all", jarFile, path)
         => JarUtils.extract(jarFile, path, true)
 
+
+    case "jar"::"-scala-uber"::output::main::"-paths"::paths
+        => {
+          JarBuilder.makeUberJar(output, main, paths = paths, scalaLib = true)
+          println("Build file:   " + output)
+          println("Run  it with: java -jar " + output)
+        }
+
     // ------- Class Path  ----------------- //
 
     case List("cpath", "-show")
