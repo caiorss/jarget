@@ -168,6 +168,16 @@ object Utils{
     )
   }
 
+
+  /** Get path to program available in PATH variable */
+  def getProgramPath(program: String) : Option[java.io.File] = {
+    val sep   = java.io.File.pathSeparator
+    val paths = System.getenv("PATH").split(sep)
+    for {
+      appPath <-  paths find { p => new java.io.File(p, program).exists }
+    } yield new java.io.File(appPath, program)
+  } 
+
   /** Emulate Unix system call execl */
   def execl(
     program: String,                           // Program that will be run
