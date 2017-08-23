@@ -176,7 +176,7 @@ object Utils{
     for {
       appPath <-  paths find { p => new java.io.File(p, program).exists }
     } yield new java.io.File(appPath, program)
-  } 
+  }
 
   /** Emulate Unix system call execl */
   def execl(
