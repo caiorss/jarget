@@ -511,6 +511,13 @@ Note: The XML in the clipboard is a maven coordinate:
           println("Run  it with: java -jar " + output)
         }
 
+    case "jar"::"-uber"::output::main::"-paths"::paths
+        => {
+          JarBuilder.makeUberJar(output, main, paths = paths)
+          println("Build file:   " + output)
+          println("Run  it with: java -jar " + output)
+        }
+
     // ------- Class Path  ----------------- //
 
     case List("cpath", "-show")
