@@ -1,6 +1,6 @@
 
 
-src := src/jarget.utils.scala src/jarget.scala 
+src := src/jarget.main.scala src/jarget.utils.scala src/jarget.mvn.scala 
 
 
 all: jarget.jar
