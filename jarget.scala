@@ -800,6 +800,7 @@ Note: The XML in the clipboard is a maven coordinate:
           JarUtils.showManifest(jarFile)
         }
 
+   // Show main class of jar file 
     case List("jar", "-main", jarFile)
         => JarUtils.withJarException{
           JarUtils.getMainClass(jarFile) foreach println
@@ -855,11 +856,19 @@ Note: The XML in the clipboard is a maven coordinate:
         => println(JarUtils.getClasspath(path))
 
 
+    //-------- Generic Command with Classpath ------//
+
+    // run generic command as ./command -cp $CLASSPATH arg1 arg2 arg2 ... 
+    case "exec"::command::"--"::args
+        => JarUtils.runWithClassPath(command, args, "./lib")
+
+    case "exec"::command::path::"--"::args  
+        => JarUtils.runWithClassPath(command, args, path)
+
+    case _ => println("Error: Invalid command")
 
 
-
-
-
+  } // -- End of function main() --- // 
 
   
 } // ------- End of object Main -------- //
