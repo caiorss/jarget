@@ -854,11 +854,16 @@ Note: The XML in the clipboard is a maven coordinate:
 
     case List("cpath", "-show", path)
         => println(JarUtils.getClasspath(path))
-
-
+      
     //-------- Generic Command with Classpath ------//
 
-    // run generic command as ./command -cp $CLASSPATH arg1 arg2 arg2 ... 
+    // run generic command as ./command -cp $CLASSPATH arg1 arg2 arg2 ...
+    case List("exec", command)
+        => JarUtils.runWithClassPath(command, List(), "./lib")
+
+    case List("exec", command, path)
+        => JarUtils.runWithClassPath(command, List(), path)
+
     case "exec"::command::"--"::args
         => JarUtils.runWithClassPath(command, args, "./lib")
 
