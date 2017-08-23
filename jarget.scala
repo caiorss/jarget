@@ -381,9 +381,12 @@ object JarUtils{
       variable set to 'app/lib/lib1.jar:app/lib/lib2.jar...'
 
     */
-  def runWithClassPath(program: String)(args: List[String], path: String) = {
+  def runWithClassPath(program: String, args: List[String] = List(), path: String = null) = {
     val cpath = getClasspath(path)
-    Utils.execl(program, args, List(("CLASSPATH", cpath)))
+    if (path == null)
+      Utils.execl(program, args)
+    else
+      Utils.execl(program, List("-cp", cpath) ++ args)
   }
 
 
