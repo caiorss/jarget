@@ -386,12 +386,6 @@ object JarUtils{
     Utils.execl(program, args, List(("CLASSPATH", cpath)))
   }
 
-  def runScalaClasspath(path: String, args: List[String] = List()) = {
-    val cpath = getClasspath(path)
-    Utils.execl("scala", List("-cp", cpath) ++ args)
-  }
-
-
   def runScalaCompilerClasspath(path: String, args: List[String] = List()) = {
     val cpath = getClasspath(path)
     Utils.execl("scalac", List("-cp", cpath) ++ args)
