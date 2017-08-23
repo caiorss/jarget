@@ -169,10 +169,22 @@ object Utils{
   }
 
   /** Emulate Unix system call execl */
-  def execl(program: String, args: List[String]) = {
+  def execl(
+    program: String,                           // Program that will be run
+    args:    List[String] = List(),            // Program arguments
+    env:     List[(String, String)] = List()   // Environment variables
+  ) = {
+
     val builder = new java.lang.ProcessBuilder()
+    val evars    = builder.environment()
     builder.command(program)
+
+    // set process' commands
     args foreach builder.command.add
+
+    // set process' enviroment variables
+    env foreach { case (k, v) => evars.put(k, v) }
+
     val iostat = builder.inheritIO().start()
     System.exit(iostat.waitFor())
   }
