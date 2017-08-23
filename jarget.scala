@@ -775,7 +775,7 @@ Note: The XML in the clipboard is a maven coordinate:
     // -----------  Jar files  ------------------- //
 
     // Print Jar manifest file or "META-INF/MANIFEST.MF"
-    case List("jar", "-manifest", jarFile)
+    case List("jar", "-man", jarFile)
         =>  JarUtils.withJarException{
           JarUtils.showManifest(jarFile)
         }
