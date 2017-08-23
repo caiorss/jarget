@@ -47,6 +47,16 @@ object Utils{
     desktop.browse(u)
   }
 
+  def copyStream(from: java.io.InputStream, to: java.io.OutputStream){
+    // number of bytes read
+    var n = 0
+    // Buffer with 1024 bytes or 1MB
+    val buf = new Array[Byte](1024)
+    while( {n = from.read(buf) ; n} > 0 ){
+      to.write(buf, 0, n)
+    }
+  }
+
 
   def getScalaVersion() = util.Properties.versionNumberString
 
