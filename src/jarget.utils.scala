@@ -381,3 +381,113 @@ object JarUtils{
 
 
 } // -------- End of object JarUtils ------------ //
+
+
+object JarBuilder{
+  import Utils.copyStream
+
+
+  def addFile(zos: java.util.jar.JarOutputStream, entry: String, file: String){
+    import java.io._
+    val is = new BufferedInputStream(new FileInputStream(file))
+    val e = new java.util.jar.JarEntry(entry)
+    zos.putNextEntry(e)
+    copyStream(is, zos)
+    is.close()
+  }
+
+
+  def addDirectory(zos: java.util.jar.JarOutputStream, path: String){
+    import java.nio.file.{Paths, Path, Files}
+    val root = Paths.get(path)
+    val name = new java.io.File(path).getName()
+    Files.walk(Paths.get(path)).filter(_.toFile.isFile).forEach{p =>
+      val entry = new java.io.File(name, root.relativize(p).toString).toString
+      addFile(zos, entry, p.toString)
+    }
+  }
+
+
+  def addJarContent(
+    zos:         java.util.jar.JarOutputStream,
+    jarFile:     String,
+    addManifest: Boolean = false
+  ){
+    import scala.collection.JavaConverters._
+    val jar = new java.util.jar.JarFile(jarFile)
+    jar.entries
+      .asScala
+      .filter(!_.isDirectory)
+      .foreach { e =>
+      if (addManifest || e.getName() != "META-INF/MANIFEST.MF" ){
+        val is = jar.getInputStream(e)
+        //val je = new java.util.jar.JarEntry(e.getName())
+        //je.setMethod(java.util.zip.ZipOutputStream.DEFLATED)
+        e.setCompressedSize(-1)
+        zos.putNextEntry(e)
+        copyStream(is, zos)
+        is.close()
+      }
+    }
+    jar.close()
+  }
+
+
+  def addJarsFromDir(
+    zos:   java.util.jar.JarOutputStream,
+    path:  String
+  ) = {
+    new java.io.File(path)
+      .listFiles()
+      .filter(_.getName.endsWith(".jar"))
+      .foreach{ p =>
+      //println("Adding file " + p)
+      addJarContent(zos, p.getPath)
+      //println("Added file " + p)
+    }
+  }
+
+
+  def makeJarWith(file: String)(fn: java.util.jar.JarOutputStream => Unit) = {
+    var os:  java.util.jar.JarOutputStream = null
+    try {
+      os = new java.util.jar.JarOutputStream(
+        new java.io.FileOutputStream(file)
+      )
+      fn(os)
+    } catch {
+      case ex: java.io.IOException => ex.printStackTrace()
+
+    } finally {
+      if (os != null) {
+        os.flush()
+        os.close()
+      }
+      //println("Release resources")
+    }
+  }
+
+  def makeUberJar(
+    output: String,
+    main: String,
+    paths: List[String]     = List(),
+    files: List[String]     = List(),
+    resources: List[String] = List(),
+    scalaLib: Boolean       = false
+  ) = makeJarWith(output){ jos =>
+
+    if (scalaLib) Utils.getScalaHome() match {
+      case None    => throw new Exception("Error: SCALA_HOME path not found")
+      case Some(p) => {
+        val lib = new java.io.File(p, "lib/scala-library.jar").getPath
+        addJarContent(jos, lib)
+      }
+    }
+
+    addJarContent(jos, main, true)
+    paths foreach { p => addJarsFromDir(jos, p) }
+    files foreach { p => addJarContent(jos, p) }
+    resources foreach { p => addDirectory(jos, p) }    
+  }  
+
+}
