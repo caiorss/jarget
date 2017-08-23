@@ -12,7 +12,7 @@ jar-tools.sh:
 	chmod +x jar-tools.sh
 
 jarget.jar : jar-tools.sh jarget.scala 
-	scalac jarget.scala -d jarget.jar
+	fsc jarget.scala -d jarget.jar
 
 bin/jarget-fat.jar: jar-tools.sh jarget.jar 
 	./jar-tools.sh -scala-build-jar bin/jarget-fat.jar jarget.jar $(SCALA_XML)
