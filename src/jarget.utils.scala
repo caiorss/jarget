@@ -474,14 +474,16 @@ exit 0
     }
   }
 
+
   def makeUberJar(
-    output: String,
-    main: String,
-    paths: List[String]     = List(),
-    files: List[String]     = List(),
-    resources: List[String] = List(),
-    scalaLib: Boolean       = false
-  ) = makeJarWith(output){ jos =>
+    output:      String,
+    main:        String,
+    paths:       List[String] = List(),
+    files:       List[String] = List(),
+    resources:   List[String] = List(),
+    scalaLib:    Boolean      = false,
+    executable: Boolean      = false
+  ) = makeJarWith(output, executable){ jos =>
 
     if (scalaLib) Utils.getScalaHome() match {
       case None    => throw new Exception("Error: SCALA_HOME path not found")
