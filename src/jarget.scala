@@ -317,8 +317,8 @@ Maven Packages / Jar Packages
 
 Jar Files Inspection
 
- jar -manifest [jar]                - Show manifest.
-
+ jar -man  [jar]                    - Show manifest.
+ jar -main [jar]                    - Show main class.
  jar -show [jar]                    - Show all files.
 
  jar -assets [jar]                  - Show all asset files disregarding *.class files.
@@ -330,29 +330,42 @@ Jar Files Inspection
 
  jar -extract-all [jar]             - Extract jar file to directory with same name of jar file 
                                       at current directory. If file is lib/chart.jar it will 
-                                      extract to ./chart 
+    
+ - Build an uber jar named output.jar from main.jar which contains the
+   main class and lib1 and lib2 are the directories containing jar files.
+
+ jar -uber output.jar main.jar -path ./lib1 ./lib2 
+
+ - Build an scala uber jar named output.jar from main.jar which
+   contains the main class and lib1 and lib2 are the directories
+   containing jar files. It bundles the scala-library.jar runtime with
+   the application.
+
+ $ jar -scala-uber output.jar main.jar
+
+ $ jar -scala-uber output.jar main.jar -path ./lib1 ./lib2 
+ 
+
+                                  extract to ./chart 
 Classpath
 
  cpath -show                        - Get classpath from ./lib directory
  cpath -show [path]                 - Get classpath from [path] directory
 
-Scala REPL 
+Exec  
 
- scala                              - Run Scala REPL with classpath built from all jars in ./lib 
- scala -- arg1 arg2 arg2 ...        - Run Scala passing arguments with class path set to ./lib  
- scala [path]                       - Run Scala REPL with classpath built from all jars in [path]
- scala [path] -- arg1 arg2 ...
-
-Scala Compiler 
-
- scalac -- arg1 arg2 ...            - Run Scala compiler with classpath set to all jars in ./lib 
- scalac [path] -- arg1 arg2 ...     - Run Scala compiler with classpath set to all jars in [path]
+ exec [program] [path] 
+ exec [program] -- arg1 arg2 ...      - Executes a program passing classpath (-cp) from ./lib to it.
+ exec [program] [path] -- arg1 arg2 
+  
 
 System Information
 
- sys -env                            - Show environment variables
- sys -path                           - Show PATH environment variable
- sys -prop                           - Show java properties
+ sys -env                            - Show environment variables in tabular format 
+ sys -env [var]                      - Show environment variable [var]
+ sys -path                           - Show PATH environment variable 
+ sys -prop                           - Show java properties in tabular format 
+ sys -expath [program]               - Show absolute path of a program in $PATH variable
 
 Misc
 
