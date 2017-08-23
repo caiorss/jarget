@@ -800,6 +800,12 @@ Note: The XML in the clipboard is a maven coordinate:
           JarUtils.showManifest(jarFile)
         }
 
+    case List("jar", "-main", jarFile)
+        => JarUtils.withJarException{
+          JarUtils.getMainClass(jarFile) foreach println
+        }
+
+
     case List("jar", "-show", jarFile)
         =>  JarUtils.withJarException{
           JarUtils.showFiles(jarFile)
