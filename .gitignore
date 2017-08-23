@@ -9,3 +9,4 @@ bin/*
 lib/*
 /Notes.org
 /scratch.scala
+*.class
