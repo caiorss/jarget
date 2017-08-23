@@ -28,6 +28,8 @@ OTHER DEALINGS IN THE SOFTWARE.
   */
 package jarget 
 
+import jarget.utils._
+
 case class PackData(group: String, artifact: String, version: String)
 
 case class PomData(
@@ -39,304 +41,6 @@ case class PomData(
   version:     String,
   packaging:   String
 )
-
-object Utils{
-
-  import scala.concurrent.Future
-  import concurrent.ExecutionContext.Implicits.global
-
-  def mkdir(path: String) = {
-    new java.io.File(path).mkdir()
-  }
-
-  def join(path1: String, path2: String) = {
-    new java.io.File(path1, path2).getPath()
-  }
-
-  def fileExists(file: String) = {
-    new java.io.File(file).isFile()
-  }
-
-
-  def downloadFile(fileUrl: String, file: String) = {
-    val url = new java.net.URL(fileUrl)
-    val rbc = java.nio.channels.Channels.newChannel(url.openStream())
-    val fos = new java.io.FileOutputStream(file)
-    fos.getChannel().transferFrom(rbc, 0, java.lang.Long.MAX_VALUE)
-  }
-
-  def getClipboardText() = {
-    import java.awt.Toolkit
-    import java.awt.datatransfer.{Clipboard, DataFlavor, Transferable}
-
-    for {
-      clip <- Option(Toolkit.getDefaultToolkit().getSystemClipboard())
-      data <- Option(clip.getContents(null))
-      if data.isDataFlavorSupported(DataFlavor.getTextPlainUnicodeFlavor())
-      text = data.getTransferData(DataFlavor.stringFlavor).asInstanceOf[String]
-    } yield text
-  }
-
-  def openUrl(uri: String){
-    import java.awt.Desktop
-    import java.io.IOException
-    import java.net.URI
-    import java.net.URISyntaxException
-    val u = new URI(uri)
-    val desktop = Desktop.getDesktop()
-    desktop.browse(u)
-  }
-
-
-  def getScalaVersion() = util.Properties.versionNumberString
-
-  /**  Pretty print a collection of tuples as a table.
-    Parameters:
-    @rows     - Collection of tuples to be printed.
-    @title    - Tuple containing the titles of left and right side.
-    @line     - Flag that if set to true, prints a new line between each row.
-    @margin   - Margin from left side of screen as number of spaces.
-    @sep      - Number of spaces between left side and right side
-    @maxRside - Maximum number of characters to printed on right side.
-    */
-  def printTupleAsTable(
-    rows:   Seq[(String, String)],
-    title:  (String, String) = ("", ""),
-    line:   Boolean = false,
-    margin: Int = 0,
-    sep:    Int = 4,
-    maxRside: Int = 100
-  ) = {
-
-    def printRow(wmax1: Int, clamp: Boolean = true) = (row: (String, String)) => {
-      val (lside, rside) = row
-
-      // print left margin
-      for (a <- 0 to margin) print(' ')
-
-      print(lside)
-
-      // Print spaces
-      for (a <- 0 to wmax1 - lside.length + sep) print(' ')
-
-      if (rside.length <= maxRside) {
-        println(rside)
-      } else if (clamp){
-        val dots = "..."
-        println(rside.take(maxRside - dots.length) + dots)
-      } else {
-        println(rside.take(maxRside))
-      }
-
-      // Print line between rows
-      if (line) println()
-    }
-
-    def printDashes(wmax1: Int) = {
-      printRow(wmax1, false)("-" * wmax1, "-" * maxRside)
-    }
-
-    val (title1, title2) = title
-
-    // Maximum length of left side column
-    val wmax1 = title1.length max rows.map(row => row._1.length).max
-
-    printRow(wmax1)(title)
-    printDashes(wmax1)
-    rows foreach printRow(wmax1)
-    printDashes(wmax1)
-  }
-
-
-  def showEnvironmentVars() {
-    import scala.collection.JavaConverters._
-    printTupleAsTable(
-      rows     = System.getenv.asScala.toSeq,
-      title    = ("Environment Variable", "Value"),
-      margin   = 2,
-      maxRside = 50
-    )
-  }
-
-  def showJavaProperties() {
-    import scala.collection.JavaConverters._
-    printTupleAsTable(
-      rows     = System.getProperties.asScala.toSeq,
-      title    = ("Java Property", "Value"),
-      margin   = 2,
-      maxRside = 50
-    )
-  }
-
-  /** Emulate Unix system call execl */
-  def execl(program: String, args: List[String]) = {
-    val builder = new java.lang.ProcessBuilder()
-    builder.command(program)
-    args foreach builder.command.add
-    val iostat = builder.inheritIO().start()
-    System.exit(iostat.waitFor())
-  }
-
-
-} /* ---- End of object Utils ------- */
-
-
-object JarUtils{
-
-  //import scala.collection.JavaConversions._
-
-  def withJarException[A](comp: => Unit) = {
-    try comp
-    catch {
-      case ex: java.util.zip.ZipException
-          => println("Error, not a zip file")
-      case ex: java.io.FileNotFoundException
-          => println("Error: file not found.")
-    }
-  }
-
-
-  /** Show jar's META-INF/MANIFEST.MF file*/
-  def showManifest(file: String): Unit = {
-    val jar = new java.util.jar.JarFile(file)
-    val man = jar.getManifest()
-    man.write(System.out)
-    jar.close()
-  }
-
-  def getFilesAsList(jarFile: String) = {
-    import scala.collection.JavaConverters._
-    val jar = new java.util.jar.JarFile(jarFile)
-    val files = jar.entries().asScala.toList
-    jar.close()
-    files
-  }
-
-  def showFiles(jarFile: String) = {
-    import scala.collection.JavaConverters._
-    val jar = new java.util.jar.JarFile(jarFile)
-    jar.entries().asScala filter(!_.isDirectory) foreach println
-    jar.close()
-  }
-
-
-  /** Get only asset files, disregarding all *.class files and directory entries. */
-  def getAssetFiles(jarFile: String) = {
-    val files = getFilesAsList(jarFile)
-    files filter (f => !f.isDirectory() && !f.getName().endsWith(".class"))
-  }
-
-  def printFile(jarFile: String, file: String) = {
-    val jar = new java.util.jar.JarFile(jarFile)
-    val is = for {
-      entry <- Option(jar.getEntry(file))
-      is    =  jar.getInputStream(entry)
-    } yield is
-
-    is foreach { ist =>
-      while(ist.available() > 0 ){
-        System.out.write(ist.read())
-      }
-      ist.close()
-    }
-    jar.close()
-  }
-
-  /** Extract jar file to a given directory */
-  def extractFile(jarFile: String, file: String, dest: String) = {
-    val jar   = new java.util.jar.JarFile(jarFile)
-    val entry = Option(jar.getEntry(file))
-
-    entry match {
-      case None    => println("Error: File not found.")
-      case Some(e) => {
-        val is = jar.getInputStream(e)
-        val fileObj = new java.io.File(file)
-        val fout = new java.io.File(dest, fileObj.getName())
-        val os = new java.io.FileOutputStream(fout)
-        while(is.available() > 0){
-          os.write(is.read())
-        }
-        is.close()
-        os.close()
-      }
-    }
-
-    jar.close()
-  }
-
-
-  def extract(jarFile: String, dest: String, verbose: Boolean = false) = {
-    import scala.collection.JavaConverters._
-
-    val jar = new java.util.jar.JarFile(jarFile)
-
-    def extractFile(file: String) = {
-      val is = jar.getInputStream(jar.getEntry(file))
-      val fout = new java.io.File(dest, file)
-      val os = new java.io.FileOutputStream(fout)
-      while(is.available() > 0){
-        os.write(is.read())
-      }
-      is.close()
-      os.close()
-    }
-
-    def mkdir(path: String) = {
-      new java.io.File(path).mkdirs()
-    }
-
-    def joinPath(path1: String, path2: String) = {
-      new java.io.File(path1, path2).getPath
-    }
-
-    // Create directories
-    jar.entries().asScala
-      .toStream
-      .filter (_.isDirectory)
-      .map(_.getName())
-      .foreach{ p => mkdir(joinPath(dest, p)) }
-
-    // Copy files
-    jar.entries().asScala
-      .toStream
-      .filter(!_.isDirectory)
-      .map(_.getName())
-      .foreach{ p =>
-      if (verbose) println("Extracting file: " + p)
-      extractFile(p)
-    }
-
-    jar.close()
-
-  } // --- End of function extract ------- //
-
-
-  def getClasspath(path: String): String = {
-    val files = new java.io.File(path)
-      .listFiles()
-      .toStream
-      .filter(_.getName().endsWith(".jar"))
-    
-    val sep = System.getProperty("path.separator")
-
-    files.foldLeft("."){ (acc: String, file: java.io.File) =>
-       file.getPath() + sep + acc
-    }
-  }
-
-  def runScalaClasspath(path: String, args: List[String] = List()) = {
-    val cpath = getClasspath(path)
-    Utils.execl("scala", List("-cp", cpath) ++ args)
-  }
-
-
-  def runScalaCompilerClasspath(path: String, args: List[String] = List()) = {
-    val cpath = getClasspath(path)
-    Utils.execl("scalac", List("-cp", cpath) ++ args)
-  }
-
-} // -------- End of object JarUtils ------------ //
 
 
 object Packget { 
@@ -613,8 +317,8 @@ Maven Packages / Jar Packages
 
 Jar Files Inspection
 
- jar -manifest [jar]                - Show manifest.
-
+ jar -man  [jar]                    - Show manifest.
+ jar -main [jar]                    - Show main class.
  jar -show [jar]                    - Show all files.
 
  jar -assets [jar]                  - Show all asset files disregarding *.class files.
@@ -626,29 +330,42 @@ Jar Files Inspection
 
  jar -extract-all [jar]             - Extract jar file to directory with same name of jar file 
                                       at current directory. If file is lib/chart.jar it will 
-                                      extract to ./chart 
+    
+ - Build an uber jar named output.jar from main.jar which contains the
+   main class and lib1 and lib2 are the directories containing jar files.
+
+ jar -uber output.jar main.jar -path ./lib1 ./lib2 
+
+ - Build an scala uber jar named output.jar from main.jar which
+   contains the main class and lib1 and lib2 are the directories
+   containing jar files. It bundles the scala-library.jar runtime with
+   the application.
+
+ $ jar -scala-uber output.jar main.jar
+
+ $ jar -scala-uber output.jar main.jar -path ./lib1 ./lib2 
+ 
+
+                                  extract to ./chart 
 Classpath
 
  cpath -show                        - Get classpath from ./lib directory
  cpath -show [path]                 - Get classpath from [path] directory
 
-Scala REPL 
+Exec  
 
- scala                              - Run Scala REPL with classpath built from all jars in ./lib 
- scala -- arg1 arg2 arg2 ...        - Run Scala passing arguments with class path set to ./lib  
- scala [path]                       - Run Scala REPL with classpath built from all jars in [path]
- scala [path] -- arg1 arg2 ...
-
-Scala Compiler 
-
- scalac -- arg1 arg2 ...            - Run Scala compiler with classpath set to all jars in ./lib 
- scalac [path] -- arg1 arg2 ...     - Run Scala compiler with classpath set to all jars in [path]
+ exec [program] [path] 
+ exec [program] -- arg1 arg2 ...      - Executes a program passing classpath (-cp) from ./lib to it.
+ exec [program] [path] -- arg1 arg2 
+  
 
 System Information
 
- sys -env                            - Show environment variables
- sys -path                           - Show PATH environment variable
- sys -prop                           - Show java properties
+ sys -env                            - Show environment variables in tabular format 
+ sys -env [var]                      - Show environment variable [var]
+ sys -path                           - Show PATH environment variable 
+ sys -prop                           - Show java properties in tabular format 
+ sys -expath [program]               - Show absolute path of a program in $PATH variable
 
 Misc
 
@@ -725,6 +442,9 @@ Note: The XML in the clipboard is a maven coordinate:
     case List("sys", "-env")
         => Utils.showEnvironmentVars()
 
+    case List("sys", "-env", evar)
+        => for { v <- Option(System.getenv(evar)) } println(v)
+
     // Show Java properties
     case List("sys", "-prop")
         => Utils.showJavaProperties()
@@ -737,14 +457,24 @@ Note: The XML in the clipboard is a maven coordinate:
           paths  = pvar.split(sep)
         } paths foreach println                  
 
+    // Show path to executable in $PATH variable
+    case List("sys", "-expath", program)
+        => Utils.getProgramPath(program) foreach println
 
     // -----------  Jar files  ------------------- //
 
     // Print Jar manifest file or "META-INF/MANIFEST.MF"
-    case List("jar", "-manifest", jarFile)
+    case List("jar", "-man", jarFile)
         =>  JarUtils.withJarException{
-          JarUtils.printFile(jarFile, "META-INF/MANIFEST.MF")
+          JarUtils.showManifest(jarFile)
         }
+
+   // Show main class of jar file 
+    case List("jar", "-main", jarFile)
+        => JarUtils.withJarException{
+          JarUtils.getMainClass(jarFile) foreach println
+        }
+
 
     case List("jar", "-show", jarFile)
         =>  JarUtils.withJarException{
@@ -786,6 +516,28 @@ Note: The XML in the clipboard is a maven coordinate:
     case List("jar", "-extract-all", jarFile, path)
         => JarUtils.extract(jarFile, path, true)
 
+
+    case List("jar", "-scala-uber", output, main)
+        => {
+          JarBuilder.makeUberJar(output, main, scalaLib = true)
+          println("Build file:   " + output)
+          println("Run  it with: java -jar " + output)
+        } 
+
+    case "jar"::"-scala-uber"::output::main::"-paths"::paths
+        => {
+          JarBuilder.makeUberJar(output, main, paths = paths, scalaLib = true)
+          println("Build file:   " + output)
+          println("Run  it with: java -jar " + output)
+        }     
+
+    case "jar"::"-uber"::output::main::"-paths"::paths
+        => {
+          JarBuilder.makeUberJar(output, main, paths = paths)
+          println("Build file:   " + output)
+          println("Run  it with: java -jar " + output)
+        }
+
     // ------- Class Path  ----------------- //
 
     case List("cpath", "-show")
@@ -793,34 +545,26 @@ Note: The XML in the clipboard is a maven coordinate:
 
     case List("cpath", "-show", path)
         => println(JarUtils.getClasspath(path))
+      
+    //-------- Generic Command with Classpath ------//
 
-    //-------- Scala REPL Commands -----------------//
+    // run generic command as ./command -cp $CLASSPATH arg1 arg2 arg2 ...
+    case List("exec", command)
+        => JarUtils.runWithClassPath(command, List(), "./lib")
 
-    // Launch Scala REPL with class path set to all jars in ./lib
-    case List("scala")
-        => JarUtils.runScalaClasspath("./lib")
+    case List("exec", command, path)
+        => JarUtils.runWithClassPath(command, List(), path)
 
-    case "scala"::"--"::args
-        => JarUtils.runScalaClasspath("./lib", args)
+    case "exec"::command::"--"::args
+        => JarUtils.runWithClassPath(command, args, "./lib")
 
-    // Launch Scala REPL with class path set to all jars in [path]
-    case List("scala", path)
-        => JarUtils.runScalaClasspath(path)
-
-    case "scala"::path::"--"::args
-        => JarUtils.runScalaClasspath(path, args)
-
-
-    //----- Scalac Compiler Commands -------------------//
-
-    case "scalac"::"--"::args
-        => JarUtils.runScalaCompilerClasspath("./lib", args)
-
-    case "scalac"::path::"--"::args
-        => JarUtils.runScalaCompilerClasspath(path, args)
+    case "exec"::command::path::"--"::args  
+        => JarUtils.runWithClassPath(command, args, path)
 
     case _ => println("Error: Invalid command")
-    }
+
+
+  } // -- End of function main() --- // 
+
   
 } // ------- End of object Main -------- //
-

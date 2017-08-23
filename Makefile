@@ -1,4 +1,8 @@
 
+
+src := src/jarget.utils.scala src/jarget.scala 
+
+
 all: jarget.jar
 
 sh: bin/jarget 
@@ -11,8 +15,8 @@ jar-tools.sh:
 	curl -O -L https://raw.githubusercontent.com/caiorss/build-fat-jar/master/jar-tools.sh
 	chmod +x jar-tools.sh
 
-jarget.jar : jar-tools.sh jarget.scala 
-	fsc jarget.scala -d jarget.jar
+jarget.jar : jar-tools.sh $(src)
+	fsc $(src) -d jarget.jar
 
 bin/jarget-fat.jar: jar-tools.sh jarget.jar 
 	./jar-tools.sh -scala-build-jar bin/jarget-fat.jar jarget.jar $(SCALA_XML)
