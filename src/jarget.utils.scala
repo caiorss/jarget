@@ -448,22 +448,29 @@ object JarBuilder{
   }
 
 
-  def makeJarWith(file: String)(fn: java.util.jar.JarOutputStream => Unit) = {
-    var os:  java.util.jar.JarOutputStream = null
+  def makeJarWith(file: String, executable: Boolean = false)(fn: JarOutputStream => Unit) = {
+    var os:  JarOutputStream  = null
+    var fo:  java.io.FileOutputStream = null
+    val header = """
+#!/usr/bin/env sh
+java -jar $0 $@
+exit 0
+""".trim() + "\n"
+
     try {
-      os = new java.util.jar.JarOutputStream(
-        new java.io.FileOutputStream(file)
-      )
+      fo = new java.io.FileOutputStream(file)
+      os = new JarOutputStream(fo)
+      if (executable) fo.write(header.getBytes())
       fn(os)
     } catch {
       case ex: java.io.IOException => ex.printStackTrace()
+    } finally if (os != null) {
+        //fo.close()
+      os.flush()
+      os.close()
 
-    } finally {
-      if (os != null) {
-        os.flush()
-        os.close()
-      }
-      //println("Release resources")
+      // Set the output file as executable if in Unix
+      if(executable) Runtime.getRuntime().exec("chmod u+x " + file)
     }
   }
 
