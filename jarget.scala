@@ -804,6 +804,9 @@ Note: The XML in the clipboard is a maven coordinate:
           paths  = pvar.split(sep)
         } paths foreach println                  
 
+    // Show path to executable in $PATH variable
+    case List("sys", "-expath", program)
+        => Utils.getProgramPath(program) foreach println
 
     // -----------  Jar files  ------------------- //
 
