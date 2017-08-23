@@ -334,6 +334,18 @@ object JarUtils{
   } // --- End of function extract ------- //
 
 
+  /** Get classpath with all jar files from a directory.
+
+      Example: If the directory app/lib
+      has the files lib1.jar, lib2.jar and so on.
+
+      The function getClasspath("app/lib")
+      will return a string containing
+      'app/lib/lib1.jar:app/lib/lib2.jar:app/lib/lib3.jar' ...
+
+      The path separator is (:) for Unix-like OS's and (;) for
+      Windows.
+    */
   def getClasspath(path: String): String = {
     val files = new java.io.File(path)
       .listFiles()
