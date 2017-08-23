@@ -195,6 +195,16 @@ object JarUtils{
     }
   }
 
+  /** Get jar's META-INF/MANIFEST.MF content */
+  def getManifest(jarFile: String): String = {
+    val jar = new java.util.jar.JarFile(jarFile)
+    val bs = new java.io.ByteArrayOutputStream()
+    jar.getManifest().write(bs)
+    val out = new String(bs.toByteArray(), "UTF-8")
+    jar.close()
+    bs.close()
+    out
+  }
 
   /** Show jar's META-INF/MANIFEST.MF file*/
   def showManifest(file: String): Unit = {
