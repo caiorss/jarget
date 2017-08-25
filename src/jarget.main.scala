@@ -260,7 +260,8 @@ Uber Jar
   
  $ jar uber -scala -sh -o output.jar -m main.jar -p ./lib1 -j dependency1.jar -r ./resources1 ./resources2 
 
- jar uber 
+ uber [command]
+
    -o [output file]         - (mandatory) Output jar file bundled with all dependencies.
    -m [main jar file]       - (optional)  Jar file containing main class.
    -p [path1] [path2] ...   - (optional)  Directories with jar file that will be included in the uber jar.
