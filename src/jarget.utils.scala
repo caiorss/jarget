@@ -530,7 +530,7 @@ object OptParseUtils {
     name:        String,
     mandatory:   Boolean,
     description: String,
-    action:      List[String] => Unit
+    action:      ArgResult => Unit
   )
 
   def getCmdArgs(arglist: List[String]) :  Map[String, List[String]] = {
