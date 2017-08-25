@@ -12,7 +12,7 @@ set up a project. It is useful to experiment java libraries with
 languages hosted in JVM such as Jython (Python implemented in Java),
 Scala or Clojure. 
 
-Features: 
+*Features:* 
 
  + Download Scala and Java libraries from https://mvnrepository.com/
    without creating a project. It is useful for quick experiments and
@@ -24,9 +24,22 @@ Features:
 
  + Run scala compiler with all jars from some directory in classpath.
 
+ + Parallallel download of dependencies.
+
  + Inspect and extract data from jar files.
 
- + Parallallel download 
+   + Show MANIFEST
+
+   + Display files
+
+   + Show assets
+
+   + Extract files 
+
+ + Build uber jar, jar file bundled with all dependencies making
+   deployment and distribution easier.
+
+ + Build self-exectutable *nix uber jar file that can be run with ./application
 
 ** Use Case Example 
 
@@ -146,8 +159,8 @@ scala>
 ** User Guide
 *** Show user help 
 
-#+BEGIN_SRC sh 
-$ jarget
+#+BEGIN_SRC text 
+$ ./jarget 
 jarget - Tool to download jar packages.
 
 Maven Packages / Jar Packages
@@ -173,8 +186,8 @@ Maven Packages / Jar Packages
 
 Jar Files Inspection
 
- jar -manifest [jar]                - Show manifest.
-
+ jar -man  [jar]                    - Show manifest.
+ jar -main [jar]                    - Show main class.
  jar -show [jar]                    - Show all files.
 
  jar -assets [jar]                  - Show all asset files disregarding *.class files.
@@ -185,26 +198,51 @@ Jar Files Inspection
  jar -extract-all [jar] [path]      - Extract all files from jar package to [path] directory.
 
  jar -extract-all [jar]             - Extract jar file to directory with same name of jar file 
-                                      at current directory. If file is lib/chart.jar it will 
-                                      extract to ./chart 
+                                      at current directory. If file is lib/chart.jar it will  
+                                      extracted to ./chart 
+    
+Uber Jar 
+
+
+ - Build an scala uber jar named output.jar from main.jar which
+   contains the main class and lib1 and lib2 are the directories
+   containing jar files. It bundles the scala-library.jar runtime with
+   the application.
+
+ $ jar uber -scala -o output.jar -m main.jar
+
+ $ jar uber -scala -o output.jar -m main.jar -p ./lib1 ./lib2 
+  
+ $ jar uber -scala -sh -o output.jar -m main.jar -p ./lib1 -j dependency1.jar -r ./resources1 ./resources2 
+
+ jar uber 
+   -o [output file]         - (mandatory) Output jar file bundled with all dependencies.
+   -m [main jar file]       - (optional)  Jar file containing main class.
+   -p [path1] [path2] ...   - (optional)  Directories with jar file that will be included in the uber jar.
+   -j [jar1.jar] [jar2.jar] - (optional)  Single jar files that will be included in the uber jar.
+   -r [dir1] [dir2] ...     - (optional)  Directories containing resource files 
+   -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar 
+   -sh                      - (optional)  Makes the jar file as a self-executable Unix app.                                 
+
 Classpath
 
  cpath -show                        - Get classpath from ./lib directory
  cpath -show [path]                 - Get classpath from [path] directory
 
- scala                              - Run Scala REPL with classpath built from all jars in ./lib 
- scala -- arg1 arg2 arg2 ...        - Run Scala passing arguments with class path set to ./lib  
- scala [path]                       - Run Scala REPL with classpath built from all jars in [path]
- scala [path] -- arg1 arg2 ...
+Exec  
 
- scalac -- arg1 arg2 ...            - Run Scala compiler with classpath set to all jars in ./lib 
- scalac [path] -- arg1 arg2 ...     - Run Scala compiler with classpath set to all jars in [path]
+ exec [program] [path] 
+ exec [program] -- arg1 arg2 ...      - Executes a program passing classpath (-cp) from ./lib to it.
+ exec [program] [path] -- arg1 arg2 
+  
 
 System Information
 
- sys -env                            - Show environment variables
- sys -path                           - Show PATH environment variable
- sys -prop                           - Show java properties
+ sys -env                            - Show environment variables in tabular format 
+ sys -env [var]                      - Show environment variable [var]
+ sys -path                           - Show PATH environment variable 
+ sys -prop                           - Show java properties in tabular format 
+ sys -expath [program]               - Show absolute path of a program in $PATH variable
 
 Misc
 
@@ -226,7 +264,9 @@ Note: The XML in the clipboard is a maven coordinate:
         <artifactId>scalaz-core_2.11</artifactId>
         <version>7.3.0-M15</version>
     </dependency>
-#+END_SRC   
+
+
+#+END_SRC    
 
 *** Maven / Packages Commands
 **** Show package information 
@@ -597,6 +637,96 @@ Implementation-Version: 1.0.17
 Implementation-Vendor: jfree.org
 
 #+END_SRC
+*** Build Uber Jar 
+
+#+BEGIN_SRC text 
+ jarget uber [command]
+ 
+ Commands
+
+   -o [output file]         - (mandatory) Output jar file bundled with all dependencies.
+   -m [main jar file]       - (optional)  Jar file containing main class.
+   -p [path1] [path2] ...   - (optional)  Directories with jar file that will be included in the uber jar.
+   -j [jar1.jar] [jar2.jar] - (optional)  jar files that will be included in the uber jar.
+   -r [dir1] [dir2] ...     - (optional)  Directories containing resource files 
+   -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar 
+   -sh                      - (optional)  Makes the jar file as a self-executable Unix app.                                 
+#+END_SRC
+
+
+Example: Make a scala uber jar from the program [[file:sample-scripts/chartTest.scala][file:sample-scripts/chartTest.scala]] 
+
+#+BEGIN_SRC sh 
+
+# Download dependencies 
+$ ./jarget mvn -get org.jfree/jfreechart/1.0.17
+
+Downloading package PackData(org.jfree,jfreechart,1.0.17)
+Downloading file ./lib/jfreechart-1.0.17.pom.
+Downloading package PackData(org.jfree,jcommon,1.0.21)
+Downloading package PackData(xml-apis,xml-apis,1.3.04)
+Downloading file ./lib/jcommon-1.0.21.pom.
+Downloading file ./lib/xml-apis-1.3.04.pom.
+File ./lib/jfreechart-1.0.17.pom downloaded. Ok.
+Downloading file ./lib/jfreechart-1.0.17.jar.
+File ./lib/jcommon-1.0.21.pom downloaded. Ok.
+Downloading file ./lib/jcommon-1.0.21.jar.
+File ./lib/xml-apis-1.3.04.pom downloaded. Ok.
+Downloading file ./lib/xml-apis-1.3.04.jar.
+File ./lib/xml-apis-1.3.04.jar downloaded. Ok.
+File ./lib/jcommon-1.0.21.jar downloaded. Ok.
+File ./lib/jfreechart-1.0.17.jar downloaded. Ok.
+
+# Compile file generating chartTest.jar 
+# 
+$ ./jarget exec scalac -- sample-scripts/chartTest.scala -d chartTest.jar 
+
+# Run it 
+$ ./jarget exec scala -- chartTest.jar 
+
+# Make an uber jar 
+#
+$ ./jarget uber -scala -o chart-uber.jar -m chartTest.jar -p ./lib
+Built file:  chart-uber.jar ok
+Run it with: $ java -jar chart-uber.jar
+
+$ java -jar chart-uber.jar
+
+
+# Make a self-executable uber jar 
+$ ./jarget uber -scala -sh -o chart-uber.sh -m chartTest.jar -p ./lib
+Built file:  chart-uber.sh ok
+Run it with: $ java -jar chart-uber.sh
+
+# The resulting file can be run as a unix executable or script.
+$ ./chart-uber.sh 
+#+END_SRC
+
+Example: Make a scala self-executable jar for the app jarget.
+
+#+BEGIN_SRC sh 
+$ scala jarget.jar uber -scala -sh -o jarget -m jarget.jar -j /home/archbox/opt/scala-2.12.3/lib/scala-xml_2.12-1.0.6.jar 
+Built file:  jarget ok
+Run it with: $ java -jar jarget
+
+# Run it 
+$ ./jarget 
+#+END_SRC
+
+Explanation: 
+
+ + -o jarget - it will generate a uber jar file named jarget
+
+ + -m jarget.jar - Jar file containing the Main class. The manifest
+   file of this file will be included in the uber jar.
+
+ + -j .../scala-xml_2.12-1.0.6.jar  - Add this library to jar file.
+
+ + -scala - This flag bundles the scala runtime library
+   scala-library.jar with the application.
+
+ + -sh    - Makes the application an *nix executable that can be run
+   with ./application -cmd1 arg1 -cmd2 ...
 *** Classpath 
 
 
@@ -623,92 +753,6 @@ $ ./bin/jarget cpath -show ./lib
 ./lib/scala-library-2.12.1.jar:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
 
 #+END_SRC
-*** Scala 
-**** Run Scala repl with classpath set to ./lib 
-
- - =$ jarget scala=
-
-Run Scala REPL with all jars from ./lib directory in classpath. 
-
- - =$ jarget scala -- arg1 arg2 arg3 ...=
-
-Run Scala REPL with all jars from ./lib directory in classpath
-passing arguments arg1, arg2 and arg3 to scala program.
-
-*Example:* 
-
-1. Install JFreeChart: 
-
-#+BEGIN_SRC sh 
-$ jarget mvn -get org.jfree/jfreechart/1.0.17
-#+END_SRC
-
-2. Run the script: [[file:sample-scripts/chartTest.scala][file:sample-scripts/chartTest.scala]]
-
-#+BEGIN_SRC sh
-$ jarget scala -- -save sample-scripts/chartTest.scala
-#+END_SRC
-
-Running the command above is equivalent to run: 
-
-#+BEGIN_SRC sh 
-$ scala -cp lib/jcommon-1.0.21.jar:lib/jfreechart-1.0.17.jar:lib/xml-apis-1.3.04.jar sample-scripts/chartTest.scala 
-#+END_SRC
-
-The classpath is 
-
-**** Run Scala repl with classpath set to some path 
-
- - =$ jarget scala [path]=
-
-Run Scala REPL with all jars from [path] directory in classpath.
-
- - =$ jarget scala -- arg1 arg2 arg3 ...=
-
-Run Scala REPL with all jars from [path] directory in classpath
-passing arguments arg1, arg2 and arg3 to scala program.
-
-**** Run Scala compiler 
-
- - =$ jarget scalac -- arg1 arg2 arg3 ...=
-
-Run Scala compiler with all jars from ./lib directory in classpath
-passing parameters arg1, arg2, ... arg3 to scalac.
-
- - =$ jarget scalac [path] -- arg1 arg2 arg3 ...=
-
-Run Scala compiler with all jars from [path] directory in classpath
-
-
-*Example* 
-
-Compile the file  [[file:sample-scripts/chartTest.scala][file:sample-scripts/chartTest.scala]]
-
-1. Install: JFreechart 
-
-#+BEGIN_SRC sh
-$ scala jarget.jar mvn -get org.jfree/jfreechart/1.0.17
-#+END_SRC
-
-2. Compile 
-
-#+BEGIN_SRC sh 
-$ jarget scalac -- sample-scripts/chartTest.scala -d chartTest.jar
-#+END_SRC
-
-It could also be compiled with: 
-
-#+BEGIN_SRC sh 
-$ jarget scalac ./lib -- sample-scripts/chartTest.scala -d chartTest.jar
-#+END_SRC
-
-3. Run 
-
-#+BEGIN_SRC sh 
-jarget scala -- chartTest.jar
-#+END_SRC
-
-**** Run Scala compiler with classpath set to ./lib 
 *** System Information 
 **** Show Enviroment Variables 
 
@@ -1047,8 +1091,8 @@ Install it: Just add this file to any directory in $PATH variable. It
 can be ~/bin.
 ** TODO Tasks 
 
- - [ ]  - Update documentation. 
  - [ ]  - Add search features.  
  - [ ]  - Add package cache 
  - [ ]  - Improve command line handling 
  - [ ]  - Improve error handling. 
+ - [X]  - Feature to make Uber Jar 
