@@ -609,11 +609,26 @@ class OptParse{
   private var opts = ListBuffer[ArgSpec]()
 
   def addOption(
-    name: String,
-    mandatory: Boolean = false,
-    description: String = ""
-  )(action: ArgResult => Unit){
+    name:         String,
+    action:       ArgResult => Unit
+  ){
+    opts append ArgSpec(name, false, "", action)
+  }
 
+  def addOption(
+    name:         String,
+    description:  String,    
+    action:       ArgResult => Unit
+  ){
+    opts append ArgSpec(name, false, description, action)
+  }
+
+  def addOption(
+    name:         String,
+    description:  String,    
+    mandatory:    Boolean,
+    action:       ArgResult => Unit
+  ){
     opts append ArgSpec(name, mandatory, description, action)
   }
 
