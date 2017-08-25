@@ -8,7 +8,7 @@ import jarget.mvn._
 object Main{
 
   def uberParser(arglist: List[String]) = {
-    val uberParser = new OptParse()
+    val parser = new OptParse()
 
     var sh                    = false
     var scala                 = false
@@ -18,52 +18,52 @@ object Main{
     var files: List[String]   = List()
     var resources: List[String] = List()
 
-    uberParser.addOption(
+    parser.addOption(
       "-scala",
       "Pack Scala library with the application.",
       arg => scala = arg.getFlag()
     )
 
-    uberParser.addOption(
+    parser.addOption(
       "-sh",
       "Build self-executable jar file",
       arg => sh = true
     )
 
-    uberParser.addOption(
+    parser.addOption(
       "-m",
       "Main file",
       true,
       arg =>  main = Some(arg.getOne())
     )
 
-    uberParser.addOption(
+    parser.addOption(
       "-o",
       "Output file",
       arg => output = arg.getOne()
     )
 
-    uberParser.addOption(
+    parser.addOption(
       "-p",
       "Paths containing libraries",
        arg => paths = arg.getOneOrMany()
     )
 
-    uberParser.addOption(
+    parser.addOption(
       "-j",
       "Additional jar files.",
       false,
       arg => files = arg.getOneOrMany()
     )
 
-    uberParser.addOption(
+    parser.addOption(
       "-r",
       "Resource directories.",
       arg => resources = arg.getOneOrMany()
     )
 
     try
-      uberParser.parseArgs(arglist)
+      parser.parseArgs(arglist)
     catch {
       case ex: java.lang.IllegalArgumentException
           => {
@@ -83,7 +83,7 @@ object Main{
       case None
           => println("Error: missing main file ") ; System.exit(1)
     }
-  }
+  } // End of uberParser
 
   def parsePack(pstr: String) = {
     val p = Packget.readPack(pstr)
