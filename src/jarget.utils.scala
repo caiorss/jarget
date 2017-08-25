@@ -593,9 +593,7 @@ object OptParseUtils {
     xs.toMap
   }
 
-}
-
-
+} // --- End of Module OptParseUtils ---- //
 
 
 class OptParse{
@@ -607,7 +605,7 @@ class OptParse{
     name: String,
     mandatory: Boolean = false,
     description: String = ""
-  )(action: List[String] => Unit){
+  )(action: ArgResult => Unit){
 
     opts append ArgSpec(name, mandatory, description, action)
   }
@@ -622,7 +620,7 @@ class OptParse{
   }
 
   def parseArgs(arglist: List[String]) = {
-    val data   = getCmdArgs(arglist)
+    val data   = parseCmdArgs(arglist)
     val params = opts.map(_.name).toSet
     if (arglist.isEmpty)
       this.showHelp()
@@ -636,7 +634,7 @@ class OptParse{
        opts foreach { opt =>
          data.get(opt.name) match {
            case Some(args)
-               => opt.action(args)
+               => opt.action(new ArgResult(opt.name, args))
            case None
                => {
                  if (opt.mandatory)
