@@ -81,7 +81,8 @@ object Main{
   import MainUtils._
 
 
-  def uberParser(arglist: List[String]) = {
+
+  def parseUberArgs(arglist: List[String]) = {
     val parser = new OptParse()
 
     var sh                    = false
@@ -384,9 +385,9 @@ Note: The XML in the clipboard is a maven coordinate:
     case List("jar", "-extract-all", jarFile, path)
         => JarUtils.extract(jarFile, path, true)
 
+    //------------  Make Uber Jar ------------- //
+    case "uber"::rest => parseUberArgs(rest)
 
-    // Make Uber Jar
-    case "uber"::rest => uberParser(rest)
 
     // ------- Class Path  ----------------- //
 
