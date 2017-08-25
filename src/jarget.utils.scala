@@ -581,6 +581,7 @@ object OptParseUtils {
   }
 
 
+  def parseCmdArgsEq(arglist: List[String]) :  Map[String, List[String]] = {
     val xs = arglist map { (opt: String) =>
       opt.split("=") match {
         case Array(arg)        => (arg, List[String]())
