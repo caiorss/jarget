@@ -5,7 +5,81 @@ import jarget.utils.OptParse
 import jarget.mvn._
 
 
+object MainUtils {
+
+
+  def parsePack(pstr: String) = {
+    val p = Packget.readPack(pstr)
+    if (p.isEmpty) {
+      println("Error: Invalid package format")
+      System.exit(1)
+    }
+    p.get 
+  }
+
+  def parseScalaPack(pstr: String, scalaVersion: String) = {
+    val fields = pstr.split("/").map(_.trim)
+    val p = fields match {
+      case Array(group, artifact, version)
+          => Some(PackData(group, artifact + "_" + scalaVersion, version))
+      case _
+          => None
+    }
+
+    if (p.isEmpty) {
+      println("Error: Invalid package format")
+      System.exit(1)
+    }
+    p.get
+  }
+
+
+  /// Get package from maven XML in the clipboard.
+  def getPackMaven() = {
+    val p = Utils.getClipboardText()
+      .map(scala.xml.XML.loadString)
+      .map(Packget.readPackMavenXML)
+
+    if (p.isEmpty) {
+      println("Error: Invalid maven XML package format")
+      System.exit(1)
+    }
+    p.get 
+  }
+
+  def showPomData(pack: PackData) = {
+    val pom = Packget.getPomXML(pack)
+    val dat = Packget.getPomData(pom)
+    println( "Package:         " + dat.name)
+    println( "Packaging:       " + dat.packaging)
+    println(s"Coordinates[1]:  group = ${dat.group} artifact = ${dat.artifact} version = ${dat.version}")
+    println(s"Coordinates[2]:  ${dat.group}/${dat.artifact}/${dat.version}")
+    println( "Url:             " + dat.url)
+    println( "Description:     " + dat.description)
+
+    println("\nDependencies:\n")
+    Packget.getPomDependencies(pom) foreach { p =>
+      println("  - " + Packget.formatPack(p) + "\n")
+    }
+  }
+
+  def showPom(pack: PackData) = {
+    println(Packget.getPomXML(pack))
+  }
+
+  def openUrl(pack: PackData) = {
+    val url = s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
+    println("Opening package: " + url)
+    Utils.openUrl(url)
+  }  
+
+}
+
+
 object Main{
+
+  import MainUtils._
+
 
   def uberParser(arglist: List[String]) = {
     val parser = new OptParse()
@@ -85,70 +159,6 @@ object Main{
     }
   } // End of uberParser
 
-  def parsePack(pstr: String) = {
-    val p = Packget.readPack(pstr)
-    if (p.isEmpty) {
-      println("Error: Invalid package format")
-      System.exit(1)
-    }
-    p.get 
-  }
-
-  def parseScalaPack(pstr: String, scalaVersion: String) = {
-    val fields = pstr.split("/").map(_.trim)
-    val p = fields match {
-      case Array(group, artifact, version)
-          => Some(PackData(group, artifact + "_" + scalaVersion, version))
-      case _
-          => None
-    }
-
-    if (p.isEmpty) {
-      println("Error: Invalid package format")
-      System.exit(1)
-    }
-    p.get
-  }
-
-
-  /// Get package from maven XML in the clipboard.
-  def getPackMaven() = {
-    val p = Utils.getClipboardText()
-      .map(scala.xml.XML.loadString)
-      .map(Packget.readPackMavenXML)
-
-    if (p.isEmpty) {
-      println("Error: Invalid maven XML package format")
-      System.exit(1)
-    }
-    p.get 
-  }
-
-  def showPomData(pack: PackData) = {
-    val pom = Packget.getPomXML(pack)
-    val dat = Packget.getPomData(pom)
-    println( "Package:         " + dat.name)
-    println( "Packaging:       " + dat.packaging)
-    println(s"Coordinates[1]:  group = ${dat.group} artifact = ${dat.artifact} version = ${dat.version}")
-    println(s"Coordinates[2]:  ${dat.group}/${dat.artifact}/${dat.version}")
-    println( "Url:             " + dat.url)
-    println( "Description:     " + dat.description)
-
-    println("\nDependencies:\n")
-    Packget.getPomDependencies(pom) foreach { p =>
-      println("  - " + Packget.formatPack(p) + "\n")
-    }
-  }
-
-  def showPom(pack: PackData) = {
-    println(Packget.getPomXML(pack))
-  }
-
-  def openUrl(pack: PackData) = {
-    val url = s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
-    println("Opening package: " + url)
-    Utils.openUrl(url)
-  }
 
   def showHelp() = println("""jarget - Tool to download jar packages.
 
