@@ -534,6 +534,54 @@ object OptParseUtils {
   )
 
   def getCmdArgs(arglist: List[String]) :  Map[String, List[String]] = {
+  /** Transform command line arguments into groups */
+  def parseCmdArgs(arglist: List[String]): Map[String, List[String]] = {
+
+    def isSwitch(term: String) = term.startsWith("-")
+
+    def findIndicesWhere[A](predicate: A => Boolean, xs: List[A]) = {
+      var idx  = -1
+      var idxs = List[Int]()
+      for (x <- xs) {
+        idx = idx + 1
+        if (predicate(x))
+          idxs = idx::idxs
+      }
+      idxs.reverse
+    }
+
+    val i = {
+      val n = arglist.indexWhere(x => x == "--", 0)
+      if (n == -1) arglist.length else n
+    }
+    val cmds = arglist.slice(0, i)
+    val extCmd = arglist.slice(i, arglist.length) match {
+      case List() => List()
+      case hd::tl => List((hd, tl))
+    }
+
+    val indices = findIndicesWhere(isSwitch, cmds)
+    val out = indices match {
+      case List() => extCmd
+      case _      => {
+
+        val xs      = (indices ++ List(cmds.length))
+          .sliding(2)
+          .map{ case List(a, b) => (a, b)}
+          .toList
+        val groups = xs.foldLeft(List(): List[(String, List[String])]){ (acc, x) =>
+          val (a, b): (Int, Int) = x
+          val cmd        = cmds(a)
+          val args       = cmds.slice(a+1, b)
+          (cmd, args)::acc
+        }
+        (groups.reverse ++ extCmd)
+      }
+    }
+    out.toMap
+  }
+
+
     val xs = arglist map { (opt: String) =>
       opt.split("=") match {
         case Array(arg)        => (arg, List[String]())
