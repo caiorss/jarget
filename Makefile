@@ -1,5 +1,4 @@
 
-
 src := src/jarget.main.scala src/jarget.utils.scala src/jarget.mvn.scala 
 
 
@@ -9,13 +8,16 @@ sh: bin/jarget
 
 fatjar: bin/jarget-fat.jar
 
-SCALA_XML=/home/archbox/opt/scala-2.12.3/lib/scala-xml_2.12-1.0.6.jar
+
+SCALA_XML=scala-xml_2.12-1.0.6.jar
+SCALA_XML_PATH=$(shell dirname $(shell dirname $(shell which scala)))/lib/$(SCALA_XML)
 
 jarget.jar : $(src)
 	fsc $(src) -d jarget.jar
 
-bin/jarget: jarget.jar 
-	scala jarget.jar uber -scala -sh -o bin/jarget -m jarget.jar -j $(SCALA_XML)
+bin/jarget: jarget.jar
+	echo $(SCALA_XML)
+	scala jarget.jar uber -scala -sh -o bin/jarget -m jarget.jar -j $(SCALA_XML_PATH)
 
 install: bin/jarget
 	cp -v bin/jarget ~/bin
