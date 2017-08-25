@@ -524,3 +524,57 @@ object OptParseUtils {
   }
 
 }
+
+
+
+
+class OptParse{
+  import OptParseUtils._
+  import scala.collection.mutable.ListBuffer
+  private var opts = ListBuffer[ArgSpec]()
+
+  def addOption(
+    name: String,
+    mandatory: Boolean = false,
+    description: String = ""
+  )(action: List[String] => Unit){
+
+    opts append ArgSpec(name, mandatory, description, action)
+  }
+
+  def getOptions() = opts.toList
+
+  def showHelp() = {
+    println("Options\n")
+    opts foreach { o =>
+      println(s" ${o.name}\t${o.description}")
+    }
+  }
+
+  def parseArgs(arglist: List[String]) = {
+    val data   = getCmdArgs(arglist)
+    val params = opts.map(_.name).toSet
+    if (arglist.isEmpty)
+      this.showHelp()
+    else {
+
+      data.keys foreach { k =>
+         if (!params.contains(k))
+           throw new IllegalArgumentException("Error: Invalid argument " + k)
+       }
+
+       opts foreach { opt =>
+         data.get(opt.name) match {
+           case Some(args)
+               => opt.action(args)
+           case None
+               => {
+                 if (opt.mandatory)
+                   throw new IllegalArgumentException("Error: missing mandatory argument " + opt.name)
+               }
+         }
+       }
+    }
+  } // --- End of method parseargs --- //
+
+} // End of class OptParse
