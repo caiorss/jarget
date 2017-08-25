@@ -375,60 +375,9 @@ Note: The XML in the clipboard is a maven coordinate:
     case List("sys", "-expath", program)
         => Utils.getProgramPath(program) foreach println
 
-    // -----------  Jar files  ------------------- //
-
-    // Print Jar manifest file or "META-INF/MANIFEST.MF"
-    case List("jar", "-man", jarFile)
-        =>  JarUtils.withJarException{
-          JarUtils.showManifest(jarFile)
-        }
-
-   // Show main class of jar file 
-    case List("jar", "-main", jarFile)
-        => JarUtils.withJarException{
-          JarUtils.getMainClass(jarFile) foreach println
-        }
-
-
-    case List("jar", "-show", jarFile)
-        =>  JarUtils.withJarException{
-          JarUtils.showFiles(jarFile)
-        }
-
-    // Show only asset files ignoring class files.
-    case List("jar", "-assets", jarFile)
-        => JarUtils.withJarException{
-          JarUtils.getAssetFiles(jarFile) foreach println
-        }
-
-    case List("jar", "-cat", jarFile, file)
-        => JarUtils.withJarException{
-          JarUtils.printFile(jarFile, file)
-        }
-
-    case List("jar", "-extract", jarFile, file)
-        => JarUtils.withJarException{
-          JarUtils.extractFile(jarFile, file, ".")
-        }
-
-    case List("jar", "-extract", jarFile, file, path)
-        => JarUtils.withJarException{
-          JarUtils.extractFile(jarFile, file, path)
-        }
-
-    case List("jar", "-extract-all", jarFile)
-        => {
-          val path = new java.io.File(jarFile)
-            .getName()
-            .stripSuffix(".jar")
-          Utils.mkdir(path)
-          JarUtils.withJarException{
-            JarUtils.extract(jarFile, path, true)
-          }
-        }
-
-    case List("jar", "-extract-all", jarFile, path)
-        => JarUtils.extract(jarFile, path, true)
+    // -----------  Jar files  --------------- //
+    case "jar"::rest
+        =>  JarUtils.withJarException{ parseJarArgs(rest) }
 
     //------------  Make Uber Jar ------------- //
     case "uber"::rest => parseUberArgs(rest)
