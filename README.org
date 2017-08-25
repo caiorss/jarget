@@ -923,57 +923,6 @@ $ jarget sys -prop
    -----------------------------     --------------------------------------------------
 
 #+END_SRC
-
-** Getting a Binary Release 
-
-An fat-jar executable binary release can be downloaded from this link:
-
- - [[https://github.com/caiorss/jarget/raw/gh-pages/jarget][jarget Download]]
-
-Or it can be downloaded with those shell commands below: 
-
-#+BEGIN_SRC sh
-$ curl -O -L https://github.com/caiorss/jarget/raw/gh-pages/jarget
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   130  100   130    0     0     28      0  0:00:04  0:00:04 --:--:--    32
-100 5675k  100 5675k    0     0   490k      0  0:00:11  0:00:11 --:--:-- 1011k
-
-$ chmod +x jarget
-
-$ ./jarget 
-jarget - Tool to download jar packages.
-
- -show [package]                 - Show package's information
-
- -pom  [package]                 - Show package's pom file
-
-... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... 
-#+END_SRC
-
-Or 
-
-#+BEGIN_SRC sh 
-$ curl -O -L https://github.com/caiorss/jarget/raw/gh-pages/jarget && chmod +x jarget && ./jarget 
-#+END_SRC
-
-On Windows the application can be executed with: 
-
-#+BEGIN_SRC sh 
-$ java -jar jarget 
-
-jarget - Tool to download jar packages.
-
- -show [package]                 - Show package's information
-
- -pom  [package]                 - Show package's pom file
-
- -get  [package]                 - Download package and dependencies to ./lib
-
- -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
-
-... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... 
-#+END_SRC
 ** Build Instructions 
 *** Requirements
 
@@ -1089,6 +1038,60 @@ Run the executable file:
 
 Install it: Just add this file to any directory in $PATH variable. It
 can be ~/bin.
+** Getting a Binary Release 
+
+An fat-jar executable binary release can be downloaded from this link:
+
+ - Most update Snapshot [[https://github.com/caiorss/jarget/raw/gh-pages/jarget][jarget Download]]
+
+ - Release [[https://github.com/caiorss/jarget/raw/001fc101096bb6d85c8a641d5809a583b5eb489c/jarget][jarget v1.0]]
+
+ - Release [[https://github.com/caiorss/jarget/raw/4dc53be306dbbfc5640c3e4e8be2baa38bea5eee/jarget][jarget v1.1]]
+
+Or it can be downloaded with those shell commands below: 
+
+#+BEGIN_SRC sh
+$ curl -O -L https://github.com/caiorss/jarget/raw/gh-pages/jarget
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   130  100   130    0     0     28      0  0:00:04  0:00:04 --:--:--    32
+100 5675k  100 5675k    0     0   490k      0  0:00:11  0:00:11 --:--:-- 1011k
+
+$ chmod +x jarget
+
+$ ./jarget 
+jarget - Tool to download jar packages.
+
+ -show [package]                 - Show package's information
+
+ -pom  [package]                 - Show package's pom file
+
+... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... 
+#+END_SRC
+
+Or 
+
+#+BEGIN_SRC sh 
+$ curl -O -L https://github.com/caiorss/jarget/raw/gh-pages/jarget && chmod +x jarget && ./jarget 
+#+END_SRC
+
+On Windows the application can be executed with: 
+
+#+BEGIN_SRC sh 
+$ java -jar jarget 
+
+jarget - Tool to download jar packages.
+
+ -show [package]                 - Show package's information
+
+ -pom  [package]                 - Show package's pom file
+
+ -get  [package]                 - Download package and dependencies to ./lib
+
+ -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
+
+... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... 
+#+END_SRC
 ** TODO Tasks 
 
  - [ ]  - Add search features.  
