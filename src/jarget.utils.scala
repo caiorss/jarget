@@ -519,6 +519,13 @@ object OptParseUtils {
       case _      => xs
     }
 
+    def getNumArgs(n: Int) = xs.length match {
+      case k if n == k
+          => xs
+      case _
+          => throw new IllegalArgumentException(s"Error: ${cmd} expects ${n} arguments.")
+    }
+
     def getFlag() = xs match {
       case List() => true
       case _      => throw new IllegalArgumentException("Error: Unexpected argument of " + cmd)
