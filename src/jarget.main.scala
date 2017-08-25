@@ -243,24 +243,32 @@ Jar Files Inspection
  jar -extract-all [jar] [path]      - Extract all files from jar package to [path] directory.
 
  jar -extract-all [jar]             - Extract jar file to directory with same name of jar file 
-                                      at current directory. If file is lib/chart.jar it will 
+                                      at current directory. If file is lib/chart.jar it will  
+                                      extracted to ./chart 
     
- - Build an uber jar named output.jar from main.jar which contains the
-   main class and lib1 and lib2 are the directories containing jar files.
+Uber Jar 
 
- jar -uber output.jar main.jar -path ./lib1 ./lib2 
 
  - Build an scala uber jar named output.jar from main.jar which
    contains the main class and lib1 and lib2 are the directories
    containing jar files. It bundles the scala-library.jar runtime with
    the application.
 
- $ jar -scala-uber output.jar main.jar
+ $ jar uber -scala -o output.jar -m main.jar
 
- $ jar -scala-uber output.jar main.jar -path ./lib1 ./lib2 
- 
+ $ jar uber -scala -o output.jar -m main.jar -p ./lib1 ./lib2 
+  
+ $ jar uber -scala -sh -o output.jar -m main.jar -p ./lib1 -j dependency1.jar -r ./resources1 ./resources2 
 
-                                  extract to ./chart 
+ jar uber 
+   -o [output file]         - (mandatory) Output jar file bundled with all dependencies.
+   -m [main jar file]       - (optional)  Jar file containing main class.
+   -p [path1] [path2] ...   - (optional)  Directories with jar file that will be included in the uber jar.
+   -j [jar1.jar] [jar2.jar] - (optional)  Single jar files that will be included in the uber jar.
+   -r [dir1] [dir2] ...     - (optional)  Directories containing resource files 
+   -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar 
+   -sh                      - (optional)  Makes the jar file as a self-executable Unix app.                                 
+
 Classpath
 
  cpath -show                        - Get classpath from ./lib directory
