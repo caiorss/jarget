@@ -19,32 +19,26 @@ object Main{
     var resources: List[String] = List()
 
     uberParser.addOption("-scala", false, "Pack Scala library with the application."){ arg =>
-      scala = true
+      scala = arg.getFlag()
     }
 
     uberParser.addOption("-sh", false, "Build self-executable jar file"){ arg =>
       sh = true
     }
-    uberParser.addOption("-m", true, "Main file"){ args =>
-      args match {
-        case List(m) => main = Some(m)
-        case _       => {
-          println("Error: wrong number of parameters.")
-          System.exit(1)
-          }
-      }
+    uberParser.addOption("-m", true, "Main file"){ arg =>
+      main  = Some(arg.getOne())
     }
     uberParser.addOption("-o", true, "Output file"){ arg =>
-      output = arg(0)
+      output = arg.getOne()
     }
     uberParser.addOption("-p", false, "Paths containing libraries"){ arg =>
-      paths = arg
+      paths = arg.getOneOrMany()
     }
     uberParser.addOption("-j", false, "Additional jar files."){ arg =>
-      files = arg
+      files = arg.getOneOrMany()
     }
     uberParser.addOption("-r", false, "Resource directories."){ arg =>
-      resources = arg
+      resources = arg.getOneOrMany()
     }
 
     try
