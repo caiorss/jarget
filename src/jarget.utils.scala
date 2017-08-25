@@ -504,6 +504,28 @@ exit 0
 
 object OptParseUtils {
 
+  class ArgResult(cmd: String, xs: List[String]){
+
+    def getOne() = xs  match {
+      case List(a) => a
+      case List()  => throw new IllegalArgumentException("Error: Expected argument of " + cmd)
+      case _       => throw new IllegalArgumentException("Error: Unexpected argument of " + cmd)
+    }
+
+    def getMany() = xs
+
+    def getOneOrMany() = xs match {
+      case List() => throw new IllegalArgumentException("Error: Expected at least one argument of " + cmd)
+      case _      => xs
+    }
+
+    def getFlag() = xs match {
+      case List() => true
+      case _      => throw new IllegalArgumentException("Error: Unexpected argument of " + cmd)
+    }
+
+  }
+
   case class ArgSpec(
     name:        String,
     mandatory:   Boolean,
