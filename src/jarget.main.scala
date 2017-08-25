@@ -360,41 +360,8 @@ Note: The XML in the clipboard is a maven coordinate:
         => JarUtils.extract(jarFile, path, true)
 
 
-    case List("jar", "-scala-uber", output, main)
-        => {
-          JarBuilder.makeUberJar(output, main, scalaLib = true)
-          println("Build file:   " + output)
-          println("Run  it with: java -jar " + output)
-        } 
-
-    case List("jar", "-scala-uber", "-sh", output, main)
-        => {
-          JarBuilder.makeUberJar(output, main, scalaLib = true, executable = true)
-          println("Build file:   " + output)
-          println("Run  it with: ./" + output)
-        } 
-
-
-    case "jar"::"-scala-uber"::output::main::"-paths"::paths
-        => {
-          JarBuilder.makeUberJar(output, main, paths = paths, scalaLib = true)
-          println("Build file:   " + output)
-          println("Run  it with: java -jar " + output)
-        }     
-
-    case "jar"::"-scala-uber"::"-sh"::output::main::"-paths"::paths
-        => {
-          JarBuilder.makeUberJar(output, main, paths = paths, scalaLib = true, executable = true)
-          println("Build file:   " + output)
-          println("Run  it with: java -jar " + output)
-        }   
-
-    case "jar"::"-uber"::output::main::"-paths"::paths
-        => {
-          JarBuilder.makeUberJar(output, main, paths = paths)
-          println("Build file:   " + output)
-          println("Run  it with: java -jar " + output)
-        }
+    case "jar"::"-uber"::rest =>
+      uberParser(rest)
 
     // ------- Class Path  ----------------- //
 
