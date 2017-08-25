@@ -1,10 +1,74 @@
 package jarget.main
 
 import jarget.utils.{Utils, JarUtils, JarBuilder}
+import jarget.utils.OptParse
 import jarget.mvn._
 
 
 object Main{
+
+  def uberParser(arglist: List[String]) = {
+    val uberParser = new OptParse()
+
+    var sh                    = false
+    var scala                 = false
+    var output                = "output.jar"
+    var main: Option[String]  = None
+    var paths: List[String]   = List()
+    var files: List[String]   = List()
+    var resources: List[String] = List()
+
+    uberParser.addOption("-scala", false, "Pack Scala library with the application."){ arg =>
+      scala = true
+    }
+
+    uberParser.addOption("-sh", false, "Build self-executable jar file"){ arg =>
+      sh = true
+    }
+    uberParser.addOption("-m", true, "Main file"){ args =>
+      args match {
+        case List(m) => main = Some(m)
+        case _       => {
+          println("Error: wrong number of parameters.")
+          System.exit(1)
+          }
+      }
+    }
+    uberParser.addOption("-o", true, "Output file"){ arg =>
+      output = arg(0)
+    }
+    uberParser.addOption("-p", false, "Paths containing libraries"){ arg =>
+      paths = arg
+    }
+    uberParser.addOption("-j", false, "Additional jar files."){ arg =>
+      files = arg
+    }
+    uberParser.addOption("-r", false, "Resource directories."){ arg =>
+      resources = arg
+    }
+
+    try
+      uberParser.parseArgs(arglist)
+    catch {
+      case ex: java.lang.IllegalArgumentException
+          => {
+            println(ex.getMessage)
+            System.exit(1)
+          }
+    }
+
+    main match {
+      case Some(m)
+          => {
+            JarBuilder.makeUberJar(output, m, paths, files, resources, scala, sh)
+            println("Built file:  " + output + " ok")
+            println("Run it with: $ java -jar " + output)
+            System.exit(0)
+          }
+      case None
+          => println("Error: missing main file ") ; System.exit(1)
+    }
+  }
 
   def parsePack(pstr: String) = {
     val p = Packget.readPack(pstr)
