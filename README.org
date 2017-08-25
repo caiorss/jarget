@@ -923,121 +923,72 @@ $ jarget sys -prop
    -----------------------------     --------------------------------------------------
 
 #+END_SRC
-** Build Instructions 
-*** Requirements
+** Building Instructions 
 
-It requires java 8, Scala version > 2.12 and the script [[https://github.com/caiorss/build-fat-jar/blob/master/jar-tools.sh][ jar-tools.sh]]
-that is downloaded automatically by the Makefile. 
+Build jarget.jar by running 
 
-*** Building 
-**** Building with Makefile 
+ - =$ make=
 
-1. Download or clone this repository. 
+#+BEGIN_SRC sh
+# Build  
+$ make 
 
-2. Get into the top level directory:
+# Run it with 
+$ scala jarget.jar 
+#+END_SRC
 
-   + To build a fat-jar (application packed with all dependencies) run
-     =$ make fatjar=
+Build standalone jarget by running 
 
-   + To build an executable named _jarget.sh_ run =$ make sh=.
-
-3. Install in ~/bin as ~/bin/jarget run =$ make install= 
-
-**** Building manually 
-
-Download the utility script 
+ - =$ make sh= 
 
 #+BEGIN_SRC sh 
-  $ curl -O -L https://raw.githubusercontent.com/caiorss/build-fat-jar/master/jar-tools.sh
-  chmod +x jar-tools.sh
+# Build 
+$ make sh
+scala jarget.jar uber -scala -sh -o bin/jarget -m jarget.jar -j /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.jar
+Built file:  bin/jarget ok
+Run it with: $ java -jar bin/jarget
+
+# Run it with 
+$ ./bin/jarget 
+
+# Or run it with 
+$ java -jar bin/jarget
+
+# Or ruin it with 
+$ sh ./bin/jarget doc
+
 #+END_SRC
 
-Compile the application
+Build and install standalone jarget tool in ~/bin 
+
+ - =$ make install=
 
 #+BEGIN_SRC sh 
-  $ scalac jarget.scala -d jarget.jar
+# Build and install 
+#
+$ make install
+scala jarget.jar uber -scala -sh -o bin/jarget -m jarget.jar -j /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.jar
+Built file:  bin/jarget ok
+Run it with: $ java -jar bin/jarget
+cp -v bin/jarget ~/bin
+'bin/jarget' -> '/home/archbox/bin/jarget'
+
+# Run it - Assuming that ~/bin is in $PATH. 
+#
+$ jarget
+jarget - Tool to download jar packages.
+
+Maven Packages / Jar Packages
+
+ mvn -show [package]                 - Show package's information
+
+ mvn -pom  [package]                 - Show package's pom file
+
+... ... ... 
 #+END_SRC
 
-Check where are Scala's libraries.
-
-#+BEGIN_SRC sh  
-  $ ./jar-tools.sh -scala-lib
-  Scala library path = /home/archbox/opt/scala-2.12.3/lib
-
-  Scala run-time lib = /home/archbox/opt/scala-2.12.3/lib/scala-library.jar
-
-  /home/archbox/opt/scala-2.12.3/lib/jline-2.14.4.jar
-  /home/archbox/opt/scala-2.12.3/lib/scala-compiler.jar
-  /home/archbox/opt/scala-2.12.3/lib/scala-library.jar
-  /home/archbox/opt/scala-2.12.3/lib/scalap-2.12.3.jar
-  /home/archbox/opt/scala-2.12.3/lib/scala-parser-combinators_2.12-1.0.6.jar
-  /home/archbox/opt/scala-2.12.3/lib/scala-reflect.jar
-  /home/archbox/opt/scala-2.12.3/lib/scala-swing_2.12-2.0.0.jar
-  /home/archbox/opt/scala-2.12.3/lib/scala-xml_2.12-1.0.6.jar
-                                
-#+END_SRC
-
-Build a fat jar 
-
-#+BEGIN_SRC sh 
-  SCALA_XML=/home/archbox/opt/scala-2.12.3/lib/scala-xml_2.12-1.0.6.jar
-  ./jar-tools.sh -scala-build-jar bin/jarget-fat.jar jarget.jar $(SCALA_XML)
-#+END_SRC
-
-Run the fat-jar or ubber jar application.
-
-#+BEGIN_SRC text 
-  $ java -jar bin/jarget-fat.jar 
-
-  jarget - Tool to download jar packages.
-
-   -show [package]                 - Show package's information
-
-   -pom  [package]                 - Show package's pom file
-
-   -get  [package]                 - Download package and dependencies to ./lib
-
-   -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
-
-  ... ... ... 
-#+END_SRC
-
-Build a sh file from the fat jar
-
-#+BEGIN_SRC sh 
-  $ ./jar-tools.sh -jar-to-sh bin/jarget-fat.jar bin/jarget
-  Build jar-executable bin/jarget
-  Run it with ./bin/jarget   
-#+END_SRC
-
-Run the executable file:
-
-#+BEGIN_SRC sh 
-
-  $ file ./bin/jarget 
-  ./bin/jarget: a /usr/bin/env sh  script executable (binary data)
-
-  $ head -n 3 ./bin/jarget 
-  #!/usr/bin/env sh 
-  java -jar $0 $@
-  exit 0
-
-  $ ./bin/jarget 
-  jarget - Tool to download jar packages.
-
-   -show [package]                 - Show package's information
-
-   -pom  [package]                 - Show package's pom file
-
-   -get  [package]                 - Download package and dependencies to ./lib
-
-  ... ... 
 
 
-#+END_SRC
-
-Install it: Just add this file to any directory in $PATH variable. It
-can be ~/bin.
 ** Getting a Binary Release 
 
 An fat-jar executable binary release can be downloaded from this link:
