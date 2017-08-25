@@ -80,6 +80,51 @@ object Main{
 
   import MainUtils._
 
+  def parseJarArgs(arglist: List[String]) = arglist match {
+
+    case List()
+        => println("Jar commands: [ -man | -main | -show | -cat | -assets | -extract | -extract-all ]")
+
+    // Print Jar manifest file or "META-INF/MANIFEST.MF"
+    case List("-man", jarFile)
+        => JarUtils.showManifest(jarFile)
+
+    // Pint Main class
+    case List("-main", jarFile)
+        => JarUtils.getMainClass(jarFile) foreach println
+
+    case List("-show", jarFile)
+        => JarUtils.showFiles(jarFile)
+
+    // Show only asset files ignoring class files.
+    case List("-assets", jarFile)
+        => JarUtils.getAssetFiles(jarFile) foreach println
+
+    case List("-cat", jarFile, file)
+        => JarUtils.printFile(jarFile, file)
+
+    case List("-extract", jarFile, file)
+        => JarUtils.extractFile(jarFile, file, ".")
+
+    case List("-extract", jarFile, file, path)
+        => JarUtils.extractFile(jarFile, file, path)
+
+    case List("-extract-all", jarFile)
+        => {
+          val path = new java.io.File(jarFile)
+            .getName()
+            .stripSuffix(".jar")
+          Utils.mkdir(path)
+          JarUtils.extract(jarFile, path, true)
+
+        }
+
+    case List("-extract-all", jarFile, path)
+        => JarUtils.extract(jarFile, path, true)
+
+    case _ => println("Error: Invalid jar argument")
+
+  } //------- EOF function parseJarArgs ------- //
 
 
   def parseUberArgs(arglist: List[String]) = {
