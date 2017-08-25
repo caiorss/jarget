@@ -375,8 +375,8 @@ Note: The XML in the clipboard is a maven coordinate:
         => JarUtils.extract(jarFile, path, true)
 
 
-    case "jar"::"-uber"::rest =>
-      uberParser(rest)
+    // Make Uber Jar
+    case "uber"::rest => uberParser(rest)
 
     // ------- Class Path  ----------------- //
 
