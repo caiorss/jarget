@@ -18,28 +18,49 @@ object Main{
     var files: List[String]   = List()
     var resources: List[String] = List()
 
-    uberParser.addOption("-scala", false, "Pack Scala library with the application."){ arg =>
-      scala = arg.getFlag()
-    }
+    uberParser.addOption(
+      "-scala",
+      "Pack Scala library with the application.",
+      arg => scala = arg.getFlag()
+    )
 
-    uberParser.addOption("-sh", false, "Build self-executable jar file"){ arg =>
-      sh = true
-    }
-    uberParser.addOption("-m", true, "Main file"){ arg =>
-      main  = Some(arg.getOne())
-    }
-    uberParser.addOption("-o", true, "Output file"){ arg =>
-      output = arg.getOne()
-    }
-    uberParser.addOption("-p", false, "Paths containing libraries"){ arg =>
-      paths = arg.getOneOrMany()
-    }
-    uberParser.addOption("-j", false, "Additional jar files."){ arg =>
-      files = arg.getOneOrMany()
-    }
-    uberParser.addOption("-r", false, "Resource directories."){ arg =>
-      resources = arg.getOneOrMany()
-    }
+    uberParser.addOption(
+      "-sh",
+      "Build self-executable jar file",
+      arg => sh = true
+    )
+
+    uberParser.addOption(
+      "-m",
+      "Main file",
+      true,
+      arg =>  main = Some(arg.getOne())
+    )
+
+    uberParser.addOption(
+      "-o",
+      "Output file",
+      arg => output = arg.getOne()
+    )
+
+    uberParser.addOption(
+      "-p",
+      "Paths containing libraries",
+       arg => paths = arg.getOneOrMany()
+    )
+
+    uberParser.addOption(
+      "-j",
+      "Additional jar files.",
+      false,
+      arg => files = arg.getOneOrMany()
+    )
+
+    uberParser.addOption(
+      "-r",
+      "Resource directories.",
+      arg => resources = arg.getOneOrMany()
+    )
 
     try
       uberParser.parseArgs(arglist)
