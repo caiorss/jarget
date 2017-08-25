@@ -1,10 +1,12 @@
 package jarget.main
 
 import jarget.utils.{Utils, JarUtils, JarBuilder}
+import jarget.utils.OptParse
 import jarget.mvn._
 
 
-object Main{
+object MainUtils {
+
 
   def parsePack(pstr: String) = {
     val p = Packget.readPack(pstr)
@@ -69,7 +71,140 @@ object Main{
     val url = s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
     println("Opening package: " + url)
     Utils.openUrl(url)
-  }
+  }  
+
+}
+
+
+object Main{
+
+  import MainUtils._
+
+  def parseJarArgs(arglist: List[String]) = arglist match {
+
+    case List()
+        => println("Jar commands: [ -man | -main | -show | -cat | -assets | -extract | -extract-all ]")
+
+    // Print Jar manifest file or "META-INF/MANIFEST.MF"
+    case List("-man", jarFile)
+        => JarUtils.showManifest(jarFile)
+
+    // Pint Main class
+    case List("-main", jarFile)
+        => JarUtils.getMainClass(jarFile) foreach println
+
+    case List("-show", jarFile)
+        => JarUtils.showFiles(jarFile)
+
+    // Show only asset files ignoring class files.
+    case List("-assets", jarFile)
+        => JarUtils.getAssetFiles(jarFile) foreach println
+
+    case List("-cat", jarFile, file)
+        => JarUtils.printFile(jarFile, file)
+
+    case List("-extract", jarFile, file)
+        => JarUtils.extractFile(jarFile, file, ".")
+
+    case List("-extract", jarFile, file, path)
+        => JarUtils.extractFile(jarFile, file, path)
+
+    case List("-extract-all", jarFile)
+        => {
+          val path = new java.io.File(jarFile)
+            .getName()
+            .stripSuffix(".jar")
+          Utils.mkdir(path)
+          JarUtils.extract(jarFile, path, true)
+
+        }
+
+    case List("-extract-all", jarFile, path)
+        => JarUtils.extract(jarFile, path, true)
+
+    case _ => println("Error: Invalid jar argument")
+
+  } //------- EOF function parseJarArgs ------- //
+
+
+  def parseUberArgs(arglist: List[String]) = {
+    val parser = new OptParse()
+
+    var sh                    = false
+    var scala                 = false
+    var output                = "output.jar"
+    var main: Option[String]  = None
+    var paths: List[String]   = List()
+    var files: List[String]   = List()
+    var resources: List[String] = List()
+
+    parser.addOption(
+      "-scala",
+      "Pack Scala library with the application.",
+      arg => scala = arg.getFlag()
+    )
+
+    parser.addOption(
+      "-sh",
+      "Build self-executable jar file",
+      arg => sh = true
+    )
+
+    parser.addOption(
+      "-m",
+      "Main file",
+      true,
+      arg =>  main = Some(arg.getOne())
+    )
+
+    parser.addOption(
+      "-o",
+      "Output file",
+      arg => output = arg.getOne()
+    )
+
+    parser.addOption(
+      "-p",
+      "Paths containing libraries",
+       arg => paths = arg.getOneOrMany()
+    )
+
+    parser.addOption(
+      "-j",
+      "Additional jar files.",
+      false,
+      arg => files = arg.getOneOrMany()
+    )
+
+    parser.addOption(
+      "-r",
+      "Resource directories.",
+      arg => resources = arg.getOneOrMany()
+    )
+
+    try
+      parser.parseArgs(arglist)
+    catch {
+      case ex: java.lang.IllegalArgumentException
+          => {
+            println(ex.getMessage)
+            System.exit(1)
+          }
+    }
+
+    main match {
+      case Some(m)
+          => {
+            JarBuilder.makeUberJar(output, m, paths, files, resources, scala, sh)
+            println("Built file:  " + output + " ok")
+            println("Run it with: $ java -jar " + output)
+            System.exit(0)
+          }
+      case None
+          => println("Error: missing main file ") ; System.exit(1)
+    }
+  } // End of uberParser
+
 
   def showHelp() = println("""jarget - Tool to download jar packages.
 
@@ -240,97 +375,13 @@ Note: The XML in the clipboard is a maven coordinate:
     case List("sys", "-expath", program)
         => Utils.getProgramPath(program) foreach println
 
-    // -----------  Jar files  ------------------- //
+    // -----------  Jar files  --------------- //
+    case "jar"::rest
+        =>  JarUtils.withJarException{ parseJarArgs(rest) }
 
-    // Print Jar manifest file or "META-INF/MANIFEST.MF"
-    case List("jar", "-man", jarFile)
-        =>  JarUtils.withJarException{
-          JarUtils.showManifest(jarFile)
-        }
+    //------------  Make Uber Jar ------------- //
+    case "uber"::rest => parseUberArgs(rest)
 
-   // Show main class of jar file 
-    case List("jar", "-main", jarFile)
-        => JarUtils.withJarException{
-          JarUtils.getMainClass(jarFile) foreach println
-        }
-
-
-    case List("jar", "-show", jarFile)
-        =>  JarUtils.withJarException{
-          JarUtils.showFiles(jarFile)
-        }
-
-    // Show only asset files ignoring class files.
-    case List("jar", "-assets", jarFile)
-        => JarUtils.withJarException{
-          JarUtils.getAssetFiles(jarFile) foreach println
-        }
-
-    case List("jar", "-cat", jarFile, file)
-        => JarUtils.withJarException{
-          JarUtils.printFile(jarFile, file)
-        }
-
-    case List("jar", "-extract", jarFile, file)
-        => JarUtils.withJarException{
-          JarUtils.extractFile(jarFile, file, ".")
-        }
-
-    case List("jar", "-extract", jarFile, file, path)
-        => JarUtils.withJarException{
-          JarUtils.extractFile(jarFile, file, path)
-        }
-
-    case List("jar", "-extract-all", jarFile)
-        => {
-          val path = new java.io.File(jarFile)
-            .getName()
-            .stripSuffix(".jar")
-          Utils.mkdir(path)
-          JarUtils.withJarException{
-            JarUtils.extract(jarFile, path, true)
-          }
-        }
-
-    case List("jar", "-extract-all", jarFile, path)
-        => JarUtils.extract(jarFile, path, true)
-
-
-    case List("jar", "-scala-uber", output, main)
-        => {
-          JarBuilder.makeUberJar(output, main, scalaLib = true)
-          println("Build file:   " + output)
-          println("Run  it with: java -jar " + output)
-        } 
-
-    case List("jar", "-scala-uber", "-sh", output, main)
-        => {
-          JarBuilder.makeUberJar(output, main, scalaLib = true, executable = true)
-          println("Build file:   " + output)
-          println("Run  it with: ./" + output)
-        } 
-
-
-    case "jar"::"-scala-uber"::output::main::"-paths"::paths
-        => {
-          JarBuilder.makeUberJar(output, main, paths = paths, scalaLib = true)
-          println("Build file:   " + output)
-          println("Run  it with: java -jar " + output)
-        }     
-
-    case "jar"::"-scala-uber"::"-sh"::output::main::"-paths"::paths
-        => {
-          JarBuilder.makeUberJar(output, main, paths = paths, scalaLib = true, executable = true)
-          println("Build file:   " + output)
-          println("Run  it with: java -jar " + output)
-        }   
-
-    case "jar"::"-uber"::output::main::"-paths"::paths
-        => {
-          JarBuilder.makeUberJar(output, main, paths = paths)
-          println("Build file:   " + output)
-          println("Run  it with: java -jar " + output)
-        }
 
     // ------- Class Path  ----------------- //
 
