@@ -533,7 +533,6 @@ object OptParseUtils {
     action:      ArgResult => Unit
   )
 
-  def getCmdArgs(arglist: List[String]) :  Map[String, List[String]] = {
   /** Transform command line arguments into groups */
   def parseCmdArgs(arglist: List[String]): Map[String, List[String]] = {
 
