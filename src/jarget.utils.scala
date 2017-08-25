@@ -499,4 +499,28 @@ exit 0
     resources foreach { p => addDirectory(jos, p) }    
   }  
 
+} // -------- End of object JarUtils -------- //
+
+
+object OptParseUtils {
+
+  case class ArgSpec(
+    name:        String,
+    mandatory:   Boolean,
+    description: String,
+    action:      List[String] => Unit
+  )
+
+  def getCmdArgs(arglist: List[String]) :  Map[String, List[String]] = {
+    val xs = arglist map { (opt: String) =>
+      opt.split("=") match {
+        case Array(arg)        => (arg, List[String]())
+        case Array("",  _)     => throw new Exception("Error bad formated argument")
+        case Array(arg, value) => (arg, value.split(":").toList)
+        case _                 => throw new Exception("Error bad formated argument")
+      }
+    }
+    xs.toMap
+  }
+
 }
