@@ -48,8 +48,64 @@ case class PomData(
   packaging:   String
 )
 
+/** Extraction of data from POM files */
+object Pom{
 
-object Packget { 
+    /** Extract Pom data from xml file */
+  def getPomData(pom: scala.xml.Node): PomData = {
+    val nodes = pom.child
+    val getText = (tag: String) => {
+      nodes.find(_.label == tag).map(_.text).getOrElse("")
+    }
+    PomData(
+      name        = getText("name"), 
+      url         = getText("url"),
+      description = getText("description"),
+      group       = getText("groupId"),
+      artifact    = getText("artifactId"),
+      version     = getText("version"),
+      packaging   = getText("packaging")
+    )  
+  }
+
+
+  /** Extract package data from pom xml file. */
+  def getPomPackData(pom: scala.xml.Node) = {
+    val nodes   = pom.child
+    val getText = (tag: String) => nodes.find(_.label == tag).map(_.text)
+    for {
+      group     <- getText("groupId")
+      artifact  <- getText("artifactId")
+      version   <- getText("version")
+    } yield PackData(group, artifact, version)
+  }
+
+  /** Display attributes of a POM file in a summarized way */
+  def showPomData(dat: PomData) = {
+    println( "Package:         " + dat.name)
+    println( "Packaging:       " + dat.packaging)
+    println(s"Coordinates[1]:  group = ${dat.group} artifact = ${dat.artifact} version = ${dat.version}")
+    println(s"Coordinates[2]:  ${dat.group}/${dat.artifact}/${dat.version}")
+    println( "Url:             " + dat.url)
+    println( "Description:     " + dat.description)
+  }  
+
+  /** Display attributes of a POM Xml in the same way as showPomData */
+  def showPomDataFromXml(uri: String, showUri: Boolean = false) = {    
+    val doc = scala.xml.XML.load(uri)
+    if (showUri) println("Uri = " + uri)
+    showPomData(Pom.getPomData(doc))
+    println("\n")
+  }  
+
+
+
+} // -------- End of object Pom -------- // 
+
+
+object Packget {
+
+  import Pom._
 
   def getCentralMavenArtifactURL(ext: String) = (pack: PackData) => {
     val gpath    = pack.group.replaceAll("\\.", "/")
@@ -103,33 +159,6 @@ object Packget {
       artifact = (xml \\ "dependency" \\ "artifactId").text,
       version  = (xml \\ "dependency" \\ "version").text
     )
-  }
-
-
-  def getPomData(pom: scala.xml.Node) = {
-    val nodes = pom.child
-    val getText = (tag: String) => {
-      nodes.find(_.label == tag).map(_.text).getOrElse("")
-    }
-    PomData(
-      name        = getText("name"), 
-      url         = getText("url"),
-      description = getText("description"),
-      group       = getText("groupId"),
-      artifact    = getText("artifactId"),
-      version     = getText("version"),
-      packaging   = getText("packaging")
-    )  
-  }
-
-  def getPomPackData(pom: scala.xml.Node) = {
-    val nodes   = pom.child
-    val getText = (tag: String) => nodes.find(_.label == tag).map(_.text)
-    for {
-      group     <- getText("groupId")
-      artifact  <- getText("artifactId")
-      version   <- getText("version")
-    } yield PackData(group, artifact, version)
   }
 
 
