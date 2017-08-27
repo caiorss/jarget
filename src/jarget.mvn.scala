@@ -30,8 +30,14 @@ package jarget.mvn
 
 import jarget.utils._
 
-case class PackData(group: String, artifact: String, version: String)
+/** Java Package Data  */
+case class PackData(
+  group:    String,
+  artifact: String,
+  version:  String
+)
 
+/** Data from the POM file - Project Object Model */
 case class PomData(
   name:        String,
   url:         String,
