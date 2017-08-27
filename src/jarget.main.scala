@@ -47,9 +47,9 @@ object MainUtils {
     p.get 
   }
 
-  def showPomData(pack: PackData) = {
+  def showPacakgeInfo(pack: PackData) = {
     val pom = Packget.getPomXML(pack)
-    val dat = Packget.getPomData(pom)
+    val dat = Pom.getPomData(pom)
     println( "Package:         " + dat.name)
     println( "Packaging:       " + dat.packaging)
     println(s"Coordinates[1]:  group = ${dat.group} artifact = ${dat.artifact} version = ${dat.version}")
@@ -62,6 +62,7 @@ object MainUtils {
       println("  - " + Packget.formatPack(p) + "\n")
     }
   }
+
 
   def showPom(pack: PackData) = {
     println(Packget.getPomXML(pack))
@@ -328,7 +329,7 @@ Note: The XML in the clipboard is a maven coordinate:
         => showPom(parsePack(pstr))
 
     case List("mvn", "-show", pstr)
-        => showPomData(parsePack(pstr))
+        => showPacakgeInfo(parsePack(pstr))
 
     // Download a package and its dependencies
     case List("mvn", "-get", pstr)
@@ -342,7 +343,7 @@ Note: The XML in the clipboard is a maven coordinate:
         => Packget.downloadPackage(parsePack(pstr), path)
 
     case List("mvn", "-browse", pstr)
-        =>   openUrl(parsePack(pstr))
+        => openUrl(parsePack(pstr))
 
     case List("mvn", "-go")
         => Utils.openUrl("https://mvnrepository.com")
@@ -354,7 +355,7 @@ Note: The XML in the clipboard is a maven coordinate:
         => showPom(getPackMaven())
 
     case List("mvn", "-clip", "-show")
-        => showPomData(getPackMaven())
+        => showPacakgeInfo(getPackMaven())
 
     case List("mvn", "-clip", "-get")
         => Packget.downloadPackage(getPackMaven(), "./lib")
@@ -384,12 +385,17 @@ Note: The XML in the clipboard is a maven coordinate:
     case List("sys", "-expath", program)
         => Utils.getProgramPath(program) foreach println
 
-    // -----------  Jar files  --------------- //
+    // ------ Jar package inspection and manipulation -- //
     case "jar"::rest
         =>  JarUtils.withJarException{ parseJarArgs(rest) }
 
+   //--------- Pom Files Inspection ---------- //
+
+    case "pom"::rest => rest foreach { uri => Pom.showPomDataFromXml(uri, true)}
+
     //------------  Make Uber Jar ------------- //
-    case "uber"::rest => parseUberArgs(rest)
+    case "uber"::rest
+        => parseUberArgs(rest)
 
 
     // ------- Class Path  ----------------- //
