@@ -28,6 +28,12 @@ clean:
 upload: bin/jarget
 	cd bin && git add jarget && git commit -a -m "Update release" && git push 
 
+doc: $(src)
+	scaladoc $(src) -author -doc-title "Jarget - Scala/Java automation tool" -doc-version "1.0" -doc-source-url "https://github.com/caiorss/jarget" -d ./bin/docs 
+
+
+
+
 # -------- Test Commands ----------- #
 
 
