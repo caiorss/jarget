@@ -29,6 +29,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 package jarget.mvn  
 
 import jarget.utils._
+import jarget.logger.Log.logger
 
 /** Java Package Data  */
 case class PackData(
