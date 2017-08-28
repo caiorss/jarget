@@ -97,13 +97,14 @@ object Pom{
   }
 
   /** Display attributes of a POM Xml in the same way as showPomData */
-  def showPomDataFromXml(uri: String, showUri: Boolean = false) = {    
+  def showPomDataFromUri(uri: String, showUri: Boolean = false) = {
     val doc = scala.xml.XML.load(uri)
     if (showUri) println("Uri = " + uri)
     showPomData(Pom.getPomData(doc))
     println("\n")
   }  
 
+} // -------- End of object Pom -------- //
 
 
 } // -------- End of object Pom -------- // 
