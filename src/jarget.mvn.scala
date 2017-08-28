@@ -29,9 +29,16 @@ OTHER DEALINGS IN THE SOFTWARE.
 package jarget.mvn  
 
 import jarget.utils._
+import jarget.logger.Log.logger
 
-case class PackData(group: String, artifact: String, version: String)
+/** Java Package Data  */
+case class PackData(
+  group:    String,
+  artifact: String,
+  version:  String
+)
 
+/** Data from the POM file - Project Object Model */
 case class PomData(
   name:        String,
   url:         String,
@@ -42,8 +49,154 @@ case class PomData(
   packaging:   String
 )
 
+/** Extraction of data from POM files */
+object Pom{
 
-object Packget { 
+    /** Extract Pom data from xml file */
+  def getPomData(pom: scala.xml.Node): PomData = {
+    val nodes = pom.child
+    val getText = (tag: String) => {
+      nodes.find(_.label == tag).map(_.text).getOrElse("")
+    }
+    PomData(
+      name        = getText("name"), 
+      url         = getText("url"),
+      description = getText("description"),
+      group       = getText("groupId"),
+      artifact    = getText("artifactId"),
+      version     = getText("version"),
+      packaging   = getText("packaging")
+    )  
+  }
+
+
+  /** Extract package data from pom xml file. */
+  def getPomPackData(pom: scala.xml.Node): Option[PackData] = {
+    val nodes   = pom.child
+    val getText = (tag: String) => nodes.find(_.label == tag).map(_.text)
+    for {
+      group     <- getText("groupId")
+      artifact  <- getText("artifactId")
+      version   <- getText("version")
+    } yield PackData(group, artifact, version)
+  }
+
+  /** Display attributes of a POM file in a summarized way */
+  def showPomData(dat: PomData) = {
+    println( "Package:         " + dat.name)
+    println( "Packaging:       " + dat.packaging)
+    println(s"Coordinates[1]:  group = ${dat.group} artifact = ${dat.artifact} version = ${dat.version}")
+    println(s"Coordinates[2]:  ${dat.group}/${dat.artifact}/${dat.version}")
+    println( "Url:             " + dat.url)
+    println( "Description:     " + dat.description)
+    println("\n")
+  }
+
+  def showPomDataFromXml(pom: scala.xml.Node) = {
+    val dat = getPomData(pom)
+    showPomData(dat)
+  }
+
+  /** Display attributes of a POM Xml in the same way as showPomData */
+  def showPomDataFromUri(uri: String, showUri: Boolean = false) = {
+    val doc = scala.xml.XML.load(uri)
+    if (showUri) println("Uri = " + uri)
+    showPomData(Pom.getPomData(doc))
+    println("\n")
+  }  
+
+} // -------- End of object Pom -------- //
+
+
+object CentralMaven{
+
+  def makeRepositoryUrl(repoUrl: String) = (ext: String, pack: PackData) => {
+    val gpath    = pack.group.replaceAll("\\.", "/")
+    val artifact = pack.artifact
+    val version  = pack.version
+    s"${repoUrl}/${gpath}/${artifact}/${version}/${artifact}-${version}.${ext}"
+  }
+
+  val getArtifactUrl = makeRepositoryUrl("https://repo1.maven.org/maven2")
+
+  def searchPackage(query: String, rows: Int = 20) = {
+    import scala.concurrent.Future
+    import concurrent.ExecutionContext.Implicits.global
+    import scala.concurrent.duration.Duration
+
+    def getResultPackage(node: scala.xml.Node): Option[PackData] = {
+      val nlist = node \\ "str"
+      def nodeAttrEq(attr: String, value: String)(node: scala.xml.Node) = {
+        node.attributes.get(attr) exists (_.text == value)
+      }
+      def findNode(name: String) = {
+        nlist find nodeAttrEq("name", name) map (_.text)
+      }
+      for {
+        dat <- findNode("id")
+        Array(groupId, artifactId) = dat.split(":")
+        ver <- findNode("latestVersion")
+      } yield PackData(groupId, artifactId, ver)
+    }
+
+    def getCentralMavenPom(p: PackData) = {
+      val uri  = getArtifactUrl("pom", p)
+      val pom  =  scala.xml.XML.load(uri)
+      Pom.getPomData(pom)
+    }
+
+    val url = s"http://search.maven.org/solrsearch/select?q=${query}&rows=${rows}&wt=xml"
+    val xml = scala.xml.XML.load(url)
+    val packs = (xml \\ "doc") map { d => getResultPackage(d).get }
+
+    val result = Future.traverse(packs) { p =>
+
+      logger.info("Getting package " + p)
+
+      val fut = Future {
+        try Some(getCentralMavenPom(p))
+        catch {
+          case ex: java.io.FileNotFoundException
+              => {
+                logger.warning("Failed to get package =" + p)
+                None
+              }
+        }
+      }
+      fut onFailure { case _ =>  logger.warning("Failed to get package " + p) }
+      fut onSuccess { case _ =>  logger.info("Got package's pom " + p) }
+      fut
+    }
+    result.onSuccess { case pomList =>
+      logger.fine("Show pom data from all packages")
+      pomList foreach { pom =>
+        pom match {
+          case Some(p) => {
+            logger.fine("Show POM data of " + p)
+            Pom.showPomData(p)
+          }
+          case None    => logger.warning("Failed to get pom")
+        }
+      }
+    }
+    result.onFailure { case _ => println("Error: failed to get data") }
+
+    logger.info("Waiting result to download")
+    scala.concurrent.Await.result(result, Duration.Inf)
+  }
+
+  /** Search a package in Maven Central [[http://search.maven.org]] */
+  def searchPackageBrowser(query: String) = {
+    val encoded = java.net.URLEncoder.encode(s"search|ga|1|${query}", "UTF-8")
+    jarget.utils.Utils.openUrl("http://search.maven.org#" + encoded)
+  }
+
+} // ------ End of CentralMaven ------------- //
+
+
+object Packget {
+
+  import Pom._
 
   def getCentralMavenArtifactURL(ext: String) = (pack: PackData) => {
     val gpath    = pack.group.replaceAll("\\.", "/")
@@ -97,33 +250,6 @@ object Packget {
       artifact = (xml \\ "dependency" \\ "artifactId").text,
       version  = (xml \\ "dependency" \\ "version").text
     )
-  }
-
-
-  def getPomData(pom: scala.xml.Node) = {
-    val nodes = pom.child
-    val getText = (tag: String) => {
-      nodes.find(_.label == tag).map(_.text).getOrElse("")
-    }
-    PomData(
-      name        = getText("name"), 
-      url         = getText("url"),
-      description = getText("description"),
-      group       = getText("groupId"),
-      artifact    = getText("artifactId"),
-      version     = getText("version"),
-      packaging   = getText("packaging")
-    )  
-  }
-
-  def getPomPackData(pom: scala.xml.Node) = {
-    val nodes   = pom.child
-    val getText = (tag: String) => nodes.find(_.label == tag).map(_.text)
-    for {
-      group     <- getText("groupId")
-      artifact  <- getText("artifactId")
-      version   <- getText("version")
-    } yield PackData(group, artifact, version)
   }
 
 
