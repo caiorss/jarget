@@ -407,7 +407,7 @@ Note: The XML in the clipboard is a maven coordinate:
 
    //--------- Pom Files Inspection ---------- //
 
-    case "pom"::rest => rest foreach { uri => Pom.showPomDataFromXml(uri, true)}
+    case "pom"::rest => rest foreach { uri => Pom.showPomDataFromUri(uri, true)}
 
     //------------  Make Uber Jar ------------- //
     case "uber"::rest
