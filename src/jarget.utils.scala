@@ -5,14 +5,17 @@ object Utils{
   import scala.concurrent.Future
   import concurrent.ExecutionContext.Implicits.global
 
+  /** Create directory and its parents */
   def mkdir(path: String) = {
     new java.io.File(path).mkdirs()
   }
 
+  /** Join paths */
   def join(path1: String, path2: String) = {
     new java.io.File(path1, path2).getPath()
   }
 
+  /** Check if file exists */ 
   def fileExists(file: String) = {
     new java.io.File(file).isFile()
   }
@@ -37,6 +40,7 @@ object Utils{
     } yield text
   }
 
+  /** Open URL with default web browser */
   def openUrl(uri: String){
     import java.awt.Desktop
     import java.io.IOException
@@ -182,7 +186,7 @@ object Utils{
 } /* ---- End of object Utils ------- */
 
 
-
+/** Provides functions to inspect and check jar files */
 object JarUtils{
 
   //import scala.collection.JavaConversions._
@@ -382,7 +386,7 @@ object JarUtils{
 
 } // -------- End of object JarUtils ------------ //
 
-
+/** Provide functions to build Uber jars (aka fat-jars)*/
 object JarBuilder{
   import Utils.copyStream
   import java.util.jar.{JarOutputStream, JarEntry, JarFile}
