@@ -88,7 +88,13 @@ object Pom{
     println(s"Coordinates[2]:  ${dat.group}/${dat.artifact}/${dat.version}")
     println( "Url:             " + dat.url)
     println( "Description:     " + dat.description)
-  }  
+    println("\n")
+  }
+
+  def showPomDataFromXml(pom: scala.xml.Node) = {
+    val dat = getPomData(pom)
+    showPomData(dat)
+  }
 
   /** Display attributes of a POM Xml in the same way as showPomData */
   def showPomDataFromXml(uri: String, showUri: Boolean = false) = {    
