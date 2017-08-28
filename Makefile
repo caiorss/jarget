@@ -1,5 +1,5 @@
 
-src := src/jarget.main.scala src/jarget.utils.scala src/jarget.mvn.scala 
+src := src/jarget.main.scala src/jarget.utils.scala src/jarget.mvn.scala src/jarget.logger.scala
 
 
 all: jarget.jar
