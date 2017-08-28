@@ -383,13 +383,13 @@ Note: The XML in the clipboard is a maven coordinate:
           => Packget.downloadPackage(parsePack(pstr), path)
 
       case List("mvn", "-search", query)
-          => CentralMaven.searchPackage(query)
-
-      case List("mvn", "-search", query, n)
-          => CentralMaven.searchPackage(query, n.toInt)
+          => CentralMaven.searchPackageBrowser(query)
 
       case List("mvn", "-search2", query)
-          => CentralMaven.searchPackageBrowser(query)
+          => CentralMaven.searchPackage(query)
+
+      case List("mvn", "-search2", query, n)
+          => CentralMaven.searchPackage(query, n.toInt)
 
       case List("mvn", "-browse", pstr)
           => openUrl(parsePack(pstr))
