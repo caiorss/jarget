@@ -70,7 +70,7 @@ object Pom{
 
 
   /** Extract package data from pom xml file. */
-  def getPomPackData(pom: scala.xml.Node) = {
+  def getPomPackData(pom: scala.xml.Node): Option[PackData] = {
     val nodes   = pom.child
     val getText = (tag: String) => nodes.find(_.label == tag).map(_.text)
     for {
