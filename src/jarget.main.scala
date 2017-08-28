@@ -260,6 +260,11 @@ Maven Packages / Jar Packages
 
  mvn -get scala [version] [package]  - Download a Scala package for an specific Scala version.
 
+ mvn -search   [query]               - Search a package in search.maven.org, opening results in 
+                                       the browser.
+
+ mvn -search2  [query]               - Search a package showing results in the console. (Experimental)
+
  mvn -browse [package]               - Open package official website.
 
  mvn -go                             - Open web site https://mvnrepository.com
@@ -324,15 +329,12 @@ Exec
 
 System Information
 
- sys -env                            - Show environment variables in tabular format 
- sys -env [var]                      - Show environment variable [var]
- sys -path                           - Show PATH environment variable 
- sys -prop                           - Show java properties in tabular format 
- sys -expath [program]               - Show absolute path of a program in $PATH variable
-
-Misc
-
- doc                                 - Open jarget's website - https://github.com/caiorss/jarget
+ utils -doc                            - Open jarget's website - https://github.com/caiorss/jarget
+ utils -env                            - Show environment variables in tabular format 
+ utils -env [var]                      - Show environment variable [var]
+ utils -path                           - Show PATH environment variable 
+ utils -prop                           - Show java properties in tabular format 
+ utils -expath [program]               - Show absolute path of a program in $PATH variable
 
 
 Note: [package] is <group>/<artifact>/<version>.
