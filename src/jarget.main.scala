@@ -109,6 +109,8 @@ object Main{
     case List("-expath", program)
         => Utils.getProgramPath(program) foreach println
 
+    case List("-doc")
+        => Utils.openUrl("https://github.com/caiorss/jarget")
 
     case _
         => {
@@ -354,93 +356,103 @@ Note: The XML in the clipboard is a maven coordinate:
   )
 
 
-  def main(args: Array[String]) : Unit = args.toList match {
+  def main(args: Array[String]) : Unit = {
 
-    case List() | List("-h") | List("-help")
-        => showHelp()
+    jarget.logger.Log.setLevel()
 
-    case List("doc")
-        => Utils.openUrl("https://github.com/caiorss/jarget")
+    args.toList match {
 
-    case List("mvn", "-pom", pstr)
-        => showPom(parsePack(pstr))
+      case List() | List("-h") | List("-help")
+          => showHelp()
 
-    case List("mvn", "-show", pstr)
-        => showPacakgeInfo(parsePack(pstr))
+      case List("mvn", "-pom", pstr)
+          => showPom(parsePack(pstr))
 
-    // Download a package and its dependencies
-    case List("mvn", "-get", pstr)
-        => Packget.downloadPackage(parsePack(pstr), "./lib")
+      case List("mvn", "-show", pstr)
+          => showPacakgeInfo(parsePack(pstr))
 
-    // Download a Scala package  
-    case List("mvn", "-get", "scala", version, pstr)
-        => Packget.downloadPackage(parseScalaPack(pstr, version), "./lib")
+      // Download a package and its dependencies
+      case List("mvn", "-get", pstr)
+          => Packget.downloadPackage(parsePack(pstr), "./lib")
 
-    case List("mvn", "-path", path, "-get", pstr)
-        => Packget.downloadPackage(parsePack(pstr), path)
+      // Download a Scala package  
+      case List("mvn", "-get", "scala", version, pstr)
+          => Packget.downloadPackage(parseScalaPack(pstr, version), "./lib")
 
-    case List("mvn", "-browse", pstr)
-        => openUrl(parsePack(pstr))
+      case List("mvn", "-path", path, "-get", pstr)
+          => Packget.downloadPackage(parsePack(pstr), path)
 
-    case List("mvn", "-go")
-        => Utils.openUrl("https://mvnrepository.com")
+      case List("mvn", "-search", query)
+          => CentralMaven.searchPackage(query)
 
-    case List("mvn", "-go", pstr)
-        => Utils.openUrl(Packget.getMavenPackgeURL(parsePack(pstr)))
+      case List("mvn", "-search", query, n)
+          => CentralMaven.searchPackage(query, n.toInt)
 
-    case List("mvn", "-clip", "-pom")
-        => showPom(getPackMaven())
+      case List("mvn", "-search2", query)
+          => CentralMaven.searchPackageBrowser(query)
 
-    case List("mvn", "-clip", "-show")
-        => showPacakgeInfo(getPackMaven())
+      case List("mvn", "-browse", pstr)
+          => openUrl(parsePack(pstr))
 
-    case List("mvn", "-clip", "-get")
-        => Packget.downloadPackage(getPackMaven(), "./lib")
+      case List("mvn", "-go")
+          => Utils.openUrl("https://mvnrepository.com")
 
-    // --------  Utils Commands ------------------- //
+      case List("mvn", "-go", pstr)
+          => Utils.openUrl(Packget.getMavenPackgeURL(parsePack(pstr)))
 
-    case "utils"::rest => parseUtilsArgs(rest)
+      case List("mvn", "-clip", "-pom")
+          => showPom(getPackMaven())
 
-    // ------ Jar package inspection and manipulation -- //
-    case "jar"::rest
-        =>  JarUtils.withJarException{ parseJarArgs(rest) }
+      case List("mvn", "-clip", "-show")
+          => showPacakgeInfo(getPackMaven())
 
-   //--------- Pom Files Inspection ---------- //
+      case List("mvn", "-clip", "-get")
+          => Packget.downloadPackage(getPackMaven(), "./lib")
 
-    case "pom"::rest => rest foreach { uri => Pom.showPomDataFromUri(uri, true)}
+      // --------  Utils Commands ------------------- //
 
-    //------------  Make Uber Jar ------------- //
-    case "uber"::rest
-        => parseUberArgs(rest)
+      case "utils"::rest => parseUtilsArgs(rest)
 
+      // ------ Jar package inspection and manipulation -- //
+      case "jar"::rest
+          =>  JarUtils.withJarException{ parseJarArgs(rest) }
 
-    // ------- Class Path  ----------------- //
+     //--------- Pom Files Inspection ---------- //
 
-    case List("cpath", "-show")
-        => println(JarUtils.getClasspath("./lib"))
+      case "pom"::rest => rest foreach { uri => Pom.showPomDataFromUri(uri, true)}
 
-    case List("cpath", "-show", path)
-        => println(JarUtils.getClasspath(path))
-      
-    //-------- Generic Command with Classpath ------//
-
-    // run generic command as ./command -cp $CLASSPATH arg1 arg2 arg2 ...
-    case List("exec", command)
-        => JarUtils.runWithClassPath(command, List(), "./lib")
-
-    case List("exec", command, path)
-        => JarUtils.runWithClassPath(command, List(), path)
-
-    case "exec"::command::"--"::args
-        => JarUtils.runWithClassPath(command, args, "./lib")
-
-    case "exec"::command::path::"--"::args  
-        => JarUtils.runWithClassPath(command, args, path)
-
-    case _ => println("Error: Invalid command")
+      //------------  Make Uber Jar ------------- //
+      case "uber"::rest
+          => parseUberArgs(rest)
 
 
-  } // -- End of function main() --- // 
+      // ------- Class Path  ----------------- //
+
+      case List("cpath", "-show")
+          => println(JarUtils.getClasspath("./lib"))
+
+      case List("cpath", "-show", path)
+          => println(JarUtils.getClasspath(path))
+
+      //-------- Generic Command with Classpath ------//
+
+      // run generic command as ./command -cp $CLASSPATH arg1 arg2 arg2 ...
+      case List("exec", command)
+          => JarUtils.runWithClassPath(command, List(), "./lib")
+
+      case List("exec", command, path)
+          => JarUtils.runWithClassPath(command, List(), path)
+
+      case "exec"::command::"--"::args
+          => JarUtils.runWithClassPath(command, args, "./lib")
+
+      case "exec"::command::path::"--"::args  
+          => JarUtils.runWithClassPath(command, args, path)
+
+      case _ => println("Error: Invalid command")
+    }
+
+  }// -- End of function main() --- //
 
   
 } // ------- End of object Main -------- //
