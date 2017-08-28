@@ -81,6 +81,43 @@ object Main{
 
   import MainUtils._
 
+
+  def parseUtilsArgs(arglist: List[String]) = arglist match {
+
+    // Show environment variable
+    case List("-env") => Utils.showEnvironmentVars()
+
+    case List("-env", evar)
+        => for { v <- Option(System.getenv(evar)) } println(v)
+
+    case List("-env", evar)
+        => for { v <- Option(System.getenv(evar)) } println(v)
+
+     // Show Java properties
+    case List("-prop")
+        => Utils.showJavaProperties()
+
+    // Show PATH enviroment variable
+    case List("-path")
+        => for {
+          pvar   <- Option(System.getenv("PATH"))
+          sep    <- Option(System.getProperty("path.separator"))
+          paths  = pvar.split(sep)
+        } paths foreach println
+
+    // Show path to executable in $PATH variable
+    case List("-expath", program)
+        => Utils.getProgramPath(program) foreach println
+
+
+    case _
+        => {
+          println("Error: Invalid Utils Commands.")
+          println("Valid commands: utils [-env | -prop | -path | -expath]")
+          System.exit(1)
+    }
+  }
+
   def parseJarArgs(arglist: List[String]) = arglist match {
 
     case List()
@@ -360,30 +397,9 @@ Note: The XML in the clipboard is a maven coordinate:
     case List("mvn", "-clip", "-get")
         => Packget.downloadPackage(getPackMaven(), "./lib")
 
-    // --------  System Commands ------------------- //
+    // --------  Utils Commands ------------------- //
 
-    // Show environment variable
-    case List("sys", "-env")
-        => Utils.showEnvironmentVars()
-
-    case List("sys", "-env", evar)
-        => for { v <- Option(System.getenv(evar)) } println(v)
-
-    // Show Java properties
-    case List("sys", "-prop")
-        => Utils.showJavaProperties()
-
-    // Show PATH enviroment variable
-    case List("sys", "-path")
-        => for {
-          pvar   <- Option(System.getenv("PATH"))
-          sep    <- Option(System.getProperty("path.separator"))
-          paths  = pvar.split(sep)
-        } paths foreach println                  
-
-    // Show path to executable in $PATH variable
-    case List("sys", "-expath", program)
-        => Utils.getProgramPath(program) foreach println
+    case "utils"::rest => parseUtilsArgs(rest)
 
     // ------ Jar package inspection and manipulation -- //
     case "jar"::rest
