@@ -72,7 +72,21 @@ object MainUtils {
     val url = s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
     println("Opening package: " + url)
     Utils.openUrl(url)
-  }  
+  }
+
+
+  def showVersion() = {
+    println("Jarget Version")
+    Option(System.getProperty("jarget.version")) match {
+      case Some(file)
+          => Utils.showFile(file)
+      case None
+          => {
+        Utils.readResourceFile(getClass(), "/version.txt")
+          .foreach(println)
+      }
+    }
+  }
 
 }
 
