@@ -97,6 +97,9 @@ object Main{
     case List("-prop")
         => Utils.showJavaProperties()
 
+    case List("-prop", name)
+        => Option(System.getProperty(name)) foreach println
+
     // Show PATH enviroment variable
     case List("-path")
         => for {
