@@ -74,6 +74,10 @@ object MainUtils {
     Utils.openUrl(url)
   }
 
+  def getVersion() = Utils.readResourceFile(
+    getClass(),
+    "/version.txt"
+  )
 
 
 } // ------ End of object MainUtils ---------- //
