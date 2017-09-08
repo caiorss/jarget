@@ -199,8 +199,7 @@ object Utils{
     def readBufferedReader(bf: java.io.BufferedReader) = {
       val builder = new StringBuilder()
       var line = ""
-      while(line != null){
-        line = bf.readLine()
+      while({line = bf.readLine() ; line} != null){        
         builder.append(line + "\n")
       }
       bf.close()
