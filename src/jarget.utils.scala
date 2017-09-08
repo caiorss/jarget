@@ -388,6 +388,7 @@ object JarUtils{
 
 /** Provide functions to build Uber jars (aka fat-jars)*/
 object JarBuilder{
+
   import Utils.copyStream
   import java.util.jar.{JarOutputStream, JarEntry, JarFile}
 
@@ -483,10 +484,10 @@ exit 0
     output:      String,
     main:        String,
     paths:       List[String] = List(),
-    files:       List[String] = List(),
+    jarFiles:    List[String] = List(),
     resources:   List[String] = List(),
     scalaLib:    Boolean      = false,
-    executable: Boolean      = false
+    executable:  Boolean      = false
   ) = makeJarWith(output, executable){ jos =>
 
     if (scalaLib) Utils.getScalaHome() match {
@@ -498,8 +499,8 @@ exit 0
     }
 
     addJarContent(jos, main, true)
-    paths foreach { p => addJarsFromDir(jos, p) }
-    files foreach { p => addJarContent(jos, p) }
+    paths foreach     { p => addJarsFromDir(jos, p) }
+    jarFiles foreach  { p => addJarContent(jos, p) }
     resources foreach { p => addDirectory(jos, p) }    
   }  
 
