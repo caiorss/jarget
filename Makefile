@@ -15,9 +15,9 @@ SCALA_XML_PATH=$(shell dirname $(shell dirname $(shell which scala)))/lib/$(SCAL
 jarget.jar : $(src)
 	fsc $(src) -d jarget.jar
 
-bin/jarget: jarget.jar
+bin/jarget: jarget.jar version.txt 
 	echo $(SCALA_XML)
-	scala jarget.jar uber -scala -sh -o bin/jarget -m jarget.jar -j $(SCALA_XML_PATH)
+	scala jarget.jar uber -scala -sh -o bin/jarget -m jarget.jar -j $(SCALA_XML_PATH) -f version.txt
 
 install: bin/jarget
 	cp -v bin/jarget ~/bin
