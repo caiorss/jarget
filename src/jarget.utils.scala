@@ -182,6 +182,18 @@ object Utils{
     System.exit(iostat.waitFor())
   }
 
+  /** Print file contents */
+  def showFile(file: String): Unit = {
+    var in: java.io.FileInputStream = null
+    try {
+      in = new java.io.FileInputStream(file)
+      while (in.available > 0) System.out.write(in.read)
+    } catch {
+      case ex: java.io.IOException => ex.printStackTrace()
+    } finally {
+      if (in != null) in.close()
+    }
+  }
 
 } /* ---- End of object Utils ------- */
 
