@@ -269,8 +269,10 @@ object Main{
   } // End of uberParser
 
 
-  def showHelp() = println("""jarget - Tool to download jar packages.
-
+  def showHelp() = {
+    val version = MainUtils.getVersion() getOrElse ""
+    println(s"jarget ${version.trim()} -  Java platform Toolbox")
+    println("""
 Maven Packages / Jar Packages
 
  mvn -show [package]                 - Show package's information
@@ -357,7 +359,7 @@ System Information
  utils -env [var]                      - Show environment variable [var]
  utils -path                           - Show PATH environment variable 
  utils -prop                           - Show java properties in tabular format 
- utils -expath [program]               - Show absolute path of a program in $PATH variable
+ utils -expath [program]               - Show absolute path of a program in PATH variable
 
 
 Note: [package] is <group>/<artifact>/<version>.
@@ -375,10 +377,9 @@ Note: The XML in the clipboard is a maven coordinate:
         <artifactId>scalaz-core_2.11</artifactId>
         <version>7.3.0-M15</version>
     </dependency>
-
-
 """
-  )
+    )
+  }
 
 
   def main(args: Array[String]) : Unit = {
