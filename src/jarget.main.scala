@@ -392,7 +392,9 @@ Note: The XML in the clipboard is a maven coordinate:
           => showHelp()
 
       case List("-v") | List("-version")
-          => showVersion()
+          => for { 
+            ver <- MainUtils.getVersion()
+          } println("Jarget v" + ver)
 
       case List("mvn", "-pom", pstr)
           => showPom(parsePack(pstr))
