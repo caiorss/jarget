@@ -480,11 +480,24 @@ exit 0
   }
 
 
+  /**
+      Build an uber jar (aka fat jar) bundling an application with
+      all its dependencies:
+
+      @param output     - output file
+      @param main       - Main jar file containing main class
+      @param paths      - List of paths to directories containing jar files
+      @param jarFiles   - List of jar files to be added to the output jar
+      @param resources  - Append a list of resource directories to the jar files.
+      @param scalaLib   - If true bundles the scala run-time scala-library.jar with the app.
+      @param executable - If true makes unix self-executable jar file that can be run as script ./app.jar
+    */
   def makeUberJar(
     output:      String,
     main:        String,
     paths:       List[String] = List(),
     jarFiles:    List[String] = List(),
+    files:       List[String] = List(),
     resources:   List[String] = List(),
     scalaLib:    Boolean      = false,
     executable:  Boolean      = false
@@ -499,8 +512,9 @@ exit 0
     }
 
     addJarContent(jos, main, true)
-    paths foreach     { p => addJarsFromDir(jos, p) }
-    jarFiles foreach  { p => addJarContent(jos, p) }
+    paths     foreach { p => addJarsFromDir(jos, p) }
+    jarFiles  foreach { p => addJarContent(jos, p) }
+    files     foreach { p => addFile(jos, p, p) }
     resources foreach { p => addDirectory(jos, p) }    
   }  
 
