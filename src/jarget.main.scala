@@ -75,20 +75,8 @@ object MainUtils {
   }
 
 
-  def showVersion() = {
-    println("Jarget Version")
-    Option(System.getProperty("jarget.version")) match {
-      case Some(file)
-          => Utils.showFile(file)
-      case None
-          => {
-        Utils.readResourceFile(getClass(), "/version.txt")
-          .foreach(println)
-      }
-    }
-  }
 
-}
+} // ------ End of object MainUtils ---------- //
 
 
 object Main{
