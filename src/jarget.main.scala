@@ -184,13 +184,14 @@ object Main{
   def parseUberArgs(arglist: List[String]) = {
     val parser = new OptParse()
 
-    var sh                    = false
-    var scala                 = false
-    var output                = "output.jar"
-    var main: Option[String]  = None
-    var paths: List[String]   = List()
-    var files: List[String]   = List()
-    var resources: List[String] = List()
+    var sh                        = false
+    var scala                     = false
+    var output                    = "output.jar"
+    var main:      Option[String] = None
+    var paths:     List[String]   = List()
+    var files:     List[String]   = List()
+    var jarFiles:  List[String]   = List()
+    var resources: List[String]   = List()
 
     parser.addOption(
       "-scala",
@@ -211,6 +212,7 @@ object Main{
       arg =>  main = Some(arg.getOne())
     )
 
+
     parser.addOption(
       "-o",
       "Output file",
@@ -227,6 +229,12 @@ object Main{
       "-j",
       "Additional jar files.",
       false,
+      arg => jarFiles = arg.getOneOrMany()
+    )
+
+    parser.addOption(
+      "-f",
+      "Files to appended to the jar file",
       arg => files = arg.getOneOrMany()
     )
 
@@ -249,7 +257,16 @@ object Main{
     main match {
       case Some(m)
           => {
-            JarBuilder.makeUberJar(output, m, paths, files, resources, scala, sh)
+            JarBuilder.makeUberJar(
+              output,
+              m,
+              paths,
+              jarFiles,
+              files,
+              resources,
+              scala,
+              sh
+            )
             println("Built file:  " + output + " ok")
             println("Run it with: $ java -jar " + output)
             System.exit(0)
