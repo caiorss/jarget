@@ -398,6 +398,9 @@ Note: The XML in the clipboard is a maven coordinate:
       case List() | List("-h") | List("-help")
           => showHelp()
 
+      case List("-v") | List("-version")
+          => showVersion()
+
       case List("mvn", "-pom", pstr)
           => showPom(parsePack(pstr))
 
