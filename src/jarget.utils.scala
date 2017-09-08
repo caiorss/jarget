@@ -195,6 +195,27 @@ object Utils{
     }
   }
 
+  def readResourceFile(cls: Class[_], file: String): Option[String] = {
+    def readBufferedReader(bf: java.io.BufferedReader) = {
+      val builder = new StringBuilder()
+      var line = ""
+      while(line != null){
+        line = bf.readLine()
+        builder.append(line + "\n")
+      }
+      bf.close()
+      builder.toString()
+    }
+    for {
+      //s = getClass().getResourceAsStream(file)
+      st    <- Option(cls.getResourceAsStream(file))
+      is    = new java.io.InputStreamReader(st)
+      bf    = new java.io.BufferedReader(is)
+      text  = readBufferedReader(bf)
+    } yield text
+  }
+
+
 } /* ---- End of object Utils ------- */
 
 
