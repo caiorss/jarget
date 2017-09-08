@@ -273,6 +273,11 @@ object Main{
     val version = MainUtils.getVersion() getOrElse ""
     println(s"jarget ${version.trim()} -  Java platform Toolbox")
     println("""
+General 
+
+ -h              - show help 
+ -v | -version   - show version 
+
 Maven Packages / Jar Packages
 
  mvn -show [package]                 - Show package's information
