@@ -104,9 +104,6 @@ object Main{
     case List("-env", evar)
         => for { v <- Option(System.getenv(evar)) } println(v)
 
-    case List("-env", evar)
-        => for { v <- Option(System.getenv(evar)) } println(v)
-
      // Show Java properties
     case List("-prop")
         => Utils.showJavaProperties()
