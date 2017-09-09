@@ -566,6 +566,8 @@ exit 0
       @param main       - Main jar file containing main class
       @param paths      - List of paths to directories containing jar files
       @param jarFiles   - List of jar files to be added to the output jar
+      @param files      - List of asset files to be added to the output uber jar 
+      @param filesEntry - List of asset files such as file1.txt:texts/entry.txt /tmp/file2.txt:entry2.txt 
       @param resources  - Append a list of resource directories to the jar files.
       @param scalaLib   - If true bundles the scala run-time scala-library.jar with the app.
       @param executable - If true makes unix self-executable jar file that can be run as script ./app.jar
@@ -576,6 +578,7 @@ exit 0
     paths:       List[String] = List(),
     jarFiles:    List[String] = List(),
     files:       List[String] = List(),
+    filesEntry:  List[String] = List(),
     resources:   List[String] = List(),
     scalaLib:    Boolean      = false,
     executable:  Boolean      = false
@@ -593,7 +596,15 @@ exit 0
     paths     foreach { p => addJarsFromDir(jos, p) }
     jarFiles  foreach { p => addJarContent(jos, p) }
     files     foreach { p => addFile(jos, p, p) }
-    resources foreach { p => addDirectory(jos, p) }    
+    resources foreach { p => addDirectory(jos, p) }
+
+    filesEntry foreach { p =>
+      p.split(":") match {
+        case Array(file, entry)
+            => addFile(jos, entry, file)
+        case _
+            => throw new IllegalArgumentException(s"Error: Invalid argument '${p}', it must separated by semicolon '(:')")
+    }}
   }  
 
 } // -------- End of object JarUtils -------- //
