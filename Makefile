@@ -6,7 +6,7 @@ all: jarget.jar
 
 sh: bin/jarget 
 
-fatjar: bin/jarget-fat.jar
+#fatjar: bin/jarget-fat.jar
 
 
 SCALA_XML=scala-xml_2.12-1.0.6.jar
@@ -18,6 +18,9 @@ jarget.jar : $(src)
 bin/jarget: jarget.jar assets/version.txt assets/user-help.txt
 	#echo $(SCALA_XML)
 	scala jarget.jar uber -scala -sh -o bin/jarget -m jarget.jar -j $(SCALA_XML_PATH) -r assets
+
+fatjar: jarget.jar assets/version.txt assets/user-help.txt
+	scala jarget.jar uber -scala -o jarget-uber.jar -m jarget.jar -j $(SCALA_XML_PATH) -r assets
 
 install: bin/jarget
 	cp -v bin/jarget ~/bin
