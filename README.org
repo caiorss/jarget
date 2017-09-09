@@ -157,11 +157,28 @@ scala>
 #+END_SRC
 
 ** User Guide
+*** Show version 
+ 
+ - =$ jarget -v= or =$ jarget -version= 
+
+#+BEGIN_SRC sh 
+$ ./jarget -v
+Jarget v1.3
+
+$ ./jarget -version
+Jarget v1.3
+#+END_SRC
+
 *** Show user help 
 
 #+BEGIN_SRC text 
-$ bin/jarget
-jarget - Tool to download jar packages.
+$ ./jarget 
+jarget 1.3 -  Java platform Toolbox
+
+General 
+
+ -h              - show help 
+ -v | -version   - show version 
 
 Maven Packages / Jar Packages
 
@@ -249,7 +266,7 @@ System Information
  utils -env [var]                      - Show environment variable [var]
  utils -path                           - Show PATH environment variable 
  utils -prop                           - Show java properties in tabular format 
- utils -expath [program]               - Show absolute path of a program in $PATH variable
+ utils -expath [program]               - Show absolute path of a program in PATH variable
 
 
 Note: [package] is <group>/<artifact>/<version>.
