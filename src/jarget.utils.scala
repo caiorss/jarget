@@ -1,5 +1,6 @@
 package jarget.utils
 
+/** General utility functions */
 object Utils{
 
   import scala.concurrent.Future
@@ -66,12 +67,12 @@ object Utils{
 
   /**  Pretty print a collection of tuples as a table.
     Parameters:
-    @rows     - Collection of tuples to be printed.
-    @title    - Tuple containing the titles of left and right side.
-    @line     - Flag that if set to true, prints a new line between each row.
-    @margin   - Margin from left side of screen as number of spaces.
-    @sep      - Number of spaces between left side and right side
-    @maxRside - Maximum number of characters to printed on right side.
+    @param rows     - Collection of tuples to be printed.
+    @param title    - Tuple containing the titles of left and right side.
+    @param line     - Flag that if set to true, prints a new line between each row.
+    @param margin   - Margin from left side of screen as number of spaces.
+    @param sep      - Number of spaces between left side and right side
+    @param maxRside - Maximum number of characters to printed on right side.
     */
   def printTupleAsTable(
     rows:   Seq[(String, String)],
@@ -122,7 +123,25 @@ object Utils{
   }
 
 
-  /** Show system's enviroment variables in tabular form */
+  /** Show system's enviroment variables in tabular form 
+      Example: 
+
+    {{{ 
+        scala> showEnvironmentVars()
+           Environment Variable         Value
+           ------------------------     --------------------------------------------------
+           PATH                         /usr/local/sbin:/usr/local/bin:/usr/bin:/usr/li...
+           XAUTHORITY                   /home/archbox/.Xauthority
+           LC_MEASUREMENT               en_US.UTF-8
+           LC_TELEPHONE                 en_US.UTF-8
+           GDMSESSION                   xfce
+           XDG_DATA_DIRS                /usr/local/share:/usr/share
+           LC_TIME                      en_US.UTF-8
+          .... .... .... .... .... 
+
+    }}}
+
+   */
   def showEnvironmentVars() {
     import scala.collection.JavaConverters._
     printTupleAsTable(
@@ -145,7 +164,22 @@ object Utils{
   }
 
 
-  /** Get path to program available in PATH variable */
+  /** Get path to program available in PATH variable 
+      Example: 
+      {{{
+        scala> getProgramPath("scala")
+        res1: Option[java.io.File] = Some(/home/archbox/opt/scala/bin/scala)
+
+        scala> getProgramPath("java")
+        res2: Option[java.io.File] = Some(/usr/bin/java)
+
+        scala> getProgramPath("sh")
+        res3: Option[java.io.File] = Some(/usr/bin/sh)
+
+        scala> getProgramPath("shx")
+        res4: Option[java.io.File] = None
+      }}}
+    */
   def getProgramPath(program: String) : Option[java.io.File] = {
     val sep   = java.io.File.pathSeparator
     val paths = System.getenv("PATH").split(sep)
@@ -195,6 +229,18 @@ object Utils{
     }
   }
 
+  /** Read resource file from  a jar file or file in classpath 
+      Example: 
+
+      {{{
+        scala> readResourceFile(getClass(), "/version.txt")
+        res5: Option[String] =
+        Some(1.3)
+
+        scala> readResourceFile(getClass(), "/version.txt") foreach println
+        1.3
+      }}}
+    */
   def readResourceFile(cls: Class[_], file: String): Option[String] = {
     def readBufferedReader(bf: java.io.BufferedReader) = {
       val builder = new StringBuilder()
@@ -211,7 +257,7 @@ object Utils{
       is    = new java.io.InputStreamReader(st)
       bf    = new java.io.BufferedReader(is)
       text  = readBufferedReader(bf)
-    } yield text
+    } yield text.trim()
   }
 
 
