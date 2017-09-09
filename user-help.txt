@@ -1,0 +1,110 @@
+General 
+
+ -h              - show help 
+ -v | -version   - show version 
+
+Maven Packages / Jar Packages
+
+ mvn -show [package]                 - Show package's information
+
+ mvn -pom  [package]                 - Show package's pom file
+
+ mvn -get  [package]                 - Download package and dependencies to ./lib
+
+ mvn -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
+
+ mvn -get scala [version] [package]  - Download a Scala package for an specific Scala version.
+
+ mvn -search   [query]               - Search a package in search.maven.org, opening results in 
+                                       the browser.
+
+ mvn -search2  [query]               - Search a package showing results in the console. (Experimental)
+
+ mvn -browse [package]               - Open package official website.
+
+ mvn -go                             - Open web site https://mvnrepository.com
+ mvn -go [package]                   - Open package mvnrepository url.
+
+ mvn -clip -show                     - Extract package from XML in clipboard and show its information.
+ mvn -clip -pom                      - Extract package from XML in clipboard and show its Pom file.
+ mvn -clip -get                      - Extract package from XML in clipboard and download it to ./lib
+
+Jar Files Inspection
+
+ jar -man  [jar]                    - Show manifest.
+ jar -main [jar]                    - Show main class.
+ jar -show [jar]                    - Show all files.
+
+ jar -assets [jar]                  - Show all asset files disregarding *.class files.
+
+ jar -extract [jar] [file]          - Extract [file] from [jar] package to current directory.
+ jar -extract [jar] [file] [path]   - Extract [file] from [jar] package to [path] directory.
+
+ jar -extract-all [jar] [path]      - Extract all files from jar package to [path] directory.
+
+ jar -extract-all [jar]             - Extract jar file to directory with same name of jar file 
+                                      at current directory. If file is lib/chart.jar it will  
+                                      extracted to ./chart 
+    
+Uber Jar 
+
+
+ - Build an scala uber jar named output.jar from main.jar which
+   contains the main class and lib1 and lib2 are the directories
+   containing jar files. It bundles the scala-library.jar runtime with
+   the application.
+
+ $ jar uber -scala -o output.jar -m main.jar
+
+ $ jar uber -scala -o output.jar -m main.jar -p ./lib1 ./lib2 
+  
+ $ jar uber -scala -sh -o output.jar -m main.jar -p ./lib1 -j dependency1.jar -r ./resources1 ./resources2 
+
+ uber [command]
+
+   -o [output file]         - (mandatory) Output jar file bundled with all dependencies.
+   -m [main jar file]       - (optional)  Jar file containing main class.
+   -p [path1] [path2] ...   - (optional)  Directories with jar file that will be included in the uber jar.
+   -j [jar1.jar] [jar2.jar] - (optional)  Single jar files that will be included in the uber jar.
+   -r [dir1] [dir2] ...     - (optional)  Directories containing resource files 
+   -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar 
+   -sh                      - (optional)  Makes the jar file as a self-executable Unix app.                                 
+
+Classpath
+
+ cpath -show                        - Get classpath from ./lib directory
+ cpath -show [path]                 - Get classpath from [path] directory
+
+Exec  
+
+ exec [program] [path] 
+ exec [program] -- arg1 arg2 ...      - Executes a program passing classpath (-cp) from ./lib to it.
+ exec [program] [path] -- arg1 arg2 
+  
+
+System Information
+
+ utils -doc                            - Open jarget's website - https://github.com/caiorss/jarget
+ utils -env                            - Show environment variables in tabular format 
+ utils -env [var]                      - Show environment variable [var]
+ utils -path                           - Show PATH environment variable 
+ utils -prop                           - Show java properties in tabular format 
+ utils -expath [program]               - Show absolute path of a program in PATH variable
+
+
+Note: [package] is <group>/<artifact>/<version>.
+Examples of valid packages:
+
+  - org.scalaz/scalaz-core_2.11/7.3.0-M15
+
+  - org.jfree/jfreechart/1.0.17
+
+Note: The XML in the clipboard is a maven coordinate: 
+
+    <!-- https://mvnrepository.com/artifact/org.scalaz/scalaz-core_2.11 -->
+    <dependency>
+        <groupId>org.scalaz</groupId>
+        <artifactId>scalaz-core_2.11</artifactId>
+        <version>7.3.0-M15</version>
+    </dependency>
+    
