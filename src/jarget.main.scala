@@ -176,14 +176,15 @@ object Main{
   def parseUberArgs(arglist: List[String]) = {
     val parser = new OptParse()
 
-    var sh                        = false
-    var scala                     = false
-    var output                    = "output.jar"
-    var main:      Option[String] = None
-    var paths:     List[String]   = List()
-    var files:     List[String]   = List()
-    var jarFiles:  List[String]   = List()
-    var resources: List[String]   = List()
+    var sh                          = false
+    var scala                       = false
+    var output                      = "output.jar"
+    var main:        Option[String] = None
+    var paths:       List[String]   = List()
+    var files:       List[String]   = List()
+    var filesEntry:  List[String]   = List()
+    var jarFiles:    List[String]   = List()
+    var resources:   List[String]   = List()
 
     parser.addOption(
       "-scala",
@@ -231,6 +232,12 @@ object Main{
     )
 
     parser.addOption(
+      "-fe",
+      "Files to appended to the jar file with entry separated by semicolon",
+      arg => filesEntry = arg.getOneOrMany()
+    )
+
+    parser.addOption(
       "-r",
       "Resource directories.",
       arg => resources = arg.getOneOrMany()
@@ -255,6 +262,7 @@ object Main{
               paths,
               jarFiles,
               files,
+              filesEntry,
               resources,
               scala,
               sh
