@@ -1012,15 +1012,17 @@ An fat-jar executable binary release can be downloaded from this link:
 
  - Most update Snapshot [[https://github.com/caiorss/jarget/raw/gh-pages/jarget][jarget Download]]
 
- - Release [[https://github.com/caiorss/jarget/raw/001fc101096bb6d85c8a641d5809a583b5eb489c/jarget][jarget v1.0]]
+ - Release [[https://github.com/caiorss/jarget/raw/v1.0-release/jarget][jarget v1.0]]
 
- - Release [[https://github.com/caiorss/jarget/raw/4dc53be306dbbfc5640c3e4e8be2baa38bea5eee/jarget][jarget v1.1]]
+ - Release [[https://github.com/caiorss/jarget/raw/v1.1-release/jarget][jarget v1.1]]
 
- - Release [[https://github.com/caiorss/jarget/raw/c302be7d0ac6c59451dcc1fc3554ac0228065709/jarget][jarget v1.2]]
+ - Release [[https://github.com/caiorss/jarget/raw/v1.2-release/jarget][jarget v1.2]]
 
- - Release [[https://github.com/caiorss/jarget/raw/d6796a977010b3cbb5a15a3d5e90df140e1b1798/jarget][jarget v1.3]]
+ - Release [[https://github.com/caiorss/jarget/raw/v1.3-release/jarget][jarget v1.3]]
 
- - Release [[https://github.com/caiorss/jarget/raw/8e1d4079fa8b3ad8c0ed8d1399c4e9bcb1d127f9/jarget][jarget v1.3.1]]
+ - Release [[https://github.com/caiorss/jarget/raw/v1.3.1-release/jarget][jarget v1.3.1]]
+
+ - Release [[https://github.com/caiorss/jarget/raw/v1.3.2-release/jarget][jarget v1.3.2]]
 
 Or it can be downloaded with those shell commands below: 
 
