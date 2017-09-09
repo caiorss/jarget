@@ -1020,6 +1020,8 @@ An fat-jar executable binary release can be downloaded from this link:
 
  - Release [[https://github.com/caiorss/jarget/raw/d6796a977010b3cbb5a15a3d5e90df140e1b1798/jarget][jarget v1.3]]
 
+ - Release [[https://github.com/caiorss/jarget/raw/8e1d4079fa8b3ad8c0ed8d1399c4e9bcb1d127f9/jarget][jarget v1.3.1]]
+
 Or it can be downloaded with those shell commands below: 
 
 #+BEGIN_SRC sh
