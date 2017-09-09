@@ -536,7 +536,12 @@ object JarBuilder{
     var fo:  java.io.FileOutputStream = null
     val header = """
 #!/usr/bin/env sh
-java -jar $0 $@
+if [[ -z "$JAVA_HOME" ]]
+then
+    java -jar $0 $@
+else
+    "$JAVA_HOME/bin/java" -jar $0 $@
+fi
 exit 0
 """.trim() + "\n"
 
