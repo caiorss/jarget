@@ -76,7 +76,7 @@ object MainUtils {
 
   def getVersion() = Utils.readResourceFile(
     getClass(),
-    "/version.txt"
+    "/assets/version.txt"
   )
 
 
@@ -272,7 +272,7 @@ object Main{
   def showHelp() = {
     val version = MainUtils.getVersion() getOrElse ""
     println(s"jarget ${version.trim()} -  Java platform Toolbox")
-    val help = Utils.readResourceFile(getClass(), "/user-help.txt")
+    val help = Utils.readResourceFile(getClass(), "/assets/user-help.txt")
     help match {
       case Some(file) => println(file)
       case None       => throw new java.io.IOException("Error: I can't find the resource file user-help.txt")
