@@ -175,9 +175,8 @@ Jarget v1.3
 *** Show user help 
 
 #+BEGIN_SRC text 
-$ ./jarget 
-jarget 1.3 -  Java platform Toolbox
-
+$ bin/jarget 
+jarget 1.4.0 -  Java platform Toolbox
 General 
 
  -h              - show help 
@@ -262,7 +261,7 @@ Exec
  exec [program] [path] -- arg1 arg2 
   
 
-System Information
+Utilities
 
  utils -doc                            - Open jarget's website - https://github.com/caiorss/jarget
  utils -env                            - Show environment variables in tabular format 
@@ -271,6 +270,28 @@ System Information
  utils -prop                           - Show java properties in tabular format 
  utils -expath [program]               - Show absolute path of a program in PATH variable
 
+
+Crypto Hash Functions 
+
+ - Computes the file hash hex digest.
+ digest -md5    -f [file]              
+ digest -sha1   -f [file]
+ digest -sha256 -f [file] 
+
+ - Checks the file hex digest.
+ digest -md5    -f [file]  [digest]     
+ digest -sha1   -f [file]  [digest]
+ digest -sha256 -f [file]  [digest]
+
+ - Computes the string hex digest.
+ digest -md5    -s [string]             
+ digest -sha1   -s [string]
+ digest -sha256 -s [string]
+
+ - Checks the string hex digest.
+ digest -md5    -s [string]  [digest]    
+ digest -sha1   -s [string]  [digest]
+ digest -sha256 -s [string]  [digest]
 
 Note: [package] is <group>/<artifact>/<version>.
 Examples of valid packages:
@@ -1026,6 +1047,8 @@ An fat-jar executable binary release can be downloaded from this link:
  - Release [[https://github.com/caiorss/jarget/raw/v1.3.1-release/jarget][jarget v1.3.1]]
 
  - Release [[https://github.com/caiorss/jarget/raw/v1.3.2-release/jarget][jarget v1.3.2]]
+
+ - Release [[https://github.com/caiorss/jarget/raw/v1.4-release/jarget][jarget v1.4.0]]
 
 Or it can be downloaded with those shell commands below: 
 
