@@ -417,6 +417,11 @@ object Main{
       case List("cpath", "-show", path)
           => println(JarUtils.getClasspath(path))
 
+     // ------- Crypto Utils -----------------------//
+
+      case "digest"::rest
+          => parseDigestArgs(rest)
+
       //-------- Generic Command with Classpath ------//
 
       // run generic command as ./command -cp $CLASSPATH arg1 arg2 arg2 ...
