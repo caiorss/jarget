@@ -277,6 +277,52 @@ object Main{
   } // End of uberParser
 
 
+  def parseDigestArgs(args: List[String]) = {
+
+    import jarget.crypto.Digest
+
+    //println(args)
+
+    args match {
+
+      //----- File Digest ------------ //
+      case List("-md5",    "-f", file)
+          => println(Digest.fileDigestSum("MD5", file))
+      case List("-sha1",   "-f", file)
+          => println(Digest.fileDigestSum("SHA1", file))
+      case List("-sha256", "-f", file)
+          => println(Digest.fileDigestSum("SHA-256", file))
+
+      case List("-md5",    "-f", file, hexDigest)
+          => println(Digest.fileDigestSum("MD5", file) == hexDigest)
+      case List("-sha1",   "-f", file, hexDigest)
+          => println(Digest.fileDigestSum("SHA1", file) == hexDigest)
+      case List("-sha256", "-f", file, hexDigest)
+          => println(Digest.fileDigestSum("SHA-256", file) == hexDigest)
+
+      // ------ String Digest -------- //
+      case List("-md5",    "-s", str)
+          => println(Digest.stringDigestSum("MD5", str))
+      case List("-sha1",   "-s", str)
+          => println(Digest.stringDigestSum("SHA1", str))
+      case List("-sha256", "-s", str)
+          => println(Digest.stringDigestSum("SHA-256", str))
+
+      case List("-md5",    "-s", str, hexDigest)
+          => println(Digest.stringDigestSum("MD5", str) == hexDigest)
+      case List("-sha1",   "-s", str, hexDigest)
+          => println(Digest.stringDigestSum("SHA1", str) == hexDigest)
+      case List("-sha256", "-s", str, hexDigest)
+          => println(Digest.stringDigestSum("SHA-256", str) == hexDigest)
+
+      case _
+          => {
+            println("Error: Invalid digest option")
+            System.exit(1)
+          }
+    }
+  }
+
   def showHelp() = {
     val version = MainUtils.getVersion() getOrElse ""
     println(s"jarget ${version.trim()} -  Java platform Toolbox")
@@ -370,6 +416,11 @@ object Main{
 
       case List("cpath", "-show", path)
           => println(JarUtils.getClasspath(path))
+
+     // ------- Crypto Utils -----------------------//
+
+      case "digest"::rest
+          => parseDigestArgs(rest)
 
       //-------- Generic Command with Classpath ------//
 
