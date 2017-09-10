@@ -538,9 +538,9 @@ object JarBuilder{
 #!/usr/bin/env sh
 if [[ -z "$JAVA_HOME" ]]
 then
-    java -jar $0 $@
+    java -jar "$0" "$@"
 else
-    "$JAVA_HOME/bin/java" -jar $0 $@
+    "$JAVA_HOME/bin/java" -jar "$0" "$@"
 fi
 exit 0
 """.trim() + "\n"
