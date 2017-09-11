@@ -1232,8 +1232,9 @@ jarget - Tool to download jar packages.
  - [ ]  - Improve command line handling 
  - [ ]  - Improve error handling. 
  - [X]  - Feature to make Uber Jar 
- - [ ]  - Shrink the generated uber jar using Pro-guard. 
+ - [X]  - Shrink the generated uber jar using Pro-guard. 
  - [ ]  - Create a Windows exe wrapper
  - [ ]  - Expose more Java Platform features through command line.
+ - [X]  - Crypto Hash commands such as md5sum, sha256sum ... 
 
 
