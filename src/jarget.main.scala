@@ -300,6 +300,7 @@ object Main{
       case List("-sha256", "-f", file, hexDigest)
           => println(Digest.fileDigestSum("SHA-256", file) == hexDigest)
 
+
       // ------ String Digest -------- //
       case List("-md5",    "-s", str)
           => println(Digest.stringDigestSum("MD5", str))
@@ -404,7 +405,26 @@ object Main{
 
       case "pom"::rest => rest foreach { uri => Pom.showPomDataFromUri(uri, true)}
 
-      //------------  Make Uber Jar ------------- //
+     //------------  Make Uber Jar ------------- //
+
+      // Turn an uber jar into a unix executable
+      // that can be run with ./app instead of java -jar app.jar
+      //
+      case List("uber", "-exjar", inputJar)
+          => {
+            val outputJar = inputJar.stripSuffix(".jar")
+            JarBuilder.makeExecutableJar(inputJar, outputJar)
+            println(s"Built ${outputJar}")
+            println(s"Run it with ./${outputJar}")
+          }
+
+      case List("uber", "-exjar", inputJar, outputJar)
+          => {
+            JarBuilder.makeExecutableJar(inputJar, outputJar)
+            println(s"Built ${outputJar}")
+            println(s"Run it with ./${outputJar}")
+          }
+
       case "uber"::rest
           => parseUberArgs(rest)
 
