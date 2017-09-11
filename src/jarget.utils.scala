@@ -610,7 +610,38 @@ exit 0
         case _
             => throw new IllegalArgumentException(s"Error: Invalid argument '${p}', it must separated by semicolon '(:')")
     }}
-  }  
+  }
+
+
+  def makeExecutableJar(jarFile: String, outFile: String) = {
+
+    var fi: java.io.FileInputStream  = null 
+    var fo: java.io.FileOutputStream = null
+
+    val header = """
+#!/usr/bin/env sh
+if [[ -z "$JAVA_HOME" ]]
+then
+    java -jar "$0" "$@"
+else
+    "$JAVA_HOME/bin/java" -jar "$0" "$@"
+fi
+exit 0
+""".trim() + "\n"
+
+    try {
+      fi = new java.io.FileInputStream(jarFile)
+      fo = new java.io.FileOutputStream(outFile)
+      fo.write(header.getBytes())
+      Utils.copyStream(fi, fo)
+      Runtime.getRuntime().exec("chmod u+x " + outFile)
+    } catch {
+      case ex: java.io.IOException => ex.printStackTrace()
+    } finally {
+      if (fi != null) fi.close()
+      if (fo != null) fo.close()
+    }
+  }
 
 } // -------- End of object JarUtils -------- //
 
