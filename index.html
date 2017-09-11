@@ -3,12 +3,12 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<title>Jarget - Command Line Tool to download jar packages.</title>
-<!-- 2017-09-09 Sat 02:05 -->
+<title>Jarget - Java Platform Command Line Toolbox</title>
+<!-- 2017-09-11 Mon 15:33 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
-<meta  name="keywords" content="jarget jar tool java scala automation deployment" />
+<meta  name="keywords" content="jarget jar tool java scala automation deployment toolbox uber fatjar" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center; }
@@ -211,7 +211,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
-<h1 class="title">Jarget - Command Line Tool to download jar packages.</h1>
+<h1 class="title">Jarget - Java Platform Command Line Toolbox</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
@@ -226,12 +226,17 @@ for the JavaScript code in this tag.
 <li><a href="#sec-1-3-2">1.3.2. Show user help</a></li>
 <li><a href="#sec-1-3-3">1.3.3. Maven / Packages Commands</a></li>
 <li><a href="#sec-1-3-4">1.3.4. Jar Files Commands</a></li>
-<li><a href="#sec-1-3-5">1.3.5. Build Uber Jar</a></li>
-<li><a href="#sec-1-3-6">1.3.6. Classpath</a></li>
-<li><a href="#sec-1-3-7">1.3.7. System Information</a></li>
+<li><a href="#sec-1-3-5">1.3.5. Classpath</a></li>
+<li><a href="#sec-1-3-6">1.3.6. System Information</a></li>
 </ul>
 </li>
-<li><a href="#sec-1-4">1.4. Building Instructions</a></li>
+<li><a href="#sec-1-4">1.4. Building Instructions</a>
+<ul>
+<li><a href="#sec-1-4-1">1.4.1. Build Standalone app</a></li>
+<li><a href="#sec-1-4-2">1.4.2. Build standalone app and shrink its size with proguard</a></li>
+<li><a href="#sec-1-4-3">1.4.3. Install jarget tool in ~/bin</a></li>
+</ul>
+</li>
 <li><a href="#sec-1-5">1.5. Getting a Binary Release</a></li>
 <li><a href="#sec-1-6">1.6. <span class="todo TODO">TODO</span> Tasks</a></li>
 </ul>
@@ -478,9 +483,8 @@ Jarget v1.3
 <div class="outline-text-4" id="text-1-3-2">
 <div class="org-src-container">
 
-<pre class="src src-text">$ ./jarget 
-jarget 1.3 -  Java platform Toolbox
-
+<pre class="src src-text">$ bin/jarget 
+jarget 1.4.0 -  Java platform Toolbox
 General 
 
  -h              - show help 
@@ -565,7 +569,7 @@ Exec
  exec [program] [path] -- arg1 arg2 
 
 
-System Information
+Utilities
 
  utils -doc                            - Open jarget's website - https://github.com/caiorss/jarget
  utils -env                            - Show environment variables in tabular format 
@@ -574,6 +578,28 @@ System Information
  utils -prop                           - Show java properties in tabular format 
  utils -expath [program]               - Show absolute path of a program in PATH variable
 
+
+Crypto Hash Functions 
+
+ - Computes the file hash hex digest.
+ digest -md5    -f [file]              
+ digest -sha1   -f [file]
+ digest -sha256 -f [file] 
+
+ - Checks the file hex digest.
+ digest -md5    -f [file]  [digest]     
+ digest -sha1   -f [file]  [digest]
+ digest -sha256 -f [file]  [digest]
+
+ - Computes the string hex digest.
+ digest -md5    -s [string]             
+ digest -sha1   -s [string]
+ digest -sha256 -s [string]
+
+ - Checks the string hex digest.
+ digest -md5    -s [string]  [digest]    
+ digest -sha1   -s [string]  [digest]
+ digest -sha256 -s [string]  [digest]
 
 Note: [package] is &lt;group&gt;/&lt;artifact&gt;/&lt;version&gt;.
 Examples of valid packages:
@@ -1042,11 +1068,89 @@ $ cat lib/MANIFEST.MF
 </pre>
 </div>
 </div>
-</li></ol>
+</li>
+<li><a id="sec-1-3-4-7" name="sec-1-3-4-7"></a>Convert a jar file to executable jar file<br  /><div class="outline-text-5" id="text-1-3-4-7">
+<ul class="org-ul">
+<li><code>$ jarget uber -exjar [application.jar] [application.jsh]</code>
+</li>
+</ul>
+
+<p>
+Generates an *nix executable ./application.jsh from the file
+application.jar that can be run with <code>$ java -jar application.jar</code>
+</p>
+
+<ul class="org-ul">
+<li><code>$ jaget uber -exjar [application.jar]</code> 
+</li>
+</ul>
+
+<p>
+Generates the *nix executable ./application from application.jar file.
+</p>
+
+<p>
+Note: Those commands create a unix shell script with a jar payload
+that can be run as an ordinary unix executable with ./app instead of
+<code>$ java -jar app.jar</code>.
+</p>
+
+<p>
+Example: Generate a *nix executable (runnable or self-executable jar
+file) named proguard from proguard.jar.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ java -jar proguard.jar 
+ProGuard, version 5.3.3
+<span class="org-function-name">Usage</span>: java proguard.ProGuard [options ...]
+
+$ jarget uber -exjar proguard.jar 
+Built proguard
+Run it with ./proguard
+
+$ ./proguard 
+ProGuard, version 5.3.3
+<span class="org-function-name">Usage</span>: java proguard.ProGuard [options ...]
+
+$ proguard 
+<span class="org-function-name">bash</span>: proguard: command not found
+
+<span class="org-comment-delimiter">#   </span><span class="org-comment">If the app is moved to some directory in $PATH variable, </span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">it can be ran without forward slash (/) as any ordinary unix app </span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">such as ls, echo, ps, ... </span>
+$ mv proguard ~/bin
+
+$ proguard 
+ProGuard, version 5.3.3
+<span class="org-function-name">Usage</span>: java proguard.ProGuard [options ...]
+
+$ which proguard 
+/home/archbox/bin/proguard
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Check the file type </span>
+<span class="org-comment-delimiter">##</span>
+$ file /home/archbox/bin/proguard
+<span class="org-function-name">/home/archbox/bin/proguard</span>: a /usr/bin/env sh script executable (binary data)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Check the executable header </span>
+<span class="org-comment-delimiter">##</span>
+$ head -n 7 /home/archbox/bin/proguard
+<span class="org-comment-delimiter">#</span><span class="org-comment">!/usr/bin/env sh</span>
+<span class="org-keyword">if</span> [[ -z <span class="org-string">"$JAVA_HOME"</span> ]]
+<span class="org-keyword">then</span>
+    java -jar <span class="org-string">"$0"</span> <span class="org-string">"$@"</span>
+<span class="org-keyword">else</span>
+    <span class="org-string">"$JAVA_HOME/bin/java"</span> -jar <span class="org-string">"$0"</span> <span class="org-string">"$@"</span>
+<span class="org-keyword">fi</span>
+</pre>
 </div>
-<div id="outline-container-sec-1-3-5" class="outline-4">
-<h4 id="sec-1-3-5"><span class="section-number-4">1.3.5</span> Build Uber Jar</h4>
-<div class="outline-text-4" id="text-1-3-5">
+</div>
+</li>
+
+
+<li><a id="sec-1-3-4-8" name="sec-1-3-4-8"></a>Build uber Jar or executable uber jar<br  /><div class="outline-text-5" id="text-1-3-4-8">
 <div class="org-src-container">
 
 <pre class="src src-text">jarget uber [command]
@@ -1154,10 +1258,11 @@ with ./application -cmd1 arg1 -cmd2 &#x2026;
 </li>
 </ul>
 </div>
+</li></ol>
 </div>
-<div id="outline-container-sec-1-3-6" class="outline-4">
-<h4 id="sec-1-3-6"><span class="section-number-4">1.3.6</span> Classpath</h4>
-<div class="outline-text-4" id="text-1-3-6">
+<div id="outline-container-sec-1-3-5" class="outline-4">
+<h4 id="sec-1-3-5"><span class="section-number-4">1.3.5</span> Classpath</h4>
+<div class="outline-text-4" id="text-1-3-5">
 <ul class="org-ul">
 <li><code>$ jarget cpath -show</code>
 </li>
@@ -1195,10 +1300,10 @@ Get class file of all jar files in a given directory.
 </div>
 </div>
 </div>
-<div id="outline-container-sec-1-3-7" class="outline-4">
-<h4 id="sec-1-3-7"><span class="section-number-4">1.3.7</span> System Information</h4>
-<div class="outline-text-4" id="text-1-3-7">
-</div><ol class="org-ol"><li><a id="sec-1-3-7-1" name="sec-1-3-7-1"></a>Show Enviroment Variables<br  /><div class="outline-text-5" id="text-1-3-7-1">
+<div id="outline-container-sec-1-3-6" class="outline-4">
+<h4 id="sec-1-3-6"><span class="section-number-4">1.3.6</span> System Information</h4>
+<div class="outline-text-4" id="text-1-3-6">
+</div><ol class="org-ol"><li><a id="sec-1-3-6-1" name="sec-1-3-6-1"></a>Show Enviroment Variables<br  /><div class="outline-text-5" id="text-1-3-6-1">
 <ul class="org-ul">
 <li><code>$ jarget utils -env</code>
 </li>
@@ -1271,7 +1376,7 @@ Get class file of all jar files in a given directory.
 </div>
 </li>
 
-<li><a id="sec-1-3-7-2" name="sec-1-3-7-2"></a>Show PATH Environment Variable<br  /><div class="outline-text-5" id="text-1-3-7-2">
+<li><a id="sec-1-3-6-2" name="sec-1-3-6-2"></a>Show PATH Environment Variable<br  /><div class="outline-text-5" id="text-1-3-6-2">
 <ul class="org-ul">
 <li><code>$ jarget utils -path</code>
 </li>
@@ -1312,7 +1417,7 @@ Get class file of all jar files in a given directory.
 </div>
 </li>
 
-<li><a id="sec-1-3-7-3" name="sec-1-3-7-3"></a>Show Java Properties<br  /><div class="outline-text-5" id="text-1-3-7-3">
+<li><a id="sec-1-3-6-3" name="sec-1-3-6-3"></a>Show Java Properties<br  /><div class="outline-text-5" id="text-1-3-6-3">
 <ul class="org-ul">
 <li><code>$ jarget utils -prop</code>
 </li>
@@ -1389,27 +1494,11 @@ Show all Java properties from System.getProperties().
 <div id="outline-container-sec-1-4" class="outline-3">
 <h3 id="sec-1-4"><span class="section-number-3">1.4</span> Building Instructions</h3>
 <div class="outline-text-3" id="text-1-4">
+</div><div id="outline-container-sec-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1"><span class="section-number-4">1.4.1</span> Build Standalone app</h4>
+<div class="outline-text-4" id="text-1-4-1">
 <p>
-Build jarget.jar by running 
-</p>
-
-<ul class="org-ul">
-<li><code>$ make</code>
-</li>
-</ul>
-
-<div class="org-src-container">
-
-<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">Build  </span>
-$ make 
-
-<span class="org-comment-delimiter"># </span><span class="org-comment">Run it with </span>
-$ scala jarget.jar
-</pre>
-</div>
-
-<p>
-Build standalone jarget by running 
+Build a standalone jarget by running 
 </p>
 
 <ul class="org-ul">
@@ -1435,11 +1524,91 @@ $ java -jar bin/jarget
 $ sh ./bin/jarget doc
 </pre>
 </div>
+</div>
+</div>
 
+<div id="outline-container-sec-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2"><span class="section-number-4">1.4.2</span> Build standalone app and shrink its size with proguard</h4>
+<div class="outline-text-4" id="text-1-4-2">
 <p>
-Build and install standalone jarget tool in ~/bin 
+Build a standalone jarget redeucing the app size with proguard. 
 </p>
 
+<ul class="org-ul">
+<li><code>$ make sh-proguard</code>
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">Build </span>
+$ make sh-guard 
+
+scala jarget.jar uber -scala -o <span class="org-keyword">bin/jarget-uber.jar</span> -m jarget.jar -j /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.jar -r assets
+Built file:  bin/jarget-uber.jar ok
+Run it with: $ java -jar bin/jarget-uber.jar
+<span class="org-builtin">echo</span> bin/jarget-uber.jar
+bin/jarget-uber.jar
+java -jar proguard.jar @config.pro
+ProGuard, version 5.3.3
+Reading input...
+Reading program jar [/home/archbox/test/jarget.scala/bin/jarget-uber.jar]
+Reading library jar [/home/archbox/opt/jdk1.8.0_144/jre/lib/rt.jar]
+Initializing...
+
+... ... .... ... ...  ... ... ... ... 
+
+Shrinking...
+Removing unused program classes and class elements...
+  Original number of program classes: 2777
+  Final number of program classes:    1117
+Inlining subroutines...
+Preverifying...
+Writing output...
+Preparing output jar [/home/archbox/test/jarget.scala/bin/jarget-pro.jar]
+  Copying resources from program jar [/home/archbox/test/jarget.scala/bin/jarget-uber.jar]
+scala jarget.jar uber -exjar bin/jarget-pro.jar bin/jarget
+Built bin/jarget
+Run it with ./bin/jarget
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Check app size </span>
+$ du -h bin/jarget
+1.7M    bin/jarget
+1.7M    total
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Run it as an executable  </span>
+$ bin/jarget -v
+Jarget v1.5.0
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Run it with sh </span>
+$ sh bin/jarget -v
+Jarget v1.5.0
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Run it with java </span>
+$ java -jar bin/jarget -v
+Jarget v1.5.0
+
+$ bin/jarget utils -prop java.home
+/home/archbox/opt/jdk1.8.0_144/jre
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Check the executable header </span>
+$ head -n 7 bin/jarget
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">!/usr/bin/env sh</span>
+<span class="org-keyword">if</span> [[ -z <span class="org-string">"$JAVA_HOME"</span> ]]
+<span class="org-keyword">then</span>
+    java -jar <span class="org-string">"$0"</span> <span class="org-string">"$@"</span>
+<span class="org-keyword">else</span>
+    <span class="org-string">"$JAVA_HOME/bin/java"</span> -jar <span class="org-string">"$0"</span> <span class="org-string">"$@"</span>
+<span class="org-keyword">fi</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4-3" class="outline-4">
+<h4 id="sec-1-4-3"><span class="section-number-4">1.4.3</span> Install jarget tool in ~/bin</h4>
+<div class="outline-text-4" id="text-1-4-3">
 <ul class="org-ul">
 <li><code>$ make install</code>
 </li>
@@ -1472,6 +1641,9 @@ Maven Packages / Jar Packages
 </div>
 </div>
 </div>
+</div>
+
+
 
 <div id="outline-container-sec-1-5" class="outline-3">
 <h3 id="sec-1-5"><span class="section-number-3">1.5</span> Getting a Binary Release</h3>
@@ -1500,6 +1672,18 @@ An fat-jar executable binary release can be downloaded from this link:
 </li>
 
 <li>Release <a href="https://github.com/caiorss/jarget/raw/v1.3.2-release/jarget">jarget v1.3.2</a>
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.4-release/jarget">jarget v1.4.0</a>
+</li>
+</ul>
+
+<p>
+From version &gt;= 1.5 jarget will be shrunk with proguard.
+</p>
+
+<ul class="org-ul">
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.5-release/jarget">jarget v1.5.0</a>
 </li>
 </ul>
 
@@ -1575,11 +1759,13 @@ jarget - Tool to download jar packages.
 </li>
 <li><code>[X]</code> - Feature to make Uber Jar 
 </li>
-<li><code>[&#xa0;]</code> - Shrink the generated uber jar using Pro-guard. 
+<li><code>[X]</code> - Shrink the generated uber jar using Pro-guard. 
 </li>
 <li><code>[&#xa0;]</code> - Create a Windows exe wrapper
 </li>
 <li><code>[&#xa0;]</code> - Expose more Java Platform features through command line.
+</li>
+<li><code>[X]</code> - Crypto Hash commands such as md5sum, sha256sum &#x2026; 
 </li>
 </ul>
 </div>
@@ -1588,7 +1774,7 @@ jarget - Tool to download jar packages.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2017-09-09 Sat 02:05</p>
+<p class="date">Created: 2017-09-11 Mon 15:33</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.2.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
