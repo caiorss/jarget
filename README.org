@@ -967,20 +967,9 @@ $ jarget utils -prop
 
 #+END_SRC
 ** Building Instructions 
+*** Build Standalone app 
 
-Build jarget.jar by running 
-
- - =$ make=
-
-#+BEGIN_SRC sh
-# Build  
-$ make 
-
-# Run it with 
-$ scala jarget.jar 
-#+END_SRC
-
-Build standalone jarget by running 
+Build a standalone jarget by running 
 
  - =$ make sh= 
 
@@ -1002,7 +991,78 @@ $ sh ./bin/jarget doc
 
 #+END_SRC
 
-Build and install standalone jarget tool in ~/bin 
+*** Build standalone app and shrink its size with proguard
+
+Build a standalone jarget redeucing the app size with proguard. 
+
+ - =$ make sh-proguard=
+
+#+BEGIN_SRC sh
+# Build 
+$ make sh-guard 
+
+scala jarget.jar uber -scala -o bin/jarget-uber.jar -m jarget.jar -j /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.jar -r assets
+Built file:  bin/jarget-uber.jar ok
+Run it with: $ java -jar bin/jarget-uber.jar
+echo bin/jarget-uber.jar
+bin/jarget-uber.jar
+java -jar proguard.jar @config.pro
+ProGuard, version 5.3.3
+Reading input...
+Reading program jar [/home/archbox/test/jarget.scala/bin/jarget-uber.jar]
+Reading library jar [/home/archbox/opt/jdk1.8.0_144/jre/lib/rt.jar]
+Initializing...
+
+... ... .... ... ...  ... ... ... ... 
+
+Shrinking...
+Removing unused program classes and class elements...
+  Original number of program classes: 2777
+  Final number of program classes:    1117
+Inlining subroutines...
+Preverifying...
+Writing output...
+Preparing output jar [/home/archbox/test/jarget.scala/bin/jarget-pro.jar]
+  Copying resources from program jar [/home/archbox/test/jarget.scala/bin/jarget-uber.jar]
+scala jarget.jar uber -exjar bin/jarget-pro.jar bin/jarget
+Built bin/jarget
+Run it with ./bin/jarget
+
+# Check app size 
+$ du -h bin/jarget
+1.7M	bin/jarget
+1.7M	total
+
+# Run it as an executable  
+$ bin/jarget -v
+Jarget v1.5.0
+
+# Run it with sh 
+$ sh bin/jarget -v
+Jarget v1.5.0
+
+# Run it with java 
+$ java -jar bin/jarget -v
+Jarget v1.5.0
+
+$ bin/jarget utils -prop java.home
+/home/archbox/opt/jdk1.8.0_144/jre
+
+# Check the executable header 
+$ head -n 7 bin/jarget
+
+#!/usr/bin/env sh
+if [[ -z "$JAVA_HOME" ]]
+then
+    java -jar "$0" "$@"
+else
+    "$JAVA_HOME/bin/java" -jar "$0" "$@"
+fi
+
+
+#+END_SRC
+
+*** Install jarget tool in ~/bin 
 
  - =$ make install=
 
@@ -1029,6 +1089,8 @@ Maven Packages / Jar Packages
 
 ... ... ... 
 #+END_SRC
+
+
 
 ** Getting a Binary Release 
 
