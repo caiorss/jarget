@@ -680,7 +680,72 @@ Implementation-Version: 1.0.17
 Implementation-Vendor: jfree.org
 
 #+END_SRC
-*** Build Uber Jar 
+**** Convert a jar file to executable jar file 
+
+ - =$ jarget uber -exjar [application.jar] [application.jsh]=
+
+Generates an *nix executable ./application.jsh from the file
+application.jar that can be run with =$ java -jar application.jar=
+
+ - =$ jaget uber -exjar [application.jar]= 
+
+Generates the *nix executable ./application from application.jar file.
+
+Note: Those commands create a unix shell script with a jar payload
+that can be run as an ordinary unix executable with ./app instead of
+=$ java -jar app.jar=.
+
+Example: Generate a *nix executable (runnable or self-executable jar
+file) named proguard from proguard.jar.
+
+#+BEGIN_SRC sh 
+$ java -jar proguard.jar 
+ProGuard, version 5.3.3
+Usage: java proguard.ProGuard [options ...]
+
+$ jarget uber -exjar proguard.jar 
+Built proguard
+Run it with ./proguard
+
+$ ./proguard 
+ProGuard, version 5.3.3
+Usage: java proguard.ProGuard [options ...]
+
+$ proguard 
+bash: proguard: command not found
+
+#   If the app is moved to some directory in $PATH variable, 
+# it can be ran without forward slash (/) as any ordinary unix app 
+# such as ls, echo, ps, ... 
+$ mv proguard ~/bin
+
+$ proguard 
+ProGuard, version 5.3.3
+Usage: java proguard.ProGuard [options ...]
+
+$ which proguard 
+/home/archbox/bin/proguard
+
+# Check the file type 
+##
+$ file /home/archbox/bin/proguard
+/home/archbox/bin/proguard: a /usr/bin/env sh script executable (binary data)
+
+# Check the executable header 
+##
+$ head -n 7 /home/archbox/bin/proguard
+#!/usr/bin/env sh
+if [[ -z "$JAVA_HOME" ]]
+then
+    java -jar "$0" "$@"
+else
+    "$JAVA_HOME/bin/java" -jar "$0" "$@"
+fi
+
+#+END_SRC
+
+ 
+**** Build uber Jar or executable uber jar 
 
 #+BEGIN_SRC text 
  jarget uber [command]
@@ -1111,6 +1176,10 @@ An fat-jar executable binary release can be downloaded from this link:
  - Release [[https://github.com/caiorss/jarget/raw/v1.3.2-release/jarget][jarget v1.3.2]]
 
  - Release [[https://github.com/caiorss/jarget/raw/v1.4-release/jarget][jarget v1.4.0]]
+
+From version >= 1.5 jarget will be shrunk with proguard.
+
+ - Release [[https://github.com/caiorss/jarget/raw/v1.5-release/jarget][jarget v1.5.0]]
 
 Or it can be downloaded with those shell commands below: 
 
