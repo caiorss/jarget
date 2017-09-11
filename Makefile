@@ -1,13 +1,10 @@
+all:       jarget.jar
+sh:        bin/jarget 
+sh-guard:  
+
+fatjar :=  bin/jarget-uber.jar
 
 src := src/jarget.main.scala src/jarget.utils.scala src/jarget.mvn.scala src/jarget.crypto.scala src/jarget.logger.scala
-
-
-all: jarget.jar
-
-sh: bin/jarget 
-
-#fatjar: bin/jarget-fat.jar
-
 
 SCALA_XML=scala-xml_2.12-1.0.6.jar
 SCALA_XML_PATH=$(shell dirname $(shell dirname $(shell which scala)))/lib/$(SCALA_XML)
@@ -16,11 +13,15 @@ jarget.jar : $(src)
 	fsc $(src) -d jarget.jar
 
 bin/jarget: jarget.jar assets/version.txt assets/user-help.txt
-	#echo $(SCALA_XML)
 	scala jarget.jar uber -scala -sh -o bin/jarget -m jarget.jar -j $(SCALA_XML_PATH) -r assets
 
-fatjar: jarget.jar assets/version.txt assets/user-help.txt
-	scala jarget.jar uber -scala -o jarget-uber.jar -m jarget.jar -j $(SCALA_XML_PATH) -r assets
+$(fatjar): jarget.jar assets/version.txt assets/user-help.txt
+	scala jarget.jar uber -scala -o bin/jarget-uber.jar -m jarget.jar -j $(SCALA_XML_PATH) -r assets
+
+sh-guard: $(fatjar) config.pro
+	echo $(fatjar)
+	java -jar proguard.jar @config.pro
+	scala jarget.jar uber -exjar bin/jarget-pro.jar bin/jarget
 
 install: bin/jarget
 	cp -v bin/jarget ~/bin
