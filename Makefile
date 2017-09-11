@@ -13,9 +13,11 @@ jarget.jar : $(src)
 	fsc $(src) -d jarget.jar
 
 bin/jarget: jarget.jar assets/version.txt assets/user-help.txt
+	mkdir -p bin
 	scala jarget.jar uber -scala -sh -o bin/jarget -m jarget.jar -j $(SCALA_XML_PATH) -r assets
 
 $(fatjar): jarget.jar assets/version.txt assets/user-help.txt
+	mkdir -p bin 
 	scala jarget.jar uber -scala -o bin/jarget-uber.jar -m jarget.jar -j $(SCALA_XML_PATH) -r assets
 
 sh-guard: $(fatjar) config.pro
