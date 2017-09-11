@@ -48,17 +48,23 @@ Jar Files Inspection
     
 Uber Jar 
 
+ - Convert a jar file into a unix executable jar file
+   that can be run with ./app.sh instead of java -jar app.jar
+
+ $ ./jarget uber -exjar app.jar app.sh
+
+ $ ./jarget uber -exjar app.jar   # Gnerates ./app
 
  - Build an scala uber jar named output.jar from main.jar which
    contains the main class and lib1 and lib2 are the directories
    containing jar files. It bundles the scala-library.jar runtime with
    the application.
 
- $ jar uber -scala -o output.jar -m main.jar
+ $ ./jarget uber -scala -o output.jar -m main.jar
 
- $ jar uber -scala -o output.jar -m main.jar -p ./lib1 ./lib2 
+ $ ./jarget uber -scala -o output.jar -m main.jar -p ./lib1 ./lib2 
   
- $ jar uber -scala -sh -o output.jar -m main.jar -p ./lib1 -j dependency1.jar -r ./resources1 ./resources2 
+ $ ./jarget uber -scala -sh -o output.jar -m main.jar -p ./lib1 -j dependency1.jar -r ./resources1 ./resources2 
 
  uber [command]
 
