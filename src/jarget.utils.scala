@@ -443,6 +443,26 @@ object JarUtils{
     }
   }
 
+
+  /** Get all packages of a jar file */
+  def getPackages(jarFile: String): Set[String] = {
+    import scala.collection.JavaConverters._
+    def getParentPath(p: String) = {
+      new java.io.File(p).getParent()
+    }
+    val jar = new java.util.jar.JarFile(jarFile)
+    val entries = (
+      jar.entries.asScala
+        map (_.getName())
+        filter (_.endsWith(".class"))
+        map getParentPath
+        map (_.replace("/", "."))
+        toSet
+    )
+    jar.close()
+    entries
+  }
+
   /** Run a program with a given set of arguments by
       setting the CLASSPATH enviroment variable with
       all jars from the 'path' directory.
