@@ -142,6 +142,12 @@ object Main{
 
     case List("-show", jarFile)
         => JarUtils.showFiles(jarFile)
+      
+    case List("-package", jarFile)
+        => JarUtils.getPackages(jarFile) foreach println
+
+    case List("-package", jarFile, clsName)
+        => JarUtils.getPackageClasses(jarFile, clsName) foreach println
 
     // Show only asset files ignoring class files.
     case List("-resource", jarFile)
