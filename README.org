@@ -175,8 +175,8 @@ Jarget v1.3
 *** Show user help 
 
 #+BEGIN_SRC text 
-$ bin/jarget 
-jarget 1.4.0 -  Java platform Toolbox
+$ jarget 
+jarget 1.5.1 -  Java platform Toolbox
 General 
 
  -h              - show help 
@@ -214,7 +214,8 @@ Jar Files Inspection
  jar -main [jar]                    - Show main class.
  jar -show [jar]                    - Show all files.
 
- jar -assets [jar]                  - Show all asset files disregarding *.class files.
+ jar -resource [jar]                - Show all asset/resource files disregarding *.class files.
+ jar -resource [jar] [file]         - Print content of resource file.
 
  jar -extract [jar] [file]          - Extract [file] from [jar] package to current directory.
  jar -extract [jar] [file] [path]   - Extract [file] from [jar] package to [path] directory.
@@ -227,17 +228,23 @@ Jar Files Inspection
     
 Uber Jar 
 
+ - Convert a jar file into a unix executable jar file
+   that can be run with ./app.sh instead of java -jar app.jar
+
+ $ ./jarget uber -exjar app.jar app.sh
+
+ $ ./jarget uber -exjar app.jar   # Gnerates ./app
 
  - Build an scala uber jar named output.jar from main.jar which
    contains the main class and lib1 and lib2 are the directories
    containing jar files. It bundles the scala-library.jar runtime with
    the application.
 
- $ jar uber -scala -o output.jar -m main.jar
+ $ ./jarget uber -scala -o output.jar -m main.jar
 
- $ jar uber -scala -o output.jar -m main.jar -p ./lib1 ./lib2 
+ $ ./jarget uber -scala -o output.jar -m main.jar -p ./lib1 ./lib2 
   
- $ jar uber -scala -sh -o output.jar -m main.jar -p ./lib1 -j dependency1.jar -r ./resources1 ./resources2 
+ $ ./jarget uber -scala -sh -o output.jar -m main.jar -p ./lib1 -j dependency1.jar -r ./resources1 ./resources2 
 
  uber [command]
 
@@ -744,7 +751,6 @@ fi
 
 #+END_SRC
 
- 
 **** Build uber Jar or executable uber jar 
 
 #+BEGIN_SRC text 
@@ -1156,7 +1162,6 @@ Maven Packages / Jar Packages
 #+END_SRC
 
 
-
 ** Getting a Binary Release 
 
 An fat-jar executable binary release can be downloaded from this link:
@@ -1180,6 +1185,8 @@ An fat-jar executable binary release can be downloaded from this link:
 From version >= 1.5 jarget will be shrunk with proguard.
 
  - Release [[https://github.com/caiorss/jarget/raw/v1.5-release/jarget][jarget v1.5.0]]
+
+ - Release [[https://github.com/caiorss/jarget/raw/v1.5.1-release/jarget][jarget v1.5.1]]
 
 Or it can be downloaded with those shell commands below: 
 
