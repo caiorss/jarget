@@ -87,7 +87,7 @@ object Main{
 
   import MainUtils._
 
-
+  /** Handles utils commands. - ./jarget utils <commands>  */
   def parseUtilsArgs(arglist: List[String]) = arglist match {
 
     // Show environment variable
@@ -126,6 +126,7 @@ object Main{
     }
   }
 
+  /** Handles jar commands. - ./jarget jar <commands> */
   def parseJarArgs(arglist: List[String]) = arglist match {
 
     case List()
@@ -143,8 +144,11 @@ object Main{
         => JarUtils.showFiles(jarFile)
 
     // Show only asset files ignoring class files.
-    case List("-assets", jarFile)
+    case List("-resource", jarFile)
         => JarUtils.getAssetFiles(jarFile) foreach println
+
+    case List("-resource", jarFile, file)
+        => JarUtils.printFile(jarFile, file)
 
     case List("-cat", jarFile, file)
         => JarUtils.printFile(jarFile, file)
@@ -173,6 +177,7 @@ object Main{
   } //------- EOF function parseJarArgs ------- //
 
 
+  /** Handles command Uber. ./jarget uber <options> */
   def parseUberArgs(arglist: List[String]) = {
     val parser = new OptParse()
 
@@ -277,6 +282,10 @@ object Main{
   } // End of uberParser
 
 
+  /** Handles command digest to compute crypto hashes. 
+      ./jarget digest -md5 -f <file> 
+      ./jarget digest -sha256 -s <password>
+   */
   def parseDigestArgs(args: List[String]) = {
 
     import jarget.crypto.Digest
@@ -324,6 +333,8 @@ object Main{
     }
   }
 
+  /** Displays user help stored in the asset file user-help.txt 
+    */
   def showHelp() = {
     val version = MainUtils.getVersion() getOrElse ""
     println(s"jarget ${version.trim()} -  Java platform Toolbox")
