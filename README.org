@@ -626,7 +626,7 @@ Packget$$anonfun$downloadPackage$5.class
 
 **** List resource/asset files 
 
- - =$ jarget jar -assets [jar]=
+ - =$ jarget jar -resource [jar]=
 
 Show all resource files disregarding *.class files. 
 
@@ -646,7 +646,7 @@ org/jfree/chart/plot/LocalizationBundle_ru.properties
 org/jfree/chart/plot/LocalizationBundle_zh_CN.properties
 #+END_SRC
 
- - =$ jarget jar -assets [jar] [file]=
+ - =$ jarget jar -resource [jar] [file]=
 
 Show a particular resource file.
 
