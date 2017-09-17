@@ -624,12 +624,14 @@ Packget$$anonfun$downloadPackage$5.class
 
 #+END_SRC
 
-**** List asset files 
+**** List resource/asset files 
 
  - =$ jarget jar -assets [jar]=
 
+Show all resource files disregarding *.class files. 
+
 #+BEGIN_SRC sh 
-$ jarget jar -assets lib/jfreechart-1.0.17.jar 
+$ jarget jar -resource lib/jfreechart-1.0.17.jar 
 META-INF/MANIFEST.MF
 org/jfree/chart/LocalizationBundle.properties
 org/jfree/chart/LocalizationBundle_cs.properties
@@ -643,6 +645,39 @@ org/jfree/chart/LocalizationBundle_it.properties
 org/jfree/chart/plot/LocalizationBundle_ru.properties
 org/jfree/chart/plot/LocalizationBundle_zh_CN.properties
 #+END_SRC
+
+ - =$ jarget jar -assets [jar] [file]=
+
+Show a particular resource file.
+
+#+BEGIN_SRC text 
+$ jarget jar -resource lib/jfreechart-1.0.17.jar org/jfree/chart/LocalizationBundle.properties
+
+# org.jfree.chart.ChartPanel ResourceBundle properties file
+# 
+# Changes (from 31-Aug-2003)
+# --------------------------
+# 31-Aug-2003 : Initial version (AL);
+#
+
+Auto_Range=Auto Range
+All_Axes=Both Axes
+Chart=Chart
+Chart_Properties=Chart Properties
+Copy=Copy
+Domain_Axis=Domain Axis
+FILE_EXISTS_CONFIRM_OVERWRITE=The file already exists, are you sure you want to overwrite it?
+PNG_Image_Files=PNG Image Files
+PDF_Files=PDF Files
+Print...=Print...
+Properties...=Properties...
+Range_Axis=Range Axis
+Save_as...=Save as...
+SVG_Files=SVG Files
+Zoom_In=Zoom In
+Zoom_Out=Zoom Out
+#+END_SRC
+
 
 **** Extract file to current directory
 
