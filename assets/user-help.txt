@@ -35,7 +35,8 @@ Jar Files Inspection
  jar -main [jar]                    - Show main class.
  jar -show [jar]                    - Show all files.
 
- jar -assets [jar]                  - Show all asset files disregarding *.class files.
+ jar -resource [jar]                - Show all asset/resource files disregarding *.class files.
+ jar -resource [jar] [file]         - Print content of resource file.
 
  jar -extract [jar] [file]          - Extract [file] from [jar] package to current directory.
  jar -extract [jar] [file] [path]   - Extract [file] from [jar] package to [path] directory.
