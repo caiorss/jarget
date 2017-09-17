@@ -46,7 +46,10 @@ Jar Files Inspection
  jar -extract-all [jar]             - Extract jar file to directory with same name of jar file 
                                       at current directory. If file is lib/chart.jar it will  
                                       extracted to ./chart 
-    
+
+ jar -package [jar]                - Show all packages(aka namespaces) of classes within a jar file.
+ jar -package [jar] [package]      - Show all classes of within a particular package.
+
 Uber Jar 
 
  - Convert a jar file into a unix executable jar file
