@@ -3,6 +3,7 @@ package jarget.main
 import jarget.utils.{Utils, JarUtils, JarBuilder}
 import jarget.utils.OptParse
 import jarget.mvn._
+import jarget.reader._
 
 case class AppSettings(
   version: String,
@@ -80,11 +81,6 @@ object MainUtils {
     println("Opening package: " + url)
     Utils.openUrl(url)
   }
-
-  def getVersion() = Utils.readResourceFile(
-    getClass(),
-    "/assets/version.txt"
-  )
 
 
 } // ------ End of object MainUtils ---------- //
