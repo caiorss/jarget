@@ -82,6 +82,20 @@ object MainUtils {
     Utils.openUrl(url)
   }
 
+  /** Read application configuration file */
+  def getAppSettings(prop: java.util.Properties) = {
+    val sopt = for {
+      version <- Option(prop.getProperty("jarget.version"))
+      repoUrl <- Option(prop.getProperty("jarget.mvn.url"))
+      website <- Option(prop.getProperty("jarget.website"))
+    } yield AppSettings(version, repoUrl, website)
+    sopt match {
+      case Some(s)
+          => s
+      case None
+          => throw new java.lang.IllegalArgumentException("Error: cannot read property file")
+    }
+  }
 
 } // ------ End of object MainUtils ---------- //
 
