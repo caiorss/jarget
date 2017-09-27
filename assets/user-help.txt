@@ -1,35 +1,45 @@
 General 
+-----------------------------------------------------------------
 
  -h              - show help 
  -v | -version   - show version 
+ -site           - Open jarget github repository in the web browser. 
 
 Maven Packages / Jar Packages
+-----------------------------------------------------------------
 
- mvn -show [package]                 - Show package's information
+ mvn -show [pack]                      - Show package's information
 
- mvn -pom  [package]                 - Show package's pom file
+ mvn -pom  [pack]                      - Show package's pom file
 
- mvn -get  [package]                 - Download package and dependencies to ./lib
+ mvn -get  [pack]                      - Download package and dependencies to ./lib
 
- mvn -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
+ mvn -get  [pack] -dir [path]          - Download package and dependencies to [path] directory.
 
- mvn -get scala [version] [package]  - Download a Scala package for an specific Scala version.
+ mvn -get [pack] -r [repo]             - Download package [pack] from a given repository [rpo].
 
- mvn -search   [query]               - Search a package in search.maven.org, opening results in 
-                                       the browser.
+ mvn -get scala [ver] [pack]           - Download a Scala package for an specific Scala version [ver].
 
- mvn -search2  [query]               - Search a package showing results in the console. (Experimental)
+ mvn -get scala [ver] [pack] -r [repo] - Download scala package from a given repository URL [repo]
 
- mvn -browse [package]               - Open package official website.
+ mvn -search   [query]                 - Search a package in search.maven.org, opening results in 
+                                         the browser.
 
- mvn -go                             - Open web site https://mvnrepository.com
- mvn -go [package]                   - Open package mvnrepository url.
+ mvn -search2  [query]                 - Search a package showing results in the console. (Experimental)
 
- mvn -clip -show                     - Extract package from XML in clipboard and show its information.
- mvn -clip -pom                      - Extract package from XML in clipboard and show its Pom file.
- mvn -clip -get                      - Extract package from XML in clipboard and download it to ./lib
+ mvn -browse [package]                 - Open package official website.
 
-Jar Files Inspection
+ mvn -go                               - Open web site https://mvnrepository.com
+ mvn -go [package]                     - Open package mvnrepository url.
+
+ mvn -clip -show                       - Extract package from XML in clipboard and show its information.
+ mvn -clip -pom                        - Extract package from XML in clipboard and show its Pom file.
+ mvn -clip -get                        - Extract package from XML in clipboard and download it to ./lib
+
+
+ Jar Files Inspection
+----------------------------------------------------------------- 
+
 
  jar -man  [jar]                    - Show manifest.
  jar -main [jar]                    - Show main class.
@@ -50,7 +60,9 @@ Jar Files Inspection
  jar -package [jar]                - Show all packages(aka namespaces) of classes within a jar file.
  jar -package [jar] [package]      - Show all classes of within a particular package.
 
+
 Uber Jar 
+-----------------------------------------------------------------
 
  - Convert a jar file into a unix executable jar file
    that can be run with ./app.sh instead of java -jar app.jar
@@ -80,12 +92,16 @@ Uber Jar
    -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar 
    -sh                      - (optional)  Makes the jar file as a self-executable Unix app.                                 
 
+
 Classpath
+-----------------------------------------------------------------
 
  cpath -show                        - Get classpath from ./lib directory
  cpath -show [path]                 - Get classpath from [path] directory
 
+
 Exec  
+-----------------------------------------------------------------
 
  exec [program] [path] 
  exec [program] -- arg1 arg2 ...      - Executes a program passing classpath (-cp) from ./lib to it.
@@ -93,8 +109,8 @@ Exec
   
 
 Utilities
+-----------------------------------------------------------------
 
- utils -doc                            - Open jarget's website - https://github.com/caiorss/jarget
  utils -env                            - Show environment variables in tabular format 
  utils -env [var]                      - Show environment variable [var]
  utils -path                           - Show PATH environment variable 
@@ -102,7 +118,8 @@ Utilities
  utils -expath [program]               - Show absolute path of a program in PATH variable
 
 
-Crypto Hash Functions 
+Crypto Hash Functions
+-----------------------------------------------------------------
 
  - Computes the file hash hex digest.
  digest -md5    -f [file]              
