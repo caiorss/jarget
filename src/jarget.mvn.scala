@@ -1,5 +1,5 @@
 /** 
- - Author: Caio Rodrigues <caiorss.rodrigues [AT] gmail [DOT] com>
+ - Author: Caio Rodrigues <caiorss [DOT] rodrigues [AT] gmail [DOT] com>
 
 
 This is free and unencumbered software released into the public domain.
@@ -195,30 +195,34 @@ object CentralMaven{
 
 
 object Packget {
-
+  
   import Pom._
+  import jarget.reader._
 
-  def getCentralMavenArtifactURL(ext: String) = (pack: PackData) => {
-    val gpath    = pack.group.replaceAll("\\.", "/")
-    val artifact = pack.artifact
-    val version  = pack.version
-    s"http://central.maven.org/maven2/${gpath}/${artifact}/${version}/${artifact}-${version}.${ext}"
-  }
+  // type Repo[A] = Reader[String, String]
+
+  def getArtifactURL(ext: String) = (pack: PackData) => for {
+    repo     <- Reader.ask[String]
+    gpath    = pack.group.replaceAll("\\.", "/")
+    artifact = pack.artifact
+    version  = pack.version
+    uri      = s"${repo}/${gpath}/${artifact}/${version}/${artifact}-${version}.${ext}"
+  } yield uri
 
   def getMavenPackgeURL(pack: PackData) = {
     s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
   }
 
-  val getJarUrl  = getCentralMavenArtifactURL("jar")
-  val getPomUrl  = getCentralMavenArtifactURL("pom")
+  val getJarUrl = getArtifactURL("jar")
+  val getPomUrl = getArtifactURL("pom")
 
   def getFileNameFull(pack: PackData, ext: String) = {
     s"${pack.artifact}-${pack.version}.${ext}"
   }
 
-  def getPomXML(pack: PackData): scala.xml.Node = {
-     scala.xml.XML.load(getPomUrl(pack))
-  }
+  def getPomXML(pack: PackData) = 
+    getPomUrl(pack) map scala.xml.XML.load
+  
 
   def readPack(packstr: String) = {
     val fields = packstr.split("/").map(_.trim)
@@ -283,70 +287,63 @@ object Packget {
     deplist.getOrElse(List())
   }
 
+
   def getAllDependencies(pack: PackData) = {
-    var packlist = Set[PackData]()
-    packlist += pack   
-    def aux(pack: PackData) {
-      val xml  = getPomXML(pack)
-      val deps = getPomDependencies(xml)
-      deps foreach {d => packlist += d}
-      deps foreach packlist
-    }
-    aux(pack)
-    packlist
+    var packlist = Set[PackData](pack)
+    //packlist += pack
+    for {    
+      xml  <- getPomXML(pack)
+      deps = getPomDependencies(xml)
+      _    <- Reader.liftIO{ deps foreach (d => packlist += d)}
+    } yield packlist
   }
 
 
-  def downloadPackage(pack: PackData, path: String) = {
-    import scala.concurrent.Future
-    import concurrent.ExecutionContext.Implicits.global
-    import scala.concurrent.duration.Duration
-
-    def downloadJarFile(p: PackData) = {
-      val file = Utils.join(path, getFileNameFull(p, "jar"))
-      val url  = getJarUrl(p)
-      println(s"Downloading file ${file}.")            
+  def downloadArtifact(pack: PackData, ext: String, path: String) =
+    for (url <- getArtifactURL(ext)(pack)){
+      val file  = Utils.join(path, getFileNameFull(pack, ext))
+      println(s"Downloading file ${file}.")
       Utils.downloadFile(url, file)
       println(s"File ${file} downloaded. Ok.")
     }
 
-    def downloadPomFile(p: PackData) = {
-      val file = Utils.join(path, getFileNameFull(p, "pom"))
-      val url  = getPomUrl(p)
-      println(s"Downloading file ${file}.")            
-      Utils.downloadFile(url, file)
-      println(s"File ${file} downloaded. Ok.")      
-    }
+
+  def downloadPackage(pack: PackData, path: String): Reader[String, Unit] = {
+    import scala.concurrent.Future
+    import concurrent.ExecutionContext.Implicits.global
+    import scala.concurrent.duration.Duration
 
     Utils.mkdir(path)
 
-    val packlist = getAllDependencies(pack) filter { p =>
-      !Utils.fileExists(Utils.join(path, getFileNameFull(p, "jar")))
-    }
+    println("Testing package")
 
-    //println(packlist)
+    for(repoURL  <- Reader.ask[String] ){
 
-    val result = Future.traverse(packlist){ p =>
-      println("Downloading package " + p)
-
-      //println(s"Downloading file ${file} / ${pack.group} - ${pack.artifact} - ${pack.version} ... ")
-      val fut = Future {
-        downloadPomFile(p)
-        downloadJarFile(p)
+      val packlist = getAllDependencies(pack) run (repoURL) filter { p =>
+        !Utils.fileExists(Utils.join(path, getFileNameFull(p, "jar")))
       }
 
-      //fut onSuccess { case _ => println(s"File ${file} download Ok.") }
-      //fut onFailure { case _ => println(s"File ${file} download Failed.")}
-      fut 
+      println("Downloading ---------------------")
+      packlist foreach println 
+      println("----------------------------------")
+
+      val result = Future.traverse(packlist){ p =>
+        println("Downloading package " + p)
+        //println(s"Downloading file ${file} / ${pack.group} - ${pack.artifact} - ${pack.version} ... ")
+        val fut = Future {
+          downloadArtifact(p, "pom", path).run(repoURL)
+          downloadArtifact(p, "jar", path).run(repoURL)
+        }
+        fut
+      }
+      result.onSuccess { case _ => println("Download Successful") }
+      result.onFailure { case _ => println("Download Failed") }
+      scala.concurrent.Await.result(result, Duration.Inf)      
+
     }
 
-    result.onSuccess { case _ => println("Download Successful") }
-    result.onFailure { case _ => println("Download Failed") }
-
-    scala.concurrent.Await.result(result, Duration.Inf)
-  }
-  
-
+  } // End of downloadPackage 
+   
 
 } // ------ End of object Packget ------ // 
 

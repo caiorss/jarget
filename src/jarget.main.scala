@@ -3,6 +3,13 @@ package jarget.main
 import jarget.utils.{Utils, JarUtils, JarBuilder}
 import jarget.utils.OptParse
 import jarget.mvn._
+import jarget.reader._
+
+case class AppSettings(
+  version: String,
+  repoUrl: String,
+  website: String
+)
 
 
 object MainUtils {
@@ -47,21 +54,22 @@ object MainUtils {
     p.get 
   }
 
-  def showPacakgeInfo(pack: PackData) = {
-    val pom = Packget.getPomXML(pack)
-    val dat = Pom.getPomData(pom)
-    println( "Package:         " + dat.name)
-    println( "Packaging:       " + dat.packaging)
-    println(s"Coordinates[1]:  group = ${dat.group} artifact = ${dat.artifact} version = ${dat.version}")
-    println(s"Coordinates[2]:  ${dat.group}/${dat.artifact}/${dat.version}")
-    println( "Url:             " + dat.url)
-    println( "Description:     " + dat.description)
+  def showPackageInfo(pack: PackData) = 
+    for (pom <- Packget.getPomXML(pack)){
+      val dat = Pom.getPomData(pom)
+      println( "Package:         " + dat.name)
+      println( "Packaging:       " + dat.packaging)
+      println(s"Coordinates[1]:  group = ${dat.group} artifact = ${dat.artifact} version = ${dat.version}")
+      println(s"Coordinates[2]:  ${dat.group}/${dat.artifact}/${dat.version}")
+      println( "Url:             " + dat.url)
+      println( "Description:     " + dat.description)
 
-    println("\nDependencies:\n")
-    Packget.getPomDependencies(pom) foreach { p =>
-      println("  - " + Packget.formatPack(p) + "\n")
+      println("\nDependencies:\n")
+      Packget.getPomDependencies(pom) foreach { p =>
+        println("  - " + Packget.formatPack(p) + "\n")
+      }
     }
-  }
+  
 
 
   def showPom(pack: PackData) = {
@@ -74,11 +82,20 @@ object MainUtils {
     Utils.openUrl(url)
   }
 
-  def getVersion() = Utils.readResourceFile(
-    getClass(),
-    "/assets/version.txt"
-  )
-
+  /** Read application configuration file */
+  def getAppSettings(prop: java.util.Properties) = {
+    val sopt = for {
+      version <- Option(prop.getProperty("jarget.version"))
+      repoUrl <- Option(prop.getProperty("jarget.mvn.url"))
+      website <- Option(prop.getProperty("jarget.website"))
+    } yield AppSettings(version, repoUrl, website)
+    sopt match {
+      case Some(s)
+          => s
+      case None
+          => throw new java.lang.IllegalArgumentException("Error: cannot read property file")
+    }
+  }
 
 } // ------ End of object MainUtils ---------- //
 
@@ -114,9 +131,6 @@ object Main{
     // Show path to executable in $PATH variable
     case List("-expath", program)
         => Utils.getProgramPath(program) foreach println
-
-    case List("-doc")
-        => Utils.openUrl("https://github.com/caiorss/jarget")
 
     case _
         => {
@@ -341,8 +355,7 @@ object Main{
 
   /** Displays user help stored in the asset file user-help.txt 
     */
-  def showHelp() = {
-    val version = MainUtils.getVersion() getOrElse ""
+  def showHelp(version: String) = {    
     println(s"jarget ${version.trim()} -  Java platform Toolbox")
     val help = Utils.readResourceFile(getClass(), "/assets/user-help.txt")
     help match {
@@ -356,29 +369,57 @@ object Main{
 
     jarget.logger.Log.setLevel()
 
+    val config =
+      Utils.readResourceProperties("/assets/app.properties")
+        .map(MainUtils.getAppSettings _ )
+        .run(getClass())
+
     args.toList match {
 
       case List() | List("-h") | List("-help")
-          => showHelp()
+          => showHelp(config.version)
 
       case List("-v") | List("-version")
-          => for { 
-            ver <- MainUtils.getVersion()
-          } println("Jarget v" + ver)
+          => println(config.version) 
+
+      case List("-site")
+        => Utils.openUrl(config.website)
 
       case List("mvn", "-pom", pstr)
           => showPom(parsePack(pstr))
 
       case List("mvn", "-show", pstr)
-          => showPacakgeInfo(parsePack(pstr))
+          => showPackageInfo(parsePack(pstr)) run config.repoUrl
+
+      case List("mvn", "-show", pstr, "-r", repo)
+          => showPackageInfo(parsePack(pstr)) run repo 
 
       // Download a package and its dependencies
       case List("mvn", "-get", pstr)
-          => Packget.downloadPackage(parsePack(pstr), "./lib")
+          => {
+            println("Downloading Packages")
+            Packget.downloadPackage(parsePack(pstr), "./lib") run config.repoUrl
+          }
+
+      case List("mvn", "-get", pstr, "-r", repo)
+          => {
+            println("Downloading Packages")
+            Packget.downloadPackage(parsePack(pstr), "./lib") run repo 
+          }
+        
 
       // Download a Scala package  
       case List("mvn", "-get", "scala", version, pstr)
-          => Packget.downloadPackage(parseScalaPack(pstr, version), "./lib")
+          => {
+            val pack = parseScalaPack(pstr, version)
+            Packget.downloadPackage(pack, "./lib") run config.repoUrl 
+          }
+
+      case List("mvn", "-get", "scala", version, pstr, repo)
+          => {
+            val pack = parseScalaPack(pstr, version)
+            Packget.downloadPackage(pack, "./lib") run repo 
+          }
 
       case List("mvn", "-path", path, "-get", pstr)
           => Packget.downloadPackage(parsePack(pstr), path)
@@ -405,7 +446,7 @@ object Main{
           => showPom(getPackMaven())
 
       case List("mvn", "-clip", "-show")
-          => showPacakgeInfo(getPackMaven())
+          => showPackageInfo(getPackMaven())
 
       case List("mvn", "-clip", "-get")
           => Packget.downloadPackage(getPackMaven(), "./lib")

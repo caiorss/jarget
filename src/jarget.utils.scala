@@ -260,6 +260,21 @@ object Utils{
     } yield text.trim()
   }
 
+  def readResourceProperties(file: String) =
+    jarget.reader.Reader { cls: Class[_] =>
+      val pdata = for {
+        res <- Option(cls.getResourceAsStream(file))
+        prop = {
+          val p = new java.util.Properties()
+          p.load(res)
+          p
+        }
+      } yield prop
+
+      assert(!pdata.isEmpty, "Fatal Error: Resource file is not supposed to be empty.")
+      pdata.get 
+    }
+  
 
 } /* ---- End of object Utils ------- */
 
