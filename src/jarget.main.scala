@@ -4,6 +4,12 @@ import jarget.utils.{Utils, JarUtils, JarBuilder}
 import jarget.utils.OptParse
 import jarget.mvn._
 
+case class AppSettings(
+  version: String,
+  repoUrl: String,
+  website: String
+)
+
 
 object MainUtils {
 
