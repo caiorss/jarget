@@ -31,4 +31,6 @@ object Reader{
   def pure[R, A](x: A) = Reader((_: R) => x)
 
   def ask[R] = Reader[R, R]((r: R) => r)
+
+  def liftIO[R, A](io: => A) = Reader((r: R) => io)
 }
