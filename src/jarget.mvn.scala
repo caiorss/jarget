@@ -1,5 +1,5 @@
 /** 
- - Author: Caio Rodrigues <caiorss.rodrigues [AT] gmail [DOT] com>
+ - Author: Caio Rodrigues <caiorss [DOT] rodrigues [AT] gmail [DOT] com>
 
 
 This is free and unencumbered software released into the public domain.
