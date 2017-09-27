@@ -415,6 +415,12 @@ object Main{
             Packget.downloadPackage(pack, "./lib") run config.repoUrl 
           }
 
+      case List("mvn", "-get", "scala", version, pstr, repo)
+          => {
+            val pack = parseScalaPack(pstr, version)
+            Packget.downloadPackage(pack, "./lib") run repo 
+          }
+
       case List("mvn", "-path", path, "-get", pstr)
           => Packget.downloadPackage(parsePack(pstr), path)
 
