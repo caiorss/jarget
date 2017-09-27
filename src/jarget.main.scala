@@ -132,9 +132,6 @@ object Main{
     case List("-expath", program)
         => Utils.getProgramPath(program) foreach println
 
-    case List("-doc")
-        => Utils.openUrl("https://github.com/caiorss/jarget")
-
     case _
         => {
           println("Error: Invalid Utils Commands.")
@@ -358,8 +355,7 @@ object Main{
 
   /** Displays user help stored in the asset file user-help.txt 
     */
-  def showHelp() = {
-    val version = MainUtils.getVersion() getOrElse ""
+  def showHelp(version: String) = {    
     println(s"jarget ${version.trim()} -  Java platform Toolbox")
     val help = Utils.readResourceFile(getClass(), "/assets/user-help.txt")
     help match {
@@ -368,27 +364,32 @@ object Main{
     }
   }
 
-  val centralMaven = "http://central.maven.org/maven2"
 
   def main(args: Array[String]) : Unit = {
 
     jarget.logger.Log.setLevel()
 
+    val config =
+      Utils.readResourceProperties("/assets/app.properties")
+        .map(MainUtils.getAppSettings _ )
+        .run(getClass())
+
     args.toList match {
 
       case List() | List("-h") | List("-help")
-          => showHelp()
+          => showHelp(config.version)
 
       case List("-v") | List("-version")
-          => for { 
-            ver <- MainUtils.getVersion()
-          } println("Jarget v" + ver)
+          => println(config.version) 
+
+      case List("-site")
+        => Utils.openUrl(config.website)
 
       case List("mvn", "-pom", pstr)
           => showPom(parsePack(pstr))
 
       case List("mvn", "-show", pstr)
-          => showPackageInfo(parsePack(pstr)) run centralMaven
+          => showPackageInfo(parsePack(pstr)) run config.repoUrl
 
       case List("mvn", "-show", pstr, "-r", repo)
           => showPackageInfo(parsePack(pstr)) run repo 
@@ -397,13 +398,13 @@ object Main{
       case List("mvn", "-get", pstr)
           => {
             println("Downloading Packages")
-            Packget.downloadPackage(parsePack(pstr), "./lib") run (centralMaven)
+            Packget.downloadPackage(parsePack(pstr), "./lib") run config.repoUrl
           }
 
       case List("mvn", "-get", pstr, "-r", repo)
           => {
             println("Downloading Packages")
-            Packget.downloadPackage(parsePack(pstr), "./lib") run (repo)
+            Packget.downloadPackage(parsePack(pstr), "./lib") run repo 
           }
         
 
@@ -411,7 +412,7 @@ object Main{
       case List("mvn", "-get", "scala", version, pstr)
           => {
             val pack = parseScalaPack(pstr, version)
-            Packget.downloadPackage(pack, "./lib") run (centralMaven)            
+            Packget.downloadPackage(pack, "./lib") run config.repoUrl 
           }
 
       case List("mvn", "-path", path, "-get", pstr)
