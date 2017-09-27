@@ -47,21 +47,22 @@ object MainUtils {
     p.get 
   }
 
-  def showPacakgeInfo(pack: PackData) = {
-    val pom = Packget.getPomXML(pack)
-    val dat = Pom.getPomData(pom)
-    println( "Package:         " + dat.name)
-    println( "Packaging:       " + dat.packaging)
-    println(s"Coordinates[1]:  group = ${dat.group} artifact = ${dat.artifact} version = ${dat.version}")
-    println(s"Coordinates[2]:  ${dat.group}/${dat.artifact}/${dat.version}")
-    println( "Url:             " + dat.url)
-    println( "Description:     " + dat.description)
+  def showPackageInfo(pack: PackData) = 
+    for (pom <- Packget.getPomXML(pack)){
+      val dat = Pom.getPomData(pom)
+      println( "Package:         " + dat.name)
+      println( "Packaging:       " + dat.packaging)
+      println(s"Coordinates[1]:  group = ${dat.group} artifact = ${dat.artifact} version = ${dat.version}")
+      println(s"Coordinates[2]:  ${dat.group}/${dat.artifact}/${dat.version}")
+      println( "Url:             " + dat.url)
+      println( "Description:     " + dat.description)
 
-    println("\nDependencies:\n")
-    Packget.getPomDependencies(pom) foreach { p =>
-      println("  - " + Packget.formatPack(p) + "\n")
+      println("\nDependencies:\n")
+      Packget.getPomDependencies(pom) foreach { p =>
+        println("  - " + Packget.formatPack(p) + "\n")
+      }
     }
-  }
+  
 
 
   def showPom(pack: PackData) = {
@@ -351,6 +352,7 @@ object Main{
     }
   }
 
+  val centralMaven = "http://central.maven.org/maven2"
 
   def main(args: Array[String]) : Unit = {
 
@@ -370,15 +372,31 @@ object Main{
           => showPom(parsePack(pstr))
 
       case List("mvn", "-show", pstr)
-          => showPacakgeInfo(parsePack(pstr))
+          => showPackageInfo(parsePack(pstr)) run centralMaven
+
+      case List("mvn", "-show", pstr, "-r", repo)
+          => showPackageInfo(parsePack(pstr)) run repo 
 
       // Download a package and its dependencies
       case List("mvn", "-get", pstr)
-          => Packget.downloadPackage(parsePack(pstr), "./lib")
+          => {
+            println("Downloading Packages")
+            Packget.downloadPackage(parsePack(pstr), "./lib") run (centralMaven)
+          }
+
+      case List("mvn", "-get", pstr, "-r", repo)
+          => {
+            println("Downloading Packages")
+            Packget.downloadPackage(parsePack(pstr), "./lib") run (repo)
+          }
+        
 
       // Download a Scala package  
       case List("mvn", "-get", "scala", version, pstr)
-          => Packget.downloadPackage(parseScalaPack(pstr, version), "./lib")
+          => {
+            val pack = parseScalaPack(pstr, version)
+            Packget.downloadPackage(pack, "./lib") run (centralMaven)            
+          }
 
       case List("mvn", "-path", path, "-get", pstr)
           => Packget.downloadPackage(parsePack(pstr), path)
@@ -405,7 +423,7 @@ object Main{
           => showPom(getPackMaven())
 
       case List("mvn", "-clip", "-show")
-          => showPacakgeInfo(getPackMaven())
+          => showPackageInfo(getPackMaven())
 
       case List("mvn", "-clip", "-get")
           => Packget.downloadPackage(getPackMaven(), "./lib")
