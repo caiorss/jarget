@@ -175,146 +175,166 @@ Jarget v1.3
 *** Show user help 
 
 #+BEGIN_SRC text 
-$ jarget 
-jarget 1.5.1 -  Java platform Toolbox
-General 
+  $ jarget 
+  jarget 1.6 -  Java platform Toolbox
+  General 
+  -----------------------------------------------------------------
 
- -h              - show help 
- -v | -version   - show version 
+   -h              - show help 
+   -v | -version   - show version 
+   -site           - Open jarget github repository in the web browser. 
 
-Maven Packages / Jar Packages
+  Maven Packages / Jar Packages
+  -----------------------------------------------------------------
 
- mvn -show [package]                 - Show package's information
+   mvn -show [pack]                      - Show package's information
 
- mvn -pom  [package]                 - Show package's pom file
+   mvn -pom  [pack]                      - Show package's pom file
 
- mvn -get  [package]                 - Download package and dependencies to ./lib
+   mvn -get  [pack]                      - Download package and dependencies to ./lib
 
- mvn -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
+   mvn -get  [pack] -dir [path]          - Download package and dependencies to [path] directory.
 
- mvn -get scala [version] [package]  - Download a Scala package for an specific Scala version.
+   mvn -get [pack] -r [repo]             - Download package [pack] from a given repository [rpo].
 
- mvn -search   [query]               - Search a package in search.maven.org, opening results in 
-                                       the browser.
+   mvn -get scala [ver] [pack]           - Download a Scala package for an specific Scala version [ver].
 
- mvn -search2  [query]               - Search a package showing results in the console. (Experimental)
+   mvn -get scala [ver] [pack] -r [repo] - Download scala package from a given repository URL [repo]
 
- mvn -browse [package]               - Open package official website.
+   mvn -search   [query]                 - Search a package in search.maven.org, opening results in 
+                                           the browser.
 
- mvn -go                             - Open web site https://mvnrepository.com
- mvn -go [package]                   - Open package mvnrepository url.
+   mvn -search2  [query]                 - Search a package showing results in the console. (Experimental)
 
- mvn -clip -show                     - Extract package from XML in clipboard and show its information.
- mvn -clip -pom                      - Extract package from XML in clipboard and show its Pom file.
- mvn -clip -get                      - Extract package from XML in clipboard and download it to ./lib
+   mvn -browse [package]                 - Open package official website.
 
-Jar Files Inspection
+   mvn -go                               - Open web site https://mvnrepository.com
+   mvn -go [package]                     - Open package mvnrepository url.
 
- jar -man  [jar]                    - Show manifest.
- jar -main [jar]                    - Show main class.
- jar -show [jar]                    - Show all files.
+   mvn -clip -show                       - Extract package from XML in clipboard and show its information.
+   mvn -clip -pom                        - Extract package from XML in clipboard and show its Pom file.
+   mvn -clip -get                        - Extract package from XML in clipboard and download it to ./lib
 
- jar -resource [jar]                - Show all asset/resource files disregarding *.class files.
- jar -resource [jar] [file]         - Print content of resource file.
 
- jar -extract [jar] [file]          - Extract [file] from [jar] package to current directory.
- jar -extract [jar] [file] [path]   - Extract [file] from [jar] package to [path] directory.
+   Jar Files Inspection
+  ----------------------------------------------------------------- 
 
- jar -extract-all [jar] [path]      - Extract all files from jar package to [path] directory.
 
- jar -extract-all [jar]             - Extract jar file to directory with same name of jar file 
-                                      at current directory. If file is lib/chart.jar it will  
-                                      extracted to ./chart 
+   jar -man  [jar]                    - Show manifest.
+   jar -main [jar]                    - Show main class.
+   jar -show [jar]                    - Show all files.
+
+   jar -resource [jar]                - Show all asset/resource files disregarding *.class files.
+   jar -resource [jar] [file]         - Print content of resource file.
+
+   jar -extract [jar] [file]          - Extract [file] from [jar] package to current directory.
+   jar -extract [jar] [file] [path]   - Extract [file] from [jar] package to [path] directory.
+
+   jar -extract-all [jar] [path]      - Extract all files from jar package to [path] directory.
+
+   jar -extract-all [jar]             - Extract jar file to directory with same name of jar file 
+                                        at current directory. If file is lib/chart.jar it will  
+                                        extracted to ./chart 
+
+   jar -package [jar]                - Show all packages(aka namespaces) of classes within a jar file.
+   jar -package [jar] [package]      - Show all classes of within a particular package.
+
+
+  Uber Jar 
+  -----------------------------------------------------------------
+
+   - Convert a jar file into a unix executable jar file
+     that can be run with ./app.sh instead of java -jar app.jar
+
+   $ ./jarget uber -exjar app.jar app.sh
+
+   $ ./jarget uber -exjar app.jar   # Gnerates ./app
+
+   - Build an scala uber jar named output.jar from main.jar which
+     contains the main class and lib1 and lib2 are the directories
+     containing jar files. It bundles the scala-library.jar runtime with
+     the application.
+
+   $ ./jarget uber -scala -o output.jar -m main.jar
+
+   $ ./jarget uber -scala -o output.jar -m main.jar -p ./lib1 ./lib2 
     
-Uber Jar 
+   $ ./jarget uber -scala -sh -o output.jar -m main.jar -p ./lib1 -j dependency1.jar -r ./resources1 ./resources2 
 
- - Convert a jar file into a unix executable jar file
-   that can be run with ./app.sh instead of java -jar app.jar
+   uber [command]
 
- $ ./jarget uber -exjar app.jar app.sh
-
- $ ./jarget uber -exjar app.jar   # Gnerates ./app
-
- - Build an scala uber jar named output.jar from main.jar which
-   contains the main class and lib1 and lib2 are the directories
-   containing jar files. It bundles the scala-library.jar runtime with
-   the application.
-
- $ ./jarget uber -scala -o output.jar -m main.jar
-
- $ ./jarget uber -scala -o output.jar -m main.jar -p ./lib1 ./lib2 
-  
- $ ./jarget uber -scala -sh -o output.jar -m main.jar -p ./lib1 -j dependency1.jar -r ./resources1 ./resources2 
-
- uber [command]
-
-   -o [output file]         - (mandatory) Output jar file bundled with all dependencies.
-   -m [main jar file]       - (optional)  Jar file containing main class.
-   -p [path1] [path2] ...   - (optional)  Directories with jar file that will be included in the uber jar.
-   -j [jar1.jar] [jar2.jar] - (optional)  Single jar files that will be included in the uber jar.
-   -r [dir1] [dir2] ...     - (optional)  Directories containing resource files 
-   -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar 
-   -sh                      - (optional)  Makes the jar file as a self-executable Unix app.                                 
-
-Classpath
-
- cpath -show                        - Get classpath from ./lib directory
- cpath -show [path]                 - Get classpath from [path] directory
-
-Exec  
-
- exec [program] [path] 
- exec [program] -- arg1 arg2 ...      - Executes a program passing classpath (-cp) from ./lib to it.
- exec [program] [path] -- arg1 arg2 
-  
-
-Utilities
-
- utils -doc                            - Open jarget's website - https://github.com/caiorss/jarget
- utils -env                            - Show environment variables in tabular format 
- utils -env [var]                      - Show environment variable [var]
- utils -path                           - Show PATH environment variable 
- utils -prop                           - Show java properties in tabular format 
- utils -expath [program]               - Show absolute path of a program in PATH variable
+     -o [output file]         - (mandatory) Output jar file bundled with all dependencies.
+     -m [main jar file]       - (optional)  Jar file containing main class.
+     -p [path1] [path2] ...   - (optional)  Directories with jar file that will be included in the uber jar.
+     -j [jar1.jar] [jar2.jar] - (optional)  Single jar files that will be included in the uber jar.
+     -r [dir1] [dir2] ...     - (optional)  Directories containing resource files 
+     -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar 
+     -sh                      - (optional)  Makes the jar file as a self-executable Unix app.                                 
 
 
-Crypto Hash Functions 
+  Classpath
+  -----------------------------------------------------------------
 
- - Computes the file hash hex digest.
- digest -md5    -f [file]              
- digest -sha1   -f [file]
- digest -sha256 -f [file] 
+   cpath -show                        - Get classpath from ./lib directory
+   cpath -show [path]                 - Get classpath from [path] directory
 
- - Checks the file hex digest.
- digest -md5    -f [file]  [digest]     
- digest -sha1   -f [file]  [digest]
- digest -sha256 -f [file]  [digest]
 
- - Computes the string hex digest.
- digest -md5    -s [string]             
- digest -sha1   -s [string]
- digest -sha256 -s [string]
+  Exec  
+  -----------------------------------------------------------------
 
- - Checks the string hex digest.
- digest -md5    -s [string]  [digest]    
- digest -sha1   -s [string]  [digest]
- digest -sha256 -s [string]  [digest]
+   exec [program] [path] 
+   exec [program] -- arg1 arg2 ...      - Executes a program passing classpath (-cp) from ./lib to it.
+   exec [program] [path] -- arg1 arg2 
+    
 
-Note: [package] is <group>/<artifact>/<version>.
-Examples of valid packages:
+  Utilities
+  -----------------------------------------------------------------
 
-  - org.scalaz/scalaz-core_2.11/7.3.0-M15
+   utils -env                            - Show environment variables in tabular format 
+   utils -env [var]                      - Show environment variable [var]
+   utils -path                           - Show PATH environment variable 
+   utils -prop                           - Show java properties in tabular format 
+   utils -expath [program]               - Show absolute path of a program in PATH variable
 
-  - org.jfree/jfreechart/1.0.17
 
-Note: The XML in the clipboard is a maven coordinate: 
+  Crypto Hash Functions
+  -----------------------------------------------------------------
 
-    <!-- https://mvnrepository.com/artifact/org.scalaz/scalaz-core_2.11 -->
-    <dependency>
-        <groupId>org.scalaz</groupId>
-        <artifactId>scalaz-core_2.11</artifactId>
-        <version>7.3.0-M15</version>
-    </dependency>
+   - Computes the file hash hex digest.
+   digest -md5    -f [file]              
+   digest -sha1   -f [file]
+   digest -sha256 -f [file] 
+
+   - Checks the file hex digest.
+   digest -md5    -f [file]  [digest]     
+   digest -sha1   -f [file]  [digest]
+   digest -sha256 -f [file]  [digest]
+
+   - Computes the string hex digest.
+   digest -md5    -s [string]             
+   digest -sha1   -s [string]
+   digest -sha256 -s [string]
+
+   - Checks the string hex digest.
+   digest -md5    -s [string]  [digest]    
+   digest -sha1   -s [string]  [digest]
+   digest -sha256 -s [string]  [digest]
+
+  Note: [package] is <group>/<artifact>/<version>.
+  Examples of valid packages:
+
+    - org.scalaz/scalaz-core_2.11/7.3.0-M15
+
+    - org.jfree/jfreechart/1.0.17
+
+  Note: The XML in the clipboard is a maven coordinate: 
+
+      <!-- https://mvnrepository.com/artifact/org.scalaz/scalaz-core_2.11 -->
+      <dependency>
+          <groupId>org.scalaz</groupId>
+          <artifactId>scalaz-core_2.11</artifactId>
+          <version>7.3.0-M15</version>
+      </dependency>
 
 #+END_SRC
 
@@ -677,7 +697,6 @@ SVG_Files=SVG Files
 Zoom_In=Zoom In
 Zoom_Out=Zoom Out
 #+END_SRC
-
 
 **** Extract file to current directory
 
@@ -1196,7 +1215,6 @@ Maven Packages / Jar Packages
 ... ... ... 
 #+END_SRC
 
-
 ** Getting a Binary Release 
 
 An fat-jar executable binary release can be downloaded from this link:
@@ -1215,13 +1233,13 @@ An fat-jar executable binary release can be downloaded from this link:
 
  - Release [[https://github.com/caiorss/jarget/raw/v1.3.2-release/jarget][jarget v1.3.2]]
 
- - Release [[https://github.com/caiorss/jarget/raw/v1.4-release/jarget][jarget v1.4.0]]
+ - Release [[https://github.com/caiorss/jarget/raw/v1.4-release/jarget][jarget v1.4.0]] (5.7 MB)
 
 From version >= 1.5 jarget will be shrunk with proguard.
 
- - Release [[https://github.com/caiorss/jarget/raw/v1.5-release/jarget][jarget v1.5.0]]
+ - Release [[https://github.com/caiorss/jarget/raw/v1.5-release/jarget][jarget v1.5.0]] (1.7 MB)
 
- - Release [[https://github.com/caiorss/jarget/raw/v1.5.1-release/jarget][jarget v1.5.1]]
+ - Release [[https://github.com/caiorss/jarget/raw/v1.5.1-release/jarget][jarget v1.5.1]] 
 
 Or it can be downloaded with those shell commands below: 
 
