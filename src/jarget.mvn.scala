@@ -315,7 +315,22 @@ object Packget {
     } yield packlist
   }
 
+  /** Download artifact with extension jar or pom to a given path.
 
+      @param pack  - Package that will be download
+      @param ext   - File extension - 'jar', 'pom', 'md5', 'sha256' and etc.
+      @param path  - Path where the artifact will be stored.
+
+      Example: It will download the package's jar artifact and store it in
+               ./download/jfreechart-1.0.17.jar
+      {{{
+         val p    = PackData("org.jfree", "jfreechart", "1.0.17")
+         val repo =  "http://central.maven.org/maven2"
+         val path = "./downloads"
+         Packget.downloadArtifact(p, "jar", path) run(repo)
+      }}}
+
+    */
   def downloadArtifact(pack: PackData, ext: String, path: String) =
     for (url <- getArtifactURL(ext)(pack)){
       val file  = Utils.join(path, getFileNameFull(pack, ext))
