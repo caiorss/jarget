@@ -196,6 +196,9 @@ object CentralMaven{
 
 object PackCache {
 
+  def getCacheHome(prefix: String) =
+    Utils.joinPathList(System.getProperty("user.home"), prefix, "cache")
+
   /** Get path to directory or URL directory which contains the jar file. */
   def getPackagePath(cachePath: String, pack: PackData) = {
     val repo     = cachePath
