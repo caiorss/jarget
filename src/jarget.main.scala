@@ -535,15 +535,20 @@ object Main{
           => packStr.split("/") match {
 
             case Array(groupID, artifactID)
-                => PackCache
-                .getPackageVersions(groupID, artifactID, cachePath)
-                .foreach{version =>
-                  println (s"${groupID}/${artifactID}/${version}")
+                => try {
+                  PackCache.showPackageInfo(groupID, artifactID, cachePath)
+                  PackCache.getPackageVersions(groupID, artifactID, cachePath)
+                    .foreach{version =>
+                    println (s"${groupID}/${artifactID}/${version}")
+                  }
+                } catch {
+                  case _ : Throwable => println("Error: package not found")
                 }
-
             case _
                 => println("Error: Invalid package specification.")
           }
+
+
 
       // Clean cache packages   
       case List("cache", "-clean")
