@@ -437,9 +437,10 @@ object Packget {
 
     Utils.mkdir(cache)
     val packDir = PackCache.getPackagePath(cache, pack)
+    val packJar = PackCache.getArtifactPath(cache, "jar", pack)
     
     for(repoURL  <- Reader.ask[String])
-      if (!Utils.dirExists(packDir)){
+      if (!Utils.fileExists(packJar)){
 
         // Create package's directory
         Utils.mkdir(packDir)
