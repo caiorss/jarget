@@ -400,13 +400,17 @@ object Main{
       case List("mvn", "-get", pstr)
           => {
             println("Downloading Packages")
-            Packget.downloadPackage(parsePack(pstr), "./lib") run config.repoUrl
+            val pack = parsePack(pstr)
+            // Packget.downloadPackage(parsePack(pstr), "./lib") run config.repoUrl
+            Packget.downloadPackageToCache(cachePath, pack) run config.repoUrl 
           }
 
       case List("mvn", "-get", pstr, "-r", repo)
           => {
             println("Downloading Packages")
-            Packget.downloadPackage(parsePack(pstr), "./lib") run repo 
+            val pack = parsePack(pstr)
+            // Packget.downloadPackage(pack, "./lib") run repo
+            Packget.downloadPackageToCache(cachePath, pack) run repo 
           }
         
 
