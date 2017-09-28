@@ -475,7 +475,6 @@ object Main{
           =>  JarUtils.withJarException{ parseJarArgs(rest) }
 
      //--------- Pom Files Inspection ---------- //
-
       case "pom"::rest => rest foreach { uri => Pom.showPomDataFromUri(uri, true)}
 
      //------------  Make Uber Jar ------------- //
@@ -544,6 +543,13 @@ object Main{
 
             case _
                 => println("Error: Invalid package specification.")
+          }
+
+      // Clean cache packages   
+      case List("cache", "-clean")
+          => {
+            println("Cleaning cache")
+            Utils.deleteDirectory(cachePath, true)
           }
 
       case "cache"::"-cpath"::packList
