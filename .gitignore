@@ -13,3 +13,5 @@ lib/*
 draft*.scala
 notes/*
 /README.html
+/tags
+cache/*
