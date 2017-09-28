@@ -484,16 +484,19 @@ object Packget {
     getAllDependenciesFromCache(cache, pack)
   }
 
-  def getPackJarsFromCache(pack: PackData, cache: String, repoUrl: String) = {
-    if(!PackCache.exists(cache, pack))
-      downloadPackageToCache(cache, pack) run repoUrl
-    val packs = getAllDependenciesFromCache(cache, pack)
-    packs map { p => PackCache.getArtifactPath(cache, "jar", p) }
+  def getPackJarsFromCache(packList: List[PackData], cache: String, repoUrl: String) = {
+    def aux(pack: PackData) = {
+      if(!PackCache.exists(cache, pack))
+        downloadPackageToCache(cache, pack) run repoUrl
+      val packs = getAllDependenciesFromCache(cache, pack)
+      packs map { p => PackCache.getArtifactPath(cache, "jar", p) }
+    }
+    packList flatMap aux
   }
 
-  def getPackCPathFromCache(pack: PackData, cache: String, repoUrl: String) = {
-    val jars = getPackJarsFromCache(pack, cache, repoUrl)
-    jars.foldLeft(".")((acc, jar) => acc + ":" + jar)
+  def getPackCPathFromCache(packList: List[PackData], cache: String, repoUrl: String) = {
+     getPackJarsFromCache(packList, cache, repoUrl)
+      .foldLeft(".")((acc, jar) => acc + ":" + jar)
   }
 
 
