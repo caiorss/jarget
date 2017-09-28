@@ -16,6 +16,9 @@ object Utils{
     new java.io.File(path1, path2).getPath()
   }
 
+  def joinPathList(paths: String*) = 
+    paths.fold(null)((acc, p) => new java.io.File(acc, p).toString)  
+
   /** Check if file exists */ 
   def fileExists(file: String) = {
     new java.io.File(file).isFile()
