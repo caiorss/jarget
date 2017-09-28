@@ -502,6 +502,22 @@ object Main{
       case "digest"::rest
           => parseDigestArgs(rest)
 
+
+     //-------- Package cache ----------------------- //
+
+      // Show directory where are the cached packages, jar files and pom files.
+      case List("cache", "-path")
+          => println(cachePath)
+
+      // Show all jar files in the cache directory   
+      case List("cache", "-jars")
+          => PackCache.showJarFiles(cachePath)
+
+      // Show all packages   
+      case List("cache", "-packs")
+          => PackCache.getPackagesInCache(cachePath)
+          .foreach { case (group, artifact) => println(s"${group}/${artifact}") }
+
       //-------- Generic Command with Classpath ------//
 
       case List("exec", command, pstr)
