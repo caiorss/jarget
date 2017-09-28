@@ -522,19 +522,30 @@ object Main{
           => PackCache.getPackagesInCache(cachePath)
           .foreach { case (group, artifact) => println(s"${group}/${artifact}") }
 
+      case "cache"::"-cpath"::packList
+          => println(Packget.getPackCPathFromCache(packList map parsePack, cachePath, config.repoUrl))
+
+      case "cache"::"-jars"::packList
+          => Packget.getPackJarsFromCache(
+            packList map parsePack,
+            cachePath,
+            config.repoUrl)
+          .foreach(println)
+
+
       //-------- Generic Command with Classpath ------//
 
       case List("exec", command, pstr)
           => {
-            val pack = parsePack(pstr)
-            val cpath = Packget.getPackCPathFromCache(pack, cachePath, config.repoUrl)
+            val packList = pstr split(":") map parsePack toList//(pstr)
+            val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
              JarUtils.runWithClassPath2(command, List(), cpath)
           }
 
       case "exec"::command::pstr::"--"::args
           => {
-            val pack = parsePack(pstr)
-            val cpath = Packget.getPackCPathFromCache(pack, cachePath, config.repoUrl)
+            val packList = pstr split(":") map parsePack toList//(pstr)
+            val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
              JarUtils.runWithClassPath2(command, args, cpath)
           }
 
