@@ -194,23 +194,10 @@ object CentralMaven{
 } // ------ End of CentralMaven ------------- //
 
 
-object Packget {
-  
-  import Pom._
-  import jarget.reader._
-
-  // type Repo[A] = Reader[String, String]
-
-  def getArtifactURL(ext: String) = (pack: PackData) => for {
-    repo     <- Reader.ask[String]
-    gpath    = pack.group.replaceAll("\\.", "/")
-    artifact = pack.artifact
-    version  = pack.version
-    uri      = s"${repo}/${gpath}/${artifact}/${version}/${artifact}-${version}.${ext}"
-  } yield uri
+object PackCache {
 
   /** Get path to directory or URL directory which contains the jar file. */
-  def getPackageCachePath(cachePath: String, pack: PackData) = {
+  def getPackagePath(cachePath: String, pack: PackData) = {
     val repo     = cachePath
     val gpath    = pack.group.replaceAll("\\.", "/")
     val artifact = pack.artifact
@@ -220,18 +207,47 @@ object Packget {
       cachePath,
       gpath,
       artifact,
-      version,
-      s"${artifact}-${version}"
+      version
     )
   }
+
+  def getArtifactPath(cachePath: String, ext: String, pack: PackData) = {
+    val path = getPackagePath(cachePath, pack)
+    val file =  s"${pack.artifact}-${pack.version}.${ext}"
+    Utils.join(path, file)
+  }
+
+  /** Check if package exists in cache */
+  def exists(cache: String, pack: PackData) = 
+    Utils.dirExists(getPackagePath(cache, pack))
+  
+
+} //---------- End of PackCache object ---------- // 
+
+
+object Packget {
+  
+  import Pom._
+  import jarget.reader._
+
+  // type Repo[A] = Reader[String, String]
+
+  /** Get path to artifact *.jar or *.pom file of a given package.*/
+  def getArtifactURI(ext: String) = (pack: PackData) => for {
+    repo     <- Reader.ask[String]
+    gpath    = pack.group.replaceAll("\\.", "/")
+    artifact = pack.artifact
+    version  = pack.version
+    uri      = s"${repo}/${gpath}/${artifact}/${version}/${artifact}-${version}.${ext}"
+  } yield uri
 
 
   def getMavenPackgeURL(pack: PackData) = {
     s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
   }
 
-  val getJarUrl = getArtifactURL("jar")
-  val getPomUrl = getArtifactURL("pom")
+  val getJarUrl = getArtifactURI("jar")
+  val getPomUrl = getArtifactURI("pom")
 
   def getFileNameFull(pack: PackData, ext: String) = {
     s"${pack.artifact}-${pack.version}.${ext}"
@@ -305,7 +321,7 @@ object Packget {
   }
 
 
-  def getAllDependencies(pack: PackData) = {
+  def getAllDependencies(pack: PackData):  Reader[String, Set[PackData]] = {
     var packlist = Set[PackData](pack)
     //packlist += pack
     for {    
@@ -315,24 +331,36 @@ object Packget {
     } yield packlist
   }
 
-  /** Download artifact with extension jar or pom to a given path.
 
-      @param pack  - Package that will be download
+  def getAllDependenciesFromCache(cache: String, pack: PackData) = {
+    var packlist = Set[PackData](pack)
+    val pomFile = PackCache.getArtifactPath(cache, "pom", pack)
+    val xml = scala.xml.XML.loadFile(pomFile)
+    val deps = getPomDependencies(xml)
+    deps foreach (d => packlist += d)
+    packlist
+  } 
+
+  /** Download artifact with extension jar or pom to a given path. 
+
+      @param pack  - Package that will be download 
       @param ext   - File extension - 'jar', 'pom', 'md5', 'sha256' and etc.
-      @param path  - Path where the artifact will be stored.
+      @param path  - Path where the artifact will be stored. 
 
-      Example: It will download the package's jar artifact and store it in
-               ./download/jfreechart-1.0.17.jar
-      {{{
+      Example: It will download the package's jar artifact and store it in 
+               ./download/jfreechart-1.0.17.jar 
+      {{{ 
          val p    = PackData("org.jfree", "jfreechart", "1.0.17")
          val repo =  "http://central.maven.org/maven2"
          val path = "./downloads"
-         Packget.downloadArtifact(p, "jar", path) run(repo)
+         Packget.downloadArtifact(p, "jar", path) run(repo)         
       }}}
 
-    */
-  def downloadArtifact(pack: PackData, ext: String, path: String) =
-    for (url <- getArtifactURL(ext)(pack)){
+    */ 
+  def downloadArtifact(pack: PackData,
+                       ext: String,
+                       path: String): Reader[String, Unit] =
+    for (url <- getArtifactURI(ext)(pack)){
       val file  = Utils.join(path, getFileNameFull(pack, ext))
       println(s"Downloading file ${file}.")
       Utils.downloadFile(url, file)
@@ -347,9 +375,7 @@ object Packget {
 
     Utils.mkdir(path)
 
-    println("Testing package")
-
-    for(repoURL  <- Reader.ask[String] ){
+    for(repoURL  <- Reader.ask[String]){
 
       val packlist = getAllDependencies(pack) run (repoURL) filter { p =>
         !Utils.fileExists(Utils.join(path, getFileNameFull(p, "jar")))
@@ -376,6 +402,74 @@ object Packget {
 
   } // End of downloadPackage 
    
+
+  /** Download package from cache directory if it is not downloaded yet.*/
+
+  def downloadPackageToCache(cache: String, pack: PackData):  Reader[String, Unit] = {
+    import scala.concurrent.Future
+    import concurrent.ExecutionContext.Implicits.global
+    import scala.concurrent.duration.Duration
+
+    Utils.mkdir(cache)
+    val packDir = PackCache.getPackagePath(cache, pack)
+    
+    for(repoURL  <- Reader.ask[String])
+      if (!Utils.dirExists(packDir)){
+
+        // Create package's directory
+        Utils.mkdir(packDir)
+
+
+        // Select package that aren't in the cache yet.
+        val packlist = getAllDependencies(pack) run (repoURL) filter { p =>
+          val path = PackCache.getPackagePath(cache, p)
+          !Utils.fileExists(Utils.join(path, getFileNameFull(p, "jar")))
+        }
+
+        println("Downloading ---------------------")
+        packlist foreach println
+        println("----------------------------------")
+
+        val result = Future.traverse(packlist){ p =>
+          // 1println("Downloading package " + p)
+          val path = PackCache.getPackagePath(cache, p)
+          Utils.mkdir(path)
+          println("Package path = " + p)
+
+          val fut = Future {
+            downloadArtifact(p, "pom", path).run(repoURL)
+            downloadArtifact(p, "jar", path).run(repoURL)
+          }
+          fut
+        }
+
+        result.onSuccess { case _ => println("Download Successful") }
+        result.onFailure { case _ => println("Download Failed") }
+        scala.concurrent.Await.result(result, Duration.Inf)
+      }
+
+  } // End of downloadPackgeToCache 
+
+
+  /** Returns path to package from cache with all its dependency */ 
+  def getPackFromCache(pack: PackData, cache: String, repoUrl: String) = {
+    if(!PackCache.exists(cache, pack))
+      downloadPackageToCache(cache, pack) run repoUrl
+    getAllDependenciesFromCache(cache, pack)
+  }
+
+  def getPackJarsFromCache(pack: PackData, cache: String, repoUrl: String) = {
+    if(!PackCache.exists(cache, pack))
+      downloadPackageToCache(cache, pack) run repoUrl
+    val packs = getAllDependenciesFromCache(cache, pack)
+    packs map { p => PackCache.getArtifactPath(cache, "jar", p) }
+  }
+
+  def getPackCPathFromCache(pack: PackData, cache: String, repoUrl: String) = {
+    val jars = getPackJarsFromCache(pack, cache, repoUrl)
+    jars.foldLeft(".")((acc, jar) => acc + ":" + jar)
+  }
+
 
 } // ------ End of object Packget ------ // 
 
