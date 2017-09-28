@@ -499,6 +499,15 @@ object Packget {
       .foldLeft(".")((acc, jar) => acc + ":" + jar)
   }
 
+  def copyPackageFromCache(packList: List[PackData], cache: String, repoUrl: String, dest: String) = {
+    Utils.mkdir("lib")
+    getPackJarsFromCache(packList, cache, repoUrl)
+      .foreach{ file =>
+      println(s"Copying ${new java.io.File(file).getName} to ${dest}")
+      Utils.copyFileTo(file, dest)
+    }
+  }
+
 
 } // ------ End of object Packget ------ // 
 
