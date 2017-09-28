@@ -396,21 +396,20 @@ object Main{
       case List("mvn", "-show", pstr, "-r", repo)
           => showPackageInfo(parsePack(pstr)) run repo 
 
-      // Download a package and its dependencies
+     //  Copy packages from cache directory to ./lib and download it
+     //  if has not been downloaded yet.
       case List("mvn", "-get", pstr)
           => {
             println("Downloading Packages")
-            val pack = parsePack(pstr)
-            // Packget.downloadPackage(parsePack(pstr), "./lib") run config.repoUrl
-            Packget.downloadPackageToCache(cachePath, pack) run config.repoUrl 
+            val packs = pstr.split(":").map(parsePack).toList
+            Packget.copyPackageFromCache(packs, cachePath, config.repoUrl, "./lib")
           }
 
       case List("mvn", "-get", pstr, "-r", repo)
           => {
             println("Downloading Packages")
-            val pack = parsePack(pstr)
-            // Packget.downloadPackage(pack, "./lib") run repo
-            Packget.downloadPackageToCache(cachePath, pack) run repo 
+            val packs = pstr.split(":").map(parsePack).toList
+            Packget.copyPackageFromCache(packs, cachePath, config.repoUrl, repo)
           }
         
 
@@ -418,17 +417,19 @@ object Main{
       case List("mvn", "-get", "scala", version, pstr)
           => {
             val pack = parseScalaPack(pstr, version)
-            Packget.downloadPackage(pack, "./lib") run config.repoUrl 
+            Packget.downloadPackageToCache(cachePath, pack) run config.repoUrl 
           }
 
       case List("mvn", "-get", "scala", version, pstr, repo)
           => {
             val pack = parseScalaPack(pstr, version)
-            Packget.downloadPackage(pack, "./lib") run repo 
+            Packget.downloadPackageToCache(cachePath, pack) run config.repoUrl 
           }
 
       case List("mvn", "-path", path, "-get", pstr)
           => Packget.downloadPackage(parsePack(pstr), path)
+
+
 
       case List("mvn", "-search", query)
           => CentralMaven.searchPackageBrowser(query)
@@ -537,14 +538,14 @@ object Main{
 
       case List("exec", command, pstr)
           => {
-            val packList = pstr split(":") map parsePack toList//(pstr)
+            val packList = pstr split(":") map parsePack toList
             val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
              JarUtils.runWithClassPath2(command, List(), cpath)
           }
 
       case "exec"::command::pstr::"--"::args
           => {
-            val packList = pstr split(":") map parsePack toList//(pstr)
+            val packList = pstr split(":") map parsePack toList
             val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
              JarUtils.runWithClassPath2(command, args, cpath)
           }
