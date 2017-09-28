@@ -523,6 +523,14 @@ object JarUtils{
   }
 
 
+  def runWithClassPath2(program: String, args: List[String] = List(), cpath: String = null) = {
+    if (cpath == null)
+      Utils.execl(program, args)
+    else
+      Utils.execl(program, List("-cp", cpath) ++ args)
+  }
+
+
 } // -------- End of object JarUtils ------------ //
 
 /** Provide functions to build Uber jars (aka fat-jars)*/
