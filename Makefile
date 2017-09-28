@@ -42,6 +42,9 @@ doc-upload: $(src)
 	cd bin && git add docs/ && git commit -a -m "Update docs" && git push 
 
 
+tags: $(src)
+	ctags src/*.scala 
+
 # -------- Test Commands ----------- #
 
 
