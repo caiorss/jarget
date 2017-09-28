@@ -374,7 +374,7 @@ object Main{
         .map(MainUtils.getAppSettings _ )
         .run(getClass())
 
-    val cachePath = Utils.join(System.getProperty("user.home"), ".jarget/cache")
+    val cachePath = PackCache.getCacheHome(".jarget")
 
     args.toList match {
 
