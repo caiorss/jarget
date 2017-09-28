@@ -20,9 +20,11 @@ object Utils{
     paths.fold(null)((acc, p) => new java.io.File(acc, p).toString)  
 
   /** Check if file exists */ 
-  def fileExists(file: String) = {
+  def fileExists(file: String) =
     new java.io.File(file).isFile()
-  }
+
+  def dirExists(dir: String) =
+    new java.io.File(dir).isDirectory()
 
 
   def downloadFile(fileUrl: String, file: String) = {
