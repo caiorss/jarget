@@ -526,10 +526,25 @@ object Main{
       case List("cache", "-jars")
           => PackCache.showJarFiles(cachePath)
 
-      // Show all packages   
-      case List("cache", "-packs")
+      // Show all packages available in the cache repository 
+      case List("cache", "-pack")
           => PackCache.getPackagesInCache(cachePath)
           .foreach { case (group, artifact) => println(s"${group}/${artifact}") }
+
+      // Show all versions of some package available in the cache repository
+      case List("cache", "-pack", packStr)
+          => packStr.split("/") match {
+
+            case Array(groupID, artifactID)
+                => PackCache
+                .getPackageVersions(groupID, artifactID, cachePath)
+                .foreach{version =>
+                  println (s"${groupID}/${artifactID}/${version}")
+                }
+
+            case _
+                => println("Error: Invalid package specification.")
+          }
 
       case "cache"::"-cpath"::packList
           => println(Packget.getPackCPathFromCache(packList map parsePack, cachePath, config.repoUrl))
