@@ -3,9 +3,9 @@
         <head>
           <meta http-equiv="X-UA-Compatible" content="IE=edge" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-          <title>Jarget - Scala/Java automation tool 1.0 - jarget.utils.JarUtils</title>
-          <meta name="description" content="Jarget - Scala Java automation tool 1.0 - jarget.utils.JarUtils" />
-          <meta name="keywords" content="Jarget Scala Java automation tool 1.0 jarget.utils.JarUtils" />
+          <title>Jarget - Scala/Java automation tool 1.0 - jarget.mvn.PackCache</title>
+          <meta name="description" content="Jarget - Scala Java automation tool 1.0 - jarget.mvn.PackCache" />
+          <meta name="keywords" content="Jarget Scala Java automation tool 1.0 jarget.mvn.PackCache" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../lib/index.css" media="screen" type="text/css" rel="stylesheet" />
@@ -89,10 +89,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../index.html" class="extype" name="_root_">root</a></dd></dl></div>
-    </li><li name="jarget.utils" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="utils"></a><a id="utils:utils"></a>
+    </li><li name="jarget.mvn" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="mvn"></a><a id="mvn:mvn"></a>
       <span class="permalink">
-      <a href="../jarget/index.html#utils" title="Permalink">
+      <a href="../jarget/index.html#mvn" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -102,40 +102,46 @@
       </span>
       <span class="symbol">
         <a title="" href="index.html">
-              <span class="name">utils</span>
+              <span class="name">mvn</span>
             </a>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="jarget">jarget</a></dd></dl></div>
     </li><li class="current-entities indented2">
                         <span class="separator"></span>
-                        <a class="object" href="JarBuilder$.html" title="Provide functions to build Uber jars (aka fat-jars)"></a>
-                        <a href="JarBuilder$.html" title="Provide functions to build Uber jars (aka fat-jars)">
-                          JarBuilder
+                        <a class="object" href="CentralMaven$.html" title=""></a>
+                        <a href="CentralMaven$.html" title="">
+                          CentralMaven
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
-                        <a class="object" href="" title="Provides functions to inspect and check jar files"></a>
-                        <a href="" title="Provides functions to inspect and check jar files">
-                          JarUtils
+                        <a class="object" href="" title=""></a>
+                        <a href="" title="">
+                          PackCache
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
-                        <a class="class" href="OptParse.html" title=""></a>
-                        <a href="OptParse.html" title="">
-                          OptParse
+                        <a class="class" href="PackData.html" title="Java Package Data"></a>
+                        <a href="PackData.html" title="Java Package Data">
+                          PackData
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
-                        <a class="object" href="OptParseUtils$.html" title=""></a>
-                        <a href="OptParseUtils$.html" title="">
-                          OptParseUtils
+                        <a class="object" href="Packget$.html" title=""></a>
+                        <a href="Packget$.html" title="">
+                          Packget
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
-                        <a class="object" href="Utils$.html" title="General utility functions"></a>
-                        <a href="Utils$.html" title="General utility functions">
-                          Utils
+                        <a class="object" href="Pom$.html" title="Extraction of data from POM files"></a>
+                        <a href="Pom$.html" title="Extraction of data from POM files">
+                          Pom
+                        </a>
+                      </li><li class="current-entities indented2">
+                        <span class="separator"></span>
+                        <a class="class" href="PomData.html" title="Data from the POM file - Project Object Model"></a>
+                        <a href="PomData.html" title="Data from the POM file - Project Object Model">
+                          PomData
                         </a>
                       </li>
               </ul>
@@ -145,9 +151,9 @@
             <body class="object value">
       <div id="definition">
         <div class="big-circle object">o</div>
-        <p id="owner"><a href="../index.html" class="extype" name="jarget">jarget</a>.<a href="index.html" class="extype" name="jarget.utils">utils</a></p>
-        <h1>JarUtils<span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html" title="Permalink">
+        <p id="owner"><a href="../index.html" class="extype" name="jarget">jarget</a>.<a href="index.html" class="extype" name="jarget.mvn">mvn</a></p>
+        <h1>PackCache<span class="permalink">
+      <a href="../../jarget/mvn/PackCache$.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
@@ -160,12 +166,12 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">JarUtils</span>
+        <span class="name">PackCache</span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Provides functions to inspect and check jar files</p></div><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/caiorss/jarget" target="_blank">jarget.utils.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/caiorss/jarget" target="_blank">jarget.mvn.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -195,7 +201,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="jarget.utils.JarUtils"><span>JarUtils</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="jarget.mvn.PackCache"><span>PackCache</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -225,7 +231,7 @@
                 <li name="scala.AnyRef#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#!=(x$1:Any):Boolean" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#!=(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -241,7 +247,7 @@
     </li><li name="scala.AnyRef###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html###():Int" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html###():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -257,7 +263,7 @@
     </li><li name="scala.AnyRef#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#==(x$1:Any):Boolean" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#==(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -273,7 +279,7 @@
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#asInstanceOf[T0]:T0" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#asInstanceOf[T0]:T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -289,7 +295,7 @@
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#clone():Object" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#clone():Object" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -311,7 +317,7 @@
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#eq(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#eq(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -327,7 +333,7 @@
     </li><li name="scala.AnyRef#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#equals(x$1:Any):Boolean" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#equals(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -340,10 +346,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="jarget.utils.JarUtils#extract" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="extract(jarFile:String,dest:String,verbose:Boolean):Unit"></a><a id="extract(String,String,Boolean):Unit"></a>
+    </li><li name="jarget.mvn.PackCache#exists" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="exists(cache:String,pack:jarget.mvn.PackData):Boolean"></a><a id="exists(String,PackData):Boolean"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#extract(jarFile:String,dest:String,verbose:Boolean):Unit" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#exists(cache:String,pack:jarget.mvn.PackData):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -352,30 +358,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">extract</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="dest">dest: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">exists</span><span class="params">(<span name="cache">cache: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="pack">pack: <a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       
-      
-    </li><li name="jarget.utils.JarUtils#extractFile" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="extractFile(jarFile:String,file:String,dest:String):Unit"></a><a id="extractFile(String,String,String):Unit"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#extractFile(jarFile:String,file:String,dest:String):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">extractFile</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="file">file: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="dest">dest: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Extract jar file to a given directory</p>
+      <p class="shortcomment cmt">Check if package exists in cache</p>
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#finalize():Unit" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#finalize():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -394,10 +384,10 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="jarget.utils.JarUtils#getAssetFiles" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getAssetFiles(jarFile:String):List[java.util.jar.JarEntry]"></a><a id="getAssetFiles(String):List[JarEntry]"></a>
+    </li><li name="jarget.mvn.PackCache#getArtifactPath" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getArtifactPath(cachePath:String,ext:String,pack:jarget.mvn.PackData):String"></a><a id="getArtifactPath(String,String,PackData):String"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#getAssetFiles(jarFile:String):List[java.util.jar.JarEntry]" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#getArtifactPath(cachePath:String,ext:String,pack:jarget.mvn.PackData):String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -406,14 +396,30 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getAssetFiles</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.collection.immutable.List">List</span>[<span class="extype" name="java.util.jar.JarEntry">JarEntry</span>]</span>
+        <span class="name">getArtifactPath</span><span class="params">(<span name="cachePath">cachePath: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="ext">ext: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="pack">pack: <a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
       
-      <p class="shortcomment cmt">Get only asset files, disregarding all *.class files and directory entries.</p>
+      
+    </li><li name="jarget.mvn.PackCache#getCacheHome" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getCacheHome(prefix:String):String"></a><a id="getCacheHome(String):String"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/PackCache$.html#getCacheHome(prefix:String):String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getCacheHome</span><span class="params">(<span name="prefix">prefix: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#getClass():Class[_]" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#getClass():Class[_]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -426,10 +432,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="jarget.utils.JarUtils#getClasspath" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="getClasspath(path:String):String"></a><a id="getClasspath(String):String"></a>
+    </li><li name="jarget.mvn.PackCache#getPackagePath" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getPackagePath(cachePath:String,pack:jarget.mvn.PackData):String"></a><a id="getPackagePath(String,PackData):String"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#getClasspath(path:String):String" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#getPackagePath(cachePath:String,pack:jarget.mvn.PackData):String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -438,19 +444,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getClasspath</span><span class="params">(<span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">getPackagePath</span><span class="params">(<span name="cachePath">cachePath: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="pack">pack: <a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       
-      <p class="shortcomment cmt">Get classpath with all jar files from a directory.</p><div class="fullcomment"><div class="comment cmt"><p>Get classpath with all jar files from a directory.</p><p>      Example: If the directory app/lib
-      has the files lib1.jar, lib2.jar and so on.</p><p>      The function getClasspath(&quot;app/lib&quot;)
-      will return a string containing
-      'app/lib/lib1.jar:app/lib/lib2.jar:app/lib/lib3.jar' ...</p><p>      The path separator is (:) for Unix-like OS's and (;) for
-      Windows.
-</p></div></div>
-    </li><li name="jarget.utils.JarUtils#getFilesAsList" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getFilesAsList(jarFile:String):List[java.util.jar.JarEntry]"></a><a id="getFilesAsList(String):List[JarEntry]"></a>
+      <p class="shortcomment cmt">Get path to directory or URL directory which contains the jar file.</p>
+    </li><li name="jarget.mvn.PackCache#getPackagesInCache" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getPackagesInCache(cachePath:String):scala.collection.immutable.Set[(String,String)]"></a><a id="getPackagesInCache(String):Set[(String,String)]"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#getFilesAsList(jarFile:String):List[java.util.jar.JarEntry]" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#getPackagesInCache(cachePath:String):scala.collection.immutable.Set[(String,String)]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -459,78 +460,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getFilesAsList</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.List">List</span>[<span class="extype" name="java.util.jar.JarEntry">JarEntry</span>]</span>
+        <span class="name">getPackagesInCache</span><span class="params">(<span name="cachePath">cachePath: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.collection.immutable.Set">Set</span>[(<span class="extype" name="java.lang.String">String</span>, <span class="extype" name="java.lang.String">String</span>)]</span>
       </span>
       
-      
-    </li><li name="jarget.utils.JarUtils#getMainClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getMainClass(jarFile:String):Option[String]"></a><a id="getMainClass(String):Option[String]"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#getMainClass(jarFile:String):Option[String]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getMainClass</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Returns 'Main-Class' parameter from jar file</p>
-    </li><li name="jarget.utils.JarUtils#getManifest" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getManifest(jarFile:String):String"></a><a id="getManifest(String):String"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#getManifest(jarFile:String):String" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getManifest</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Get jar's META-INF/MANIFEST.MF content</p>
-    </li><li name="jarget.utils.JarUtils#getPackageClasses" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getPackageClasses(jarFile:String,packName:String):List[String]"></a><a id="getPackageClasses(String,String):List[String]"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#getPackageClasses(jarFile:String,packName:String):List[String]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getPackageClasses</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="packName">packName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Get all classes within a package.</p>
-    </li><li name="jarget.utils.JarUtils#getPackages" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getPackages(jarFile:String):Set[String]"></a><a id="getPackages(String):Set[String]"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#getPackages(jarFile:String):Set[String]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getPackages</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Get all packages of a jar file</p>
+      <p class="shortcomment cmt">Get all packages available in the cache.</p>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#hashCode():Int" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#hashCode():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -546,7 +483,7 @@
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#isInstanceOf[T0]:Boolean" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#isInstanceOf[T0]:Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -562,7 +499,7 @@
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#ne(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#ne(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -578,7 +515,7 @@
     </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#notify():Unit" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#notify():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -594,7 +531,7 @@
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#notifyAll():Unit" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#notifyAll():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -607,10 +544,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="jarget.utils.JarUtils#printFile" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="printFile(jarFile:String,file:String):Unit"></a><a id="printFile(String,String):Unit"></a>
+    </li><li name="jarget.mvn.PackCache#showJarFiles" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="showJarFiles(cachePath:String):Unit"></a><a id="showJarFiles(String):Unit"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#printFile(jarFile:String,file:String):Unit" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#showJarFiles(cachePath:String):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -619,85 +556,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">printFile</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="file">file: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">showJarFiles</span><span class="params">(<span name="cachePath">cachePath: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
-      
-    </li><li name="jarget.utils.JarUtils#runWithClassPath" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="runWithClassPath(program:String,args:List[String],path:String):Unit"></a><a id="runWithClassPath(String,List[String],String):Unit"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#runWithClassPath(program:String,args:List[String],path:String):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">runWithClassPath</span><span class="params">(<span name="program">program: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">List()</span></span>, <span name="path">path: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">null</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Run a program with a given set of arguments by
-      setting the CLASSPATH enviroment variable with
-      all jars from the 'path' directory.</p><div class="fullcomment"><div class="comment cmt"><p>Run a program with a given set of arguments by
-      setting the CLASSPATH enviroment variable with
-      all jars from the 'path' directory.</p><p>      Example: if the directory path is 'app/lib' and
-      contains the files lib1.jar, lib2.jar and lib3.jar
-      it will run the 'program' with CLASSPATH enviroment
-      variable set to 'app/lib/lib1.jar:app/lib/lib2.jar...'</p></div></div>
-    </li><li name="jarget.utils.JarUtils#runWithClassPath2" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="runWithClassPath2(program:String,args:List[String],cpath:String):Unit"></a><a id="runWithClassPath2(String,List[String],String):Unit"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#runWithClassPath2(program:String,args:List[String],cpath:String):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">runWithClassPath2</span><span class="params">(<span name="program">program: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">List()</span></span>, <span name="cpath">cpath: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">null</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      
-    </li><li name="jarget.utils.JarUtils#showFiles" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="showFiles(jarFile:String):Unit"></a><a id="showFiles(String):Unit"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#showFiles(jarFile:String):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">showFiles</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      
-    </li><li name="jarget.utils.JarUtils#showManifest" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="showManifest(file:String):Unit"></a><a id="showManifest(String):Unit"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#showManifest(file:String):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">showManifest</span><span class="params">(<span name="file">file: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Show jar's META-INF/MANIFEST.MF file</p>
+      <p class="shortcomment cmt">Show all jar files in the cache repository</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -713,7 +579,7 @@
     </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#toString():String" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#toString():String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -729,7 +595,7 @@
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#wait():Unit" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#wait():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -751,7 +617,7 @@
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long,x$2:Int):Unit"></a><a id="wait(Long,Int):Unit"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -773,7 +639,7 @@
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long):Unit"></a><a id="wait(Long):Unit"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#wait(x$1:Long):Unit" title="Permalink">
+      <a href="../../jarget/mvn/PackCache$.html#wait(x$1:Long):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -792,22 +658,6 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="jarget.utils.JarUtils#withJarException" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="withJarException[A](comp:=&gt;Unit):Unit"></a><a id="withJarException[A](⇒Unit):Unit"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#withJarException[A](comp:=&gt;Unit):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">withJarException</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="comp">comp: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      
     </li>
               </ol>
             </div>

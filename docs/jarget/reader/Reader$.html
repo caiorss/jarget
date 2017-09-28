@@ -3,9 +3,9 @@
         <head>
           <meta http-equiv="X-UA-Compatible" content="IE=edge" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-          <title>Jarget - Scala/Java automation tool 1.0 - jarget.utils.JarUtils</title>
-          <meta name="description" content="Jarget - Scala Java automation tool 1.0 - jarget.utils.JarUtils" />
-          <meta name="keywords" content="Jarget Scala Java automation tool 1.0 jarget.utils.JarUtils" />
+          <title>Jarget - Scala/Java automation tool 1.0 - jarget.reader.Reader</title>
+          <meta name="description" content="Jarget - Scala Java automation tool 1.0 - jarget.reader.Reader" />
+          <meta name="keywords" content="Jarget Scala Java automation tool 1.0 jarget.reader.Reader" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../lib/index.css" media="screen" type="text/css" rel="stylesheet" />
@@ -89,10 +89,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../index.html" class="extype" name="_root_">root</a></dd></dl></div>
-    </li><li name="jarget.utils" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="utils"></a><a id="utils:utils"></a>
+    </li><li name="jarget.reader" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="reader"></a><a id="reader:reader"></a>
       <span class="permalink">
-      <a href="../jarget/index.html#utils" title="Permalink">
+      <a href="../jarget/index.html#reader" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -102,40 +102,16 @@
       </span>
       <span class="symbol">
         <a title="" href="index.html">
-              <span class="name">utils</span>
+              <span class="name">reader</span>
             </a>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="jarget">jarget</a></dd></dl></div>
     </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="object" href="JarBuilder$.html" title="Provide functions to build Uber jars (aka fat-jars)"></a>
-                        <a href="JarBuilder$.html" title="Provide functions to build Uber jars (aka fat-jars)">
-                          JarBuilder
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="object" href="" title="Provides functions to inspect and check jar files"></a>
-                        <a href="" title="Provides functions to inspect and check jar files">
-                          JarUtils
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="class" href="OptParse.html" title=""></a>
-                        <a href="OptParse.html" title="">
-                          OptParse
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="object" href="OptParseUtils$.html" title=""></a>
-                        <a href="OptParseUtils$.html" title="">
-                          OptParseUtils
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="object" href="Utils$.html" title="General utility functions"></a>
-                        <a href="Utils$.html" title="General utility functions">
-                          Utils
+                        <a class="object" href="" title=""></a>
+                        <a class="class" href="Reader.html" title=""></a>
+                        <a href="Reader.html" title="">
+                          Reader
                         </a>
                       </li>
               </ul>
@@ -144,14 +120,16 @@
           <div id="content">
             <body class="object value">
       <div id="definition">
-        <div class="big-circle object">o</div>
-        <p id="owner"><a href="../index.html" class="extype" name="jarget">jarget</a>.<a href="index.html" class="extype" name="jarget.utils">utils</a></p>
-        <h1>JarUtils<span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html" title="Permalink">
+        <a href="Reader.html" title="See companion class"><div class="big-circle object-companion-class">o</div></a>
+        <p id="owner"><a href="../index.html" class="extype" name="jarget">jarget</a>.<a href="index.html" class="extype" name="jarget.reader">reader</a></p>
+        <h1><a href="Reader.html" title="See companion class">Reader</a><span class="permalink">
+      <a href="../../jarget/reader/Reader$.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
-        <h3><span class="morelinks"></span></h3>
+        <h3><span class="morelinks"><div>
+            Companion <a href="Reader.html" title="See companion class">class Reader</a>
+          </div></span></h3>
       </div>
 
       <h4 id="signature" class="signature">
@@ -160,16 +138,16 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">JarUtils</span>
+        <span class="name">Reader</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Provides functions to inspect and check jar files</p></div><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/caiorss/jarget" target="_blank">jarget.utils.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/caiorss/jarget" target="_blank">jarget.reader.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -195,7 +173,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="jarget.utils.JarUtils"><span>JarUtils</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="jarget.reader.Reader"><span>Reader</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -225,7 +203,7 @@
                 <li name="scala.AnyRef#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#!=(x$1:Any):Boolean" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#!=(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -241,7 +219,7 @@
     </li><li name="scala.AnyRef###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html###():Int" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html###():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -257,7 +235,7 @@
     </li><li name="scala.AnyRef#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#==(x$1:Any):Boolean" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#==(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -273,7 +251,7 @@
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#asInstanceOf[T0]:T0" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#asInstanceOf[T0]:T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -286,10 +264,26 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="jarget.reader.Reader#ask" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ask[R]:jarget.reader.Reader[R,R]"></a><a id="ask[R]:Reader[R,R]"></a>
+      <span class="permalink">
+      <a href="../../jarget/reader/Reader$.html#ask[R]:jarget.reader.Reader[R,R]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ask</span><span class="tparams">[<span name="R">R</span>]</span><span class="result">: <a href="Reader.html" class="extype" name="jarget.reader.Reader">Reader</a>[<span class="extype" name="jarget.reader.Reader.ask.R">R</span>, <span class="extype" name="jarget.reader.Reader.ask.R">R</span>]</span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#clone():Object" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#clone():Object" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -311,7 +305,7 @@
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#eq(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#eq(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -327,7 +321,7 @@
     </li><li name="scala.AnyRef#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#equals(x$1:Any):Boolean" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#equals(x$1:Any):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -340,42 +334,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="jarget.utils.JarUtils#extract" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="extract(jarFile:String,dest:String,verbose:Boolean):Unit"></a><a id="extract(String,String,Boolean):Unit"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#extract(jarFile:String,dest:String,verbose:Boolean):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">extract</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="dest">dest: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      
-    </li><li name="jarget.utils.JarUtils#extractFile" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="extractFile(jarFile:String,file:String,dest:String):Unit"></a><a id="extractFile(String,String,String):Unit"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#extractFile(jarFile:String,file:String,dest:String):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">extractFile</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="file">file: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="dest">dest: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Extract jar file to a given directory</p>
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#finalize():Unit" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#finalize():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -394,26 +356,10 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="jarget.utils.JarUtils#getAssetFiles" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getAssetFiles(jarFile:String):List[java.util.jar.JarEntry]"></a><a id="getAssetFiles(String):List[JarEntry]"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#getAssetFiles(jarFile:String):List[java.util.jar.JarEntry]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getAssetFiles</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.collection.immutable.List">List</span>[<span class="extype" name="java.util.jar.JarEntry">JarEntry</span>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Get only asset files, disregarding all *.class files and directory entries.</p>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#getClass():Class[_]" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#getClass():Class[_]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -426,111 +372,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="jarget.utils.JarUtils#getClasspath" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="getClasspath(path:String):String"></a><a id="getClasspath(String):String"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#getClasspath(path:String):String" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getClasspath</span><span class="params">(<span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Get classpath with all jar files from a directory.</p><div class="fullcomment"><div class="comment cmt"><p>Get classpath with all jar files from a directory.</p><p>      Example: If the directory app/lib
-      has the files lib1.jar, lib2.jar and so on.</p><p>      The function getClasspath(&quot;app/lib&quot;)
-      will return a string containing
-      'app/lib/lib1.jar:app/lib/lib2.jar:app/lib/lib3.jar' ...</p><p>      The path separator is (:) for Unix-like OS's and (;) for
-      Windows.
-</p></div></div>
-    </li><li name="jarget.utils.JarUtils#getFilesAsList" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getFilesAsList(jarFile:String):List[java.util.jar.JarEntry]"></a><a id="getFilesAsList(String):List[JarEntry]"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#getFilesAsList(jarFile:String):List[java.util.jar.JarEntry]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getFilesAsList</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.List">List</span>[<span class="extype" name="java.util.jar.JarEntry">JarEntry</span>]</span>
-      </span>
-      
-      
-    </li><li name="jarget.utils.JarUtils#getMainClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getMainClass(jarFile:String):Option[String]"></a><a id="getMainClass(String):Option[String]"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#getMainClass(jarFile:String):Option[String]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getMainClass</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Returns 'Main-Class' parameter from jar file</p>
-    </li><li name="jarget.utils.JarUtils#getManifest" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getManifest(jarFile:String):String"></a><a id="getManifest(String):String"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#getManifest(jarFile:String):String" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getManifest</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Get jar's META-INF/MANIFEST.MF content</p>
-    </li><li name="jarget.utils.JarUtils#getPackageClasses" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getPackageClasses(jarFile:String,packName:String):List[String]"></a><a id="getPackageClasses(String,String):List[String]"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#getPackageClasses(jarFile:String,packName:String):List[String]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getPackageClasses</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="packName">packName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Get all classes within a package.</p>
-    </li><li name="jarget.utils.JarUtils#getPackages" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getPackages(jarFile:String):Set[String]"></a><a id="getPackages(String):Set[String]"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#getPackages(jarFile:String):Set[String]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getPackages</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Get all packages of a jar file</p>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#hashCode():Int" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#hashCode():Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -546,7 +391,7 @@
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#isInstanceOf[T0]:Boolean" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#isInstanceOf[T0]:Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -559,10 +404,26 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="jarget.reader.Reader#liftIO" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="liftIO[R,A](io:=&gt;A):jarget.reader.Reader[R,A]"></a><a id="liftIO[R,A](⇒A):Reader[R,A]"></a>
+      <span class="permalink">
+      <a href="../../jarget/reader/Reader$.html#liftIO[R,A](io:=&gt;A):jarget.reader.Reader[R,A]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">liftIO</span><span class="tparams">[<span name="R">R</span>, <span name="A">A</span>]</span><span class="params">(<span name="io">io: ⇒ <span class="extype" name="jarget.reader.Reader.liftIO.A">A</span></span>)</span><span class="result">: <a href="Reader.html" class="extype" name="jarget.reader.Reader">Reader</a>[<span class="extype" name="jarget.reader.Reader.liftIO.R">R</span>, <span class="extype" name="jarget.reader.Reader.liftIO.A">A</span>]</span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#ne(x$1:AnyRef):Boolean" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#ne(x$1:AnyRef):Boolean" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -578,7 +439,7 @@
     </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#notify():Unit" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#notify():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -594,7 +455,7 @@
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#notifyAll():Unit" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#notifyAll():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -607,10 +468,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="jarget.utils.JarUtils#printFile" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="printFile(jarFile:String,file:String):Unit"></a><a id="printFile(String,String):Unit"></a>
+    </li><li name="jarget.reader.Reader#pure" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="pure[R,A](x:A):jarget.reader.Reader[R,A]"></a><a id="pure[R,A](A):Reader[R,A]"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#printFile(jarFile:String,file:String):Unit" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#pure[R,A](x:A):jarget.reader.Reader[R,A]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -619,85 +480,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">printFile</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="file">file: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">pure</span><span class="tparams">[<span name="R">R</span>, <span name="A">A</span>]</span><span class="params">(<span name="x">x: <span class="extype" name="jarget.reader.Reader.pure.A">A</span></span>)</span><span class="result">: <a href="Reader.html" class="extype" name="jarget.reader.Reader">Reader</a>[<span class="extype" name="jarget.reader.Reader.pure.R">R</span>, <span class="extype" name="jarget.reader.Reader.pure.A">A</span>]</span>
       </span>
       
       
-    </li><li name="jarget.utils.JarUtils#runWithClassPath" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="runWithClassPath(program:String,args:List[String],path:String):Unit"></a><a id="runWithClassPath(String,List[String],String):Unit"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#runWithClassPath(program:String,args:List[String],path:String):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">runWithClassPath</span><span class="params">(<span name="program">program: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">List()</span></span>, <span name="path">path: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">null</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Run a program with a given set of arguments by
-      setting the CLASSPATH enviroment variable with
-      all jars from the 'path' directory.</p><div class="fullcomment"><div class="comment cmt"><p>Run a program with a given set of arguments by
-      setting the CLASSPATH enviroment variable with
-      all jars from the 'path' directory.</p><p>      Example: if the directory path is 'app/lib' and
-      contains the files lib1.jar, lib2.jar and lib3.jar
-      it will run the 'program' with CLASSPATH enviroment
-      variable set to 'app/lib/lib1.jar:app/lib/lib2.jar...'</p></div></div>
-    </li><li name="jarget.utils.JarUtils#runWithClassPath2" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="runWithClassPath2(program:String,args:List[String],cpath:String):Unit"></a><a id="runWithClassPath2(String,List[String],String):Unit"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#runWithClassPath2(program:String,args:List[String],cpath:String):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">runWithClassPath2</span><span class="params">(<span name="program">program: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">List()</span></span>, <span name="cpath">cpath: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">null</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      
-    </li><li name="jarget.utils.JarUtils#showFiles" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="showFiles(jarFile:String):Unit"></a><a id="showFiles(String):Unit"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#showFiles(jarFile:String):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">showFiles</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      
-    </li><li name="jarget.utils.JarUtils#showManifest" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="showManifest(file:String):Unit"></a><a id="showManifest(String):Unit"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#showManifest(file:String):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">showManifest</span><span class="params">(<span name="file">file: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      <p class="shortcomment cmt">Show jar's META-INF/MANIFEST.MF file</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -713,7 +503,7 @@
     </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#toString():String" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#toString():String" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -729,7 +519,7 @@
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#wait():Unit" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#wait():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -751,7 +541,7 @@
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long,x$2:Int):Unit"></a><a id="wait(Long,Int):Unit"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -773,7 +563,7 @@
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait(x$1:Long):Unit"></a><a id="wait(Long):Unit"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#wait(x$1:Long):Unit" title="Permalink">
+      <a href="../../jarget/reader/Reader$.html#wait(x$1:Long):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -792,22 +582,6 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="jarget.utils.JarUtils#withJarException" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="withJarException[A](comp:=&gt;Unit):Unit"></a><a id="withJarException[A](⇒Unit):Unit"></a>
-      <span class="permalink">
-      <a href="../../jarget/utils/JarUtils$.html#withJarException[A](comp:=&gt;Unit):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">withJarException</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="comp">comp: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      
     </li>
               </ol>
             </div>
@@ -818,7 +592,11 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.Serializable">
+              <h3>Inherited from <span class="extype" name="scala.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="java.io.Serializable">
+              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>

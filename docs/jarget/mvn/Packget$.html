@@ -115,6 +115,12 @@
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
+                        <a class="object" href="PackCache$.html" title=""></a>
+                        <a href="PackCache$.html" title="">
+                          PackCache
+                        </a>
+                      </li><li class="current-entities indented2">
+                        <span class="separator"></span>
                         <a class="class" href="PackData.html" title="Java Package Data"></a>
                         <a href="PackData.html" title="Java Package Data">
                           PackData
@@ -308,10 +314,10 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="jarget.mvn.Packget#downloadPackage" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="downloadPackage(pack:jarget.mvn.PackData,path:String):scala.collection.immutable.Set[Unit]"></a><a id="downloadPackage(PackData,String):Set[Unit]"></a>
+    </li><li name="jarget.mvn.Packget#downloadArtifact" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="downloadArtifact(pack:jarget.mvn.PackData,ext:String,path:String):jarget.reader.Reader[String,Unit]"></a><a id="downloadArtifact(PackData,String,String):Reader[String,Unit]"></a>
       <span class="permalink">
-      <a href="../../jarget/mvn/Packget$.html#downloadPackage(pack:jarget.mvn.PackData,path:String):scala.collection.immutable.Set[Unit]" title="Permalink">
+      <a href="../../jarget/mvn/Packget$.html#downloadArtifact(pack:jarget.mvn.PackData,ext:String,path:String):jarget.reader.Reader[String,Unit]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -320,10 +326,48 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">downloadPackage</span><span class="params">(<span name="pack">pack: <a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a></span>, <span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.collection.immutable.Set">Set</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+        <span class="name">downloadArtifact</span><span class="params">(<span name="pack">pack: <a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a></span>, <span name="ext">ext: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="../reader/Reader.html" class="extype" name="jarget.reader.Reader">Reader</a>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Unit">Unit</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Download artifact with extension jar or pom to a given path.</p><div class="fullcomment"><div class="comment cmt"><p>Download artifact with extension jar or pom to a given path.
+</p></div><dl class="paramcmts block"><dt class="param">pack</dt><dd class="cmt"><p>- Package that will be download</p></dd><dt class="param">ext</dt><dd class="cmt"><p>- File extension - 'jar', 'pom', 'md5', 'sha256' and etc.</p></dd><dt class="param">path</dt><dd class="cmt"><p>- Path where the artifact will be stored.
+      Example: It will download the package's jar artifact and store it in
+               ./download/jfreechart-1.0.17.jar</p><pre><span class="kw">val</span> p    = PackData(<span class="lit">"org.jfree"</span>, <span class="lit">"jfreechart"</span>, <span class="lit">"1.0.17"</span>)
+<span class="kw">val</span> repo =  <span class="lit">"http://central.maven.org/maven2"</span>
+<span class="kw">val</span> path = <span class="lit">"./downloads"</span>
+Packget.downloadArtifact(p, <span class="lit">"jar"</span>, path) run(repo)</pre></dd></dl></div>
+    </li><li name="jarget.mvn.Packget#downloadPackage" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="downloadPackage(pack:jarget.mvn.PackData,path:String):jarget.reader.Reader[String,Unit]"></a><a id="downloadPackage(PackData,String):Reader[String,Unit]"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/Packget$.html#downloadPackage(pack:jarget.mvn.PackData,path:String):jarget.reader.Reader[String,Unit]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">downloadPackage</span><span class="params">(<span name="pack">pack: <a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a></span>, <span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="../reader/Reader.html" class="extype" name="jarget.reader.Reader">Reader</a>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Unit">Unit</span>]</span>
       </span>
       
       
+    </li><li name="jarget.mvn.Packget#downloadPackageToCache" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="downloadPackageToCache(cache:String,pack:jarget.mvn.PackData):jarget.reader.Reader[String,Unit]"></a><a id="downloadPackageToCache(String,PackData):Reader[String,Unit]"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/Packget$.html#downloadPackageToCache(cache:String,pack:jarget.mvn.PackData):jarget.reader.Reader[String,Unit]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">downloadPackageToCache</span><span class="params">(<span name="cache">cache: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="pack">pack: <a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a></span>)</span><span class="result">: <a href="../reader/Reader.html" class="extype" name="jarget.reader.Reader">Reader</a>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Unit">Unit</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Download package from cache directory if it is not downloaded yet.</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -395,9 +439,9 @@
       
       
     </li><li name="jarget.mvn.Packget#getAllDependencies" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getAllDependencies(pack:jarget.mvn.PackData):scala.collection.immutable.Set[jarget.mvn.PackData]"></a><a id="getAllDependencies(PackData):Set[PackData]"></a>
+      <a id="getAllDependencies(pack:jarget.mvn.PackData):jarget.reader.Reader[String,Set[jarget.mvn.PackData]]"></a><a id="getAllDependencies(PackData):Reader[String,Set[PackData]]"></a>
       <span class="permalink">
-      <a href="../../jarget/mvn/Packget$.html#getAllDependencies(pack:jarget.mvn.PackData):scala.collection.immutable.Set[jarget.mvn.PackData]" title="Permalink">
+      <a href="../../jarget/mvn/Packget$.html#getAllDependencies(pack:jarget.mvn.PackData):jarget.reader.Reader[String,Set[jarget.mvn.PackData]]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -406,14 +450,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getAllDependencies</span><span class="params">(<span name="pack">pack: <a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a></span>)</span><span class="result">: <span class="extype" name="scala.collection.immutable.Set">Set</span>[<a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a>]</span>
+        <span class="name">getAllDependencies</span><span class="params">(<span name="pack">pack: <a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a></span>)</span><span class="result">: <a href="../reader/Reader.html" class="extype" name="jarget.reader.Reader">Reader</a>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.Set">Set</span>[<a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a>]]</span>
       </span>
       
       
-    </li><li name="jarget.mvn.Packget#getCentralMavenArtifactURL" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getCentralMavenArtifactURL(ext:String):jarget.mvn.PackData=&gt;String"></a><a id="getCentralMavenArtifactURL(String):(PackData)⇒String"></a>
+    </li><li name="jarget.mvn.Packget#getAllDependenciesFromCache" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getAllDependenciesFromCache(cache:String,pack:jarget.mvn.PackData):scala.collection.immutable.Set[jarget.mvn.PackData]"></a><a id="getAllDependenciesFromCache(String,PackData):Set[PackData]"></a>
       <span class="permalink">
-      <a href="../../jarget/mvn/Packget$.html#getCentralMavenArtifactURL(ext:String):jarget.mvn.PackData=&gt;String" title="Permalink">
+      <a href="../../jarget/mvn/Packget$.html#getAllDependenciesFromCache(cache:String,pack:jarget.mvn.PackData):scala.collection.immutable.Set[jarget.mvn.PackData]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -422,10 +466,26 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getCentralMavenArtifactURL</span><span class="params">(<span name="ext">ext: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: (<a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a>) ⇒ <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">getAllDependenciesFromCache</span><span class="params">(<span name="cache">cache: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="pack">pack: <a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a></span>)</span><span class="result">: <span class="extype" name="scala.collection.immutable.Set">Set</span>[<a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a>]</span>
       </span>
       
       
+    </li><li name="jarget.mvn.Packget#getArtifactURI" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getArtifactURI(ext:String):jarget.mvn.PackData=&gt;jarget.reader.Reader[String,String]"></a><a id="getArtifactURI(String):(PackData)⇒Reader[String,String]"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/Packget$.html#getArtifactURI(ext:String):jarget.mvn.PackData=&gt;jarget.reader.Reader[String,String]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getArtifactURI</span><span class="params">(<span name="ext">ext: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: (<a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a>) ⇒ <a href="../reader/Reader.html" class="extype" name="jarget.reader.Reader">Reader</a>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Get path to artifact *.jar or *.pom file of a given package.</p>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
@@ -459,9 +519,9 @@
       
       
     </li><li name="jarget.mvn.Packget#getJarUrl" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getJarUrl:jarget.mvn.PackData=&gt;String"></a><a id="getJarUrl:(PackData)⇒String"></a>
+      <a id="getJarUrl:jarget.mvn.PackData=&gt;jarget.reader.Reader[String,String]"></a><a id="getJarUrl:(PackData)⇒Reader[String,String]"></a>
       <span class="permalink">
-      <a href="../../jarget/mvn/Packget$.html#getJarUrl:jarget.mvn.PackData=&gt;String" title="Permalink">
+      <a href="../../jarget/mvn/Packget$.html#getJarUrl:jarget.mvn.PackData=&gt;jarget.reader.Reader[String,String]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -470,7 +530,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">getJarUrl</span><span class="result">: (<a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a>) ⇒ <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">getJarUrl</span><span class="result">: (<a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a>) ⇒ <a href="../reader/Reader.html" class="extype" name="jarget.reader.Reader">Reader</a>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       
       
@@ -487,6 +547,54 @@
       </span>
       <span class="symbol">
         <span class="name">getMavenPackgeURL</span><span class="params">(<span name="pack">pack: <a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      
+    </li><li name="jarget.mvn.Packget#getPackCPathFromCache" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getPackCPathFromCache(packList:List[jarget.mvn.PackData],cache:String,repoUrl:String):String"></a><a id="getPackCPathFromCache(List[PackData],String,String):String"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/Packget$.html#getPackCPathFromCache(packList:List[jarget.mvn.PackData],cache:String,repoUrl:String):String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getPackCPathFromCache</span><span class="params">(<span name="packList">packList: <span class="extype" name="scala.List">List</span>[<a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a>]</span>, <span name="cache">cache: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="repoUrl">repoUrl: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      
+      
+    </li><li name="jarget.mvn.Packget#getPackFromCache" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getPackFromCache(pack:jarget.mvn.PackData,cache:String,repoUrl:String):scala.collection.immutable.Set[jarget.mvn.PackData]"></a><a id="getPackFromCache(PackData,String,String):Set[PackData]"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/Packget$.html#getPackFromCache(pack:jarget.mvn.PackData,cache:String,repoUrl:String):scala.collection.immutable.Set[jarget.mvn.PackData]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getPackFromCache</span><span class="params">(<span name="pack">pack: <a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a></span>, <span name="cache">cache: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="repoUrl">repoUrl: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.collection.immutable.Set">Set</span>[<a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Returns path to package from cache with all its dependency</p>
+    </li><li name="jarget.mvn.Packget#getPackJarsFromCache" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getPackJarsFromCache(packList:List[jarget.mvn.PackData],cache:String,repoUrl:String):List[String]"></a><a id="getPackJarsFromCache(List[PackData],String,String):List[String]"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/Packget$.html#getPackJarsFromCache(packList:List[jarget.mvn.PackData],cache:String,repoUrl:String):List[String]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getPackJarsFromCache</span><span class="params">(<span name="packList">packList: <span class="extype" name="scala.List">List</span>[<a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a>]</span>, <span name="cache">cache: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="repoUrl">repoUrl: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.collection.immutable.List">List</span>[<span class="extype" name="java.lang.String">String</span>]</span>
       </span>
       
       
@@ -513,9 +621,9 @@
                   &lt;/dependency&gt;
 </p></div></div>
     </li><li name="jarget.mvn.Packget#getPomUrl" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getPomUrl:jarget.mvn.PackData=&gt;String"></a><a id="getPomUrl:(PackData)⇒String"></a>
+      <a id="getPomUrl:jarget.mvn.PackData=&gt;jarget.reader.Reader[String,String]"></a><a id="getPomUrl:(PackData)⇒Reader[String,String]"></a>
       <span class="permalink">
-      <a href="../../jarget/mvn/Packget$.html#getPomUrl:jarget.mvn.PackData=&gt;String" title="Permalink">
+      <a href="../../jarget/mvn/Packget$.html#getPomUrl:jarget.mvn.PackData=&gt;jarget.reader.Reader[String,String]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -524,14 +632,14 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">getPomUrl</span><span class="result">: (<a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a>) ⇒ <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">getPomUrl</span><span class="result">: (<a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a>) ⇒ <a href="../reader/Reader.html" class="extype" name="jarget.reader.Reader">Reader</a>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       
       
     </li><li name="jarget.mvn.Packget#getPomXML" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getPomXML(pack:jarget.mvn.PackData):scala.xml.Node"></a><a id="getPomXML(PackData):Node"></a>
+      <a id="getPomXML(pack:jarget.mvn.PackData):jarget.reader.Reader[String,scala.xml.Elem]"></a><a id="getPomXML(PackData):Reader[String,Elem]"></a>
       <span class="permalink">
-      <a href="../../jarget/mvn/Packget$.html#getPomXML(pack:jarget.mvn.PackData):scala.xml.Node" title="Permalink">
+      <a href="../../jarget/mvn/Packget$.html#getPomXML(pack:jarget.mvn.PackData):jarget.reader.Reader[String,scala.xml.Elem]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -540,7 +648,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getPomXML</span><span class="params">(<span name="pack">pack: <a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a></span>)</span><span class="result">: <span class="extype" name="scala.xml.Node">Node</span></span>
+        <span class="name">getPomXML</span><span class="params">(<span name="pack">pack: <a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a></span>)</span><span class="result">: <a href="../reader/Reader.html" class="extype" name="jarget.reader.Reader">Reader</a>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.xml.Elem">Elem</span>]</span>
       </span>
       
       
