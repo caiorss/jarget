@@ -223,7 +223,12 @@ object PackCache {
   /** Check if package exists in cache */
   def exists(cache: String, pack: PackData) = 
     Utils.dirExists(getPackagePath(cache, pack))
-  
+
+  /** Show all jar files in the cache repository */
+  def showJarFiles(cachePath: String) = {
+    import java.nio.file.{Files, Paths}
+    Files.walk(Paths.get(cachePath)).filter(_.toString().endsWith(".jar")).forEach(println)
+  }
 
 } //---------- End of PackCache object ---------- // 
 
