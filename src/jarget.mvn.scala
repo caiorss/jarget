@@ -214,6 +214,23 @@ object PackCache {
     )
   }
 
+
+  /** Get all packages available in the cache. */
+  def getPackagesInCache(cachePath: String) = {
+    import java.nio.file.{Files, Paths, Path}
+    val root = Paths.get(cachePath)
+    def getPack(p: Path) = {
+      val k = root relativize p getParent() getParent()
+      (k.getParent.toString.replace("/", "."), k.getFileName.toString)
+    }
+    Files.walk(root)
+      .filter(_.toString().endsWith(".jar"))
+      .toArray
+      .map(p => getPack(p.asInstanceOf[java.nio.file.Path]))
+      .toSet 
+  }
+
+
   def getArtifactPath(cachePath: String, ext: String, pack: PackData) = {
     val path = getPackagePath(cachePath, pack)
     val file =  s"${pack.artifact}-${pack.version}.${ext}"
