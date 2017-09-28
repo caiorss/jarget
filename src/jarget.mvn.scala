@@ -244,6 +244,23 @@ object PackCache {
     Utils.join(path, file)
   }
 
+  def showPackageInfo(groupID: String, artifactID: String, cachePath: String) = {
+    val repo     = cachePath
+    val gpath    = groupID.replaceAll("\\.", "/")
+    val path     = Utils.joinPathList(cachePath, gpath, artifactID)
+    val version  = (new java.io.File(path))
+      .listFiles
+      .filter(_.isDirectory)
+      .head
+      .getName()
+    val pomFile = Utils.joinPathList(
+      path,
+      version,
+      s"${artifactID}-${version}.pom"
+    )
+    Pom.showPomDataFromUri(pomFile, showUri = true)
+  }
+
   /** Check if package exists in cache */
   def exists(cache: String, pack: PackData) = 
     Utils.dirExists(getPackagePath(cache, pack))
