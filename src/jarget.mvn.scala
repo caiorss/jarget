@@ -209,6 +209,23 @@ object Packget {
     uri      = s"${repo}/${gpath}/${artifact}/${version}/${artifact}-${version}.${ext}"
   } yield uri
 
+  /** Get path to directory or URL directory which contains the jar file. */
+  def getPackageCachePath(cachePath: String, pack: PackData) = {
+    val repo     = cachePath
+    val gpath    = pack.group.replaceAll("\\.", "/")
+    val artifact = pack.artifact
+    val version  = pack.version
+    // s"${gpath}/${artifact}/${version}/${artifact}-${version}"
+    Utils.joinPathList(
+      cachePath,
+      gpath,
+      artifact,
+      version,
+      s"${artifact}-${version}"
+    )
+  }
+
+
   def getMavenPackgeURL(pack: PackData) = {
     s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
   }
