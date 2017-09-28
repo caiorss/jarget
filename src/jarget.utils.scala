@@ -34,6 +34,35 @@ object Utils{
     fos.getChannel().transferFrom(rbc, 0, java.lang.Long.MAX_VALUE)
   }
 
+  /** 
+      Copy file to directory. 
+
+      @param file    - File that will be copied. 
+      @param destDir - Path to destination directory 
+
+      Example: The command below will copy file lsb-release to file
+              /tmp/lsb-release.
+
+     {{{
+          copyFileTo("/etc/lsb-release", "/tmp")
+      }}}
+    */ 
+  def copyFileTo(file: String, destDir: String) = {
+    val src = new java.io.File(file)
+    val dst = new java.io.File(destDir, src.getName)
+    var srcChannel: java.nio.channels.FileChannel = null
+    var dstChannel: java.nio.channels.FileChannel = null
+    try {
+      srcChannel = new java.io.FileInputStream(src).getChannel()
+      dstChannel = new java.io.FileOutputStream(dst).getChannel()
+      dstChannel.transferFrom(srcChannel, 0, srcChannel.size())
+    } finally {
+      srcChannel.close()
+      dstChannel.close()
+    }
+  }
+
+
   def getClipboardText() = {
     import java.awt.Toolkit
     import java.awt.datatransfer.{Clipboard, DataFlavor, Transferable}
