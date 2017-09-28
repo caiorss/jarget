@@ -214,6 +214,13 @@ object PackCache {
     )
   }
 
+  def getPackageVersions(groupID: String, artifactID: String, cachePath: String) = {
+    val repo     = cachePath
+    val gpath    = groupID.replaceAll("\\.", "/")
+    val path = Utils.joinPathList(cachePath, gpath, artifactID)
+    (new java.io.File(path)).listFiles map (_.getName) toList
+  }
+
 
   /** Get all packages available in the cache. */
   def getPackagesInCache(cachePath: String) = {
