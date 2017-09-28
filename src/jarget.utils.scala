@@ -62,6 +62,27 @@ object Utils{
     }
   }
 
+  /** Delete all files and subdirectories of a directory recursively */ 
+  def deleteDirectory(path: String, verbose: Boolean = false) =
+    if (new java.io.File(path).isDirectory){
+      import java.nio.file.{Files, Paths, Path}
+      val root = Paths.get(path)
+      Files.walk(root)
+        .filter(_.toFile.isFile)
+        .forEach{ p =>
+        if (verbose) println("Removing file: " + p)
+        p.toFile().delete()
+      }
+      Files.walk(root)
+        .filter(_.toFile().isDirectory)
+        .toArray
+        .map(_.asInstanceOf[java.nio.file.Path].toFile)
+        .reverse
+        .foreach{p =>
+        if (verbose) println("Deleting directory: " + p)
+        p.delete()
+      }
+    }
 
   def getClipboardText() = {
     import java.awt.Toolkit
