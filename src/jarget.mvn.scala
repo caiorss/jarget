@@ -31,7 +31,37 @@ package jarget.mvn
 import jarget.utils._
 import jarget.logger.Log.logger
 
-/** Java Package Data  */
+
+
+/** Data from the POM file - Project Object Model */
+case class PomData(
+  name:        String,
+  url:         String,
+  description: String,
+  group:       String,
+  artifact:    String,
+  version:     String,
+  packaging:   String
+) 
+
+
+
+
+case class RepoConf(
+  cache:   String,
+  repoUrl: String
+)
+
+
+/** Encodes java package specification.
+
+   Example: The package org.jfree:jfreechart:1.0.17 is encoded as 
+   PackData("org.jfree", "jfreechart", "1.0.17")
+
+   @param group    - Package's groupID. 
+   @param artifact - Package's artifactID
+   @param version  - Package's version.
+  */
 case class PackData(
   group:    String,
   artifact: String,
@@ -100,26 +130,6 @@ case class PackData(
   def getPomURI = this.getArtifactURI("pom")
 
 } //---------- End of object PackData ------------- // 
-
-
-/** Data from the POM file - Project Object Model */
-case class PomData(
-  name:        String,
-  url:         String,
-  description: String,
-  group:       String,
-  artifact:    String,
-  version:     String,
-  packaging:   String
-) 
-
-
-
-
-case class RepoConf(
-  cache:   String,
-  repoUrl: String
-)
 
 
 object PackData{
@@ -336,7 +346,7 @@ object CentralMaven{
 
 object PackCache {
 
-  
+
   def getCacheHome(prefix: String) =
     Utils.joinPathList(System.getProperty("user.home"), prefix, "cache")
 
