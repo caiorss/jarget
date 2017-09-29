@@ -400,16 +400,14 @@ object Main{
       case List("-path", path, "-get", pstr)
           => Packget.downloadPackage(parsePack(pstr), path)
 
-
-
       case List("-search", query)
-          => CentralMaven.searchPackageBrowser(query)
+          => PackSearch.searchPackageBrowser(query)
 
       case List("-search2", query)
-          => CentralMaven.searchPackage(query)
+          => PackSearch.searchPackage(query)
 
       case List("-search2", query, n)
-          => CentralMaven.searchPackage(query, n.toInt)
+          => PackSearch.searchPackage(query, n.toInt)
 
       case List("-browse", pstr)
           => openUrl(parsePack(pstr))
