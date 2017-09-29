@@ -45,7 +45,7 @@ object MainUtils {
   def getPackMaven() = {
     val p = Utils.getClipboardText()
       .map(scala.xml.XML.loadString)
-      .map(Packget.readPackMavenXML)
+      .map(PackData.readFromXML)
 
     if (p.isEmpty) {
       println("Error: Invalid maven XML package format")

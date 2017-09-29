@@ -135,6 +135,26 @@ object PackData{
     }
   }
 
+  /**  Read package from a maven XML specification like the one below.
+
+    {{{
+    <!-- https://mvnrepository.com/artifact/org.json4s/json4s-native_2.11 -->
+    <dependency>
+        <groupId>org.json4s</groupId>
+        <artifactId>json4s-native_2.11</artifactId>
+        <version>3.5.3</version>
+    </dependency>
+    }}}
+    */
+  def readFromXML(xml: scala.xml.Node) = {
+    PackData(
+      group    = (xml \\ "dependency" \\ "groupId").text,
+      artifact = (xml \\ "dependency" \\ "artifactId").text,
+      version  = (xml \\ "dependency" \\ "version").text
+    )
+  }
+
+
 }
 
 
@@ -199,9 +219,6 @@ object Pom{
     } yield deps
     deplist.getOrElse(List())
   } // ----- End of   getPomDependencies --- //
-
-
-
 
 
   /** Display attributes of a POM file in a summarized way */
@@ -319,6 +336,7 @@ object CentralMaven{
 
 object PackCache {
 
+  
   def getCacheHome(prefix: String) =
     Utils.joinPathList(System.getProperty("user.home"), prefix, "cache")
 
@@ -412,25 +430,6 @@ object Packget {
   def getPomXML(pack: PackData) = 
     pack.getPomURI map scala.xml.XML.load
   
-
-  /**  Extract package data from Maven XML like this: 
-
-    <!-- https://mvnrepository.com/artifact/org.json4s/json4s-native_2.11 -->
-    <dependency>
-        <groupId>org.json4s</groupId>
-        <artifactId>json4s-native_2.11</artifactId>
-        <version>3.5.3</version>
-    </dependency>
-
-    */
-  def readPackMavenXML(xml: scala.xml.Node) = {
-    PackData(
-      group    = (xml \\ "dependency" \\ "groupId").text,
-      artifact = (xml \\ "dependency" \\ "artifactId").text,
-      version  = (xml \\ "dependency" \\ "version").text
-    )
-  }
-
 
   def getAllDependencies(pack: PackData):  Reader[String, Set[PackData]] = {
     var packlist = Set[PackData](pack)
