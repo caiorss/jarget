@@ -281,7 +281,8 @@ object Pom{
     println(s"Coordinates[1]:  group = ${dat.group} artifact = ${dat.artifact} version = ${dat.version}")
     println(s"Coordinates[2]:  ${dat.group}/${dat.artifact}/${dat.version}")
     println( "Url:             " + dat.url)
-    println( "Description:     " + dat.description)
+    println( "\nDescription:     \n" + dat.description.trim)
+    println("-----------------------------------------------")
     println("\n")
   }
 
