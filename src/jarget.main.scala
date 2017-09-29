@@ -16,7 +16,7 @@ object MainUtils {
 
 
   def parsePack(pstr: String) = {
-    val p = Packget.readPack(pstr)
+    val p = PackData.read(pstr, "/")
     if (p.isEmpty) {
       println("Error: Invalid package format")
       System.exit(1)
@@ -65,8 +65,8 @@ object MainUtils {
       println( "Description:     " + dat.description)
 
       println("\nDependencies:\n")
-      Packget.getPomDependencies(pom) foreach { p =>
-        println("  - " + Packget.formatPack(p) + "\n")
+      Pom.getPomDependencies(pom) foreach { p =>
+        println("  - " + p.format() + "\n")
       }
     }
   
