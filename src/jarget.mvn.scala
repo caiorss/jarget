@@ -58,6 +58,44 @@ case class RepoConf(
    Example: The package org.jfree:jfreechart:1.0.17 is encoded as 
    PackData("org.jfree", "jfreechart", "1.0.17")
 
+
+   Example: Package's operations. 
+
+   {{{
+    $ scala -cp jarget.jar
+    
+    import jarget.mvn.PackData
+    import jarget.mvn.Packget 
+ 
+    scala> val p = PackData("org.jfree", "jfreechart", "1.0.17")
+    p: jarget.mvn.PackData = PackData(org.jfree,jfreechart,1.0.17)
+
+    scala> p.group
+    res0: String = org.jfree
+
+    scala> p.artifact
+    res1: String = jfreechart
+
+    scala> p.version
+    res2: String = 1.0.17
+
+
+    scala> p.format 
+    res3: String = org.jfree/jfreechart/1.0.17
+
+
+    scala> p.getArtifactFile("jar")
+    res4: String = jfreechart-1.0.17.jar
+
+    scala> p.getArtifactFile("pom")
+    res5: String = jfreechart-1.0.17.pom
+
+    scala> p.getArtifactFile("md5")
+    res6: String = jfreechart-1.0.17.md5
+
+
+   }}} 
+
    @param group    - Package's groupID. 
    @param artifact - Package's artifactID
    @param version  - Package's version.
