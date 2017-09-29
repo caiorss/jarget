@@ -298,6 +298,28 @@ object Packget {
   val getJarUrl = getArtifactURI("jar")
   val getPomUrl = getArtifactURI("pom")
 
+  /** Build artifact file names from package data.
+
+      Example:
+      {{{
+         $ scala -cp jarget.jar
+
+         import jarget.mvn.PackData
+         import jarget.mvn.Packget
+
+         scala> val p = PackData("org.xerial", "sqlite-jdbc", "3.20.0")
+         p: jarget.mvn.PackData = PackData(org.xerial,sqlite-jdbc,3.20.0)
+
+         scala> Packget.getFileNameFull(p, "jar")
+         res1: String = sqlite-jdbc-3.20.0.jar
+
+         scala> Packget.getFileNameFull(p, "pom")
+         res2: String = sqlite-jdbc-3.20.0.pom
+
+         scala> Packget.getFileNameFull(p, "md5")
+         res3: String = sqlite-jdbc-3.20.0.md5
+      }}}
+   */
   def getFileNameFull(pack: PackData, ext: String) = {
     s"${pack.artifact}-${pack.version}.${ext}"
   }
