@@ -55,7 +55,7 @@ object MainUtils {
   }
 
   def showPackageInfo(pack: PackData) = 
-    for (pom <- Packget.getPomXML(pack)){
+    for (pom <- pack.getPomXML()){
       val dat = Pom.getPomData(pom)
       println( "Package:         " + dat.name)
       println( "Packaging:       " + dat.packaging)
@@ -71,9 +71,8 @@ object MainUtils {
     }
   
 
-
   def showPom(pack: PackData) = {
-    println(Packget.getPomXML(pack))
+    println(pack.getPomXML())
   }
 
   def openUrl(pack: PackData) = {

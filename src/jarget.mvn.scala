@@ -162,8 +162,16 @@ case class PackData(
     uri      = s"${repo}/${gpath}/${artifact}/${version}/${artifact}-${version}.${ext}"
   } yield uri
 
+  /** Get URL or Path to package's Jar file */
   def getJarURI = this.getArtifactURI("jar")
+
+  /** Get URL or Path to package's POM file */
   def getPomURI = this.getArtifactURI("pom")
+
+  /** Get package's pom XML */
+  def getPomXML() = 
+    this.getPomURI map scala.xml.XML.load
+  
 
 } //---------- End of object PackData ------------- // 
 
@@ -200,8 +208,7 @@ object PackData{
     )
   }
 
-
-}
+} //------- End of object PackData -------------- // 
 
 
 /** Extraction of data from POM files */
@@ -386,16 +393,11 @@ object Packget {
     s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
   }
 
-
-  def getPomXML(pack: PackData) = 
-    pack.getPomURI map scala.xml.XML.load
-  
-
   def getAllDependencies(pack: PackData):  Reader[String, Set[PackData]] = {
     var packlist = Set[PackData](pack)
     //packlist += pack
     for {    
-      xml  <- getPomXML(pack)
+      xml  <-pack.getPomXML
       deps = getPomDependencies(xml)
       _    <- Reader.liftIO{ deps foreach (d => packlist += d)}
     } yield packlist
