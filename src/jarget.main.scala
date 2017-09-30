@@ -84,7 +84,7 @@ object MainUtils {
   def getAppSettings(prop: java.util.Properties) = {
     val sopt = for {
       version <- Option(prop.getProperty("jarget.version"))
-      repoUrl <- Option(prop.getProperty("jarget.mvn.url"))
+      repoUrl <- Option(prop.getProperty("jarget.repository.url"))
       website <- Option(prop.getProperty("jarget.website"))
     } yield AppSettings(version, repoUrl, website)
     sopt match {
