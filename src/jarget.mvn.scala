@@ -370,8 +370,8 @@ object PackCache {
   }
 
   /** Check if package exists in cache */
-  def exists(cache: String, pack: PackData) = 
-    Utils.dirExists(getPackagePath(cache, pack))
+  def exists(cachePath: String, pack: PackData) = 
+    Utils.fileExists(getArtifactPath(cachePath, "jar", pack))
 
   /** Show all jar files in the cache repository */
   def showJarFiles(cachePath: String) = {
@@ -391,7 +391,7 @@ object Packget {
     var packlist = Set[PackData](pack)
     //packlist += pack
     for {    
-      xml  <-pack.getPomXML
+      xml  <- pack.getPomXML
       deps = getPomDependencies(xml)
       _    <- Reader.liftIO{ deps foreach (d => packlist += d)}
     } yield packlist
