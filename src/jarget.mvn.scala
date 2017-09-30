@@ -304,7 +304,7 @@ object Pom{
 
 object PackCache {
 
-
+  /** Get path to packages cache directory in ~/<prefix> directory.  */ 
   def getCacheHome(prefix: String) =
     Utils.joinPathList(System.getProperty("user.home"), prefix, "cache")
 
@@ -457,7 +457,6 @@ object Packget {
         // Create package's directory
         Utils.mkdir(packDir)
 
-
         // Select package that aren't in the cache yet.
         val packlist = getAllDependencies(pack) run (repoURL) filter { p =>
           val path = PackCache.getPackagePath(cache, p)
@@ -486,7 +485,7 @@ object Packget {
         scala.concurrent.Await.result(result, Duration.Inf)
       }
 
-  } // End of downloadPackgeToCache 
+  } // End of function downloadPackgeToCache 
 
 
   /** Returns path to package from cache with all its dependency */ 
@@ -496,6 +495,7 @@ object Packget {
     getAllDependenciesFromCache(cache, pack)
   }
 
+  /** Get list of paths to package's jar files in the cache. */
   def getPackJarsFromCache(packList: List[PackData], cache: String, repoUrl: String) = {
     def aux(pack: PackData) = {
       if(!PackCache.exists(cache, pack))
@@ -506,13 +506,21 @@ object Packget {
     packList flatMap aux
   }
 
+  /** Get Classpath string of all required packages' jar files in the
+      cache. If the packages aren't available in the cache, they will
+      be downloaded from a remote repository.
+   */
   def getPackCPathFromCache(packList: List[PackData], cache: String, repoUrl: String) = {
      getPackJarsFromCache(packList, cache, repoUrl)
       .foldLeft(".")((acc, jar) => acc + ":" + jar)
   }
 
+  /** Copy packages from cache to a destination directory. The packages
+      will be downloaded from a remote repository if not available in
+      the cache yet.
+    */ 
   def copyPackageFromCache(packList: List[PackData], cache: String, repoUrl: String, dest: String) = {
-    Utils.mkdir("lib")
+    Utils.mkdir(dest)
     getPackJarsFromCache(packList, cache, repoUrl)
       .foreach{ file =>
       println(s"Copying ${new java.io.File(file).getName} to ${dest}")
