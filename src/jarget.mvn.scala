@@ -387,13 +387,6 @@ object Packget {
   import Pom._
   import jarget.reader._
 
-  // type Repo[A] = Reader[String, String]
-
-
-  def getMavenPackgeURL(pack: PackData) = {
-    s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
-  }
-
   def getAllDependencies(pack: PackData):  Reader[String, Set[PackData]] = {
     var packlist = Set[PackData](pack)
     //packlist += pack

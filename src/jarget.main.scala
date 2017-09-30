@@ -14,7 +14,6 @@ case class AppSettings(
 
 object MainUtils {
 
-
   def parsePack(pstr: String) = {
     val p = PackData.read(pstr, "/")
     if (p.isEmpty) {
@@ -413,7 +412,11 @@ object Main{
           => Utils.openUrl("https://mvnrepository.com")
 
       case List("-go", pstr)
-          => Utils.openUrl(Packget.getMavenPackgeURL(parsePack(pstr)))
+          => {
+            val pack = parsePack(pstr)
+            val url  = s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
+            Utils.openUrl(url)
+          }
 
       // case List("-clip", "-pom")
       //     => showPom(getPackMaven())
