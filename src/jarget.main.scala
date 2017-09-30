@@ -396,8 +396,6 @@ object Main{
             Packget.downloadPackageToCache(cachePath, pack) run config.repoUrl 
           }
 
-      case List("-path", path, "-get", pstr)
-          => Packget.downloadPackage(parsePack(pstr), path)
 
       case List("-search", query)
           => PackSearch.searchPackageBrowser(query)
@@ -417,14 +415,15 @@ object Main{
       case List("-go", pstr)
           => Utils.openUrl(Packget.getMavenPackgeURL(parsePack(pstr)))
 
-      case List("-clip", "-pom")
-          => showPom(getPackMaven())
+      // case List("-clip", "-pom")
+      //     => showPom(getPackMaven())
 
-      case List("-clip", "-show")
-          => showPackageInfo(getPackMaven())
+      // case List("-clip", "-show")
+      //     => showPackageInfo(getPackMaven())
 
-      case List("-clip", "-get")
-          => Packget.downloadPackage(getPackMaven(), "./lib")     
+      // case List("-clip", "-get")
+      //     => Packget.downloadPackage(getPackMaven(), "./lib")  
+        
     }
 
   /** Displays user help stored in the asset file user-help.txt 

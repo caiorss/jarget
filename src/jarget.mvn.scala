@@ -441,43 +441,7 @@ object Packget {
     }
 
 
-  def downloadPackage(pack: PackData, path: String): Reader[String, Unit] = {
-    import scala.concurrent.Future
-    import concurrent.ExecutionContext.Implicits.global
-    import scala.concurrent.duration.Duration
-
-    Utils.mkdir(path)
-
-    for(repoURL  <- Reader.ask[String]){
-
-      val packlist = getAllDependencies(pack) run (repoURL) filter { p =>
-        !Utils.fileExists(Utils.join(path, p.getArtifactFile("jar")))
-      }
-
-      println("Downloading ---------------------")
-      packlist foreach println 
-      println("----------------------------------")
-
-      val result = Future.traverse(packlist){ p =>
-        println("Downloading package " + p)
-        //println(s"Downloading file ${file} / ${pack.group} - ${pack.artifact} - ${pack.version} ... ")
-        val fut = Future {
-          downloadArtifact(p, "pom", path).run(repoURL)
-          downloadArtifact(p, "jar", path).run(repoURL)
-        }
-        fut
-      }
-      result.onSuccess { case _ => println("Download Successful") }
-      result.onFailure { case _ => println("Download Failed") }
-      scala.concurrent.Await.result(result, Duration.Inf)      
-
-    }
-
-  } // End of downloadPackage 
-   
-
   /** Download package from cache directory if it is not downloaded yet.*/
-
   def downloadPackageToCache(cache: String, pack: PackData):  Reader[String, Unit] = {
     import scala.concurrent.Future
     import concurrent.ExecutionContext.Implicits.global
