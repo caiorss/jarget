@@ -504,8 +504,9 @@ object Packget {
       be downloaded from a remote repository.
    */
   def getPackCPathFromCache(packList: List[PackData], cache: String, repoUrl: String) = {
+    val sep = System.getProperty("path.separator")
      getPackJarsFromCache(packList, cache, repoUrl)
-      .foldLeft(".")((acc, jar) => acc + ":" + jar)
+      .foldLeft(".")((acc, jar) => acc + sep + jar)
   }
 
   /** Copy packages from cache to a destination directory. The packages
