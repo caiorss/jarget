@@ -481,13 +481,6 @@ object Packget {
   } // End of function downloadPackgeToCache 
 
 
-  /** Returns path to package from cache with all its dependency */ 
-  def getPackFromCache(pack: PackData, cache: String, repoUrl: String) = {
-    if(!PackCache.exists(cache, pack))
-      downloadPackageToCache(cache, pack) run repoUrl
-    getAllDependenciesFromCache(cache, pack)
-  }
-
   /** Get list of paths to package's jar files in the cache. */
   def getPackJarsFromCache(packList: List[PackData], cache: String, repoUrl: String) = {
     def aux(pack: PackData) = {
