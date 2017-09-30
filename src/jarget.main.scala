@@ -408,10 +408,12 @@ object Main{
       case List("-browse", pstr)
           => openUrl(parsePack(pstr))
 
-      case List("-go")
+       // Open package documentation in browser  
+      case List("-open")
           => Utils.openUrl("https://mvnrepository.com")
 
-      case List("-go", pstr)
+       // Open package documentation in browser          
+      case List("-open", pstr)
           => {
             val pack = parsePack(pstr)
             val url  = s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
