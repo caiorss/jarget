@@ -569,34 +569,12 @@ object Main{
 
       //-------- Generic Command with Classpath ------//
 
-      case List("exec", command, pstr)
-          => {
-            val packList = pstr split(":") map parsePack toList
-            val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
-             JarUtils.runWithClassPath2(command, List(), cpath)
-          }
-
-      case "exec"::command::pstr::"--"::args
+      case "exec"::pstr::"--"::command::args
           => {
             val packList = pstr split(":") map parsePack toList
             val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
              JarUtils.runWithClassPath2(command, args, cpath)
           }
-
-
-      // run generic command as ./command -cp $CLASSPATH arg1 arg2 arg2 ...
-      // case List("exec", command)
-      //     => JarUtils.runWithClassPath(command, List(), "./lib")
-
-      // case List("exec", command, path)
-      //     => JarUtils.runWithClassPath(command, List(), path)
-
-      // case "exec"::command::"--"::args
-      //     => JarUtils.runWithClassPath(command, args, "./lib")
-
-      // case "exec"::command::path::"--"::args  
-      //     => JarUtils.runWithClassPath(command, args, path)
-
 
       case _ => println("Error: Invalid command")
     }
