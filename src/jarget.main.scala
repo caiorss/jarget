@@ -386,7 +386,13 @@ object Main{
             val packs = parsePackageList(pstr)
             Packget.getPackJarsFromCache(packs, cachePath, repoUrl)
           }
-      
+
+      // Clean cache packages
+      case List("-clear")
+          => {
+            println("Cleaning cache")
+            Utils.deleteDirectory(cachePath, true)
+          }      
  
       case List("-search", query)
           => PackSearch.searchPackageBrowser(query)
@@ -535,14 +541,6 @@ object Main{
                 => println("Error: Invalid package specification.")
           }
 
-
-
-      // Clean cache packages   
-      case List("cache", "-clean")
-          => {
-            println("Cleaning cache")
-            Utils.deleteDirectory(cachePath, true)
-          }
 
       case "cache"::"-cpath"::packList
           => println(Packget.getPackCPathFromCache(packList map parsePack, cachePath, config.repoUrl))
