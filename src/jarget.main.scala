@@ -352,7 +352,17 @@ object Main{
   }
 
 
-  def parseMvnArgs(args: List[String], config: AppSettings, cachePath: String ) =
+  def parseMvnArgs(args: List[String], config: AppSettings, cachePath: String ) = {
+
+    val repoUrl = Option(System.getenv("jarget.url")) getOrElse config.repoUrl
+
+    def getLibPath(path: String) = Option(System.getenv("jarget.path")) getOrElse path 
+
+    // Parse package list separated by (;)
+    //
+    def parsePackageList(plist: String) =
+      plist.split(",").map(parsePack).toList 
+
     args.toList match {
 
       case List("-pom", pstr)
@@ -360,28 +370,24 @@ object Main{
 
 
       case List("-show", pstr)
-          => showPackageInfo(parsePack(pstr)) run config.repoUrl
-
-      case List("-show", pstr, "-r", repo)
-          => showPackageInfo(parsePack(pstr)) run repo 
+          => showPackageInfo(parsePack(pstr)) run repoUrl 
 
      //  Copy packages from cache directory to ./lib and download it
      //  if has not been downloaded yet.
-      case List("-get", pstr)
+      case List("-copy", pstr)
           => {
-            println("Downloading Packages")
-            val packs = pstr.split(":").map(parsePack).toList
-            Packget.copyPackageFromCache(packs, cachePath, config.repoUrl, "./lib")
+            val packs = parsePackageList(pstr)
+            Packget.copyPackageFromCache(packs, cachePath, repoUrl, getLibPath("./lib"))
           }
 
-      case List("-get", pstr, "-r", repo)
+      // Pull packages from remote repository to package cache.  
+      case List("-pull", pstr)
           => {
-            println("Downloading Packages")
-            val packs = pstr.split(":").map(parsePack).toList
-            Packget.copyPackageFromCache(packs, cachePath, config.repoUrl, repo)
+            val packs = parsePackageList(pstr)
+            Packget.getPackJarsFromCache(packs, cachePath, repoUrl)
           }
-
-
+      
+ 
       case List("-search", query)
           => PackSearch.searchPackageBrowser(query)
 
