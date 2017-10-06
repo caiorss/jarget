@@ -380,20 +380,6 @@ object Main{
             val packs = pstr.split(":").map(parsePack).toList
             Packget.copyPackageFromCache(packs, cachePath, config.repoUrl, repo)
           }
-        
-
-      // Download a Scala package  
-      case List("-get", "scala", version, pstr)
-          => {
-            val pack = parseScalaPack(pstr, version)
-            Packget.downloadPackageToCache(cachePath, pack) run config.repoUrl 
-          }
-
-      case List("-get", "scala", version, pstr, repo)
-          => {
-            val pack = parseScalaPack(pstr, version)
-            Packget.downloadPackageToCache(cachePath, pack) run config.repoUrl 
-          }
 
 
       case List("-search", query)
