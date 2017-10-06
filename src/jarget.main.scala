@@ -420,16 +420,10 @@ object Main{
             Utils.openUrl(url)
           }
 
-      // case List("-clip", "-pom")
-      //     => showPom(getPackMaven())
-
-      // case List("-clip", "-show")
-      //     => showPackageInfo(getPackMaven())
-
-      // case List("-clip", "-get")
-      //     => Packget.downloadPackage(getPackMaven(), "./lib")  
+      case _ => println("Error: invalid command.")
         
     }
+  } // ----- End of parseMvnArgs ---------- //
 
   /** Displays user help stored in the asset file user-help.txt 
     */
