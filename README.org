@@ -683,6 +683,97 @@ $ jarget cache -jars
 
 #+END_SRC
 
+*** Scripting with jarget 
+    :PROPERTIES:
+    :ID:       b900cee2-b19f-41ae-8ad6-006ab37b9dfc
+    :END:
+
+Jarget can be used to run scala scripts with java packages
+dependencies by downloading them if they are not available in the
+jarget package cache file:~/.jarget/cache. 
+
+Example: [[file:sample-scripts/chartScript.sh]]
+
+#+BEGIN_SRC scala :tangle sample-scripts/chartScript.sh
+  #!/bin/sh
+  DEPS=org.jfree/jfreechart/1.0.17
+  exec jarget script "$DEPS" -- "$0" "$@"
+  !#
+
+  import org.jfree.chart.{ChartPanel, ChartFactory, JFreeChart, ChartUtilities}
+  import org.jfree.data.general.DefaultPieDataset
+
+  object Main{
+
+    def main(args: Array[String]){
+      val dataset = new DefaultPieDataset()
+
+      dataset.setValue("A", 75)
+      dataset.setValue("B", 10)
+      dataset.setValue("C", 10)
+      dataset.setValue("D", 5)
+
+      val chart = ChartFactory.createPieChart(
+         "Sample Pie Chart", // Title
+         dataset,            // Dataset 
+         true,               // Show legend
+         true,               // Tooltips on
+         false 
+       )
+
+      // Save chart to a png file
+      //---------------------------
+      ChartUtilities.saveChartAsPNG(new java.io.File("mychart.png"), chart, 500, 500)
+
+       // Show Chart in a Java Swing Frame
+       //--------------------------------------
+      val frame = new javax.swing.JFrame()
+      frame.add(new ChartPanel(chart))
+      frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE)
+      frame.setSize(693, 513)
+      frame.setTitle("Sample Pie Chart")
+      frame.setVisible(true)
+    }
+
+  }
+
+#+END_SRC
+
+Running the scala script: It is assumed that jarget is in any directory
+listed in '$PATH' variable.
+
+#+BEGIN_SRC sh 
+  # Make the script executable
+  $ chmod +x chartScript.sh 
+
+  # As the dependency jfree chart package has not been downloaded yet,
+  # jarget will download it to the cache directory and run the scala script 'chartScript.scala'
+  # passing the dependency in the classpath parameter. 
+  #
+  $ ./chartScript.sh 
+  Downloading ---------------------
+  PackData(org.jfree,jfreechart,1.0.17)
+  PackData(org.jfree,jcommon,1.0.21)
+  PackData(xml-apis,xml-apis,1.3.04)
+  ----------------------------------
+  Package path = PackData(org.jfree,jfreechart,1.0.17)
+  Downloading file /home/archbox/.jarget/cache/org/jfree/jfreechart/1.0.17/jfreechart-1.0.17.pom.
+  Package path = PackData(org.jfree,jcommon,1.0.21)
+  Package path = PackData(xml-apis,xml-apis,1.3.04)
+                              ... ... ... ... ... 
+  File /home/archbox/.jarget/cache/org/jfree/jcommon/1.0.21/jcommon-1.0.21.jar downloaded. Ok.
+  File /home/archbox/.jarget/cache/org/jfree/jfreechart/1.0.17/jfreechart-1.0.17.jar downloaded. Ok.
+  Download Successful
+
+
+  # When the scala script is run again and the dependencies are in the
+  # cache directory ~/.jarget/cache, the dependencies no longer needs to
+  # be downloaded and the script is executed immediately by passing the
+  # dependencies' classpath to scala runtime.
+  #
+  $ ./chartScript.sh
+#+END_SRC
+
 *** Command to manipulate Jar packages
 **** Show manifest file 
 
