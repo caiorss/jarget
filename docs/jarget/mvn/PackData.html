@@ -109,21 +109,21 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="jarget">jarget</a></dd></dl></div>
     </li><li class="current-entities indented2">
                         <span class="separator"></span>
-                        <a class="object" href="CentralMaven$.html" title=""></a>
-                        <a href="CentralMaven$.html" title="">
-                          CentralMaven
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
                         <a class="object" href="PackCache$.html" title=""></a>
                         <a href="PackCache$.html" title="">
                           PackCache
                         </a>
                       </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="class" href="" title="Java Package Data"></a>
-                        <a href="" title="Java Package Data">
+                        <a class="object" href="PackData$.html" title=""></a>
+                        <a class="class" href="" title="Encodes java package specification."></a>
+                        <a href="" title="Encodes java package specification.">
                           PackData
+                        </a>
+                      </li><li class="current-entities indented2">
+                        <span class="separator"></span>
+                        <a class="object" href="PackSearch$.html" title=""></a>
+                        <a href="PackSearch$.html" title="">
+                          PackSearch
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
@@ -143,6 +143,12 @@
                         <a href="PomData.html" title="Data from the POM file - Project Object Model">
                           PomData
                         </a>
+                      </li><li class="current-entities indented2">
+                        <span class="separator"></span>
+                        <a class="class" href="RepoConf.html" title=""></a>
+                        <a href="RepoConf.html" title="">
+                          RepoConf
+                        </a>
                       </li>
               </ul>
             </div>
@@ -150,14 +156,16 @@
           <div id="content">
             <body class="class type">
       <div id="definition">
-        <div class="big-circle class">c</div>
+        <a href="PackData$.html" title="See companion object"><div class="big-circle class-companion-object">c</div></a>
         <p id="owner"><a href="../index.html" class="extype" name="jarget">jarget</a>.<a href="index.html" class="extype" name="jarget.mvn">mvn</a></p>
-        <h1>PackData<span class="permalink">
+        <h1><a href="PackData$.html" title="See companion object">PackData</a><span class="permalink">
       <a href="../../jarget/mvn/PackData.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
-        <h3><span class="morelinks"></span></h3>
+        <h3><span class="morelinks"><div>
+            Companion <a href="PackData$.html" title="See companion object">object PackData</a>
+          </div></span></h3>
       </div>
 
       <h4 id="signature" class="signature">
@@ -171,7 +179,37 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Java Package Data</p></div><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/caiorss/jarget" target="_blank">jarget.mvn.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Encodes java package specification.</p><p>   Example: The package org.jfree:jfreechart:1.0.17 is encoded as
+   PackData(&quot;org.jfree&quot;, &quot;jfreechart&quot;, &quot;1.0.17&quot;)</p><p>   Example: Package's operations.</p><pre>$ scala -cp jarget.jar
+
+<span class="kw">import</span> jarget.mvn.PackData
+<span class="kw">import</span> jarget.mvn.Packget
+
+scala&gt; <span class="kw">val</span> p = PackData(<span class="lit">"org.jfree"</span>, <span class="lit">"jfreechart"</span>, <span class="lit">"1.0.17"</span>)
+p: jarget.mvn.PackData = PackData(org.jfree,jfreechart,<span class="num">1.0</span>.<span class="num">17</span>)
+
+scala&gt; p.group
+res0: <span class="std">String</span> = org.jfree
+
+scala&gt; p.artifact
+res1: <span class="std">String</span> = jfreechart
+
+scala&gt; p.version
+res2: <span class="std">String</span> = <span class="num">1.0</span>.<span class="num">17</span>
+
+
+scala&gt; p.format
+res3: <span class="std">String</span> = org.jfree/jfreechart/<span class="num">1.0</span>.<span class="num">17</span>
+
+
+scala&gt; p.getArtifactFile(<span class="lit">"jar"</span>)
+res4: <span class="std">String</span> = jfreechart-<span class="num">1.0</span>.<span class="num">17.</span>jar
+
+scala&gt; p.getArtifactFile(<span class="lit">"pom"</span>)
+res5: <span class="std">String</span> = jfreechart-<span class="num">1.0</span>.<span class="num">17.</span>pom
+
+scala&gt; p.getArtifactFile(<span class="lit">"md5"</span>)
+res6: <span class="std">String</span> = jfreechart-<span class="num">1.0</span>.<span class="num">17.</span>md5</pre></div><dl class="paramcmts block"><dt class="param">group</dt><dd class="cmt"><p>- Package's groupID.</p></dd><dt class="param">artifact</dt><dd class="cmt"><p>- Package's artifactID</p></dd><dt class="param">version</dt><dd class="cmt"><p>- Package's version.</p></dd></dl><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/caiorss/jarget" target="_blank">jarget.mvn.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -221,7 +259,7 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="jarget.mvn.PackData#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="jarget.mvn.PackData#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="&lt;init&gt;(group:String,artifact:String,version:String):jarget.mvn.PackData"></a><a id="&lt;init&gt;:PackData"></a>
       <span class="permalink">
       <a href="../../jarget/mvn/PackData.html#&lt;init&gt;(group:String,artifact:String,version:String):jarget.mvn.PackData" title="Permalink">
@@ -236,7 +274,7 @@
         <span class="name">PackData</span><span class="params">(<span name="group">group: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="artifact">artifact: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="version">version: <span class="extype" name="scala.Predef.String">String</span></span>)</span>
       </span>
       
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">group</dt><dd class="cmt"><p>- Package's groupID.</p></dd><dt class="param">artifact</dt><dd class="cmt"><p>- Package's artifactID</p></dd><dt class="param">version</dt><dd class="cmt"><p>- Package's version.</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -387,6 +425,78 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="jarget.mvn.PackData#format" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="format():String"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/PackData.html#format():String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">format</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Format package to string</p><div class="fullcomment"><div class="comment cmt"><p>Format package to string</p><p>   Example:</p><pre>$ scala -cp jarget.jar
+
+<span class="kw">import</span> jarget.mvn.PackData
+<span class="kw">import</span> jarget.mvn.Packget
+
+scala&gt; <span class="kw">val</span> p = PackData(<span class="lit">"org.xerial"</span>, <span class="lit">"sqlite-jdbc"</span>, <span class="lit">"3.20.0"</span>)
+p: jarget.mvn.PackData = PackData(org.xerial,sqlite-jdbc,<span class="num">3.20</span>.<span class="num">0</span>)
+
+scala&gt; p.format
+res3: <span class="std">String</span> = org.xerial/sqlite-jdbc/<span class="num">3.20</span>.<span class="num">0</span></pre></div></div>
+    </li><li name="jarget.mvn.PackData#getArtifactFile" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getArtifactFile(ext:String):String"></a><a id="getArtifactFile(String):String"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/PackData.html#getArtifactFile(ext:String):String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getArtifactFile</span><span class="params">(<span name="ext">ext: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Build artifact file names from package data.</p><div class="fullcomment"><div class="comment cmt"><p>Build artifact file names from package data.</p><p>    Example:</p><pre> $ scala -cp jarget.jar
+
+ <span class="kw">import</span> jarget.mvn.PackData
+ <span class="kw">import</span> jarget.mvn.Packget
+
+ scala&gt; <span class="kw">val</span> p = PackData(<span class="lit">"org.xerial"</span>, <span class="lit">"sqlite-jdbc"</span>, <span class="lit">"3.20.0"</span>)
+ p: jarget.mvn.PackData = PackData(org.xerial,sqlite-jdbc,<span class="num">3.20</span>.<span class="num">0</span>)
+
+scala&gt; p.getArtifactFile(<span class="lit">"jar"</span>)
+res0: <span class="std">String</span> = sqlite-jdbc-<span class="num">3.20</span>.<span class="num">0.</span>jar
+
+scala&gt; p.getArtifactFile(<span class="lit">"pom"</span>)
+res1: <span class="std">String</span> = sqlite-jdbc-<span class="num">3.20</span>.<span class="num">0.</span>pom
+
+scala&gt; p.getArtifactFile(<span class="lit">"md5"</span>)
+res2: <span class="std">String</span> = sqlite-jdbc-<span class="num">3.20</span>.<span class="num">0.</span>md5</pre></div></div>
+    </li><li name="jarget.mvn.PackData#getArtifactURI" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getArtifactURI(ext:String):jarget.reader.Reader[String,String]"></a><a id="getArtifactURI(String):Reader[String,String]"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/PackData.html#getArtifactURI(ext:String):jarget.reader.Reader[String,String]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getArtifactURI</span><span class="params">(<span name="ext">ext: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="../reader/Reader.html" class="extype" name="jarget.reader.Reader">Reader</a>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Get path to artifact *.jar or *.pom file of a given package.</p>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
@@ -403,6 +513,54 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="jarget.mvn.PackData#getJarURI" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getJarURI:jarget.reader.Reader[String,String]"></a><a id="getJarURI:Reader[String,String]"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/PackData.html#getJarURI:jarget.reader.Reader[String,String]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getJarURI</span><span class="result">: <a href="../reader/Reader.html" class="extype" name="jarget.reader.Reader">Reader</a>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Get URL or Path to package's Jar file</p>
+    </li><li name="jarget.mvn.PackData#getPomURI" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getPomURI:jarget.reader.Reader[String,String]"></a><a id="getPomURI:Reader[String,String]"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/PackData.html#getPomURI:jarget.reader.Reader[String,String]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getPomURI</span><span class="result">: <a href="../reader/Reader.html" class="extype" name="jarget.reader.Reader">Reader</a>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Get URL or Path to package's POM file</p>
+    </li><li name="jarget.mvn.PackData#getPomXML" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getPomXML():jarget.reader.Reader[String,scala.xml.Elem]"></a><a id="getPomXML():Reader[String,Elem]"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/PackData.html#getPomXML():jarget.reader.Reader[String,scala.xml.Elem]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getPomXML</span><span class="params">()</span><span class="result">: <a href="../reader/Reader.html" class="extype" name="jarget.reader.Reader">Reader</a>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.xml.Elem">Elem</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Get package's pom XML</p>
     </li><li name="jarget.mvn.PackData#group" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="group:String"></a>
       <span class="permalink">

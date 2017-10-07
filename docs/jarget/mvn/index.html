@@ -161,21 +161,21 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="jarget">jarget</a></dd></dl></div>
     </li><li class="current-entities indented2">
                         <span class="separator"></span>
-                        <a class="object" href="CentralMaven$.html" title=""></a>
-                        <a href="CentralMaven$.html" title="">
-                          CentralMaven
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
                         <a class="object" href="PackCache$.html" title=""></a>
                         <a href="PackCache$.html" title="">
                           PackCache
                         </a>
                       </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="class" href="PackData.html" title="Java Package Data"></a>
-                        <a href="PackData.html" title="Java Package Data">
+                        <a class="object" href="PackData$.html" title=""></a>
+                        <a class="class" href="PackData.html" title="Encodes java package specification."></a>
+                        <a href="PackData.html" title="Encodes java package specification.">
                           PackData
+                        </a>
+                      </li><li class="current-entities indented2">
+                        <span class="separator"></span>
+                        <a class="object" href="PackSearch$.html" title=""></a>
+                        <a href="PackSearch$.html" title="">
+                          PackSearch
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
@@ -194,6 +194,12 @@
                         <a class="class" href="PomData.html" title="Data from the POM file - Project Object Model"></a>
                         <a href="PomData.html" title="Data from the POM file - Project Object Model">
                           PomData
+                        </a>
+                      </li><li class="current-entities indented2">
+                        <span class="separator"></span>
+                        <a class="class" href="RepoConf.html" title=""></a>
+                        <a href="RepoConf.html" title="">
+                          RepoConf
                         </a>
                       </li><li name="jarget.reader" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="reader"></a><a id="reader:reader"></a>
@@ -294,7 +300,7 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="jarget.mvn.PackData" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="jarget.mvn.PackData" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="PackDataextendsProductwithSerializable"></a><a id="PackData:PackData"></a>
       <span class="permalink">
       <a href="../../jarget/mvn/index.html#PackDataextendsProductwithSerializable" title="Permalink">
@@ -306,12 +312,42 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a title="Java Package Data" href="PackData.html">
+        <a title="Encodes java package specification." href="PackData.html">
               <span class="name">PackData</span>
             </a><span class="params">(<span name="group">group: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="artifact">artifact: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="version">version: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       
-      <p class="shortcomment cmt">Java Package Data</p>
+      <p class="shortcomment cmt">Encodes java package specification.</p><div class="fullcomment"><div class="comment cmt"><p>Encodes java package specification.</p><p>   Example: The package org.jfree:jfreechart:1.0.17 is encoded as
+   PackData(&quot;org.jfree&quot;, &quot;jfreechart&quot;, &quot;1.0.17&quot;)</p><p>   Example: Package's operations.</p><pre>$ scala -cp jarget.jar
+
+<span class="kw">import</span> jarget.mvn.PackData
+<span class="kw">import</span> jarget.mvn.Packget
+
+scala&gt; <span class="kw">val</span> p = PackData(<span class="lit">"org.jfree"</span>, <span class="lit">"jfreechart"</span>, <span class="lit">"1.0.17"</span>)
+p: jarget.mvn.PackData = PackData(org.jfree,jfreechart,<span class="num">1.0</span>.<span class="num">17</span>)
+
+scala&gt; p.group
+res0: <span class="std">String</span> = org.jfree
+
+scala&gt; p.artifact
+res1: <span class="std">String</span> = jfreechart
+
+scala&gt; p.version
+res2: <span class="std">String</span> = <span class="num">1.0</span>.<span class="num">17</span>
+
+
+scala&gt; p.format
+res3: <span class="std">String</span> = org.jfree/jfreechart/<span class="num">1.0</span>.<span class="num">17</span>
+
+
+scala&gt; p.getArtifactFile(<span class="lit">"jar"</span>)
+res4: <span class="std">String</span> = jfreechart-<span class="num">1.0</span>.<span class="num">17.</span>jar
+
+scala&gt; p.getArtifactFile(<span class="lit">"pom"</span>)
+res5: <span class="std">String</span> = jfreechart-<span class="num">1.0</span>.<span class="num">17.</span>pom
+
+scala&gt; p.getArtifactFile(<span class="lit">"md5"</span>)
+res6: <span class="std">String</span> = jfreechart-<span class="num">1.0</span>.<span class="num">17.</span>md5</pre></div><dl class="paramcmts block"><dt class="param">group</dt><dd class="cmt"><p>- Package's groupID.</p></dd><dt class="param">artifact</dt><dd class="cmt"><p>- Package's artifactID</p></dd><dt class="param">version</dt><dd class="cmt"><p>- Package's version.</p></dd></dl></div>
     </li><li name="jarget.mvn.PomData" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="PomDataextendsProductwithSerializable"></a><a id="PomData:PomData"></a>
       <span class="permalink">
@@ -330,6 +366,24 @@
       </span>
       
       <p class="shortcomment cmt">Data from the POM file - Project Object Model</p>
+    </li><li name="jarget.mvn.RepoConf" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RepoConfextendsProductwithSerializable"></a><a id="RepoConf:RepoConf"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/index.html#RepoConfextendsProductwithSerializable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="RepoConf.html">
+              <span class="name">RepoConf</span>
+            </a><span class="params">(<span name="cache">cache: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="repoUrl">repoUrl: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      
     </li></ol>
             </div>
 
@@ -338,25 +392,7 @@
         <div class="values members">
               <h3>Value Members</h3>
               <ol>
-                <li name="jarget.mvn.CentralMaven" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="CentralMaven"></a><a id="CentralMaven:CentralMaven"></a>
-      <span class="permalink">
-      <a href="../../jarget/mvn/index.html#CentralMaven" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a title="" href="CentralMaven$.html">
-              <span class="name">CentralMaven</span>
-            </a>
-      </span>
-      
-      
-    </li><li name="jarget.mvn.PackCache" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+                <li name="jarget.mvn.PackCache" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="PackCache"></a><a id="PackCache:PackCache"></a>
       <span class="permalink">
       <a href="../../jarget/mvn/index.html#PackCache" title="Permalink">
@@ -370,6 +406,42 @@
       <span class="symbol">
         <a title="" href="PackCache$.html">
               <span class="name">PackCache</span>
+            </a>
+      </span>
+      
+      
+    </li><li name="jarget.mvn.PackData" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PackData"></a><a id="PackData:PackData"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/index.html#PackData" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="PackData$.html">
+              <span class="name">PackData</span>
+            </a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      
+    </li><li name="jarget.mvn.PackSearch" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PackSearch"></a><a id="PackSearch:PackSearch"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/index.html#PackSearch" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="PackSearch$.html">
+              <span class="name">PackSearch</span>
             </a>
       </span>
       

@@ -109,21 +109,21 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="jarget">jarget</a></dd></dl></div>
     </li><li class="current-entities indented2">
                         <span class="separator"></span>
-                        <a class="object" href="CentralMaven$.html" title=""></a>
-                        <a href="CentralMaven$.html" title="">
-                          CentralMaven
-                        </a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
                         <a class="object" href="PackCache$.html" title=""></a>
                         <a href="PackCache$.html" title="">
                           PackCache
                         </a>
                       </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="class" href="PackData.html" title="Java Package Data"></a>
-                        <a href="PackData.html" title="Java Package Data">
+                        <a class="object" href="PackData$.html" title=""></a>
+                        <a class="class" href="PackData.html" title="Encodes java package specification."></a>
+                        <a href="PackData.html" title="Encodes java package specification.">
                           PackData
+                        </a>
+                      </li><li class="current-entities indented2">
+                        <span class="separator"></span>
+                        <a class="object" href="PackSearch$.html" title=""></a>
+                        <a href="PackSearch$.html" title="">
+                          PackSearch
                         </a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
@@ -142,6 +142,12 @@
                         <a class="class" href="PomData.html" title="Data from the POM file - Project Object Model"></a>
                         <a href="PomData.html" title="Data from the POM file - Project Object Model">
                           PomData
+                        </a>
+                      </li><li class="current-entities indented2">
+                        <span class="separator"></span>
+                        <a class="class" href="RepoConf.html" title=""></a>
+                        <a href="RepoConf.html" title="">
+                          RepoConf
                         </a>
                       </li>
               </ul>
@@ -400,6 +406,28 @@
       </span>
       
       <p class="shortcomment cmt">Extract Pom data from xml file</p>
+    </li><li name="jarget.mvn.Pom#getPomDependencies" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getPomDependencies(pom:scala.xml.Node):Seq[jarget.mvn.PackData]"></a><a id="getPomDependencies(Node):Seq[PackData]"></a>
+      <span class="permalink">
+      <a href="../../jarget/mvn/Pom$.html#getPomDependencies(pom:scala.xml.Node):Seq[jarget.mvn.PackData]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getPomDependencies</span><span class="params">(<span name="pom">pom: <span class="extype" name="scala.xml.Node">Node</span></span>)</span><span class="result">: <span class="extype" name="scala.collection.Seq">Seq</span>[<a href="PackData.html" class="extype" name="jarget.mvn.PackData">PackData</a>]</span>
+      </span>
+      
+      <p class="shortcomment cmt"> Get a XML node like this:</p><div class="fullcomment"><div class="comment cmt"><p> Get a XML node like this:</p><p>          &lt;dependency xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;&gt;
+                      &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+                      &lt;artifactId&gt;servlet-api&lt;/artifactId&gt;
+                      &lt;version&gt;2.5&lt;/version&gt;
+                      &lt;scope&gt;provided&lt;/scope&gt;
+                  &lt;/dependency&gt;
+</p></div></div>
     </li><li name="jarget.mvn.Pom#getPomPackData" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="getPomPackData(pom:scala.xml.Node):Option[jarget.mvn.PackData]"></a><a id="getPomPackData(Node):Option[PackData]"></a>
       <span class="permalink">
