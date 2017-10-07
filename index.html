@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Jarget - Java Platform Command Line Toolbox</title>
-<!-- 2017-10-06 Fri 22:56 -->
+<!-- 2017-10-07 Sat 14:28 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues" />
@@ -227,9 +227,10 @@ for the JavaScript code in this tag.
 <li><a href="#sec-1-3-3">1.3.3. Open jarget website</a></li>
 <li><a href="#sec-1-3-4">1.3.4. Maven / Packages Commands</a></li>
 <li><a href="#sec-1-3-5">1.3.5. Cache commands</a></li>
-<li><a href="#sec-1-3-6">1.3.6. Command to manipulate Jar packages</a></li>
-<li><a href="#sec-1-3-7">1.3.7. Classpath</a></li>
-<li><a href="#sec-1-3-8">1.3.8. System Information</a></li>
+<li><a href="#sec-1-3-6">1.3.6. Scripting with jarget</a></li>
+<li><a href="#sec-1-3-7">1.3.7. Command to manipulate Jar packages</a></li>
+<li><a href="#sec-1-3-8">1.3.8. Classpath</a></li>
+<li><a href="#sec-1-3-9">1.3.9. System Information</a></li>
 </ul>
 </li>
 <li><a href="#sec-1-4">1.4. Building Instructions</a>
@@ -1106,9 +1107,109 @@ org.typelevel/cats-core_2.12/0.9.0
 </div>
 
 <div id="outline-container-sec-1-3-6" class="outline-4">
-<h4 id="sec-1-3-6"><span class="section-number-4">1.3.6</span> Command to manipulate Jar packages</h4>
+<h4 id="sec-1-3-6"><a id="ID-b900cee2-b19f-41ae-8ad6-006ab37b9dfc" name="ID-b900cee2-b19f-41ae-8ad6-006ab37b9dfc"></a><span class="section-number-4">1.3.6</span> Scripting with jarget</h4>
 <div class="outline-text-4" id="text-1-3-6">
-</div><ol class="org-ol"><li><a id="sec-1-3-6-1" name="sec-1-3-6-1"></a>Show manifest file<br  /><div class="outline-text-5" id="text-1-3-6-1">
+
+<p>
+Jarget can be used to run scala scripts with java packages
+dependencies by downloading them if they are not available in the
+jarget package cache <a href="file:///home/archbox/.jarget/cache">file:///home/archbox/.jarget/cache</a>. 
+</p>
+
+<p>
+Example: <a href="sample-scripts/chartScript.sh">sample-scripts/chartScript.sh</a>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-scala"><span class="org-comment">#!/bin/sh</span>
+<span class="org-constant">DEPS</span><span class="org-keyword">=</span>org.jfree/jfreechart/<span class="org-constant">1.0.17</span>
+exec jarget script <span class="org-string">"$DEPS"</span> -- <span class="org-string">"$0"</span> <span class="org-string">"$@"</span>
+!#
+
+<span class="org-keyword">import</span> org.jfree.chart.<span class="org-rainbow-delimiters-depth-1">{</span><span class="org-constant">ChartPanel</span>, <span class="org-constant">ChartFactory</span>, <span class="org-constant">JFreeChart</span>, <span class="org-constant">ChartUtilities</span><span class="org-rainbow-delimiters-depth-1">}</span>
+<span class="org-keyword">import</span> org.jfree.data.general.<span class="org-constant">DefaultPieDataset</span>
+
+<span class="org-keyword">object</span> <span class="org-constant">Main</span><span class="org-rainbow-delimiters-depth-1">{</span>
+
+  <span class="org-keyword">def</span> <span class="org-function-name">main</span><span class="org-rainbow-delimiters-depth-2">(</span>args<span class="org-keyword">:</span> <span class="org-type">Array</span><span class="org-rainbow-delimiters-depth-3">[</span><span class="org-constant">String</span><span class="org-rainbow-delimiters-depth-3">]</span><span class="org-rainbow-delimiters-depth-2">){</span>
+    <span class="org-keyword">val</span> <span class="org-variable-name">dataset</span> <span class="org-keyword">=</span> <span class="org-keyword">new</span> <span class="org-type">DefaultPieDataset</span><span class="org-rainbow-delimiters-depth-3">()</span>
+
+    dataset.setValue<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"A"</span>, <span class="org-constant">75</span><span class="org-rainbow-delimiters-depth-3">)</span>
+    dataset.setValue<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"B"</span>, <span class="org-constant">10</span><span class="org-rainbow-delimiters-depth-3">)</span>
+    dataset.setValue<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"C"</span>, <span class="org-constant">10</span><span class="org-rainbow-delimiters-depth-3">)</span>
+    dataset.setValue<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"D"</span>, <span class="org-constant">5</span><span class="org-rainbow-delimiters-depth-3">)</span>
+
+    <span class="org-keyword">val</span> <span class="org-variable-name">chart</span> <span class="org-keyword">=</span> <span class="org-constant">ChartFactory</span>.createPieChart<span class="org-rainbow-delimiters-depth-3">(</span>
+       <span class="org-string">"Sample Pie Chart"</span>, <span class="org-comment-delimiter">// </span><span class="org-comment">Title</span>
+       dataset,            <span class="org-comment-delimiter">// </span><span class="org-comment">Dataset </span>
+       <span class="org-constant">true</span>,               <span class="org-comment-delimiter">// </span><span class="org-comment">Show legend</span>
+       <span class="org-constant">true</span>,               <span class="org-comment-delimiter">// </span><span class="org-comment">Tooltips on</span>
+       <span class="org-constant">false</span> 
+     <span class="org-rainbow-delimiters-depth-3">)</span>
+
+    <span class="org-comment-delimiter">// </span><span class="org-comment">Save chart to a png file</span>
+    <span class="org-comment-delimiter">//</span><span class="org-comment">---------------------------</span>
+    <span class="org-constant">ChartUtilities</span>.saveChartAsPNG<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">new</span> <span class="org-type">java</span>.io.<span class="org-constant">File</span><span class="org-rainbow-delimiters-depth-4">(</span><span class="org-string">"mychart.png"</span><span class="org-rainbow-delimiters-depth-4">)</span>, chart, <span class="org-constant">500</span>, <span class="org-constant">500</span><span class="org-rainbow-delimiters-depth-3">)</span>
+
+     <span class="org-comment-delimiter">// </span><span class="org-comment">Show Chart in a Java Swing Frame</span>
+     <span class="org-comment-delimiter">//</span><span class="org-comment">--------------------------------------</span>
+    <span class="org-keyword">val</span> <span class="org-variable-name">frame</span> <span class="org-keyword">=</span> <span class="org-keyword">new</span> <span class="org-type">javax</span>.swing.<span class="org-constant">JFrame</span><span class="org-rainbow-delimiters-depth-3">()</span>
+    frame.add<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-keyword">new</span> <span class="org-type">ChartPanel</span><span class="org-rainbow-delimiters-depth-4">(</span>chart<span class="org-rainbow-delimiters-depth-4">)</span><span class="org-rainbow-delimiters-depth-3">)</span>
+    frame.setDefaultCloseOperation<span class="org-rainbow-delimiters-depth-3">(</span>javax.swing.<span class="org-constant">WindowConstants</span>.<span class="org-constant">EXIT_ON_CLOSE</span><span class="org-rainbow-delimiters-depth-3">)</span>
+    frame.setSize<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">693</span>, <span class="org-constant">513</span><span class="org-rainbow-delimiters-depth-3">)</span>
+    frame.setTitle<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-string">"Sample Pie Chart"</span><span class="org-rainbow-delimiters-depth-3">)</span>
+    frame.setVisible<span class="org-rainbow-delimiters-depth-3">(</span><span class="org-constant">true</span><span class="org-rainbow-delimiters-depth-3">)</span>
+  <span class="org-rainbow-delimiters-depth-2">}</span>
+
+<span class="org-rainbow-delimiters-depth-1">}</span>
+</pre>
+</div>
+
+<p>
+Running the scala script: It is assumed that jarget is in any directory
+listed in '$PATH' variable.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">Make the script executable</span>
+$ chmod +x chartScript.sh 
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">As the dependency jfree chart package has not been downloaded yet,</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">jarget will download it to the cache directory and run the scala script 'chartScript.scala'</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">passing the dependency in the classpath parameter. </span>
+<span class="org-comment-delimiter">#</span>
+$ ./chartScript.sh 
+Downloading ---------------------
+<span class="org-function-name">PackData</span>(org.jfree,jfreechart,1.0.17)
+<span class="org-function-name">PackData</span>(org.jfree,jcommon,1.0.21)
+<span class="org-function-name">PackData</span>(xml-apis,xml-apis,1.3.04)
+----------------------------------
+Package path = PackData(org.jfree,jfreechart,1.0.17)
+Downloading file /home/archbox/.jarget/cache/org/jfree/jfreechart/1.0.17/jfreechart-1.0.17.pom.
+Package path = PackData(org.jfree,jcommon,1.0.21)
+Package path = PackData(xml-apis,xml-apis,1.3.04)
+                            ... ... ... ... ... 
+File /home/archbox/.jarget/cache/org/jfree/jcommon/1.0.21/jcommon-1.0.21.jar downloaded. Ok.
+File /home/archbox/.jarget/cache/org/jfree/jfreechart/1.0.17/jfreechart-1.0.17.jar downloaded. Ok.
+Download Successful
+
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">When the scala script is run again and the dependencies are in the</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">cache directory ~/.jarget/cache, the dependencies no longer needs to</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">be downloaded and the script is executed immediately by passing the</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">dependencies' classpath to scala runtime.</span>
+<span class="org-comment-delimiter">#</span>
+$ ./chartScript.sh
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-3-7" class="outline-4">
+<h4 id="sec-1-3-7"><span class="section-number-4">1.3.7</span> Command to manipulate Jar packages</h4>
+<div class="outline-text-4" id="text-1-3-7">
+</div><ol class="org-ol"><li><a id="sec-1-3-7-1" name="sec-1-3-7-1"></a>Show manifest file<br  /><div class="outline-text-5" id="text-1-3-7-1">
 <ul class="org-ul">
 <li><code>$ jarget jar [jar]</code>
 </li>
@@ -1132,7 +1233,7 @@ org.typelevel/cats-core_2.12/0.9.0
 </div>
 </li>
 
-<li><a id="sec-1-3-6-2" name="sec-1-3-6-2"></a>Show contents of single file<br  /><div class="outline-text-5" id="text-1-3-6-2">
+<li><a id="sec-1-3-7-2" name="sec-1-3-7-2"></a>Show contents of single file<br  /><div class="outline-text-5" id="text-1-3-7-2">
 <ul class="org-ul">
 <li><code>$ jarget jar -cat [jar] [file]</code>
 </li>
@@ -1186,7 +1287,7 @@ $ jarget jar -cat lib/jfreechart-1.0.17.jar org/jfree/chart/plot/LocalizationBun
 </div>
 </li>
 
-<li><a id="sec-1-3-6-3" name="sec-1-3-6-3"></a>List all files<br  /><div class="outline-text-5" id="text-1-3-6-3">
+<li><a id="sec-1-3-7-3" name="sec-1-3-7-3"></a>List all files<br  /><div class="outline-text-5" id="text-1-3-7-3">
 <ul class="org-ul">
 <li><code>$ jarget jar -show [jar]</code>
 </li>
@@ -1216,7 +1317,7 @@ Packget$<span class="org-variable-name">$anonfun</span>$<span class="org-variabl
 </div>
 </li>
 
-<li><a id="sec-1-3-6-4" name="sec-1-3-6-4"></a>List resource/asset files<br  /><div class="outline-text-5" id="text-1-3-6-4">
+<li><a id="sec-1-3-7-4" name="sec-1-3-7-4"></a>List resource/asset files<br  /><div class="outline-text-5" id="text-1-3-7-4">
 <ul class="org-ul">
 <li><code>$ jarget jar -resource [jar]</code>
 </li>
@@ -1285,7 +1386,7 @@ Zoom_Out=Zoom Out
 </div>
 </li>
 
-<li><a id="sec-1-3-6-5" name="sec-1-3-6-5"></a>Extract file to current directory<br  /><div class="outline-text-5" id="text-1-3-6-5">
+<li><a id="sec-1-3-7-5" name="sec-1-3-7-5"></a>Extract file to current directory<br  /><div class="outline-text-5" id="text-1-3-7-5">
 <ul class="org-ul">
 <li><code>jarget jar -extract [jar] [file]</code>
 </li>
@@ -1313,7 +1414,7 @@ $ cat MANIFEST.MF
 </div>
 </div>
 </li>
-<li><a id="sec-1-3-6-6" name="sec-1-3-6-6"></a>Extract file to a directory<br  /><div class="outline-text-5" id="text-1-3-6-6">
+<li><a id="sec-1-3-7-6" name="sec-1-3-7-6"></a>Extract file to a directory<br  /><div class="outline-text-5" id="text-1-3-7-6">
 <ul class="org-ul">
 <li><code>jarget jar -extract [jar] [file] [path]</code>
 </li>
@@ -1341,7 +1442,7 @@ $ cat lib/MANIFEST.MF
 </div>
 </div>
 </li>
-<li><a id="sec-1-3-6-7" name="sec-1-3-6-7"></a>Convert a jar file to executable jar file<br  /><div class="outline-text-5" id="text-1-3-6-7">
+<li><a id="sec-1-3-7-7" name="sec-1-3-7-7"></a>Convert a jar file to executable jar file<br  /><div class="outline-text-5" id="text-1-3-7-7">
 <ul class="org-ul">
 <li><code>$ jarget uber -exjar [application.jar] [application.jsh]</code>
 </li>
@@ -1421,7 +1522,7 @@ $ head -n 7 /home/archbox/bin/proguard
 </div>
 </li>
 
-<li><a id="sec-1-3-6-8" name="sec-1-3-6-8"></a>Build uber Jar or executable uber jar<br  /><div class="outline-text-5" id="text-1-3-6-8">
+<li><a id="sec-1-3-7-8" name="sec-1-3-7-8"></a>Build uber Jar or executable uber jar<br  /><div class="outline-text-5" id="text-1-3-7-8">
 <div class="org-src-container">
 
 <pre class="src src-text">jarget uber [command]
@@ -1531,9 +1632,9 @@ with ./application -cmd1 arg1 -cmd2 &#x2026;
 </div>
 </li></ol>
 </div>
-<div id="outline-container-sec-1-3-7" class="outline-4">
-<h4 id="sec-1-3-7"><span class="section-number-4">1.3.7</span> Classpath</h4>
-<div class="outline-text-4" id="text-1-3-7">
+<div id="outline-container-sec-1-3-8" class="outline-4">
+<h4 id="sec-1-3-8"><span class="section-number-4">1.3.8</span> Classpath</h4>
+<div class="outline-text-4" id="text-1-3-8">
 <ul class="org-ul">
 <li><code>$ jarget cpath -show</code>
 </li>
@@ -1571,10 +1672,10 @@ Get class file of all jar files in a given directory.
 </div>
 </div>
 </div>
-<div id="outline-container-sec-1-3-8" class="outline-4">
-<h4 id="sec-1-3-8"><span class="section-number-4">1.3.8</span> System Information</h4>
-<div class="outline-text-4" id="text-1-3-8">
-</div><ol class="org-ol"><li><a id="sec-1-3-8-1" name="sec-1-3-8-1"></a>Show Enviroment Variables<br  /><div class="outline-text-5" id="text-1-3-8-1">
+<div id="outline-container-sec-1-3-9" class="outline-4">
+<h4 id="sec-1-3-9"><span class="section-number-4">1.3.9</span> System Information</h4>
+<div class="outline-text-4" id="text-1-3-9">
+</div><ol class="org-ol"><li><a id="sec-1-3-9-1" name="sec-1-3-9-1"></a>Show Enviroment Variables<br  /><div class="outline-text-5" id="text-1-3-9-1">
 <ul class="org-ul">
 <li><code>$ jarget utils -env</code>
 </li>
@@ -1647,7 +1748,7 @@ Get class file of all jar files in a given directory.
 </div>
 </li>
 
-<li><a id="sec-1-3-8-2" name="sec-1-3-8-2"></a>Show PATH Environment Variable<br  /><div class="outline-text-5" id="text-1-3-8-2">
+<li><a id="sec-1-3-9-2" name="sec-1-3-9-2"></a>Show PATH Environment Variable<br  /><div class="outline-text-5" id="text-1-3-9-2">
 <ul class="org-ul">
 <li><code>$ jarget utils -path</code>
 </li>
@@ -1688,7 +1789,7 @@ Get class file of all jar files in a given directory.
 </div>
 </li>
 
-<li><a id="sec-1-3-8-3" name="sec-1-3-8-3"></a>Show Java Properties<br  /><div class="outline-text-5" id="text-1-3-8-3">
+<li><a id="sec-1-3-9-3" name="sec-1-3-9-3"></a>Show Java Properties<br  /><div class="outline-text-5" id="text-1-3-9-3">
 <ul class="org-ul">
 <li><code>$ jarget utils -prop</code>
 </li>
@@ -1791,7 +1892,7 @@ $ ./bin/jarget
 <span class="org-comment-delimiter"># </span><span class="org-comment">Or run it with </span>
 $ java -jar bin/jarget
 
-<span class="org-comment-delimiter"># </span><span class="org-comment">Or ruin it with </span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">Or run it with </span>
 $ sh ./bin/jarget doc
 </pre>
 </div>
@@ -1958,9 +2059,13 @@ From version &gt;= 1.5 jarget will be shrunk with proguard.
 <li>Release <a href="https://github.com/caiorss/jarget/raw/v1.5.1-release/jarget">jarget v1.5.1</a> 
 </li>
 
-<li>Release <a href="https://github.com/caiorss/jarget/raw/v2.0-beta-release/jarget">jarget v2.0-beta</a>  
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v2.0-beta-release/jarget">jarget v2.0-beta</a>   - Added pacakge caching feature.
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v2.0.1-beta/jarget">jarget v2.0.1-beta</a> - Allows scripting with dependencies.
 </li>
 </ul>
+
 
 <p>
 Or it can be downloaded with those shell commands below: 
@@ -2026,7 +2131,7 @@ jarget - Tool to download jar packages.
 <ul class="org-ul">
 <li><code>[&#xa0;]</code> - Add search features.  
 </li>
-<li><code>[&#xa0;]</code> - Add package cache 
+<li><code>[X]</code> - Add package cache 
 </li>
 <li><code>[&#xa0;]</code> - Improve command line handling 
 </li>
@@ -2038,8 +2143,6 @@ jarget - Tool to download jar packages.
 </li>
 <li><code>[&#xa0;]</code> - Create a Windows exe wrapper
 </li>
-<li><code>[&#xa0;]</code> - Expose more Java Platform features through command line.
-</li>
 <li><code>[X]</code> - Crypto Hash commands such as md5sum, sha256sum &#x2026; 
 </li>
 </ul>
@@ -2049,7 +2152,7 @@ jarget - Tool to download jar packages.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues</p>
-<p class="date">Created: 2017-10-06 Fri 22:56</p>
+<p class="date">Created: 2017-10-07 Sat 14:28</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
