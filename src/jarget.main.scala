@@ -71,7 +71,7 @@ object MainUtils {
   
 
   def showPom(pack: PackData) = {
-    println(pack.getPomXML())
+    pack.getPomXML() foreach println 
   }
 
   def openUrl(pack: PackData) = {
@@ -366,7 +366,7 @@ object Main{
     args.toList match {
 
       case List("-pom", pstr)
-          => showPom(parsePack(pstr))
+          => showPom(parsePack(pstr)) run repoUrl
 
 
       case List("-show", pstr)
