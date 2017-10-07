@@ -514,9 +514,6 @@ object Main{
       case List("cache", "-path")
           => println(cachePath)
 
-      // Show all jar files in the cache directory   
-      case List("cache", "-jars")
-          => PackCache.showJarFiles(cachePath)
 
       // Show all packages available in the cache repository 
       case List("cache", "-pack")
@@ -544,6 +541,10 @@ object Main{
 
       case "cache"::"-cpath"::packList
           => println(Packget.getPackCPathFromCache(packList map parsePack, cachePath, config.repoUrl))
+
+      // Show all jar files in the cache directory   
+      case List("cache", "-jars")
+          => PackCache.showJarFiles(cachePath)
 
       case "cache"::"-jars"::packList
           => Packget.getPackJarsFromCache(
