@@ -94,57 +94,17 @@ Dependencies:
 
 #+END_SRC
 
- 2. Install it.
-
-#+BEGIN_SRC sh
-$ jarget mvn -get scala 2.11 org.typelevel/cats/0.7.2
-
-Downloading package PackData(org.typelevel,machinist_2.11,0.4.1)
-Downloading file ./lib/machinist_2.11-0.4.1.pom.
-
- ... ... ... ... ... ... ... ... ... ... ... ... 
-
-File ./lib/cats-free_2.11-0.7.2.jar downloaded. Ok.
-Downloading file ./lib/cats-laws_2.11-0.7.2.pom.
-File ./lib/cats-laws_2.11-0.7.2.pom downloaded. Ok.
-Downloading file ./lib/cats-laws_2.11-0.7.2.jar.
-File ./lib/cats-laws_2.11-0.7.2.jar downloaded. Ok.
-
-$ ls lib
-cats_2.11-0.7.2.jar       cats-kernel_2.11-0.7.2.jar       machinist_2.11-0.4.1.jar
-cats_2.11-0.7.2.pom       cats-kernel_2.11-0.7.2.pom       machinist_2.11-0.4.1.pom
-cats-core_2.11-0.7.2.jar  cats-kernel-laws_2.11-0.7.2.jar  scala-library-2.11.8.jar
-cats-core_2.11-0.7.2.pom  cats-kernel-laws_2.11-0.7.2.pom  scala-library-2.11.8.pom
-cats-free_2.11-0.7.2.jar  cats-laws_2.11-0.7.2.jar         simulacrum_2.11-0.8.0.jar
-cats-free_2.11-0.7.2.pom  cats-laws_2.11-0.7.2.pom         simulacrum_2.11-0.8.0.pom
-cats-jvm_2.11-0.7.2.jar   cats-macros_2.11-0.7.2.jar
-cats-jvm_2.11-0.7.2.pom   cats-macros_2.11-0.7.2.pom
-
-#+END_SRC
-
-It also could be done with: 
-
-#+BEGIN_SRC sh
-$ jarget mvn -get org.typelevel/cats_2.11/0.7.2
-Download Successful
-#+END_SRC
-
-Show class path with all jars from directory ./lib 
-
-#+BEGIN_SRC sh 
-$ jarget cpath -show
-./lib/cats-free_2.11-0.7.2.jar:./lib/machinist_2.11-0.4.1.jar:./lib/cats-core_2.11-0.7.2.jar...
-
-#+END_SRC
+ 2. Install it and run with: 
 
 Load Scala REPL with all jars from ./lib in classpath and test the
 package: 
 
-#+BEGIN_SRC scala 
-$ jarget scala 
-Welcome to Scala 2.12.3 (Java HotSpot(TM) 64-Bit Server VM, Java 9).
+#+BEGIN_SRC sh 
+$ jarget exec org.typelevel/cats-core_2.12/0.9.0 -- scala 
+Welcome to Scala 2.12.3 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_144).
 Type in expressions for evaluation. Or try :help.
 
+scala> 
 scala> import cats._, cats.instances.all._ 
 import cats._
 import cats.instances.all._
@@ -174,169 +134,182 @@ Jarget v1.3
 
 *** Show user help 
 
+ - =$ jarget=
+
 #+BEGIN_SRC text 
-  $ jarget 
-  jarget 1.6 -  Java platform Toolbox
-  General 
-  -----------------------------------------------------------------
+$ jarget 
+jarget 2.0-beta -  Java platform Toolbox
+General 
+-----------------------------------------------------------------
 
-   -h              - show help 
-   -v | -version   - show version 
-   -site           - Open jarget github repository in the web browser. 
+ -h              - show help 
+ -v | -version   - show version 
+ -site           - Open jarget github repository in the web browser. 
 
-  Maven Packages / Jar Packages
-  -----------------------------------------------------------------
+Maven Packages / Jar Packages
+-----------------------------------------------------------------
 
-   mvn -show [pack]                      - Show package's information
+ mvn -show <pack>                      - Show package's information
 
-   mvn -pom  [pack]                      - Show package's pom file
+ mvn -pom  <pack>                      - Show package's pom file
 
-   mvn -get  [pack]                      - Download package and dependencies to ./lib
+ mvn -pull <pack1,pack2,pack3...>      - Download package and dependencies to cache directory.
 
-   mvn -get  [pack] -dir [path]          - Download package and dependencies to [path] directory.
-
-   mvn -get [pack] -r [repo]             - Download package [pack] from a given repository [rpo].
-
-   mvn -get scala [ver] [pack]           - Download a Scala package for an specific Scala version [ver].
-
-   mvn -get scala [ver] [pack] -r [repo] - Download scala package from a given repository URL [repo]
-
-   mvn -search   [query]                 - Search a package in search.maven.org, opening results in 
-                                           the browser.
-
-   mvn -search2  [query]                 - Search a package showing results in the console. (Experimental)
-
-   mvn -browse [package]                 - Open package official website.
-
-   mvn -go                               - Open web site https://mvnrepository.com
-   mvn -go [package]                     - Open package mvnrepository url.
-
-   mvn -clip -show                       - Extract package from XML in clipboard and show its information.
-   mvn -clip -pom                        - Extract package from XML in clipboard and show its Pom file.
-   mvn -clip -get                        - Extract package from XML in clipboard and download it to ./lib
+ mvn -copy <pack1,pack2,pack3..>       -  Copy packages from cache to ./lib downloading them if
+                                          they are not available.
 
 
-   Jar Files Inspection
-  ----------------------------------------------------------------- 
+ mvn -search   <query>                 - Search a package in search.maven.org, opening results in 
+                                         the browser.
+
+ mvn -search2  <query>                 - Search a package showing results in the console. (Experimental)
+
+ mvn -browse <package>                 - Open package official website.
+
+ mvn -open                             - Open web site https://mvnrepository.com
+ mvn -open <package>                   - Open package mvnrepository url.
 
 
-   jar -man  [jar]                    - Show manifest.
-   jar -main [jar]                    - Show main class.
-   jar -show [jar]                    - Show all files.
-
-   jar -resource [jar]                - Show all asset/resource files disregarding *.class files.
-   jar -resource [jar] [file]         - Print content of resource file.
-
-   jar -extract [jar] [file]          - Extract [file] from [jar] package to current directory.
-   jar -extract [jar] [file] [path]   - Extract [file] from [jar] package to [path] directory.
-
-   jar -extract-all [jar] [path]      - Extract all files from jar package to [path] directory.
-
-   jar -extract-all [jar]             - Extract jar file to directory with same name of jar file 
-                                        at current directory. If file is lib/chart.jar it will  
-                                        extracted to ./chart 
-
-   jar -package [jar]                - Show all packages(aka namespaces) of classes within a jar file.
-   jar -package [jar] [package]      - Show all classes of within a particular package.
+ mvn -clear                            - Clear package cache by removing all packages in cache directory.
 
 
-  Uber Jar 
-  -----------------------------------------------------------------
+ Cache Control
+-----------------------------------------------------------------  
 
-   - Convert a jar file into a unix executable jar file
-     that can be run with ./app.sh instead of java -jar app.jar
+ cache -path                            - Show cache directory path (directory ~/.jarget/cache)
+ cache -jars                            - Show all jar files in cache directory.
+ cache -pack                            - Show all packages available in the cache
+ cache -pack <pack>                     - Show all versions of a given package in the cache.
+ 
 
-   $ ./jarget uber -exjar app.jar app.sh
-
-   $ ./jarget uber -exjar app.jar   # Gnerates ./app
-
-   - Build an scala uber jar named output.jar from main.jar which
-     contains the main class and lib1 and lib2 are the directories
-     containing jar files. It bundles the scala-library.jar runtime with
-     the application.
-
-   $ ./jarget uber -scala -o output.jar -m main.jar
-
-   $ ./jarget uber -scala -o output.jar -m main.jar -p ./lib1 ./lib2 
-    
-   $ ./jarget uber -scala -sh -o output.jar -m main.jar -p ./lib1 -j dependency1.jar -r ./resources1 ./resources2 
-
-   uber [command]
-
-     -o [output file]         - (mandatory) Output jar file bundled with all dependencies.
-     -m [main jar file]       - (optional)  Jar file containing main class.
-     -p [path1] [path2] ...   - (optional)  Directories with jar file that will be included in the uber jar.
-     -j [jar1.jar] [jar2.jar] - (optional)  Single jar files that will be included in the uber jar.
-     -r [dir1] [dir2] ...     - (optional)  Directories containing resource files 
-     -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar 
-     -sh                      - (optional)  Makes the jar file as a self-executable Unix app.                                 
+ Jar Files Inspection
+----------------------------------------------------------------- 
 
 
-  Classpath
-  -----------------------------------------------------------------
+ jar -man  <jar>                    - Show manifest.
+ jar -main <jar>                    - Show main class.
+ jar -show <jar>                    - Show all files.
 
-   cpath -show                        - Get classpath from ./lib directory
-   cpath -show [path]                 - Get classpath from [path] directory
+ jar -resource <jar>                - Show all asset/resource files disregarding *.class files.
+ jar -resource <jar> <file>         - Print content of resource file.
 
+ jar -extract <jar> <file>          - Extract <file> from <jar> package to current directory.
+ jar -extract <jar> <file> <path>   - Extract <file> from <jar> package to <path> directory.
 
-  Exec  
-  -----------------------------------------------------------------
+ jar -extract-all <jar> <path>      - Extract all files from jar package to <path> directory.
 
-   exec [program] [path] 
-   exec [program] -- arg1 arg2 ...      - Executes a program passing classpath (-cp) from ./lib to it.
-   exec [program] [path] -- arg1 arg2 
-    
+ jar -extract-all <jar>             - Extract jar file to directory with same name of jar file 
+                                      at current directory. If file is lib/chart.jar it will  
+                                      extracted to ./chart 
 
-  Utilities
-  -----------------------------------------------------------------
-
-   utils -env                            - Show environment variables in tabular format 
-   utils -env [var]                      - Show environment variable [var]
-   utils -path                           - Show PATH environment variable 
-   utils -prop                           - Show java properties in tabular format 
-   utils -expath [program]               - Show absolute path of a program in PATH variable
+ jar -package <jar>                - Show all packages(aka namespaces) of classes within a jar file.
+ jar -package <jar> <package>      - Show all classes of within a particular package.
 
 
-  Crypto Hash Functions
-  -----------------------------------------------------------------
+Uber Jar 
+-----------------------------------------------------------------
 
-   - Computes the file hash hex digest.
-   digest -md5    -f [file]              
-   digest -sha1   -f [file]
-   digest -sha256 -f [file] 
+ - Convert a jar file into a unix executable jar file
+   that can be run with ./app.sh instead of java -jar app.jar
 
-   - Checks the file hex digest.
-   digest -md5    -f [file]  [digest]     
-   digest -sha1   -f [file]  [digest]
-   digest -sha256 -f [file]  [digest]
+ $ ./jarget uber -exjar app.jar app.sh
 
-   - Computes the string hex digest.
-   digest -md5    -s [string]             
-   digest -sha1   -s [string]
-   digest -sha256 -s [string]
+ $ ./jarget uber -exjar app.jar   # Gnerates ./app
 
-   - Checks the string hex digest.
-   digest -md5    -s [string]  [digest]    
-   digest -sha1   -s [string]  [digest]
-   digest -sha256 -s [string]  [digest]
+ - Build an scala uber jar named output.jar from main.jar which
+   contains the main class and lib1 and lib2 are the directories
+   containing jar files. It bundles the scala-library.jar runtime with
+   the application.
 
-  Note: [package] is <group>/<artifact>/<version>.
-  Examples of valid packages:
+ $ ./jarget uber -scala -o output.jar -m main.jar
 
-    - org.scalaz/scalaz-core_2.11/7.3.0-M15
+ $ ./jarget uber -scala -o output.jar -m main.jar -p ./lib1 ./lib2 
+  
+ $ ./jarget uber -scala -sh -o output.jar -m main.jar -p ./lib1 -j dependency1.jar -r ./resources1 ./resources2 
 
-    - org.jfree/jfreechart/1.0.17
+ uber <command>
 
-  Note: The XML in the clipboard is a maven coordinate: 
+   -o <output file>         - (mandatory) Output jar file bundled with all dependencies.
+   -m <main jar file>       - (optional)  Jar file containing main class.
+   -p <path1> <path2> ...   - (optional)  Directories with jar file that will be included in the uber jar.
+   -j <jar1.jar> <jar2.jar> - (optional)  Single jar files that will be included in the uber jar.
+   -r <dir1> <dir2> ...     - (optional)  Directories containing resource files 
+   -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar 
+   -sh                      - (optional)  Makes the jar file as a self-executable Unix app.                                 
 
-      <!-- https://mvnrepository.com/artifact/org.scalaz/scalaz-core_2.11 -->
-      <dependency>
-          <groupId>org.scalaz</groupId>
-          <artifactId>scalaz-core_2.11</artifactId>
-          <version>7.3.0-M15</version>
-      </dependency>
+
+Classpath
+-----------------------------------------------------------------
+
+ cpath -show                        - Get classpath from ./lib directory
+ cpath -show <path]                 - Get classpath from <path] directory
+
+
+Exec  
+-----------------------------------------------------------------
+
+ exec <pack1,pack2...> -- <program> <arg1> <arg2>  - Executes a program passing classpath (-cp) flag with
+                                                     classpath of packages <pack1,pack2,..> separated by comma.
+
+
+Utilities
+-----------------------------------------------------------------
+
+ utils -env                            - Show environment variables in tabular format 
+ utils -env [var]                      - Show environment variable [var]
+ utils -path                           - Show PATH environment variable 
+ utils -prop                           - Show java properties in tabular format 
+ utils -expath [program]               - Show absolute path of a program in PATH variable
+
+
+Crypto Hash Functions
+-----------------------------------------------------------------
+
+ - Computes the file hash hex digest.
+ digest -md5    -f <file>              
+ digest -sha1   -f <file>
+ digest -sha256 -f <file> 
+
+ - Checks the file hex digest.
+ digest -md5    -f <file>  <digest>     
+ digest -sha1   -f <file>  <digest>
+ digest -sha256 -f <file>  <digest>
+
+ - Computes the string hex digest.
+ digest -md5    -s <string>             
+ digest -sha1   -s <string>
+ digest -sha256 -s <string>
+
+ - Checks the string hex digest.
+ digest -md5    -s <string>  <digest>    
+ digest -sha1   -s <string>  <digest>
+ digest -sha256 -s <string>  <digest>
+
+-----------------------------------------------------------------
+
+Note: <package> is <group>/<artifact>/<version>.
+Examples of valid packages:
+
+  - org.scalaz/scalaz-core_2.11/7.3.0-M15
+
+  - org.jfree/jfreechart/1.0.17
+
+Note: The XML in the clipboard is a maven coordinate: 
+
+    <!-- https://mvnrepository.com/artifact/org.scalaz/scalaz-core_2.11 -->
+    <dependency>
+        <groupId>org.scalaz</groupId>
+        <artifactId>scalaz-core_2.11</artifactId>
+        <version>7.3.0-M15</version>
+    </dependency>
 
 #+END_SRC
+
+*** Open jarget website 
+
+Open jarget github web site. 
+
+ - =$ jarget -site=
 
 *** Maven / Packages Commands
 **** Show package information 
@@ -412,144 +385,305 @@ $ jarget -pom org.jfree/jfreechart/1.0.17
 #+END_SRC
 **** Open package Maven URL 
  
- = =$ jarget mvn -go org.jfree/jfreechart/1.0.17= 
+ = =$ jarget mvn -open org.jfree/jfreechart/1.0.17= 
 
 It will open the Mvn site of the package JFreeChart or:
  - https://mvnrepository.com/artifact/org.jfree/jfreechart/1.0.17  
 
-**** Open Maven Central 
+**** Open https://mvnrepository.com/
 
-  - =$ jarget mvn -go=
+Open website: https://mvnrepository.com/ that is useful for searching
+packages.
 
-**** Install jar files 
+  - =$ jarget mvn -open=
 
-It will install the JFreeChart jar files into ./lib directories. 
+**** Install packages in the cache 
 
- - =$ jarget mvn -get org.jfree/jfreechart/1.0.17=
+This command installs/downloads all packages to jarget cache directory: file:~/.jarget/cache
+
+ - =jarget mvn -pull <pack1,pack2,pack3...>=
+
+Example: Get teh packages org.jfree/jfreechart/1.0.17 and org.scalaz/scalaz-core_2.11/7.3.0-M15.
+
+#+BEGIN_SRC text 
+$ jarget mvn -pull org.jfree/jfreechart/1.0.17,org.scalaz/scalaz-core_2.11/7.3.0-M15
+Downloading ---------------------
+PackData(org.jfree,jfreechart,1.0.17)
+PackData(org.jfree,jcommon,1.0.21)
+PackData(xml-apis,xml-apis,1.3.04)
+----------------------------------
+Package path = PackData(org.jfree,jfreechart,1.0.17)
+Downloading file /home/archbox/.jarget/cache/org/jfree/jfreechart/1.0.17/jfreechart-1.0.17.pom.
+Package path = PackData(org.jfree,jcommon,1.0.21)
+Package path = PackData(xml-apis,xml-apis,1.3.04)
+Downloading file /home/archbox/.jarget/cache/org/jfree/jcommon/1.0.21/jcommon-1.0.21.pom.
+Downloading file /home/archbox/.jarget/cache/xml-apis/xml-apis/1.3.04/xml-apis-1.3.04.pom.
+File /home/archbox/.jarget/cache/org/jfree/jfreechart/1.0.17/jfreechart-1.0.17.pom downloaded. Ok.
+Downloading file /home/archbox/.jarget/cache/org/jfree/jfreechart/1.0.17/jfreechart-1.0.17.jar.
+File /home/archbox/.jarget/cache/xml-apis/xml-apis/1.3.04/xml-apis-1.3.04.pom downloaded. Ok.
+.... ... ... 
+Download Successful
+#+END_SRC
+
+Show packages in cache: 
 
 #+BEGIN_SRC sh 
-$ jarget mvn -get org.jfree/jfreechart/1.0.17
+$ jarget cache -pack
+org.scala-lang/scala-library
+xml-apis/xml-apis
+org.scala-lang.modules/scala-java8-compat_2.11
+org.scalaz/scalaz-core_2.11
+org.jfree/jcommon
+org.jfree/jfreechart
 
-Downloading package PackData(org.jfree,jfreechart,1.0.17)
-Downloading file ./lib/jfreechart-1.0.17.pom.
-Downloading package PackData(org.jfree,jcommon,1.0.21)
-Downloading package PackData(xml-apis,xml-apis,1.3.04)
-Downloading file ./lib/jcommon-1.0.21.pom.
-Downloading file ./lib/xml-apis-1.3.04.pom.
-File ./lib/jfreechart-1.0.17.pom downloaded. Ok.
-Downloading file ./lib/jfreechart-1.0.17.jar.
-File ./lib/xml-apis-1.3.04.pom downloaded. Ok.
-Downloading file ./lib/xml-apis-1.3.04.jar.
-File ./lib/jcommon-1.0.21.pom downloaded. Ok.
-Downloading file ./lib/jcommon-1.0.21.jar.
-File ./lib/xml-apis-1.3.04.jar downloaded. Ok.
-File ./lib/jcommon-1.0.21.jar downloaded. Ok.
-File ./lib/jfreechart-1.0.17.jar downloaded. Ok.
-Download Successful
+#+END_SRC
+
+**** Copy packages from cache to local directory 
+
+This command copies a package from cache to ./lib directory. The
+packages are downloaded if not available in the cache directory yet.
+
+ - =$ jarget mvn -copy <pack1,pack2,pack3...>=
+
+#+BEGIN_SRC sh 
+$ jarget mvn -copy org.jfree/jfreechart/1.0.17,org.scalaz/scalaz-core_2.11/7.3.0-M15
+
+Copying jfreechart-1.0.17.jar to ./lib
+Copying jcommon-1.0.21.jar to ./lib
+Copying xml-apis-1.3.04.jar to ./lib
+Copying scalaz-core_2.11-7.3.0-M15.jar to ./lib
+Copying scala-library-2.11.11.jar to ./lib
+Copying scala-java8-compat_2.11-0.7.0.jar to ./lib
 
 $ ls lib/
-jcommon-1.0.21.jar  jfreechart-1.0.17.jar  xml-apis-1.3.04.jar
-jcommon-1.0.21.pom  jfreechart-1.0.17.pom  xml-apis-1.3.04.pom
+jcommon-1.0.21.jar                 scala-library-2.11.11.jar
+jfreechart-1.0.17.jar              scalaz-core_2.11-7.3.0-M15.jar
+scala-java8-compat_2.11-0.7.0.jar  xml-apis-1.3.04.jar
 
 #+END_SRC
 
-Testing with Scala:  
+**** Clean cache removing all packages 
 
-#+BEGIN_SRC scala 
-  $ scala -cp lib/jcommon-1.0.21.jar:lib/jfreechart-1.0.17.jar
-
-  :paste
-  import org.jfree.chart.{ChartPanel, ChartFactory, JFreeChart, ChartUtilities}
-  import org.jfree.data.general.DefaultPieDataset
-
-  val dataset = new DefaultPieDataset()
-
-  dataset.setValue("A", 75)
-  dataset.setValue("B", 10)
-  dataset.setValue("C", 10)
-  dataset.setValue("D", 5)
-
-  val chart = ChartFactory.createPieChart(
-    "Sample Pie Chart", // Title
-    dataset,            // Dataset 
-    true,               // Show legend
-    true,               // Tooltips on
-    false 
-  )
-
-  // Save chart to a png file 
-  //---------------------------
-  ChartUtilities.saveChartAsPNG(new java.io.File("mychart.png"), chart, 500, 500)
-
-  // Show Chart in a Java Swing Frame
-  //--------------------------------------
-  val frame = new javax.swing.JFrame()
-  frame.add(new ChartPanel(chart))
-  frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE)
-  frame.setSize(693, 513)
-  frame.setTitle("Sample Pie Chart")
-  frame.setVisible(true)
-#+END_SRC
-**** Install a Scala package jar file
-
- - =$ jarget mvn -get scala [scala version] [package]=
-
-Example: It will download the scala package [[https://mvnrepository.com/artifact/org.typelevel/cats-core_2.12/0.9.0][cats-core]] for scala version
-2.12 and all its dependencies to directory ./lib.
+ - =$ jarget mvn -clear=
 
 #+BEGIN_SRC sh 
-  $ jarget mvn -get scala 2.12 org.typelevel/cats-core/0.9.0
+$ jarget mvn -clear 
+Cleaning cache
+Removing file: /home/archbox/.jarget/cache/xml-apis/xml-apis/1.3.04/xml-apis-1.3.04.pom
+Removing file: /home/archbox/.jarget/cache/xml-apis/xml-apis/1.3.04/xml-apis-1.3.04.jar
 
-  Downloading package PackData(org.typelevel,cats-macros_2.12,0.9.0)
-  Downloading file ./lib/cats-macros_2.12-0.9.0.pom.
-  Downloading package PackData(org.typelevel,cats-kernel_2.12,0.9.0)
-  Downloading package PackData(org.typelevel,cats-core_2.12,0.9.0)
-  Downloading file ./lib/cats-kernel_2.12-0.9.0.pom.
-  Downloading package PackData(com.github.mpilquist,simulacrum_2.12,0.10.0)
-  Downloading file ./lib/cats-core_2.12-0.9.0.pom.
-  Downloading package PackData(org.typelevel,machinist_2.12,0.6.1)
-  Downloading package PackData(org.scala-lang,scala-library,2.12.1)
-  Downloading file ./lib/simulacrum_2.12-0.10.0.pom.
-  File ./lib/cats-macros_2.12-0.9.0.pom downloaded. Ok.
-  Downloading file ./lib/cats-macros_2.12-0.9.0.jar.
-  File ./lib/cats-core_2.12-0.9.0.pom downloaded. Ok.
-  Downloading file ./lib/cats-core_2.12-0.9.0.jar.
-  File ./lib/simulacrum_2.12-0.10.0.pom downloaded. Ok.
-  Downloading file ./lib/simulacrum_2.12-0.10.0.jar.
-  File ./lib/cats-kernel_2.12-0.9.0.pom downloaded. Ok.
-  Downloading file ./lib/cats-kernel_2.12-0.9.0.jar.
-  File ./lib/cats-macros_2.12-0.9.0.jar downloaded. Ok.
-  Downloading file ./lib/machinist_2.12-0.6.1.pom.
-  File ./lib/machinist_2.12-0.6.1.pom downloaded. Ok.
-  Downloading file ./lib/machinist_2.12-0.6.1.jar.
-  File ./lib/simulacrum_2.12-0.10.0.jar downloaded. Ok.
-  Downloading file ./lib/scala-library-2.12.1.pom.
-  File ./lib/machinist_2.12-0.6.1.jar downloaded. Ok.
-  File ./lib/scala-library-2.12.1.pom downloaded. Ok.
-  Downloading file ./lib/scala-library-2.12.1.jar.
-  File ./lib/scala-library-2.12.1.jar downloaded. Ok.
-  File ./lib/cats-core_2.12-0.9.0.jar downloaded. Ok.
-  File ./lib/cats-kernel_2.12-0.9.0.jar downloaded. Ok.
-  Download Successful
+                           ... ... ... ... ... 
 
-
-  $ ls -l lib/
-  total 12084
-  -rw-r--r-- 1 archbox archbox 2696252 ago 15 16:34 cats-core_2.12-0.9.0.jar
-  -rw-r--r-- 1 archbox archbox    4592 ago 15 16:34 cats-core_2.12-0.9.0.pom
-  -rw-r--r-- 1 archbox archbox 4241540 ago 15 16:35 cats-kernel_2.12-0.9.0.jar
-  -rw-r--r-- 1 archbox archbox    3665 ago 15 16:34 cats-kernel_2.12-0.9.0.pom
-  -rw-r--r-- 1 archbox archbox    6438 ago 15 16:34 cats-macros_2.12-0.9.0.jar
-  -rw-r--r-- 1 archbox archbox    4028 ago 15 16:34 cats-macros_2.12-0.9.0.pom
-  -rw-r--r-- 1 archbox archbox   33650 ago 15 16:34 machinist_2.12-0.6.1.jar
-  -rw-r--r-- 1 archbox archbox    1780 ago 15 16:34 machinist_2.12-0.6.1.pom
-  -rw-r--r-- 1 archbox archbox 5272325 ago 15 16:34 scala-library-2.12.1.jar
-  -rw-r--r-- 1 archbox archbox    1587 ago 15 16:34 scala-library-2.12.1.pom
-  -rw-r--r-- 1 archbox archbox   81815 ago 15 16:34 simulacrum_2.12-0.10.0.jar
-  -rw-r--r-- 1 archbox archbox    2068 ago 15 16:34 simulacrum_2.12-0.10.0.pom
+Deleting directory: /home/archbox/.jarget/cache/xml-apis/xml-apis/1.3.04
+Deleting directory: /home/archbox/.jarget/cache/xml-apis/xml-apis
+Deleting directory: /home/archbox/.jarget/cache/xml-apis
+Deleting directory: /home/archbox/.jarget/cache
 #+END_SRC
 
-*** Jar Files Commands 
+**** Execute program with packages classpath 
+***** Command 
+
+ - =$ jarget <pack1,pack2, ...> -- program arg1 arg2 arg2 ...=
+
+It will execute a program with arguments arg1, arg2 and arg3 passing
+the option =-cp <classpath of pack1,pack2,..,packn>=, where (-cp)
+argument is the class path of the packages pack1,pack2... from the
+cache directory ~/.jarget/cache, to it. So the program will be
+executed with:
+
+ - =$ program -cp <classpath of pack1,pack2...> arg1 arg2 arg3 ...=
+
+The packages are downloaded to cache if not available yet. 
+
+***** Example: Running scala with a set of packages in classpath
+
+Example: Run Scala with [[https://mvnrepository.com/artifact/org.typelevel/cats-core_2.12/0.9.0][org.typelevel/cats-core_2.12/0.9.0]]
+
+#+BEGIN_SRC sh 
+$ jarget exec org.typelevel/cats-core_2.12/0.9.0 -- scala 
+Downloading ---------------------
+PackData(org.typelevel,cats-macros_2.12,0.9.0)
+PackData(org.typelevel,cats-kernel_2.12,0.9.0)
+PackData(org.typelevel,cats-core_2.12,0.9.0)
+PackData(com.github.mpilquist,simulacrum_2.12,0.10.0)
+PackData(org.typelevel,machinist_2.12,0.6.1)
+PackData(org.scala-lang,scala-library,2.12.1)
+----------------------------------
+Package path = PackData(org.typelevel,cats-macros_2.12,0.9.0)
+Downloading file /home/archbox/.jarget/cache/org/typelevel/cats-macros_2.12/0.9.0/cats-macros_2.12-0.9.0.pom.
+Package path = PackData(org.typelevel,cats-kernel_2.12,0.9.0)
+Package path = PackData(org.typelevel,cats-core_2.12,0.9.0)
+Package path = PackData(com.github.mpilquist,simulacrum_2.12,0.10.0)
+Package path = PackData(org.typelevel,machinist_2.12,0.6.1)
+Package path = PackData(org.scala-lang,scala-library,2.12.1)
+Downloading file /home/archbox/.jarget/cache/org/typelevel/cats-kernel_2.12/0.9.0/cats-kernel_2.12-0.9.0.pom.
+Downloading file /home/archbox/.jarget/cache/com/github/mpilquist/simulacrum_2.12/0.10.0/simulacrum_2.12-0.10.0.pom.
+Downloading file /home/archbox/.jarget/cache/org/typelevel/cats-core_2.12/0.9.0/cats-core_2.12-0.9.0.pom.
+File /home/archbox/.jarget/cache/org/typelevel/cats-macros_2.12/0.9.0/cats-macros_2.12-0.9.0.pom downloaded. Ok.
+Downloading file /home/archbox/.jarget/cache/org/typelevel/cats-macros_2.12/0.9.0/cats-macros_2.12-0.9.0.jar.
+
+... ... ... ... ... 
+
+Download Successful
+Welcome to Scala 2.12.3 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_144).
+Type in expressions for evaluation. Or try :help.
+
+scala> 
+
+scala>  import cats._, cats.instances.all._ 
+import cats._
+import cats.instances.all._
+
+scala>  val len: String => Int = _.length
+len: String => Int = $$Lambda$1041/28318221@2ed71727
+
+scala> 
+
+scala> Functor[List].map(List("scala", "cats")) (len)
+res0: List[Int] = List(5, 4)
+
+scala> 
+
+#+END_SRC
+
+***** Example: Running scalac with ase packages in classpath 
+
+*Run script with scala and dependencies*
+
+It runs the script [[file:sample-scripts/chartTest.scala][sample-scripts/chartTest.scala]] with jfreechart
+library in passed to scala classpath. 
+
+#+BEGIN_SRC sh 
+$ jarget exec org.jfree/jfreechart/1.0.17 -- scala sample-scripts/chartTest.scala 
+#+END_SRC
+
+The command above runs: 
+
+#+BEGIN_SRC sh 
+scala -cp <classpath of  org.jfree/jfreechart/1.0.17> sample-scripts/chartTest.scala 
+#+END_SRC
+
+*Compile scala program with dependencies* 
+
+#+BEGIN_SRC sh 
+$ jarget exec org.jfree/jfreechart/1.0.17 -- scalac sample-scripts/chartTest.scala -d chart.jar 
+
+$ file chart.jar 
+chart.jar: Java archive data (JAR)
+
+# Run the program:
+$ jarget exec org.jfree/jfreechart/1.0.17 -- scala chart.jar 
+
+#+END_SRC
+
+*** Cache commands 
+**** Show cache path 
+
+ - =$ jarget cache -path=
+
+Example: 
+
+#+BEGIN_SRC sh 
+$ jarget cache -path
+/home/archbox/.jarget/cache
+
+$ tree $(jarget cache -path)
+/home/archbox/.jarget/cache
+├── com
+│   └── github
+│       └── mpilquist
+│           └── simulacrum_2.12
+│               └── 0.10.0
+│                   ├── simulacrum_2.12-0.10.0.jar
+│                   └── simulacrum_2.12-0.10.0.pom
+└── org
+    ├── scala-lang
+    │   └── scala-library
+    │       └── 2.12.1
+    │           ├── scala-library-2.12.1.jar
+    │           └── scala-library-2.12.1.pom
+    └── typelevel
+        ├── cats-core_2.12
+        │   └── 0.9.0
+        │       ├── cats-core_2.12-0.9.0.jar
+        │       └── cats-core_2.12-0.9.0.pom
+        ├── cats-kernel_2.12
+        │   └── 0.9.0
+        │       ├── cats-kernel_2.12-0.9.0.jar
+        │       └── cats-kernel_2.12-0.9.0.pom
+        ├── cats-macros_2.12
+        │   └── 0.9.0
+        │       ├── cats-macros_2.12-0.9.0.jar
+        │       └── cats-macros_2.12-0.9.0.pom
+        └── machinist_2.12
+            └── 0.6.1
+                ├── machinist_2.12-0.6.1.jar
+                └── machinist_2.12-0.6.1.pom
+#+END_SRC
+
+**** Show all packages in cache 
+
+ - =$ jarget cache -pack=
+
+#+BEGIN_SRC sh 
+$ jarget cache -pack 
+org.scala-lang/scala-library
+org.typelevel/cats-core_2.12
+org.typelevel/cats-macros_2.12
+org.typelevel/cats-kernel_2.12
+org.typelevel/machinist_2.12
+com.github.mpilquist/simulacrum_2.12
+
+#+END_SRC
+
+**** Show all versions of a given package in cache 
+
+ - =$ jarget cache -pack <pack>=
+
+Example: 
+
+#+BEGIN_SRC sh 
+$ jarget cache -pack 
+org.scala-lang/scala-library
+org.typelevel/cats-core_2.12
+org.typelevel/cats-macros_2.12
+org.typelevel/cats-kernel_2.12
+org.typelevel/machinist_2.12
+com.github.mpilquist/simulacrum_2.12
+
+$ jarget cache -pack  org.typelevel/cats-core_2.12
+Uri = /home/archbox/.jarget/cache/org/typelevel/cats-core_2.12/0.9.0/cats-core_2.12-0.9.0.pom
+Package:         Cats core
+Packaging:       jar
+Coordinates[1]:  group = org.typelevel artifact = cats-core_2.12 version = 0.9.0
+Coordinates[2]:  org.typelevel/cats-core_2.12/0.9.0
+Url:             https://github.com/typelevel/cats
+
+Description:     
+Cats core
+-----------------------------------------------
+
+
+
+
+org.typelevel/cats-core_2.12/0.9.0
+
+#+END_SRC
+
+**** Show all jar packages in cache
+
+#+BEGIN_SRC sh 
+$ jarget cache -jars
+/home/archbox/.jarget/cache/org/typelevel/cats-macros_2.12/0.9.0/cats-macros_2.12-0.9.0.jar
+/home/archbox/.jarget/cache/org/typelevel/machinist_2.12/0.6.1/machinist_2.12-0.6.1.jar
+/home/archbox/.jarget/cache/org/typelevel/cats-core_2.12/0.9.0/cats-core_2.12-0.9.0.jar
+/home/archbox/.jarget/cache/org/typelevel/cats-kernel_2.12/0.9.0/cats-kernel_2.12-0.9.0.jar
+/home/archbox/.jarget/cache/org/scala-lang/scala-library/2.12.1/scala-library-2.12.1.jar
+/home/archbox/.jarget/cache/com/github/mpilquist/simulacrum_2.12/0.10.0/simulacrum_2.12-0.10.0.jar
+
+#+END_SRC
+
+*** Command to manipulate Jar packages
 **** Show manifest file 
 
  - =$ jarget jar [jar]=

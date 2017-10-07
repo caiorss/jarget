@@ -16,10 +16,15 @@ object Utils{
     new java.io.File(path1, path2).getPath()
   }
 
+  def joinPathList(paths: String*) = 
+    paths.fold(null)((acc, p) => new java.io.File(acc, p).toString)  
+
   /** Check if file exists */ 
-  def fileExists(file: String) = {
+  def fileExists(file: String) =
     new java.io.File(file).isFile()
-  }
+
+  def dirExists(dir: String) =
+    new java.io.File(dir).isDirectory()
 
 
   def downloadFile(fileUrl: String, file: String) = {
@@ -28,6 +33,56 @@ object Utils{
     val fos = new java.io.FileOutputStream(file)
     fos.getChannel().transferFrom(rbc, 0, java.lang.Long.MAX_VALUE)
   }
+
+  /** 
+      Copy file to directory. 
+
+      @param file    - File that will be copied. 
+      @param destDir - Path to destination directory 
+
+      Example: The command below will copy file lsb-release to file
+              /tmp/lsb-release.
+
+     {{{
+          copyFileTo("/etc/lsb-release", "/tmp")
+      }}}
+    */ 
+  def copyFileTo(file: String, destDir: String) = {
+    val src = new java.io.File(file)
+    val dst = new java.io.File(destDir, src.getName)
+    var srcChannel: java.nio.channels.FileChannel = null
+    var dstChannel: java.nio.channels.FileChannel = null
+    try {
+      srcChannel = new java.io.FileInputStream(src).getChannel()
+      dstChannel = new java.io.FileOutputStream(dst).getChannel()
+      dstChannel.transferFrom(srcChannel, 0, srcChannel.size())
+    } finally {
+      srcChannel.close()
+      dstChannel.close()
+    }
+  }
+
+  /** Delete all files and subdirectories of a directory recursively */ 
+  def deleteDirectory(path: String, verbose: Boolean = false) =
+    if (new java.io.File(path).isDirectory){
+      import java.nio.file.{Files, Paths, Path}
+      val root = Paths.get(path)
+      Files.walk(root)
+        .filter(_.toFile.isFile)
+        .forEach{ p =>
+        if (verbose) println("Removing file: " + p)
+        p.toFile().delete()
+      }
+      Files.walk(root)
+        .filter(_.toFile().isDirectory)
+        .toArray
+        .map(_.asInstanceOf[java.nio.file.Path].toFile)
+        .reverse
+        .foreach{p =>
+        if (verbose) println("Deleting directory: " + p)
+        p.delete()
+      }
+    }
 
   def getClipboardText() = {
     import java.awt.Toolkit
@@ -512,6 +567,14 @@ object JarUtils{
   def runWithClassPath(program: String, args: List[String] = List(), path: String = null) = {
     val cpath = getClasspath(path)
     if (path == null)
+      Utils.execl(program, args)
+    else
+      Utils.execl(program, List("-cp", cpath) ++ args)
+  }
+
+
+  def runWithClassPath2(program: String, args: List[String] = List(), cpath: String = null) = {
+    if (cpath == null)
       Utils.execl(program, args)
     else
       Utils.execl(program, List("-cp", cpath) ++ args)

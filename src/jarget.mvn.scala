@@ -31,12 +31,7 @@ package jarget.mvn
 import jarget.utils._
 import jarget.logger.Log.logger
 
-/** Java Package Data  */
-case class PackData(
-  group:    String,
-  artifact: String,
-  version:  String
-)
+
 
 /** Data from the POM file - Project Object Model */
 case class PomData(
@@ -47,7 +42,174 @@ case class PomData(
   artifact:    String,
   version:     String,
   packaging:   String
+) 
+
+
+case class RepoConf(
+  cache:   String,
+  repoUrl: String
 )
+
+
+/** Encodes java package specification.
+
+   Example: The package org.jfree:jfreechart:1.0.17 is encoded as 
+   PackData("org.jfree", "jfreechart", "1.0.17")
+
+
+   Example: Package's operations. 
+
+   {{{
+    $ scala -cp jarget.jar
+    
+    import jarget.mvn.PackData
+    import jarget.mvn.Packget 
+ 
+    scala> val p = PackData("org.jfree", "jfreechart", "1.0.17")
+    p: jarget.mvn.PackData = PackData(org.jfree,jfreechart,1.0.17)
+
+    scala> p.group
+    res0: String = org.jfree
+
+    scala> p.artifact
+    res1: String = jfreechart
+
+    scala> p.version
+    res2: String = 1.0.17
+
+
+    scala> p.format 
+    res3: String = org.jfree/jfreechart/1.0.17
+
+
+    scala> p.getArtifactFile("jar")
+    res4: String = jfreechart-1.0.17.jar
+
+    scala> p.getArtifactFile("pom")
+    res5: String = jfreechart-1.0.17.pom
+
+    scala> p.getArtifactFile("md5")
+    res6: String = jfreechart-1.0.17.md5
+
+
+   }}} 
+
+   @param group    - Package's groupID. 
+   @param artifact - Package's artifactID
+   @param version  - Package's version.
+  */
+case class PackData(
+  group:    String,
+  artifact: String,
+  version:  String
+
+) {
+  import jarget.reader.Reader
+
+  /** Format package to string 
+
+   Example: 
+   {{{  
+    $ scala -cp jarget.jar
+    
+    import jarget.mvn.PackData
+    import jarget.mvn.Packget   
+    
+    scala> val p = PackData("org.xerial", "sqlite-jdbc", "3.20.0")
+    p: jarget.mvn.PackData = PackData(org.xerial,sqlite-jdbc,3.20.0)
+
+    scala> p.format 
+    res3: String = org.xerial/sqlite-jdbc/3.20.0
+   }}}
+   */ 
+  def format() = {
+    s"${this.group}/${this.artifact}/${this.version}"
+  }
+
+
+  /** Build artifact file names from package data.
+
+    Example: 
+    {{{ 
+    $ scala -cp jarget.jar
+    
+    import jarget.mvn.PackData
+    import jarget.mvn.Packget   
+    
+    scala> val p = PackData("org.xerial", "sqlite-jdbc", "3.20.0")
+    p: jarget.mvn.PackData = PackData(org.xerial,sqlite-jdbc,3.20.0)
+    
+   scala> p.getArtifactFile("jar")
+   res0: String = sqlite-jdbc-3.20.0.jar
+
+   scala> p.getArtifactFile("pom")
+   res1: String = sqlite-jdbc-3.20.0.pom
+
+   scala> p.getArtifactFile("md5")
+   res2: String = sqlite-jdbc-3.20.0.md5
+    }}}
+   */ 
+  def getArtifactFile(ext: String) = {
+    s"${this.artifact}-${this.version}.${ext}"
+  }
+
+  /** Get path to artifact *.jar or *.pom file of a given package.*/
+  def getArtifactURI(ext: String) = for {
+    repo     <- Reader.ask[String]
+    gpath    = this.group.replaceAll("\\.", "/")
+    artifact = this.artifact
+    version  = this.version
+    uri      = s"${repo}/${gpath}/${artifact}/${version}/${artifact}-${version}.${ext}"
+  } yield uri
+
+  /** Get URL or Path to package's Jar file */
+  def getJarURI = this.getArtifactURI("jar")
+
+  /** Get URL or Path to package's POM file */
+  def getPomURI = this.getArtifactURI("pom")
+
+  /** Get package's pom XML */
+  def getPomXML() = 
+    this.getPomURI map scala.xml.XML.load
+  
+
+} //---------- End of object PackData ------------- // 
+
+
+object PackData{
+
+  /** Read package from string */ 
+  def read(packstr: String, separator: String) = {
+    val fields = packstr.split(separator).map(_.trim)
+    fields match {
+      case Array(group, artifact, version)
+          => Some(PackData(group, artifact, version))
+      case _
+          => None
+    }
+  }
+
+  /**  Read package from a maven XML specification like the one below.
+
+    {{{
+    <!-- https://mvnrepository.com/artifact/org.json4s/json4s-native_2.11 -->
+    <dependency>
+        <groupId>org.json4s</groupId>
+        <artifactId>json4s-native_2.11</artifactId>
+        <version>3.5.3</version>
+    </dependency>
+    }}}
+    */
+  def readFromXML(xml: scala.xml.Node) = {
+    PackData(
+      group    = (xml \\ "dependency" \\ "groupId").text,
+      artifact = (xml \\ "dependency" \\ "artifactId").text,
+      version  = (xml \\ "dependency" \\ "version").text
+    )
+  }
+
+} //------- End of object PackData -------------- // 
+
 
 /** Extraction of data from POM files */
 object Pom{
@@ -81,6 +243,37 @@ object Pom{
     } yield PackData(group, artifact, version)
   }
 
+
+  /**  Get a XML node like this:
+
+          <dependency xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
+                      <groupId>javax.servlet</groupId>
+                      <artifactId>servlet-api</artifactId>
+                      <version>2.5</version>
+                      <scope>provided</scope>
+                  </dependency>
+  */
+  def getPomDependencies(pom: scala.xml.Node) = {
+    def getPomBasicDependencyData(node: scala.xml.Node) = {
+      val ch = node.child
+      for {
+        group     <- ch.find(_.label == "groupId").map(_.text)
+        artifact  <- ch.find(_.label == "artifactId").map(_.text)
+        version   <- ch.find(_.label == "version").map(_.text)
+        scope = ch.find(_.label == "scope")
+        if scope.isEmpty    
+      } yield PackData(group, artifact, version)
+    }
+
+    val deplist = for {
+      depRoot <- pom.child.find(_.label == "dependencies")
+      depsXml = depRoot.child.filter(_.label == "dependency")
+      deps    = depsXml map getPomBasicDependencyData filter (!_.isEmpty) map(_.get)
+    } yield deps
+    deplist.getOrElse(List())
+  } // ----- End of   getPomDependencies --- //
+
+
   /** Display attributes of a POM file in a summarized way */
   def showPomData(dat: PomData) = {
     println( "Package:         " + dat.name)
@@ -88,7 +281,8 @@ object Pom{
     println(s"Coordinates[1]:  group = ${dat.group} artifact = ${dat.artifact} version = ${dat.version}")
     println(s"Coordinates[2]:  ${dat.group}/${dat.artifact}/${dat.version}")
     println( "Url:             " + dat.url)
-    println( "Description:     " + dat.description)
+    println( "\nDescription:     \n" + dat.description.trim)
+    println("-----------------------------------------------")
     println("\n")
   }
 
@@ -108,7 +302,226 @@ object Pom{
 } // -------- End of object Pom -------- //
 
 
-object CentralMaven{
+object PackCache {
+
+  /** Get path to packages cache directory in ~/<prefix> directory.  */ 
+  def getCacheHome(prefix: String) =
+    Utils.joinPathList(System.getProperty("user.home"), prefix, "cache")
+
+  /** Get path to directory or URL directory which contains the jar file. */
+  def getPackagePath(cachePath: String, pack: PackData) = {
+    val repo     = cachePath
+    val gpath    = pack.group.replaceAll("\\.", "/")
+    val artifact = pack.artifact
+    val version  = pack.version
+    // s"${gpath}/${artifact}/${version}/${artifact}-${version}"
+    Utils.joinPathList(
+      cachePath,
+      gpath,
+      artifact,
+      version
+    )
+  }
+
+  def getPackageVersions(groupID: String, artifactID: String, cachePath: String) = {
+    val repo     = cachePath
+    val gpath    = groupID.replaceAll("\\.", "/")
+    val path = Utils.joinPathList(cachePath, gpath, artifactID)
+    (new java.io.File(path)).listFiles map (_.getName) toList
+  }
+
+
+  /** Get all packages available in the cache. */
+  def getPackagesInCache(cachePath: String) = {
+    import java.nio.file.{Files, Paths, Path}
+    val root = Paths.get(cachePath)
+    def getPack(p: Path) = {
+      val k = root relativize p getParent() getParent()
+      (k.getParent.toString.replace("/", "."), k.getFileName.toString)
+    }
+    Files.walk(root)
+      .filter(_.toString().endsWith(".jar"))
+      .toArray
+      .map(p => getPack(p.asInstanceOf[java.nio.file.Path]))
+      .toSet 
+  }
+
+  def getArtifactPath(cachePath: String, ext: String, pack: PackData) = {
+    val path = getPackagePath(cachePath, pack)
+    val file =  s"${pack.artifact}-${pack.version}.${ext}"
+    Utils.join(path, file)
+  }
+
+  def showPackageInfo(groupID: String, artifactID: String, cachePath: String) = {
+    val repo     = cachePath
+    val gpath    = groupID.replaceAll("\\.", "/")
+    val path     = Utils.joinPathList(cachePath, gpath, artifactID)
+    val version  = (new java.io.File(path))
+      .listFiles
+      .filter(_.isDirectory)
+      .head
+      .getName()
+    val pomFile = Utils.joinPathList(
+      path,
+      version,
+      s"${artifactID}-${version}.pom"
+    )
+    Pom.showPomDataFromUri(pomFile, showUri = true)
+  }
+
+  /** Check if package exists in cache */
+  def exists(cachePath: String, pack: PackData) = 
+    Utils.fileExists(getArtifactPath(cachePath, "jar", pack))
+
+  /** Show all jar files in the cache repository */
+  def showJarFiles(cachePath: String) = {
+    import java.nio.file.{Files, Paths}
+    Files.walk(Paths.get(cachePath)).filter(_.toString().endsWith(".jar")).forEach(println)
+  }
+
+} //---------- End of PackCache object ---------- // 
+
+
+object Packget {
+  
+  import Pom._
+  import jarget.reader._
+
+  def getAllDependencies(pack: PackData):  Reader[String, Set[PackData]] = {
+    var packlist = Set[PackData](pack)
+    //packlist += pack
+    for {    
+      xml  <- pack.getPomXML
+      deps = getPomDependencies(xml)
+      _    <- Reader.liftIO{ deps foreach (d => packlist += d)}
+    } yield packlist
+  }
+
+
+  def getAllDependenciesFromCache(cache: String, pack: PackData) = {
+    var packlist = Set[PackData](pack)
+    val pomFile = PackCache.getArtifactPath(cache, "pom", pack)
+    val xml = scala.xml.XML.loadFile(pomFile)
+    val deps = getPomDependencies(xml)
+    deps foreach (d => packlist += d)
+    packlist
+  } 
+
+  /** Download artifact with extension jar or pom to a given path. 
+
+      @param pack  - Package that will be download 
+      @param ext   - File extension - 'jar', 'pom', 'md5', 'sha256' and etc.
+      @param path  - Path where the artifact will be stored. 
+
+      Example: It will download the package's jar artifact and store it in 
+               ./download/jfreechart-1.0.17.jar 
+      {{{ 
+         val p    = PackData("org.jfree", "jfreechart", "1.0.17")
+         val repo =  "http://central.maven.org/maven2"
+         val path = "./downloads"
+         Packget.downloadArtifact(p, "jar", path) run(repo)         
+      }}}
+
+    */ 
+  def downloadArtifact(pack: PackData,
+                       ext: String,
+                       path: String): Reader[String, Unit] =
+    for (url <- pack.getArtifactURI(ext)){
+      val file  = Utils.join(path, pack.getArtifactFile(ext))
+      println(s"Downloading file ${file}.")
+      Utils.downloadFile(url, file)
+      println(s"File ${file} downloaded. Ok.")
+    }
+
+
+  /** Download package from cache directory if it is not downloaded yet.*/
+  def downloadPackageToCache(cache: String, pack: PackData):  Reader[String, Unit] = {
+    import scala.concurrent.Future
+    import concurrent.ExecutionContext.Implicits.global
+    import scala.concurrent.duration.Duration
+
+    Utils.mkdir(cache)
+    val packDir = PackCache.getPackagePath(cache, pack)
+    val packJar = PackCache.getArtifactPath(cache, "jar", pack)
+    
+    for(repoURL  <- Reader.ask[String])
+      if (!Utils.fileExists(packJar)){
+
+        // Create package's directory
+        Utils.mkdir(packDir)
+
+        // Select package that aren't in the cache yet.
+        val packlist = getAllDependencies(pack) run (repoURL) filter { p =>
+          val path = PackCache.getPackagePath(cache, p)
+          !Utils.fileExists(Utils.join(path, p.getArtifactFile("jar")))
+        }
+
+        println("Downloading ---------------------")
+        packlist foreach println
+        println("----------------------------------")
+
+        val result = Future.traverse(packlist){ p =>
+          // 1println("Downloading package " + p)
+          val path = PackCache.getPackagePath(cache, p)
+          Utils.mkdir(path)
+          println("Package path = " + p)
+
+          val fut = Future {
+            downloadArtifact(p, "pom", path).run(repoURL)
+            downloadArtifact(p, "jar", path).run(repoURL)
+          }
+          fut
+        }
+
+        result.onSuccess { case _ => println("Download Successful") }
+        result.onFailure { case _ => println("Download Failed") }
+        scala.concurrent.Await.result(result, Duration.Inf)
+      }
+
+  } // End of function downloadPackgeToCache 
+
+
+  /** Get list of paths to package's jar files in the cache. */
+  def getPackJarsFromCache(packList: List[PackData], cache: String, repoUrl: String) = {
+    def aux(pack: PackData) = {
+      if(!PackCache.exists(cache, pack))
+        downloadPackageToCache(cache, pack) run repoUrl
+      val packs = getAllDependenciesFromCache(cache, pack)
+      packs map { p => PackCache.getArtifactPath(cache, "jar", p) }
+    }
+    packList flatMap aux
+  }
+
+  /** Get Classpath string of all required packages' jar files in the
+      cache. If the packages aren't available in the cache, they will
+      be downloaded from a remote repository.
+   */
+  def getPackCPathFromCache(packList: List[PackData], cache: String, repoUrl: String) = {
+    val sep = System.getProperty("path.separator")
+     getPackJarsFromCache(packList, cache, repoUrl)
+      .foldLeft(".")((acc, jar) => acc + sep + jar)
+  }
+
+  /** Copy packages from cache to a destination directory. The packages
+      will be downloaded from a remote repository if not available in
+      the cache yet.
+    */ 
+  def copyPackageFromCache(packList: List[PackData], cache: String, repoUrl: String, dest: String) = {
+    Utils.mkdir(dest)
+    getPackJarsFromCache(packList, cache, repoUrl)
+      .foreach{ file =>
+      println(s"Copying ${new java.io.File(file).getName} to ${dest}")
+      Utils.copyFileTo(file, dest)
+    }
+  }
+
+
+} // ------ End of object Packget ------ // 
+
+
+
+
+object PackSearch{
 
   def makeRepositoryUrl(repoUrl: String) = (ext: String, pack: PackData) => {
     val gpath    = pack.group.replaceAll("\\.", "/")
@@ -192,158 +605,4 @@ object CentralMaven{
   }
 
 } // ------ End of CentralMaven ------------- //
-
-
-object Packget {
-  
-  import Pom._
-  import jarget.reader._
-
-  // type Repo[A] = Reader[String, String]
-
-  def getArtifactURL(ext: String) = (pack: PackData) => for {
-    repo     <- Reader.ask[String]
-    gpath    = pack.group.replaceAll("\\.", "/")
-    artifact = pack.artifact
-    version  = pack.version
-    uri      = s"${repo}/${gpath}/${artifact}/${version}/${artifact}-${version}.${ext}"
-  } yield uri
-
-  def getMavenPackgeURL(pack: PackData) = {
-    s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
-  }
-
-  val getJarUrl = getArtifactURL("jar")
-  val getPomUrl = getArtifactURL("pom")
-
-  def getFileNameFull(pack: PackData, ext: String) = {
-    s"${pack.artifact}-${pack.version}.${ext}"
-  }
-
-  def getPomXML(pack: PackData) = 
-    getPomUrl(pack) map scala.xml.XML.load
-  
-
-  def readPack(packstr: String) = {
-    val fields = packstr.split("/").map(_.trim)
-    fields match {
-      case Array(group, artifact, version)
-          => Some(PackData(group, artifact, version))
-      case _
-          => None
-    }
-  }
-
-  def formatPack(pack: PackData) = {
-    s"${pack.group}/${pack.artifact}/${pack.version}"
-  }
-
-  /**  Extract package data from Maven XML like this: 
-
-    <!-- https://mvnrepository.com/artifact/org.json4s/json4s-native_2.11 -->
-    <dependency>
-        <groupId>org.json4s</groupId>
-        <artifactId>json4s-native_2.11</artifactId>
-        <version>3.5.3</version>
-    </dependency>
-
-    */
-  def readPackMavenXML(xml: scala.xml.Node) = {
-    PackData(
-      group    = (xml \\ "dependency" \\ "groupId").text,
-      artifact = (xml \\ "dependency" \\ "artifactId").text,
-      version  = (xml \\ "dependency" \\ "version").text
-    )
-  }
-
-
-
-  /**  Get a XML node like this:
-
-          <dependency xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
-                      <groupId>javax.servlet</groupId>
-                      <artifactId>servlet-api</artifactId>
-                      <version>2.5</version>
-                      <scope>provided</scope>
-                  </dependency>
-  */
-  def getPomDependencies(pom: scala.xml.Node) = {
-    def getPomBasicDependencyData(node: scala.xml.Node) = {
-      val ch = node.child
-      for {
-        group     <- ch.find(_.label == "groupId").map(_.text)
-        artifact  <- ch.find(_.label == "artifactId").map(_.text)
-        version   <- ch.find(_.label == "version").map(_.text)
-        scope = ch.find(_.label == "scope")
-        if scope.isEmpty    
-      } yield PackData(group, artifact, version)
-    }
-
-    val deplist = for {
-      depRoot <- pom.child.find(_.label == "dependencies")
-      depsXml = depRoot.child.filter(_.label == "dependency")
-      deps    = depsXml map getPomBasicDependencyData filter (!_.isEmpty) map(_.get)
-    } yield deps
-    deplist.getOrElse(List())
-  }
-
-
-  def getAllDependencies(pack: PackData) = {
-    var packlist = Set[PackData](pack)
-    //packlist += pack
-    for {    
-      xml  <- getPomXML(pack)
-      deps = getPomDependencies(xml)
-      _    <- Reader.liftIO{ deps foreach (d => packlist += d)}
-    } yield packlist
-  }
-
-
-  def downloadArtifact(pack: PackData, ext: String, path: String) =
-    for (url <- getArtifactURL(ext)(pack)){
-      val file  = Utils.join(path, getFileNameFull(pack, ext))
-      println(s"Downloading file ${file}.")
-      Utils.downloadFile(url, file)
-      println(s"File ${file} downloaded. Ok.")
-    }
-
-
-  def downloadPackage(pack: PackData, path: String): Reader[String, Unit] = {
-    import scala.concurrent.Future
-    import concurrent.ExecutionContext.Implicits.global
-    import scala.concurrent.duration.Duration
-
-    Utils.mkdir(path)
-
-    println("Testing package")
-
-    for(repoURL  <- Reader.ask[String] ){
-
-      val packlist = getAllDependencies(pack) run (repoURL) filter { p =>
-        !Utils.fileExists(Utils.join(path, getFileNameFull(p, "jar")))
-      }
-
-      println("Downloading ---------------------")
-      packlist foreach println 
-      println("----------------------------------")
-
-      val result = Future.traverse(packlist){ p =>
-        println("Downloading package " + p)
-        //println(s"Downloading file ${file} / ${pack.group} - ${pack.artifact} - ${pack.version} ... ")
-        val fut = Future {
-          downloadArtifact(p, "pom", path).run(repoURL)
-          downloadArtifact(p, "jar", path).run(repoURL)
-        }
-        fut
-      }
-      result.onSuccess { case _ => println("Download Successful") }
-      result.onFailure { case _ => println("Download Failed") }
-      scala.concurrent.Await.result(result, Duration.Inf)      
-
-    }
-
-  } // End of downloadPackage 
-   
-
-} // ------ End of object Packget ------ // 
 

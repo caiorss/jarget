@@ -8,57 +8,61 @@ General
 Maven Packages / Jar Packages
 -----------------------------------------------------------------
 
- mvn -show [pack]                      - Show package's information
+ mvn -show <pack>                      - Show package's information
 
- mvn -pom  [pack]                      - Show package's pom file
+ mvn -pom  <pack>                      - Show package's pom file
 
- mvn -get  [pack]                      - Download package and dependencies to ./lib
+ mvn -pull <pack1,pack2,pack3...>      - Download package and dependencies to cache directory.
 
- mvn -get  [pack] -dir [path]          - Download package and dependencies to [path] directory.
+ mvn -copy <pack1,pack2,pack3..>       -  Copy packages from cache to ./lib downloading them if
+                                          they are not available.
 
- mvn -get [pack] -r [repo]             - Download package [pack] from a given repository [rpo].
 
- mvn -get scala [ver] [pack]           - Download a Scala package for an specific Scala version [ver].
-
- mvn -get scala [ver] [pack] -r [repo] - Download scala package from a given repository URL [repo]
-
- mvn -search   [query]                 - Search a package in search.maven.org, opening results in 
+ mvn -search   <query>                 - Search a package in search.maven.org, opening results in 
                                          the browser.
 
- mvn -search2  [query]                 - Search a package showing results in the console. (Experimental)
+ mvn -search2  <query>                 - Search a package showing results in the console. (Experimental)
 
- mvn -browse [package]                 - Open package official website.
+ mvn -browse <package>                 - Open package official website.
 
- mvn -go                               - Open web site https://mvnrepository.com
- mvn -go [package]                     - Open package mvnrepository url.
+ mvn -open                             - Open web site https://mvnrepository.com
+ mvn -open <package>                   - Open package mvnrepository url.
 
- mvn -clip -show                       - Extract package from XML in clipboard and show its information.
- mvn -clip -pom                        - Extract package from XML in clipboard and show its Pom file.
- mvn -clip -get                        - Extract package from XML in clipboard and download it to ./lib
 
+ mvn -clear                            - Clear package cache by removing all packages in cache directory.
+
+
+ Cache Control
+-----------------------------------------------------------------  
+
+ cache -path                            - Show cache directory path (directory ~/.jarget/cache)
+ cache -jars                            - Show all jar files in cache directory.
+ cache -pack                            - Show all packages available in the cache
+ cache -pack <pack>                     - Show all versions of a given package in the cache.
+ 
 
  Jar Files Inspection
 ----------------------------------------------------------------- 
 
 
- jar -man  [jar]                    - Show manifest.
- jar -main [jar]                    - Show main class.
- jar -show [jar]                    - Show all files.
+ jar -man  <jar>                    - Show manifest.
+ jar -main <jar>                    - Show main class.
+ jar -show <jar>                    - Show all files.
 
- jar -resource [jar]                - Show all asset/resource files disregarding *.class files.
- jar -resource [jar] [file]         - Print content of resource file.
+ jar -resource <jar>                - Show all asset/resource files disregarding *.class files.
+ jar -resource <jar> <file>         - Print content of resource file.
 
- jar -extract [jar] [file]          - Extract [file] from [jar] package to current directory.
- jar -extract [jar] [file] [path]   - Extract [file] from [jar] package to [path] directory.
+ jar -extract <jar> <file>          - Extract <file> from <jar> package to current directory.
+ jar -extract <jar> <file> <path>   - Extract <file> from <jar> package to <path> directory.
 
- jar -extract-all [jar] [path]      - Extract all files from jar package to [path] directory.
+ jar -extract-all <jar> <path>      - Extract all files from jar package to <path> directory.
 
- jar -extract-all [jar]             - Extract jar file to directory with same name of jar file 
+ jar -extract-all <jar>             - Extract jar file to directory with same name of jar file 
                                       at current directory. If file is lib/chart.jar it will  
                                       extracted to ./chart 
 
- jar -package [jar]                - Show all packages(aka namespaces) of classes within a jar file.
- jar -package [jar] [package]      - Show all classes of within a particular package.
+ jar -package <jar>                - Show all packages(aka namespaces) of classes within a jar file.
+ jar -package <jar> <package>      - Show all classes of within a particular package.
 
 
 Uber Jar 
@@ -82,13 +86,13 @@ Uber Jar
   
  $ ./jarget uber -scala -sh -o output.jar -m main.jar -p ./lib1 -j dependency1.jar -r ./resources1 ./resources2 
 
- uber [command]
+ uber <command>
 
-   -o [output file]         - (mandatory) Output jar file bundled with all dependencies.
-   -m [main jar file]       - (optional)  Jar file containing main class.
-   -p [path1] [path2] ...   - (optional)  Directories with jar file that will be included in the uber jar.
-   -j [jar1.jar] [jar2.jar] - (optional)  Single jar files that will be included in the uber jar.
-   -r [dir1] [dir2] ...     - (optional)  Directories containing resource files 
+   -o <output file>         - (mandatory) Output jar file bundled with all dependencies.
+   -m <main jar file>       - (optional)  Jar file containing main class.
+   -p <path1> <path2> ...   - (optional)  Directories with jar file that will be included in the uber jar.
+   -j <jar1.jar> <jar2.jar> - (optional)  Single jar files that will be included in the uber jar.
+   -r <dir1> <dir2> ...     - (optional)  Directories containing resource files 
    -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar 
    -sh                      - (optional)  Makes the jar file as a self-executable Unix app.                                 
 
@@ -97,16 +101,15 @@ Classpath
 -----------------------------------------------------------------
 
  cpath -show                        - Get classpath from ./lib directory
- cpath -show [path]                 - Get classpath from [path] directory
+ cpath -show <path]                 - Get classpath from <path] directory
 
 
 Exec  
 -----------------------------------------------------------------
 
- exec [program] [path] 
- exec [program] -- arg1 arg2 ...      - Executes a program passing classpath (-cp) from ./lib to it.
- exec [program] [path] -- arg1 arg2 
-  
+ exec <pack1,pack2...> -- <program> <arg1> <arg2>  - Executes a program passing classpath (-cp) flag with
+                                                     classpath of packages <pack1,pack2,..> separated by comma.
+
 
 Utilities
 -----------------------------------------------------------------
@@ -122,26 +125,28 @@ Crypto Hash Functions
 -----------------------------------------------------------------
 
  - Computes the file hash hex digest.
- digest -md5    -f [file]              
- digest -sha1   -f [file]
- digest -sha256 -f [file] 
+ digest -md5    -f <file>              
+ digest -sha1   -f <file>
+ digest -sha256 -f <file> 
 
  - Checks the file hex digest.
- digest -md5    -f [file]  [digest]     
- digest -sha1   -f [file]  [digest]
- digest -sha256 -f [file]  [digest]
+ digest -md5    -f <file>  <digest>     
+ digest -sha1   -f <file>  <digest>
+ digest -sha256 -f <file>  <digest>
 
  - Computes the string hex digest.
- digest -md5    -s [string]             
- digest -sha1   -s [string]
- digest -sha256 -s [string]
+ digest -md5    -s <string>             
+ digest -sha1   -s <string>
+ digest -sha256 -s <string>
 
  - Checks the string hex digest.
- digest -md5    -s [string]  [digest]    
- digest -sha1   -s [string]  [digest]
- digest -sha256 -s [string]  [digest]
+ digest -md5    -s <string>  <digest>    
+ digest -sha1   -s <string>  <digest>
+ digest -sha256 -s <string>  <digest>
 
-Note: [package] is <group>/<artifact>/<version>.
+-----------------------------------------------------------------
+
+Note: <package> is <group>/<artifact>/<version>.
 Examples of valid packages:
 
   - org.scalaz/scalaz-core_2.11/7.3.0-M15

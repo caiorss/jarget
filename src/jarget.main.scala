@@ -14,9 +14,8 @@ case class AppSettings(
 
 object MainUtils {
 
-
   def parsePack(pstr: String) = {
-    val p = Packget.readPack(pstr)
+    val p = PackData.read(pstr, "/")
     if (p.isEmpty) {
       println("Error: Invalid package format")
       System.exit(1)
@@ -45,7 +44,7 @@ object MainUtils {
   def getPackMaven() = {
     val p = Utils.getClipboardText()
       .map(scala.xml.XML.loadString)
-      .map(Packget.readPackMavenXML)
+      .map(PackData.readFromXML)
 
     if (p.isEmpty) {
       println("Error: Invalid maven XML package format")
@@ -55,7 +54,7 @@ object MainUtils {
   }
 
   def showPackageInfo(pack: PackData) = 
-    for (pom <- Packget.getPomXML(pack)){
+    for (pom <- pack.getPomXML()){
       val dat = Pom.getPomData(pom)
       println( "Package:         " + dat.name)
       println( "Packaging:       " + dat.packaging)
@@ -65,15 +64,14 @@ object MainUtils {
       println( "Description:     " + dat.description)
 
       println("\nDependencies:\n")
-      Packget.getPomDependencies(pom) foreach { p =>
-        println("  - " + Packget.formatPack(p) + "\n")
+      Pom.getPomDependencies(pom) foreach { p =>
+        println("  - " + p.format() + "\n")
       }
     }
   
 
-
   def showPom(pack: PackData) = {
-    println(Packget.getPomXML(pack))
+    pack.getPomXML() foreach println 
   }
 
   def openUrl(pack: PackData) = {
@@ -86,7 +84,7 @@ object MainUtils {
   def getAppSettings(prop: java.util.Properties) = {
     val sopt = for {
       version <- Option(prop.getProperty("jarget.version"))
-      repoUrl <- Option(prop.getProperty("jarget.mvn.url"))
+      repoUrl <- Option(prop.getProperty("jarget.repository.url"))
       website <- Option(prop.getProperty("jarget.website"))
     } yield AppSettings(version, repoUrl, website)
     sopt match {
@@ -103,6 +101,27 @@ object MainUtils {
 object Main{
 
   import MainUtils._
+
+  def tryMVNGet(action: => Unit) = 
+    try {
+      action
+      System.exit(0)
+    } catch {
+      case ex: java.io.FileNotFoundException
+          => {
+            println("Error: package not found.")
+            System.exit(1)
+          }
+
+      case ex: java.net.UnknownHostException
+          => {
+            println("Error: DNS Failure")
+            System.exit(1)
+          }
+
+      // Throw unknown exception again  
+      case ex: Throwable => throw ex 
+    }
 
   /** Handles utils commands. - ./jarget utils <commands>  */
   def parseUtilsArgs(arglist: List[String]) = arglist match {
@@ -353,6 +372,78 @@ object Main{
     }
   }
 
+
+  def parseMvnArgs(args: List[String], config: AppSettings, cachePath: String ) = {
+
+    val repoUrl = Option(System.getenv("jarget.url")) getOrElse config.repoUrl
+
+    def getLibPath(path: String) = Option(System.getenv("jarget.path")) getOrElse path 
+
+    // Parse package list separated by (;)
+    //
+    def parsePackageList(plist: String) =
+      plist.split(",").map(parsePack).toList 
+
+    args.toList match {
+
+      case List("-pom", pstr)
+          => showPom(parsePack(pstr)) run repoUrl
+
+
+      case List("-show", pstr)
+          => showPackageInfo(parsePack(pstr)) run repoUrl 
+
+     //  Copy packages from cache directory to ./lib and download it
+     //  if has not been downloaded yet.
+      case List("-copy", pstr)
+          => tryMVNGet {
+            val packs = parsePackageList(pstr)
+            Packget.copyPackageFromCache(packs, cachePath, repoUrl, getLibPath("./lib"))
+          }
+
+      // Pull packages from remote repository to package cache.  
+      case List("-pull", pstr)
+          => tryMVNGet {
+            val packs = parsePackageList(pstr)
+            Packget.getPackJarsFromCache(packs, cachePath, repoUrl)
+          }
+
+      // Clean cache packages
+      case List("-clear")
+          => tryMVNGet {
+            println("Cleaning cache")
+            Utils.deleteDirectory(cachePath, true)
+          }      
+ 
+      case List("-search", query)
+          => PackSearch.searchPackageBrowser(query)
+
+      case List("-search2", query)
+          => PackSearch.searchPackage(query)
+
+      case List("-search2", query, n)
+          => PackSearch.searchPackage(query, n.toInt)
+
+      case List("-browse", pstr)
+          => openUrl(parsePack(pstr))
+
+       // Open package documentation in browser  
+      case List("-open")
+          => Utils.openUrl("https://mvnrepository.com")
+
+       // Open package documentation in browser          
+      case List("-open", pstr)
+          => {
+            val pack = parsePack(pstr)
+            val url  = s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
+            Utils.openUrl(url)
+          }
+
+      case _ => println("Error: invalid command.")
+        
+    }
+  } // ----- End of parseMvnArgs ---------- //
+
   /** Displays user help stored in the asset file user-help.txt 
     */
   def showHelp(version: String) = {    
@@ -374,6 +465,8 @@ object Main{
         .map(MainUtils.getAppSettings _ )
         .run(getClass())
 
+    val cachePath = PackCache.getCacheHome(".jarget")
+
     args.toList match {
 
       case List() | List("-h") | List("-help")
@@ -385,74 +478,10 @@ object Main{
       case List("-site")
         => Utils.openUrl(config.website)
 
-      case List("mvn", "-pom", pstr)
-          => showPom(parsePack(pstr))
-
-      case List("mvn", "-show", pstr)
-          => showPackageInfo(parsePack(pstr)) run config.repoUrl
-
-      case List("mvn", "-show", pstr, "-r", repo)
-          => showPackageInfo(parsePack(pstr)) run repo 
-
-      // Download a package and its dependencies
-      case List("mvn", "-get", pstr)
-          => {
-            println("Downloading Packages")
-            Packget.downloadPackage(parsePack(pstr), "./lib") run config.repoUrl
-          }
-
-      case List("mvn", "-get", pstr, "-r", repo)
-          => {
-            println("Downloading Packages")
-            Packget.downloadPackage(parsePack(pstr), "./lib") run repo 
-          }
-        
-
-      // Download a Scala package  
-      case List("mvn", "-get", "scala", version, pstr)
-          => {
-            val pack = parseScalaPack(pstr, version)
-            Packget.downloadPackage(pack, "./lib") run config.repoUrl 
-          }
-
-      case List("mvn", "-get", "scala", version, pstr, repo)
-          => {
-            val pack = parseScalaPack(pstr, version)
-            Packget.downloadPackage(pack, "./lib") run repo 
-          }
-
-      case List("mvn", "-path", path, "-get", pstr)
-          => Packget.downloadPackage(parsePack(pstr), path)
-
-      case List("mvn", "-search", query)
-          => CentralMaven.searchPackageBrowser(query)
-
-      case List("mvn", "-search2", query)
-          => CentralMaven.searchPackage(query)
-
-      case List("mvn", "-search2", query, n)
-          => CentralMaven.searchPackage(query, n.toInt)
-
-      case List("mvn", "-browse", pstr)
-          => openUrl(parsePack(pstr))
-
-      case List("mvn", "-go")
-          => Utils.openUrl("https://mvnrepository.com")
-
-      case List("mvn", "-go", pstr)
-          => Utils.openUrl(Packget.getMavenPackgeURL(parsePack(pstr)))
-
-      case List("mvn", "-clip", "-pom")
-          => showPom(getPackMaven())
-
-      case List("mvn", "-clip", "-show")
-          => showPackageInfo(getPackMaven())
-
-      case List("mvn", "-clip", "-get")
-          => Packget.downloadPackage(getPackMaven(), "./lib")
+      //--------- Mvn commands ------------------ //
+      case "mvn"::rest  => parseMvnArgs(rest, config, cachePath)
 
       // --------  Utils Commands ------------------- //
-
       case "utils"::rest => parseUtilsArgs(rest)
 
       // ------ Jar package inspection and manipulation -- //
@@ -460,7 +489,6 @@ object Main{
           =>  JarUtils.withJarException{ parseJarArgs(rest) }
 
      //--------- Pom Files Inspection ---------- //
-
       case "pom"::rest => rest foreach { uri => Pom.showPomDataFromUri(uri, true)}
 
      //------------  Make Uber Jar ------------- //
@@ -500,20 +528,61 @@ object Main{
       case "digest"::rest
           => parseDigestArgs(rest)
 
+
+     //-------- Package cache ----------------------- //
+
+      // Show directory where are the cached packages, jar files and pom files.
+      case List("cache", "-path")
+          => println(cachePath)
+
+
+      // Show all packages available in the cache repository 
+      case List("cache", "-pack")
+          => PackCache.getPackagesInCache(cachePath)
+          .foreach { case (group, artifact) => println(s"${group}/${artifact}") }
+
+      // Show all versions of some package available in the cache repository
+      case List("cache", "-pack", packStr)
+          => packStr.split("/") match {
+
+            case Array(groupID, artifactID)
+                => try {
+                  PackCache.showPackageInfo(groupID, artifactID, cachePath)
+                  PackCache.getPackageVersions(groupID, artifactID, cachePath)
+                    .foreach{version =>
+                    println (s"${groupID}/${artifactID}/${version}")
+                  }
+                } catch {
+                  case _ : Throwable => println("Error: package not found")
+                }
+            case _
+                => println("Error: Invalid package specification.")
+          }
+
+
+      case "cache"::"-cpath"::packList
+          => println(Packget.getPackCPathFromCache(packList map parsePack, cachePath, config.repoUrl))
+
+      // Show all jar files in the cache directory   
+      case List("cache", "-jars")
+          => PackCache.showJarFiles(cachePath)
+
+      case "cache"::"-jars"::packList
+          => Packget.getPackJarsFromCache(
+            packList map parsePack,
+            cachePath,
+            config.repoUrl)
+          .foreach(println)
+
+
       //-------- Generic Command with Classpath ------//
 
-      // run generic command as ./command -cp $CLASSPATH arg1 arg2 arg2 ...
-      case List("exec", command)
-          => JarUtils.runWithClassPath(command, List(), "./lib")
-
-      case List("exec", command, path)
-          => JarUtils.runWithClassPath(command, List(), path)
-
-      case "exec"::command::"--"::args
-          => JarUtils.runWithClassPath(command, args, "./lib")
-
-      case "exec"::command::path::"--"::args  
-          => JarUtils.runWithClassPath(command, args, path)
+      case "exec"::pstr::"--"::command::args
+          => tryMVNGet {
+            val packList = pstr split(",") map parsePack toList
+            val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
+            JarUtils.runWithClassPath2(command, args, cpath)
+          }
 
       case _ => println("Error: Invalid command")
     }
