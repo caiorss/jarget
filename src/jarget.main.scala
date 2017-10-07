@@ -557,7 +557,7 @@ object Main{
 
       case "exec"::pstr::"--"::command::args
           => {
-            val packList = pstr split(":") map parsePack toList
+            val packList = pstr split(",") map parsePack toList
             val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
              JarUtils.runWithClassPath2(command, args, cpath)
           }
