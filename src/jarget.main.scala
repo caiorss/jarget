@@ -102,6 +102,27 @@ object Main{
 
   import MainUtils._
 
+  def tryMVNGet(action: => Unit) = 
+    try {
+      action
+      System.exit(0)
+    } catch {
+      case ex: java.io.FileNotFoundException
+          => {
+            println("Error: package not found.")
+            System.exit(1)
+          }
+
+      case ex: java.net.UnknownHostException
+          => {
+            println("Error: DNS Failure")
+            System.exit(1)
+          }
+
+      // Throw unknown exception again  
+      case ex: Throwable => throw ex 
+    }
+
   /** Handles utils commands. - ./jarget utils <commands>  */
   def parseUtilsArgs(arglist: List[String]) = arglist match {
 
@@ -375,21 +396,21 @@ object Main{
      //  Copy packages from cache directory to ./lib and download it
      //  if has not been downloaded yet.
       case List("-copy", pstr)
-          => {
+          => tryMVNGet {
             val packs = parsePackageList(pstr)
             Packget.copyPackageFromCache(packs, cachePath, repoUrl, getLibPath("./lib"))
           }
 
       // Pull packages from remote repository to package cache.  
       case List("-pull", pstr)
-          => {
+          => tryMVNGet {
             val packs = parsePackageList(pstr)
             Packget.getPackJarsFromCache(packs, cachePath, repoUrl)
           }
 
       // Clean cache packages
       case List("-clear")
-          => {
+          => tryMVNGet {
             println("Cleaning cache")
             Utils.deleteDirectory(cachePath, true)
           }      
@@ -557,10 +578,10 @@ object Main{
       //-------- Generic Command with Classpath ------//
 
       case "exec"::pstr::"--"::command::args
-          => {
+          => tryMVNGet {
             val packList = pstr split(",") map parsePack toList
             val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
-             JarUtils.runWithClassPath2(command, args, cpath)
+            JarUtils.runWithClassPath2(command, args, cpath)
           }
 
       case _ => println("Error: Invalid command")
