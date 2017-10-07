@@ -1375,6 +1375,8 @@ From version >= 1.5 jarget will be shrunk with proguard.
 
  - Release [[https://github.com/caiorss/jarget/raw/v1.5.1-release/jarget][jarget v1.5.1]] 
 
+ - Release [[https://github.com/caiorss/jarget/raw/v2.0-beta-release/jarget][jarget v2.0-beta]]  
+
 Or it can be downloaded with those shell commands below: 
 
 #+BEGIN_SRC sh
