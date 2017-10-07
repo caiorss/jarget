@@ -773,7 +773,6 @@ listed in '$PATH' variable.
   #
   $ ./chartScript.sh
 #+END_SRC
-
 *** Command to manipulate Jar packages
 **** Show manifest file 
 
@@ -1336,7 +1335,7 @@ $ ./bin/jarget
 # Or run it with 
 $ java -jar bin/jarget
 
-# Or ruin it with 
+# Or run it with 
 $ sh ./bin/jarget doc
 
 #+END_SRC
@@ -1466,7 +1465,10 @@ From version >= 1.5 jarget will be shrunk with proguard.
 
  - Release [[https://github.com/caiorss/jarget/raw/v1.5.1-release/jarget][jarget v1.5.1]] 
 
- - Release [[https://github.com/caiorss/jarget/raw/v2.0-beta-release/jarget][jarget v2.0-beta]]  
+ - Release [[https://github.com/caiorss/jarget/raw/v2.0-beta-release/jarget][jarget v2.0-beta]]   - Added pacakge caching feature.
+
+ - Release [[https://github.com/caiorss/jarget/raw/v2.0.1-beta/jarget][jarget v2.0.1-beta]] - Allows scripting with dependencies.
+
 
 Or it can be downloaded with those shell commands below: 
 
@@ -1515,13 +1517,12 @@ jarget - Tool to download jar packages.
 ** TODO Tasks 
 
  - [ ]  - Add search features.  
- - [ ]  - Add package cache 
+ - [X]  - Add package cache 
  - [ ]  - Improve command line handling 
  - [ ]  - Improve error handling. 
  - [X]  - Feature to make Uber Jar 
  - [X]  - Shrink the generated uber jar using Pro-guard. 
  - [ ]  - Create a Windows exe wrapper
- - [ ]  - Expose more Java Platform features through command line.
  - [X]  - Crypto Hash commands such as md5sum, sha256sum ... 
 
 
