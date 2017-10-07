@@ -584,6 +584,14 @@ object Main{
             JarUtils.runWithClassPath2(command, args, cpath)
           }
 
+      case "script"::pstr::"--"::script::args
+          => tryMVNGet {
+            val packList = pstr split(",") map parsePack toList
+            val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
+            //println(s"Script = ${script} args = ${args}")
+            JarUtils.runWithClassPath2("scala", "-save"::script::args, cpath)
+          }
+
       case _ => println("Error: Invalid command")
     }
 
