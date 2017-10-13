@@ -1,6 +1,7 @@
 package jarget.main
 
-import jarget.utils.{Utils, JarUtils, JarBuilder}
+import jarget.utils.{Utils, JarUtils}
+import jarget.utils.JarBuilder
 import jarget.utils.OptParse
 import jarget.mvn._
 import jarget.reader._
