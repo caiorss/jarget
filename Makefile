@@ -91,6 +91,12 @@ doc-upload: $(src) jarget.jar
 	scaladoc $(src) -author -doc-title "Jarget - Scala/Java automation tool" -doc-version "1.0" -doc-source-url "https://github.com/caiorss/jarget" -d ./bin/docs
 	cd bin && git add docs/ && git commit -a -m "Update docs" && git push 
 
+page:
+	cp README.html bin/index.html
+	cp -r -v images   bin/images
+	cp -r -v scripts  bin/scripts
+	cd bin && git add images scripts 
+	cd bin && git commit -a -m "Update project website" && git push 
 
 tags: $(src)
 	ctags src/*.scala 
