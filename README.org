@@ -538,23 +538,23 @@ scala>
 
 *Run script with scala and dependencies*
 
-It runs the script [[file:sample-scripts/chartTest.scala][sample-scripts/chartTest.scala]] with jfreechart
+It runs the script [[file:scripts/chartTest.scala][scripts/chartTest.scala]] with jfreechart
 library in passed to scala classpath. 
 
 #+BEGIN_SRC sh 
-$ jarget exec org.jfree/jfreechart/1.0.17 -- scala sample-scripts/chartTest.scala 
+$ jarget exec org.jfree/jfreechart/1.0.17 -- scala scripts/chartTest.scala 
 #+END_SRC
 
 The command above runs: 
 
 #+BEGIN_SRC sh 
-scala -cp <classpath of  org.jfree/jfreechart/1.0.17> sample-scripts/chartTest.scala 
+scala -cp <classpath of  org.jfree/jfreechart/1.0.17> scripts/chartTest.scala 
 #+END_SRC
 
 *Compile scala program with dependencies* 
 
 #+BEGIN_SRC sh 
-$ jarget exec org.jfree/jfreechart/1.0.17 -- scalac sample-scripts/chartTest.scala -d chart.jar 
+$ jarget exec org.jfree/jfreechart/1.0.17 -- scalac scripts/chartTest.scala -d chart.jar 
 
 $ file chart.jar 
 chart.jar: Java archive data (JAR)
@@ -680,9 +680,9 @@ Jarget can be used to run scala scripts with java packages
 dependencies by downloading them if they are not available in the
 jarget package cache file:~/.jarget/cache. 
 
-Example: [[file:sample-scripts/chartScript.sh]]
+Example: [[file:scripts/chartScript.sh]]
 
-#+BEGIN_SRC scala :tangle sample-scripts/chartScript.sh
+#+BEGIN_SRC scala :tangle scripts/chartScript.sh
   #!/bin/sh
   DEPS=org.jfree/jfreechart/1.0.17
   exec jarget script "$DEPS" -- "$0" "$@"
@@ -1036,7 +1036,7 @@ fi
 #+END_SRC
 
 
-Example: Make a scala uber-jar from the program [[file:sample-scripts/chartTest.scala][file:sample-scripts/chartTest.scala]] 
+Example: Make a scala uber-jar from the program [[file:scripts/chartTest.scala][file:scripts/chartTest.scala]] 
 
 #+BEGIN_SRC sh 
 
