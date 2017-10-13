@@ -489,7 +489,7 @@ object Packget {
       val packs = getAllDependenciesFromCache(cache, pack)
       packs map { p => PackCache.getArtifactPath(cache, "jar", p) }
     }
-    packList flatMap aux
+    (packList flatMap aux).toSet.toList
   }
 
   /** Get Classpath string of all required packages' jar files in the
