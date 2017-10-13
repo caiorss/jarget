@@ -1634,8 +1634,11 @@ From version >= 1.5 jarget will be shrunk with proguard.
 
  - Release [[https://github.com/caiorss/jarget/raw/v2.0-beta-release/jarget][jarget v2.0-beta]]   - Added pacakge caching feature.
 
- - Release [[https://github.com/caiorss/jarget/raw/v2.0.1-beta/jarget][jarget v2.0.1-beta]] - Allows scripting with dependencies.
+ - Release [[https://github.com/caiorss/jarget/raw/v2.0.1-beta/jarget][jarget v2.0.1-beta]] - Allows scripting with dependencies (maven coordinates).
 
+ - Release [[https://github.com/caiorss/jarget/raw/v2.1.0-beta-release/jarget][jarget v2.1.0-beta]] - Uber jars can be built with maven
+   coordinates specifications and added more examples to
+   documentation.
 
 Or it can be downloaded with those shell commands below: 
 
