@@ -82,20 +82,20 @@ Uber Jar
 
  $ ./jarget uber -scala -o output.jar -m main.jar
 
- $ ./jarget uber -scala -o output.jar -m main.jar -p ./lib1 ./lib2 
+ $ ./jarget uber -scala -o output.jar -m main.jar -jd ./lib1 ./lib2 
   
- $ ./jarget uber -scala -sh -o output.jar -m main.jar -p ./lib1 -j dependency1.jar -r ./resources1 ./resources2 
+ $ ./jarget uber -scala -sh -o output.jar -m main.jar -jd ./lib1 -j dependency1.jar -r ./resources1 ./resources2 
 
  uber <command>
 
    -o <output file>         - (mandatory) Output jar file bundled with all dependencies.
    -m <main jar file>       - (optional)  Jar file containing main class.
-   -p <path1> <path2> ...   - (optional)  Directories with jar file that will be included in the uber jar.
+   -p <pack1> <pack2> ...   - (optional)  Packages int the format <group>/<artifact>/<version>
    -j <jar1.jar> <jar2.jar> - (optional)  Single jar files that will be included in the uber jar.
+   -jd <dir1> <dir2> ...    - (optional)  Directories containing jar files that will be included in the uber jar.
    -r <dir1> <dir2> ...     - (optional)  Directories containing resource files 
    -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar 
    -sh                      - (optional)  Makes the jar file as a self-executable Unix app.                                 
-
 
 Classpath
 -----------------------------------------------------------------
