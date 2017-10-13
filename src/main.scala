@@ -1,6 +1,7 @@
 package jarget.main
 
-import jarget.utils.{Utils, JarUtils, JarBuilder}
+import jarget.utils.{Utils, JarUtils}
+import jarget.utils.JarBuilder
 import jarget.utils.OptParse
 import jarget.mvn._
 import jarget.reader._
@@ -217,7 +218,7 @@ object Main{
 
 
   /** Handles command Uber. ./jarget uber <options> */
-  def parseUberArgs(arglist: List[String]) = {
+  def parseUberArgs(arglist: List[String],  config: AppSettings, cachePath: String) = {
     val parser = new OptParse()
 
     var sh                          = false
@@ -229,6 +230,8 @@ object Main{
     var filesEntry:  List[String]   = List()
     var jarFiles:    List[String]   = List()
     var resources:   List[String]   = List()
+    var packList:    List[PackData] = List()
+
 
     parser.addOption(
       "-scala",
@@ -257,9 +260,16 @@ object Main{
     )
 
     parser.addOption(
-      "-p",
-      "Paths containing libraries",
+      "-jd",
+      "Paths containing libraries (jar files)",
        arg => paths = arg.getOneOrMany()
+    )
+
+    parser.addOption(
+      "-p",
+      "Java package with maven coordinates <group>/<artifact>/<version>",
+      false,
+      arg => { packList = arg.getOneOrMany().map(parsePack)}
     )
 
     parser.addOption(
@@ -287,8 +297,11 @@ object Main{
       arg => resources = arg.getOneOrMany()
     )
 
-    try
+    try{
       parser.parseArgs(arglist)
+      val packFiles =  Packget.getPackJarsFromCache(packList, cachePath, config.repoUrl)
+      jarFiles = jarFiles ++ packFiles
+    }
     catch {
       case ex: java.lang.IllegalArgumentException
           => {
@@ -515,7 +528,7 @@ object Main{
           }
 
       case "uber"::rest
-          => parseUberArgs(rest)
+          => parseUberArgs(rest, config, cachePath)
 
 
       // ------- Class Path  ----------------- //

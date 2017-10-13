@@ -1,29 +1,79 @@
-all:       jarget.jar
-sh:        bin/jarget 
-sh-guard:  
+# Makefile to build jarget. 
+#
+# Rules: 
+# 
+# $ make check		-> Print make file variables to check them.
+#
+# $ make			-> Build jarget.jar app runnable with '$ scala jarget.jar' (not self-contained).
+#
+# $ make force      -> Build jarget.jar forcing compilation without the fsc daemon.
+#
+# $ make sh			-> Build bin/jarget - uber jar file for testing.
+#
+# $ make sh-guard	-> Build bin/jarget - uber jar shrunk with proguard. 
+#
+# $ make install    -> Copy file bin/jarget to ~/bin/jarget or $HOME/bin/jarget 
+#
+#
+#============================ V A R I A B L E S =======================# 
+
+target   := jarget.jar 
+#sh-guard := bin/jarget  
+
+# Name of executable uber-jar file not shrunk by proguard.
+sh     := bin/jarget
 
 fatjar :=  bin/jarget-uber.jar
 
-src := src/jarget.main.scala src/jarget.utils.scala src/jarget.mvn.scala src/jarget.crypto.scala src/jarget.logger.scala src/jarget.reader.scala 
+# Scala source files necessary to build the project
+src			:= $(wildcard src/*.scala)
+
+# Assets/resources files to be bundled with the uber-jar 
+assetfiles	:= $(wildcard assets/*)
 
 SCALA_XML=scala-xml_2.12-1.0.6.jar
 SCALA_XML_PATH=$(shell dirname $(shell dirname $(shell which scala)))/lib/$(SCALA_XML)
 
-jarget.jar : $(src)
+
+#=============================  R U L E S =================================#
+
+all:      $(target)
+sh:       $(sh)
+# sh-quard: $(sh-guard)
+
+# This rule checks make variables 
+check:
+	@echo "src             = "$(src)
+	@echo "assetfiles      = "$(assetfiles)
+	@echo "SCALA_XML_PATH  = "$(SCALA_XML_PATH)
+
+
+$(target) : $(src)
 	fsc $(src) -d jarget.jar
 
-bin/jarget: jarget.jar assets/app.properties assets/user-help.txt
-	mkdir -p bin
-	scala jarget.jar uber -scala -sh -o bin/jarget -m jarget.jar -j $(SCALA_XML_PATH) -r assets
+force: $(src)
+	scalac $(src) -d jarget.jar 
 
-$(fatjar): jarget.jar assets/app.properties assets/user-help.txt
+bin/jarget: $(target) $(assetfiles)
+	mkdir -p bin
+	scala jarget.jar uber -scala -sh -o $(sh) -m jarget.jar -j $(SCALA_XML_PATH) -r assets
+
+$(fatjar): 
 	mkdir -p bin 
 	scala jarget.jar uber -scala -o bin/jarget-uber.jar -m jarget.jar -j $(SCALA_XML_PATH) -r assets
 
-sh-guard: $(fatjar) config.pro
-	echo $(fatjar)
+# Generates files bin/jarget shrunk with proguard
+#
+sh-guard: $(target) $(assetfiles) config.pro
+	mkdir -p bin
+	@# Generate uber jar 
+	scala jarget.jar uber -scala -o bin/jarget-uber.jar -m jarget.jar -j $(SCALA_XML_PATH) -r assets
+	@# Shrink app with proguard 
 	java -jar proguard.jar @config.pro
+	@# Make file executable 
 	scala jarget.jar uber -exjar bin/jarget-pro.jar bin/jarget
+	@# Remove temporary files
+	rm -rf bin/jarget-uber.jar bin/jarget-pro.jar
 
 install: bin/jarget
 	cp -v bin/jarget ~/bin
