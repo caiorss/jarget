@@ -416,7 +416,10 @@ object Main{
           }      
  
       case List("-search", query)
-          => PackSearch.searchPackageBrowser(query)
+          => {
+            val q = java.net.URLEncoder.encode(query)
+            Utils.openUrl("https://mvnrepository.com/search?q=" + q)
+          }
 
       case List("-search2", query)
           => PackSearch.searchPackage(query)
