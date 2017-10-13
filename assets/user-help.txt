@@ -152,13 +152,3 @@ Examples of valid packages:
   - org.scalaz/scalaz-core_2.11/7.3.0-M15
 
   - org.jfree/jfreechart/1.0.17
-
-Note: The XML in the clipboard is a maven coordinate: 
-
-    <!-- https://mvnrepository.com/artifact/org.scalaz/scalaz-core_2.11 -->
-    <dependency>
-        <groupId>org.scalaz</groupId>
-        <artifactId>scalaz-core_2.11</artifactId>
-        <version>7.3.0-M15</version>
-    </dependency>
-    
