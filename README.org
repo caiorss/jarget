@@ -1,5 +1,6 @@
 #+TITLE:  Jarget - Java Platform Command Line Toolbox
 #+AUTHOR:   Caio Rodrigues
+#+DESCRIPTION: Command line toolbox for java platform, scala automation and dependency manager. 
 #+KEYWORDS: jarget jar tool java scala automation deployment toolbox uber fatjar 
 #+STARTUP: content
 #+INFOJS_OPT: view:info toc:t ltoc:t ftoc:nil mouse:underline button:nil path:theme/org-info.js
@@ -675,10 +676,16 @@ $ jarget cache -jars
     :PROPERTIES:
     :ID:       b900cee2-b19f-41ae-8ad6-006ab37b9dfc
     :END:
+**** Overview 
 
 Jarget can be used to run scala scripts with java packages
 dependencies by downloading them if they are not available in the
 jarget package cache file:~/.jarget/cache. 
+
+**** Example 1 - Script with JFreeChart 
+     :PROPERTIES:
+     :ID:       cbb743e4-f9a8-4784-be27-b8c0e9599f8b
+     :END:
 
 Example: [[file:scripts/chartScript.sh]]
 
@@ -761,6 +768,175 @@ listed in '$PATH' variable.
   #
   $ ./chartScript.sh
 #+END_SRC
+**** Example 2 - Script that generates QRCode 
+     :PROPERTIES:
+     :ID:       121d73f6-37d4-4a7d-9774-9092d7bf23a9
+     :END:
+
+This script generates a [[https://en.wikipedia.org/wiki/QR_code][QRCode]] from argument passed from command line
+saving it to an image file or showing it with a JFrame window.
+
+File: [[file:scripts/qrcode.sh][file:scripts/qrcode.sh]]
+
+#+BEGIN_SRC scala  :tangle scripts/qrcode.sh   :tangle-mode (identity #o755) :padline no
+  #!/bin/sh
+  DEPS=com.google.zxing/core/2.2,com.google.zxing/javase/2.2
+  exec jarget script "$DEPS" -- "$0" "$@"
+  !#
+
+  object QRCode { 
+
+    import javax.imageio.ImageIO;
+    import java.io._
+    import java.util.HashMap
+    import com.google.zxing.{BarcodeFormat, BinaryBitmap, EncodeHintType, MultiFormatReader}
+    import com.google.zxing.{MultiFormatWriter, NotFoundException, Result, WriterException}
+    import com.google.zxing.client.j2se.MatrixToImageWriter
+    import com.google.zxing.common.{ BitMatrix, HybridBinarizer}
+    import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
+
+    def writeToFile(
+      data:    String,
+      file:    String  = "out.png",
+      width:   Int     = 200,
+      height:  Int     = 200,
+      charset: String  = "UTF-8") = {
+      val hintMap = {
+        val h = new HashMap[EncodeHintType, ErrorCorrectionLevel]();
+        h.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+        h
+      }
+      val matrix = new MultiFormatWriter().encode(
+        new String(data.getBytes(charset), charset),
+        BarcodeFormat.QR_CODE, width, height, hintMap)
+      MatrixToImageWriter.writeToFile(matrix, "png", new File(file));
+    }
+
+
+    def writeToImage(
+      data:    String,
+      width:   Int     = 200,
+      height:  Int     = 200,
+      charset: String  = "UTF-8" ): java.awt.image.BufferedImage = {
+      val hintMap = {
+        val h = new HashMap[EncodeHintType, ErrorCorrectionLevel]();
+        h.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+        h
+      }
+      val matrix = new MultiFormatWriter().encode(
+         new String(data.getBytes(charset), charset),
+        BarcodeFormat.QR_CODE, width, height, hintMap)
+      MatrixToImageWriter.toBufferedImage(matrix)
+    }
+
+
+    /** Show QR code in a JFrame */
+    def show(
+      data:    String,
+      width:   Int         = 200,
+      height:  Int         = 200,
+      charset: String      = "UTF-8",
+      title:   String      = "QRCode",
+      exitOnClose: Boolean = false
+    ) = {
+      import javax.swing.{ImageIcon, JFrame, JLabel, JPanel}
+      val bimg  = writeToImage(data, width, height, charset)
+      val frame = new javax.swing.JFrame("Frame 1")
+      frame.setSize(400, 400)
+      val pic = new javax.swing.JLabel(new ImageIcon(bimg))
+      frame.add(pic)
+      if (exitOnClose)
+        frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE)
+      frame.setVisible(true)
+    }
+
+  } // ------- End of Object QRCode ------------ // 
+
+
+  val testUrl = "https://msdn.microsoft.com/en-us/library/ff798384.aspx"
+
+  args.toList match { 
+    case List("-show", data)
+        => QRCode.show(data, exitOnClose = true)
+    case List("-file", data, file)
+        => QRCode.writeToFile(data, file)
+
+    case List("-test1")
+        => {
+          println("Generating QRcode for testing URL: " + testUrl)
+          QRCode.show(testUrl, exitOnClose = true)
+        }
+
+    case List("-test2")
+        => {
+          println("Generating QRcode image file images/qrcodeTest.png for testing URL: " + testUrl)
+          QRCode.writeToFile(testUrl, "images/qrcodeTest.png")
+        }
+
+    case _
+        => {
+          println("Valid commands")
+          println("$ jqrcode -file <file> <data>")
+          println("$ jqrcode -show <data>")
+        }   
+  }
+
+#+END_SRC
+
+*Running*
+
+#+BEGIN_SRC sh 
+$ scripts/qrcode.sh 
+Valid commands
+$ jqrcode -file <file> <data>
+$ jqrcode -show <data>
+#+END_SRC
+
+*Generating image with QRcode.*
+
+It will generate a QRCode shown in the image below containing "Hello
+world QRCode". The script dependencies are downloaded to the cache
+directory if they are not available yet. 
+
+#+BEGIN_SRC sh 
+$ scripts/qrcode.sh -file "Hello world QRCode" images/qrcode.png
+Downloading ---------------------
+PackData(com.google.zxing,core,2.2)
+----------------------------------
+Package path = PackData(com.google.zxing,core,2.2)
+Downloading file /home/archbox/.jarget/cache/com/google/zxing/core/2.2/core-2.2.pom.
+File /home/archbox/.jarget/cache/com/google/zxing/core/2.2/core-2.2.pom downloaded. Ok.
+Downloading file /home/archbox/.jarget/cache/com/google/zxing/core/2.2/core-2.2.jar.
+File /home/archbox/.jarget/cache/com/google/zxing/core/2.2/core-2.2.jar downloaded. Ok.
+Download Successful
+Downloading ---------------------
+PackData(com.google.zxing,javase,2.2)
+----------------------------------
+Package path = PackData(com.google.zxing,javase,2.2)
+Downloading file /home/archbox/.jarget/cache/com/google/zxing/javase/2.2/javase-2.2.pom.
+File /home/archbox/.jarget/cache/com/google/zxing/javase/2.2/javase-2.2.pom downloaded. Ok.
+Downloading file /home/archbox/.jarget/cache/com/google/zxing/javase/2.2/javase-2.2.jar.
+File /home/archbox/.jarget/cache/com/google/zxing/javase/2.2/javase-2.2.jar downloaded. Ok.
+Download Successful
+
+#+END_SRC
+
+File: [[file:images/qrcode.png]]
+
+[[file:images/qrcode.png]]  
+
+*Show QRcode in a window* 
+
+#+BEGIN_SRC sh
+$ scripts/qrcode.sh -show "Hello world QRCode" 
+
+$ scripts/qrcode.sh -test1 
+Generating QRcode for testing URL: https://msdn.microsoft.com/en-us/library/ff798384.aspx
+
+$  scripts/qrcode.sh -test2 
+Generating QRcode image file images/qrcodeTest.png for testing URL: https://msdn.microsoft.com/en-us/library/ff798384.aspx
+#+END_SRC
+
 *** Command to manipulate Jar packages
 **** Show manifest file 
 
@@ -1520,4 +1696,4 @@ jarget - Tool to download jar packages.
  - [ ]  - Create a Windows exe wrapper
  - [X]  - Crypto Hash commands such as md5sum, sha256sum ... 
  - [ ]  - Improve project's web site design.
-
+   
