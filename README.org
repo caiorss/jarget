@@ -16,6 +16,10 @@ set up a project. It is useful to experiment java libraries with
 languages hosted in JVM such as Jython (Python implemented in Java),
 Scala or Clojure. 
 
+ - [[https://github.com/caiorss/jarget/][Jarget Repository]]
+
+ - [[https://caiorss.github.io/jarget][Jarget Website]]
+
 *Features:* 
 
  + Download Scala and Java libraries from https://mvnrepository.com/
@@ -44,6 +48,7 @@ Scala or Clojure.
    deployment and distribution easier.
 
  + Build self-exectutable *nix uber jar file that can be run with ./application
+
 
 ** Use Case Example 
 
