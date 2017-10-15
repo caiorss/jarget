@@ -4,9 +4,18 @@ package jarget.utils
 
 /** Provide functions to build Uber jars (aka fat-jars)*/
 object JarBuilder{
-
   
   import java.util.jar.{JarOutputStream, JarEntry, JarFile}
+
+  val jarHeader = """#!/usr/bin/env sh 
+if [ -n "${JAVA_HOME}" ]
+then
+    "$JAVA_HOME/bin/java" -jar "$0" "$@"
+else
+    java -jar "$0" "$@"
+fi
+exit 0
+"""
 
   def addFile(zos: JarOutputStream, entry: String, file: String){
     import java.io._
@@ -73,21 +82,10 @@ object JarBuilder{
   def makeJarWith(file: String, executable: Boolean = false)(fn: JarOutputStream => Unit) = {
     var os:  JarOutputStream  = null
     var fo:  java.io.FileOutputStream = null
-    val header = """
-#!/usr/bin/env sh
-if [[ -z "$JAVA_HOME" ]]
-then
-    java -jar "$0" "$@"
-else
-    "$JAVA_HOME/bin/java" -jar "$0" "$@"
-fi
-exit 0
-""".trim() + "\n"
-
     try {
       fo = new java.io.FileOutputStream(file)
       os = new JarOutputStream(fo)
-      if (executable) fo.write(header.getBytes())
+      if (executable) fo.write(jarHeader.getBytes())
       fn(os)
     } catch {
       case ex: java.io.IOException => ex.printStackTrace()
@@ -157,21 +155,10 @@ exit 0
     var fi: java.io.FileInputStream  = null 
     var fo: java.io.FileOutputStream = null
 
-    val header = """
-#!/usr/bin/env sh
-if [[ -z "$JAVA_HOME" ]]
-then
-    java -jar "$0" "$@"
-else
-    "$JAVA_HOME/bin/java" -jar "$0" "$@"
-fi
-exit 0
-""".trim() + "\n"
-
     try {
       fi = new java.io.FileInputStream(jarFile)
       fo = new java.io.FileOutputStream(outFile)
-      fo.write(header.getBytes())
+      fo.write(jarHeader.getBytes())
       Utils.copyStream(fi, fo)
       Runtime.getRuntime().exec("chmod u+x " + outFile)
     } catch {
