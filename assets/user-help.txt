@@ -114,12 +114,14 @@ Exec
 Utilities
 -----------------------------------------------------------------
 
- utils -env                            - Show environment variables in tabular format 
- utils -env [var]                      - Show environment variable [var]
- utils -path                           - Show PATH environment variable 
- utils -prop                           - Show java properties in tabular format 
- utils -expath [program]               - Show absolute path of a program in PATH variable
-
+ utils -env                    - Show environment variables in tabular format 
+ utils -env [var]              - Show environment variable [var]
+ utils -path                   - Show PATH environment variable 
+ utils -prop                   - Show java properties in tabular format 
+ utils -expath [program]       - Show absolute path of a program in PATH variable
+ 
+ utils -info                   - Show Platform Information - such as number of processors,
+                                 system default econding such as UTF-8, path separator and etc.
 
 Crypto Hash Functions
 -----------------------------------------------------------------
