@@ -1297,34 +1297,8 @@ Explanation:
 
  + -sh    - Makes the application an *nix executable that can be run
    with ./application -cmd1 arg1 -cmd2 as an ordinary shell script ...
-**** Classpath 
-
-
- - =$ jarget cpath -show=
-
-Get class file of all jar files in ./lib directory.
-
-#+BEGIN_SRC sh 
-$ ./bin/jarget cpath -show
-./lib/scala-library-2.12.1.jar:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
-
-$ scala -cp $(./bin/jarget cpath -show)
-Welcome to Scala 2.12.3 (OpenJDK 64-Bit Server VM, Java 1.8.0_141).
-Type in expressions for evaluation. Or try :help.
-
-#+END_SRC
-
- - =$ jarget cpath -show [dir]=
-
-Get class file of all jar files in a given directory.
-
-#+BEGIN_SRC sh 
-$ ./bin/jarget cpath -show ./lib
-./lib/scala-library-2.12.1.jar:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
-
-#+END_SRC
-**** System Information 
-***** Show Enviroment Variables 
+*** System Information 
+**** Show Enviroment Variables 
 
  - =$ jarget utils -env=
 
@@ -1393,7 +1367,7 @@ $ jarget utils -env
 
 #+END_SRC
 
-***** Show PATH Environment Variable 
+**** Show PATH Environment Variable 
 
  - =$ jarget utils -path=
 
@@ -1428,7 +1402,7 @@ $ jarget utils -env
   /home/archbox/opt/vscode
 #+END_SRC
 
-***** Show Java Properties 
+**** Show Java Properties 
 
  - =$ jarget utils -prop=
 
@@ -1493,7 +1467,7 @@ $ jarget utils -prop
    -----------------------------     --------------------------------------------------
 
 #+END_SRC
-***** Show Path to Program 
+**** Show Path to Program 
 
  - =$ jarget utils -expath <program>=
 
@@ -1506,7 +1480,7 @@ $ jarget utils -expath jarget
 
 #+END_SRC
 
-***** Show Platform Information
+**** Show Platform Information
 
  - jarget utils -info
 
@@ -1533,6 +1507,32 @@ $ jarget utils -expath jarget
   - java.vm.name                  = OpenJDK 64-Bit Server VM
   - java.home                     = /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.161-0.b14.fc26.x86_64/jre
 
+
+#+END_SRC
+*** Classpath 
+
+
+ - =$ jarget cpath -show=
+
+Get class file of all jar files in ./lib directory.
+
+#+BEGIN_SRC sh 
+$ ./bin/jarget cpath -show
+./lib/scala-library-2.12.1.jar:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
+
+$ scala -cp $(./bin/jarget cpath -show)
+Welcome to Scala 2.12.3 (OpenJDK 64-Bit Server VM, Java 1.8.0_141).
+Type in expressions for evaluation. Or try :help.
+
+#+END_SRC
+
+ - =$ jarget cpath -show [dir]=
+
+Get class file of all jar files in a given directory.
+
+#+BEGIN_SRC sh 
+$ ./bin/jarget cpath -show ./lib
+./lib/scala-library-2.12.1.jar:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
 
 #+END_SRC
 
