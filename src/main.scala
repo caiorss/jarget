@@ -96,6 +96,36 @@ object MainUtils {
     }
   }
 
+   def showPlatformInfo() = {
+     val lineSep = System.getProperty("line.separator")
+       .replace("\r\n", "'\\r\\n' - CRLF")
+       .replace("\n", "'\\n' - LF")
+       .replace("\r", "'\\r' - CR")
+     val nproc = Runtime.getRuntime().availableProcessors()
+     println(s"""
+Operating System              = ${System.getProperty("os.name")}
+Operating System Version      = ${System.getProperty("os.version")}
+Operating System Architecture = ${System.getProperty("os.arch")}
+Number of processors          = $nproc cores
+Processor endianess           = ${System.getProperty("sun.cpu.endian")}
+
+OS Path Separators and File Encoding
+
+- path.separator  = '${System.getProperty("path.separator")}'
+- file.separator  = '${System.getProperty("file.separator")}'
+- line.separator  =  $lineSep
+- file.enconding  =  ${System.getProperty("file.encoding")}
+
+Java Runtime
+
+- java.vm.specification.version = ${System.getProperty("java.specification.version")}
+- java.runtime.version          = ${System.getProperty("java.runtime.version")}
+- java.vm.name                  = ${System.getProperty("java.vm.name")}
+- java.home                     = ${System.getProperty("java.home")}
+   """)
+   } // --- EOF showPlatformInfo --- //
+
+
 } // ------ End of object MainUtils ---------- //
 
 
