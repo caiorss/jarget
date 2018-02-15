@@ -178,6 +178,10 @@ object Main{
           paths  = pvar.split(sep)
         } paths foreach println
 
+    // Show Platform Info
+    case List("-info")
+        => showPlatformInfo()
+
     // Show path to executable in $PATH variable
     case List("-expath", program)
         => Utils.getProgramPath(program) foreach println
