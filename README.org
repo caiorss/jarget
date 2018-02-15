@@ -3,8 +3,10 @@
 #+DESCRIPTION: Command line toolbox for java platform, scala automation and dependency manager. 
 #+KEYWORDS: jarget jar tool java scala automation deployment toolbox uber fatjar 
 #+STARTUP: content
-#+INFOJS_OPT: view:info toc:t ltoc:t ftoc:nil mouse:underline button:nil path:theme/org-info.js
-#+HTML_HEAD: <link href="style.css" rel="stylesheet"> 
+
+#+HTML_HEAD: <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+#+HTML_HEAD: <link href="theme/org-nav-theme.css" rel="stylesheet">
+#+HTML_HEAD: <script src="theme/org-nav-theme.js"></script>
 
 * Jarget 
 ** Overview 
@@ -1756,5 +1758,5 @@ jarget - Tool to download jar packages.
  - [X]  - Shrink the generated uber jar using Pro-guard. 
  - [ ]  - Create a Windows exe wrapper
  - [X]  - Crypto Hash commands such as md5sum, sha256sum ... 
- - [ ]  - Improve project's web site design.
+ - [X]  - Improve project's web site design.
    
