@@ -1,11 +1,10 @@
 #+TITLE:  Jarget - Java Platform Command Line Toolbox
-#+AUTHOR:   Caio Rodrigues
+#+AUTHOR:   Caio Rodrigues - caiorss.rodrigues@gmail.com 
 #+DESCRIPTION: Command line toolbox for java platform, scala automation and dependency manager. 
 #+KEYWORDS: jarget jar tool java scala automation deployment toolbox uber fatjar 
 #+STARTUP: content
 #+INFOJS_OPT: view:info toc:t ltoc:t ftoc:nil mouse:underline button:nil path:theme/org-info.js
 #+HTML_HEAD: <link href="style.css" rel="stylesheet"> 
-
 
 * Jarget 
 ** Overview 
@@ -48,7 +47,6 @@ Scala or Clojure.
    deployment and distribution easier.
 
  + Build self-exectutable *nix uber jar file that can be run with ./application
-
 
 ** Use Case Example 
 
@@ -133,7 +131,7 @@ scala>
 
 #+BEGIN_SRC sh 
 $ jarget -v
-2.1.0-beta
+2.2.0-beta
 #+END_SRC
 
 **** Show user help 
@@ -142,13 +140,13 @@ $ jarget -v
 
 #+BEGIN_SRC text 
   $ jarget
-  jarget 2.1.0-beta -  Java platform Toolbox
-  General 
+  jarget 2.2.0-beta -  Java platform Toolbox
+  General
   -----------------------------------------------------------------
 
-   -h              - show help 
-   -v | -version   - show version 
-   -site           - Open jarget github repository in the web browser. 
+   -h              - show help
+   -v | -version   - show version
+   -site           - Open jarget github repository in the web browser.
 
   Maven Packages / Jar Packages
   -----------------------------------------------------------------
@@ -163,7 +161,7 @@ $ jarget -v
                                             they are not available.
 
 
-   mvn -search   <query>                 - Search a package in search.maven.org, opening results in 
+   mvn -search   <query>                 - Search a package in search.maven.org, opening results in
                                            the browser.
 
    mvn -search2  <query>                 - Search a package showing results in the console. (Experimental)
@@ -178,16 +176,16 @@ $ jarget -v
 
 
    Cache Control
-  -----------------------------------------------------------------  
+  -----------------------------------------------------------------
 
    cache -path                            - Show cache directory path (directory ~/.jarget/cache)
    cache -jars                            - Show all jar files in cache directory.
    cache -pack                            - Show all packages available in the cache
    cache -pack <pack>                     - Show all versions of a given package in the cache.
-   
+
 
    Jar Files Inspection
-  ----------------------------------------------------------------- 
+  -----------------------------------------------------------------
 
 
    jar -man  <jar>                    - Show manifest.
@@ -202,15 +200,15 @@ $ jarget -v
 
    jar -extract-all <jar> <path>      - Extract all files from jar package to <path> directory.
 
-   jar -extract-all <jar>             - Extract jar file to directory with same name of jar file 
-                                        at current directory. If file is lib/chart.jar it will  
-                                        extracted to ./chart 
+   jar -extract-all <jar>             - Extract jar file to directory with same name of jar file
+                                        at current directory. If file is lib/chart.jar it will
+                                        extracted to ./chart
 
    jar -package <jar>                - Show all packages(aka namespaces) of classes within a jar file.
    jar -package <jar> <package>      - Show all classes of within a particular package.
 
 
-  Uber Jar 
+  Uber Jar
   -----------------------------------------------------------------
 
    - Convert a jar file into a unix executable jar file
@@ -227,9 +225,10 @@ $ jarget -v
 
    $ ./jarget uber -scala -o output.jar -m main.jar
 
-   $ ./jarget uber -scala -o output.jar -m main.jar -jd ./lib1 ./lib2 
-    
-   $ ./jarget uber -scala -sh -o output.jar -m main.jar -jd ./lib1 -j dependency1.jar -r ./resources1 ./resources2 
+   $ ./jarget uber -scala -o output.jar -m main.jar -jd ./lib1 ./lib2
+
+   $ ./jarget uber -scala -sh -o output.jar -m main.jar -jd ./lib1 -j dependency1.jar -r ./resources1 ./res
+  ources2
 
    uber <command>
 
@@ -237,10 +236,12 @@ $ jarget -v
      -m <main jar file>       - (optional)  Jar file containing main class.
      -p <pack1> <pack2> ...   - (optional)  Packages int the format <group>/<artifact>/<version>
      -j <jar1.jar> <jar2.jar> - (optional)  Single jar files that will be included in the uber jar.
-     -jd <dir1> <dir2> ...    - (optional)  Directories containing jar files that will be included in the uber jar.
-     -r <dir1> <dir2> ...     - (optional)  Directories containing resource files 
-     -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar 
-     -sh                      - (optional)  Makes the jar file as a self-executable Unix app.                                 
+     -jd <dir1> <dir2> ...    - (optional)  Directories containing jar files that will be included in the u
+  ber jar.
+     -r <dir1> <dir2> ...     - (optional)  Directories containing resource files
+     -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar
+     -sh                      - (optional)  Makes the jar file as a self-executable Unix app.
+
 
   Classpath
   -----------------------------------------------------------------
@@ -249,43 +250,46 @@ $ jarget -v
    cpath -show <path]                 - Get classpath from <path] directory
 
 
-  Exec  
+  Exec
   -----------------------------------------------------------------
 
    exec <pack1,pack2...> -- <program> <arg1> <arg2>  - Executes a program passing classpath (-cp) flag with
-                                                       classpath of packages <pack1,pack2,..> separated by comma.
+                                                       classpath of packages <pack1,pack2,..> separated by
+  comma.
 
 
   Utilities
   -----------------------------------------------------------------
 
-   utils -env                            - Show environment variables in tabular format 
-   utils -env [var]                      - Show environment variable [var]
-   utils -path                           - Show PATH environment variable 
-   utils -prop                           - Show java properties in tabular format 
-   utils -expath [program]               - Show absolute path of a program in PATH variable
+   utils -env                    - Show environment variables in tabular format
+   utils -env [var]              - Show environment variable [var]
+   utils -path                   - Show PATH environment variable
+   utils -prop                   - Show java properties in tabular format
+   utils -expath [program]       - Show absolute path of a program in PATH variable
 
+   utils -info                   - Show Platform Information - such as number of processors,
+                                   system default econding such as UTF-8, path separator and etc.
 
   Crypto Hash Functions
   -----------------------------------------------------------------
 
    - Computes the file hash hex digest.
-   digest -md5    -f <file>              
+   digest -md5    -f <file>
    digest -sha1   -f <file>
-   digest -sha256 -f <file> 
+   digest -sha256 -f <file>
 
    - Checks the file hex digest.
-   digest -md5    -f <file>  <digest>     
+   digest -md5    -f <file>  <digest>
    digest -sha1   -f <file>  <digest>
    digest -sha256 -f <file>  <digest>
 
    - Computes the string hex digest.
-   digest -md5    -s <string>             
+   digest -md5    -s <string>
    digest -sha1   -s <string>
    digest -sha256 -s <string>
 
    - Checks the string hex digest.
-   digest -md5    -s <string>  <digest>    
+   digest -md5    -s <string>  <digest>
    digest -sha1   -s <string>  <digest>
    digest -sha256 -s <string>  <digest>
 
@@ -1487,6 +1491,49 @@ $ jarget utils -prop
    -----------------------------     --------------------------------------------------
 
 #+END_SRC
+***** Show Path to Program 
+
+ - =$ jarget utils -expath <program>=
+
+#+BEGIN_SRC sh 
+$ jarget utils -expath java
+/usr/bin/java
+
+$ jarget utils -expath jarget
+/home/archbox/bin/jarget
+
+#+END_SRC
+
+***** Show Platform Information
+
+ - jarget utils -info
+
+#+BEGIN_SRC text 
+  $ jarget utils -info
+
+  Operating System              = Linux
+  Operating System Version      = 4.14.16-200.fc26.x86_64
+  Operating System Architecture = amd64
+  Number of processors          = 4 cores
+  Processor endianess           = little
+
+  OS Path Separators and File Encoding
+
+  - path.separator  = ':'
+  - file.separator  = '/'
+  - line.separator  =  '\n' - LF
+  - file.enconding  =  UTF-8
+
+  Java Runtime
+
+  - java.vm.specification.version = 1.8
+  - java.runtime.version          = 1.8.0_161-b14
+  - java.vm.name                  = OpenJDK 64-Bit Server VM
+  - java.home                     = /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.161-0.b14.fc26.x86_64/jre
+
+
+#+END_SRC
+
 ** Building Instructions 
 *** Build Standalone app 
 
