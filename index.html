@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Jarget - Java Platform Command Line Toolbox</title>
-<!-- 2018-02-14 Wed 22:52 -->
+<!-- 2018-02-14 Wed 23:14 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues - caiorss.rodrigues@gmail.com" />
@@ -202,6 +202,8 @@ for the JavaScript code in this tag.
 <li><a href="#sec-1-3-4">1.3.4. Scripting with jarget</a></li>
 <li><a href="#sec-1-3-5">1.3.5. Command to manipulate Jar packages</a></li>
 <li><a href="#sec-1-3-6">1.3.6. Build uber Jar or executable uber jar</a></li>
+<li><a href="#sec-1-3-7">1.3.7. System Information</a></li>
+<li><a href="#sec-1-3-8">1.3.8. Classpath</a></li>
 </ul>
 </li>
 <li><a href="#sec-1-4">1.4. Building Instructions</a>
@@ -1802,45 +1804,11 @@ with ./application -cmd1 arg1 -cmd2 as an ordinary shell script &#x2026;
 </li>
 </ul>
 </div>
-<ol class="org-ol"><li><a id="sec-1-3-6-1" name="sec-1-3-6-1"></a>Classpath<br  /><div class="outline-text-5" id="text-1-3-6-1">
-<ul class="org-ul">
-<li><code>$ jarget cpath -show</code>
-</li>
-</ul>
-
-<p>
-Get class file of all jar files in ./lib directory.
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-sh">$ ./bin/jarget cpath -show
-<span class="org-function-name">./lib/scala-library-2.12.1.jar</span>:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
-
-$ scala -cp $(<span class="org-sh-quoted-exec">./bin/jarget</span> cpath -show)
-Welcome to Scala 2.12.3 (OpenJDK 64-Bit Server VM, Java 1.8.0_141)<span class="org-builtin">.</span>
-Type<span class="org-keyword"> in</span> expressions for evaluation. Or try :help.
-</pre>
 </div>
-
-<ul class="org-ul">
-<li><code>$ jarget cpath -show [dir]</code>
-</li>
-</ul>
-
-<p>
-Get class file of all jar files in a given directory.
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-sh">$ ./bin/jarget cpath -show ./lib
-<span class="org-function-name">./lib/scala-library-2.12.1.jar</span>:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
-</pre>
-</div>
-</div>
-</li>
-<li><a id="sec-1-3-6-2" name="sec-1-3-6-2"></a>System Information<br  /><ol class="org-ol"><li><a id="sec-1-3-6-2-1" name="sec-1-3-6-2-1"></a>Show Enviroment Variables<br  /><div class="outline-text-6" id="text-1-3-6-2-1">
+<div id="outline-container-sec-1-3-7" class="outline-4">
+<h4 id="sec-1-3-7"><span class="section-number-4">1.3.7</span> System Information</h4>
+<div class="outline-text-4" id="text-1-3-7">
+</div><ol class="org-ol"><li><a id="sec-1-3-7-1" name="sec-1-3-7-1"></a>Show Enviroment Variables<br  /><div class="outline-text-5" id="text-1-3-7-1">
 <ul class="org-ul">
 <li><code>$ jarget utils -env</code>
 </li>
@@ -1913,7 +1881,7 @@ Get class file of all jar files in a given directory.
 </div>
 </li>
 
-<li><a id="sec-1-3-6-2-2" name="sec-1-3-6-2-2"></a>Show PATH Environment Variable<br  /><div class="outline-text-6" id="text-1-3-6-2-2">
+<li><a id="sec-1-3-7-2" name="sec-1-3-7-2"></a>Show PATH Environment Variable<br  /><div class="outline-text-5" id="text-1-3-7-2">
 <ul class="org-ul">
 <li><code>$ jarget utils -path</code>
 </li>
@@ -1954,7 +1922,7 @@ Get class file of all jar files in a given directory.
 </div>
 </li>
 
-<li><a id="sec-1-3-6-2-3" name="sec-1-3-6-2-3"></a>Show Java Properties<br  /><div class="outline-text-6" id="text-1-3-6-2-3">
+<li><a id="sec-1-3-7-3" name="sec-1-3-7-3"></a>Show Java Properties<br  /><div class="outline-text-5" id="text-1-3-7-3">
 <ul class="org-ul">
 <li><code>$ jarget utils -prop</code>
 </li>
@@ -2026,7 +1994,7 @@ Show all Java properties from System.getProperties().
 </div>
 </div>
 </li>
-<li><a id="sec-1-3-6-2-4" name="sec-1-3-6-2-4"></a>Show Path to Program<br  /><div class="outline-text-6" id="text-1-3-6-2-4">
+<li><a id="sec-1-3-7-4" name="sec-1-3-7-4"></a>Show Path to Program<br  /><div class="outline-text-5" id="text-1-3-7-4">
 <ul class="org-ul">
 <li><code>$ jarget utils -expath &lt;program&gt;</code>
 </li>
@@ -2044,7 +2012,7 @@ $ jarget utils -expath jarget
 </div>
 </li>
 
-<li><a id="sec-1-3-6-2-5" name="sec-1-3-6-2-5"></a>Show Platform Information<br  /><div class="outline-text-6" id="text-1-3-6-2-5">
+<li><a id="sec-1-3-7-5" name="sec-1-3-7-5"></a>Show Platform Information<br  /><div class="outline-text-5" id="text-1-3-7-5">
 <ul class="org-ul">
 <li>jarget utils -info
 </li>
@@ -2077,7 +2045,46 @@ Java Runtime
 </div>
 </div>
 </li></ol>
-</li></ol>
+</div>
+<div id="outline-container-sec-1-3-8" class="outline-4">
+<h4 id="sec-1-3-8"><span class="section-number-4">1.3.8</span> Classpath</h4>
+<div class="outline-text-4" id="text-1-3-8">
+<ul class="org-ul">
+<li><code>$ jarget cpath -show</code>
+</li>
+</ul>
+
+<p>
+Get class file of all jar files in ./lib directory.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ ./bin/jarget cpath -show
+<span class="org-function-name">./lib/scala-library-2.12.1.jar</span>:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
+
+$ scala -cp $(<span class="org-sh-quoted-exec">./bin/jarget</span> cpath -show)
+Welcome to Scala 2.12.3 (OpenJDK 64-Bit Server VM, Java 1.8.0_141)<span class="org-builtin">.</span>
+Type<span class="org-keyword"> in</span> expressions for evaluation. Or try :help.
+</pre>
+</div>
+
+<ul class="org-ul">
+<li><code>$ jarget cpath -show [dir]</code>
+</li>
+</ul>
+
+<p>
+Get class file of all jar files in a given directory.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ ./bin/jarget cpath -show ./lib
+<span class="org-function-name">./lib/scala-library-2.12.1.jar</span>:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
+</pre>
+</div>
+</div>
 </div>
 </div>
 
@@ -2382,7 +2389,7 @@ jarget - Tool to download jar packages.
 </li>
 <li><code>[X]</code> - Crypto Hash commands such as md5sum, sha256sum &#x2026; 
 </li>
-<li><code>[&#xa0;]</code> - Improve project's web site design.
+<li><code>[X]</code> - Improve project's web site design.
 </li>
 </ul>
 </div>
@@ -2391,7 +2398,7 @@ jarget - Tool to download jar packages.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues - caiorss.rodrigues@gmail.com</p>
-<p class="date">Created: 2018-02-14 Wed 22:52</p>
+<p class="date">Created: 2018-02-14 Wed 23:14</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
