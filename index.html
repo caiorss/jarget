@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Jarget - Java Platform Command Line Toolbox</title>
-<!-- 2018-02-14 Wed 23:14 -->
+<!-- 2018-02-17 Sat 22:07 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues - caiorss.rodrigues@gmail.com" />
@@ -1814,9 +1814,13 @@ with ./application -cmd1 arg1 -cmd2 as an ordinary shell script &#x2026;
 </li>
 </ul>
 
+<p>
+On Linux: 
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget utils -env
+<pre class="src src-text">$ jarget utils -env
    Environment Variable         Value
    ------------------------     --------------------------------------------------
    PATH                         /usr/local/sbin:/usr/local/bin:/usr/bin:/usr/li...
@@ -1826,56 +1830,57 @@ with ./application -cmd1 arg1 -cmd2 as an ordinary shell script &#x2026;
    GDMSESSION                   xfce
    XDG_DATA_DIRS                /usr/local/share:/usr/share
    LC_TIME                      pt_BR.UTF-8
-   DBUS_SESSION_BUS_ADDRESS     unix:<span class="org-variable-name">path</span>=/run/user/1001/bus
-   XDG_CURRENT_DESKTOP          XFCE
-   MAIL                         /var/spool/mail/archbox
-   SSH_AGENT_PID                29199
-   MOZ_PLUGIN_PATH              /usr/lib/mozilla/plugins
-   COLORTERM                    truecolor
-   SESSION_MANAGER              local/ghostpc:@/tmp/.ICE-unix/29194,unix/ghostp...
-   LC_PAPER                     pt_BR.UTF-8
-   LOGNAME                      archbox
-   PWD                          /home/archbox/Documents/projects/jarget.scala
-   WINDOWID                     73927890
-   SHELL                        /bin/bash
-   LC_ADDRESS                   pt_BR.UTF-8
-   OLDPWD                       /home/archbox/test
-   VISUAL                       emacs -Q -nw --no-site -eval <span class="org-string">"(progn (setq  inh...</span>
-<span class="org-string">   GTK_MODULES                  canberra-gtk-module</span>
-<span class="org-string">   XDG_SESSION_PATH             /org/freedesktop/DisplayManager/Session2</span>
-<span class="org-string">   XDG_SESSION_DESKTOP          xfce</span>
-<span class="org-string">   SHLVL                        3</span>
-<span class="org-string">   LC_IDENTIFICATION            pt_BR.UTF-8</span>
-<span class="org-string">   GLADE_CATALOG_PATH           :</span>
-<span class="org-string">   LC_MONETARY                  pt_BR.UTF-8</span>
-<span class="org-string">   DOCKER_HOST                  tcp://127.0.0.1:4243</span>
-<span class="org-string">   TERM                         xterm-256color</span>
-<span class="org-string">   XFILESEARCHPATH              /usr/dt/app-defaults/%L/Dt</span>
-<span class="org-string">   XDG_CONFIG_DIRS              /etc/xdg</span>
-<span class="org-string">   GLADE_PIXMAP_PATH            :</span>
-<span class="org-string">   XDG_SEAT_PATH                /org/freedesktop/DisplayManager/Seat0</span>
-<span class="org-string">   LANG                         en_US.utf8</span>
-<span class="org-string">   XDG_SESSION_TYPE             x11</span>
-<span class="org-string">   XDG_SESSION_ID               c87</span>
-<span class="org-string">   DISPLAY                      :0.0</span>
-<span class="org-string">   LC_NAME                      pt_BR.UTF-8</span>
-<span class="org-string">   _                            /usr/lib/jvm/default/bin/java</span>
-<span class="org-string">   XDG_GREETER_DATA_DIR         /var/lib/lightdm-data/archbox</span>
-<span class="org-string">   DESKTOP_SESSION              xfce</span>
-<span class="org-string">   USER                         archbox</span>
-<span class="org-string">   XDG_MENU_PREFIX              xfce-</span>
-<span class="org-string">   VTE_VERSION                  4803</span>
-<span class="org-string">   LC_NUMERIC                   pt_BR.UTF-8</span>
-<span class="org-string">   XDG_SEAT                     seat0</span>
-<span class="org-string">   SSH_AUTH_SOCK                /tmp/ssh-kO5hsOw4FbVp/agent.29198</span>
-<span class="org-string">   GLADE_MODULE_PATH            :</span>
-<span class="org-string">   EDITOR                       emacs -Q -nw --no-site -eval "</span>(progn (setq  inh...
+   ... ... ... ... 
    NLSPATH                      /usr/dt/lib/nls/msg/%L/%N.cat
    QT_QPA_PLATFORMTHEME         qt5ct
    XDG_RUNTIME_DIR              /run/user/1001
    XDG_VTNR                     7
    HOME                         /home/archbox
    ------------------------     --------------------------------------------------
+</pre>
+</div>
+
+<p>
+On Windows: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">C:\Users\archbox\Desktop&gt;java -jar jarget utils -env
+   Environment Variable          Value
+   -------------------------     --------------------------------------------------
+   USERDOMAIN_ROAMINGPROFILE     DESKTOP-2TJVI2H
+   LOCALAPPDATA                  C:\Users\archbox\AppData\Local
+   ChocolateyLastPathUpdate      Thu Feb 15 06:11:43 2018
+   PROCESSOR_LEVEL               6
+   USERDOMAIN                    DESKTOP-2TJVI2H
+   LOGONSERVER                   \\DESKTOP-2TJVI2H
+   JAVA_HOME                     C:\Program Files\Java\jdk1.8.0_162
+   PROMPT                        $P$G
+   SESSIONNAME                   Console
+   ALLUSERSPROFILE               C:\ProgramData
+   PROCESSOR_ARCHITECTURE        AMD64
+   PSModulePath                  C:\Program Files\WindowsPowerShell\Modules;C:\W...
+   SystemDrive                   C:
+   =ExitCode                     00000000
+   OneDrive                      C:\Users\archbox\OneDrive
+   =C:                           C:\Users\archbox\Desktop
+   APPDATA                       C:\Users\archbox\AppData\Roaming
+   USERNAME                      archbox
+           ... . .. ... . .. .. . .. . .. 
+   Path                          C:\Windows\system32;C:\Windows;C:\Windows\Syste...
+   PATHEXT                       .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WS...
+   OS                            Windows_NT
+   COMPUTERNAME                  DESKTOP-2TJVI2H
+   PROCESSOR_REVISION            4e03
+   CLASSPATH                     .;
+   CommonProgramW6432            C:\Program Files\Common Files
+   ComSpec                       C:\Windows\system32\cmd.exe
+   ProgramData                   C:\ProgramData
+           ... . .. ... . .. .. . .. . .. 
+   windir                        C:\Windows
+   =::                           ::\
+   -------------------------     --------------------------------------------------
 </pre>
 </div>
 </div>
@@ -1887,9 +1892,13 @@ with ./application -cmd1 arg1 -cmd2 as an ordinary shell script &#x2026;
 </li>
 </ul>
 
+<p>
+On Linux:
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget utils -path
+<pre class="src src-text">$ jarget utils -path
 /usr/local/sbin
 /usr/local/bin
 /usr/bin
@@ -1900,23 +1909,25 @@ with ./application -cmd1 arg1 -cmd2 as an ordinary shell script &#x2026;
 /home/archbox/opt/java/bin
 /home/archbox/opt/scala-2.11.8/bin/
 /home/archbox/bin
-/home/archbox/.local/bin
-/home/archbox/opt/cling/bin
-/home/archbox/opt/cling2
-/home/archbox/opt/eclipse
-/home/archbox/opt/fsformatting
-/home/archbox/opt/gambit-4.8.4/bin
-/home/archbox/opt/groovy-2.4.11/bin
-/home/archbox/opt/jars
-/home/archbox/opt/java/bin
-/home/archbox/opt/jdk/bin
-/home/archbox/opt/jdk1.8.0_20/bin
-/home/archbox/opt/maven/bin
-/home/archbox/opt/mobac
-/home/archbox/opt/scala/bin
-/home/archbox/opt/scala-2.12.3/bin
-/home/archbox/opt/vivaldi
-/home/archbox/opt/vscode
+... ... ... ...
+</pre>
+</div>
+
+<p>
+On Windows: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">C:\Users\archbox\Desktop&gt; java -jar jarget utils -path
+
+C:\Windows\system32
+C:\Windows
+C:\Windows\System32\Wbem
+C:\Windows\System32\WindowsPowerShell\v1.0\
+C:\ProgramData\chocolatey\bin
+C:\Program Files\Java\jdk1.8.0_162\bin
+C:\Users\archbox\AppData\Local\Microsoft\WindowsApps
 </pre>
 </div>
 </div>
@@ -1932,9 +1943,13 @@ with ./application -cmd1 arg1 -cmd2 as an ordinary shell script &#x2026;
 Show all Java properties from System.getProperties().
 </p>
 
+<p>
+On Linux:
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget utils -prop
+<pre class="src src-text">$ jarget utils -prop
    Java Property                     Value
    -----------------------------     --------------------------------------------------
    java.runtime.name                 OpenJDK Runtime Environment
@@ -1992,8 +2007,79 @@ Show all Java properties from System.getProperties().
    -----------------------------     --------------------------------------------------
 </pre>
 </div>
+
+<p>
+On Windows: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">C:\Users\archbox\Desktop&gt;java -jar jarget utils -prop
+   Java Property                     Value
+   -----------------------------     --------------------------------------------------
+   java.runtime.name                 Java(TM) SE Runtime Environment
+   sun.boot.library.path             C:\Program Files\Java\jdk1.8.0_162\jre\bin
+   java.vm.version                   25.162-b12
+   java.vm.vendor                    Oracle Corporation
+   java.vendor.url                   http://java.oracle.com/
+   path.separator                    ;
+   java.vm.name                      Java HotSpot(TM) 64-Bit Server VM
+   file.encoding.pkg                 sun.io
+   user.country                      US
+   user.script
+   sun.java.launcher                 SUN_STANDARD
+   sun.os.patch.level
+   java.vm.specification.name        Java Virtual Machine Specification
+   user.dir                          C:\Users\archbox\Desktop
+   java.runtime.version              1.8.0_162-b12
+   java.awt.graphicsenv              sun.awt.Win32GraphicsEnvironment
+   java.endorsed.dirs                C:\Program Files\Java\jdk1.8.0_162\jre\lib\endo...
+   os.arch                           amd64
+   java.io.tmpdir                    C:\Users\archbox\AppData\Local\Temp\
+   line.separator
+
+   java.vm.specification.vendor      Oracle Corporation
+   user.variant
+   os.name                           Windows 10
+   sun.jnu.encoding                  Cp1252
+   java.library.path                 C:\Program Files\Java\jdk1.8.0_162\bin;C:\Windo...
+   java.specification.name           Java Platform API Specification
+   java.class.version                52.0
+   sun.management.compiler           HotSpot 64-Bit Tiered Compilers
+   os.version                        10.0
+   user.home                         C:\Users\archbox
+   user.timezone
+   java.awt.printerjob               sun.awt.windows.WPrinterJob
+   file.encoding                     Cp1252
+   java.specification.version        1.8
+   java.class.path                   jarget
+   user.name                         archbox
+   java.vm.specification.version     1.8
+   sun.java.command                  jarget utils -prop
+   java.home                         C:\Program Files\Java\jdk1.8.0_162\jre
+   sun.arch.data.model               64
+   user.language                     en
+   java.specification.vendor         Oracle Corporation
+   awt.toolkit                       sun.awt.windows.WToolkit
+   java.vm.info                      mixed mode
+   java.version                      1.8.0_162
+   java.ext.dirs                     C:\Program Files\Java\jdk1.8.0_162\jre\lib\ext;...
+   sun.boot.class.path               C:\Program Files\Java\jdk1.8.0_162\jre\lib\reso...
+   java.vendor                       Oracle Corporation
+   sun.stderr.encoding               cp437
+   file.separator                    \
+   java.vendor.url.bug               http://bugreport.sun.com/bugreport/
+   sun.io.unicode.encoding           UnicodeLittle
+   sun.cpu.endian                    little
+   sun.stdout.encoding               cp437
+   sun.desktop                       windows
+   sun.cpu.isalist                   amd64
+   -----------------------------     --------------------------------------------------
+</pre>
+</div>
 </div>
 </li>
+
 <li><a id="sec-1-3-7-4" name="sec-1-3-7-4"></a>Show Path to Program<br  /><div class="outline-text-5" id="text-1-3-7-4">
 <ul class="org-ul">
 <li><code>$ jarget utils -expath &lt;program&gt;</code>
@@ -2017,6 +2103,10 @@ $ jarget utils -expath jarget
 <li>jarget utils -info
 </li>
 </ul>
+
+<p>
+Output on Linux:
+</p>
 
 <div class="org-src-container">
 
@@ -2043,9 +2133,40 @@ Java Runtime
 - java.home                     = /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.161-0.b14.fc26.x86_64/jre
 </pre>
 </div>
+
+<p>
+Output on Windows 10:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">C:\Users\archbox\Desktop&gt;java -jar jarget utils -info
+
+Operating System              = Windows 10
+Operating System Version      = 10.0
+Operating System Architecture = amd64
+Number of processors          = 1 cores
+Processor endianess           = little
+
+OS Path Separators and File Encoding
+
+- path.separator  = ';'
+- file.separator  = '\'
+- line.separator  =  '\r\n' - CRLF
+- file.enconding  =  Cp1252
+
+Java Runtime
+
+- java.vm.specification.version = 1.8
+- java.runtime.version          = 1.8.0_162-b12
+- java.vm.name                  = Java HotSpot(TM) 64-Bit Server VM
+- java.home                     = C:\Program Files\Java\jdk1.8.0_162\jre
+</pre>
+</div>
 </div>
 </li></ol>
 </div>
+
 <div id="outline-container-sec-1-3-8" class="outline-4">
 <h4 id="sec-1-3-8"><span class="section-number-4">1.3.8</span> Classpath</h4>
 <div class="outline-text-4" id="text-1-3-8">
@@ -2398,7 +2519,7 @@ jarget - Tool to download jar packages.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues - caiorss.rodrigues@gmail.com</p>
-<p class="date">Created: 2018-02-14 Wed 23:14</p>
+<p class="date">Created: 2018-02-17 Sat 22:07</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
