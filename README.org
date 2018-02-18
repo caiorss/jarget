@@ -1484,6 +1484,8 @@ $ jarget utils -expath jarget
 
  - jarget utils -info
 
+Output on Linux:
+
 #+BEGIN_SRC text 
   $ jarget utils -info
 
@@ -1509,6 +1511,34 @@ $ jarget utils -expath jarget
 
 
 #+END_SRC
+
+Output on Windows 10:
+
+#+BEGIN_SRC text 
+  C:\Users\archbox\Desktop>java -jar jarget utils -info
+
+  Operating System              = Windows 10
+  Operating System Version      = 10.0
+  Operating System Architecture = amd64
+  Number of processors          = 1 cores
+  Processor endianess           = little
+
+  OS Path Separators and File Encoding
+
+  - path.separator  = ';'
+  - file.separator  = '\'
+  - line.separator  =  '\r\n' - CRLF
+  - file.enconding  =  Cp1252
+
+  Java Runtime
+
+  - java.vm.specification.version = 1.8
+  - java.runtime.version          = 1.8.0_162-b12
+  - java.vm.name                  = Java HotSpot(TM) 64-Bit Server VM
+  - java.home                     = C:\Program Files\Java\jdk1.8.0_162\jre
+
+#+END_SRC
+
 *** Classpath 
 
 
