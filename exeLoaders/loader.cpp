@@ -232,7 +232,7 @@ bool fileExists(string path){
 	return access(path.c_str(), 0) == 0;
 }
 
-void execProc(string program, vector<string> args, bool console = true){
+bool execProc(string program, vector<string> args, bool console = true){
   #if defined __linux__ || defined __apple__ 
 	const char **argsarr = new const char* [args.size() + 2];
 	argsarr[0] = "program"; // Set program name
@@ -242,7 +242,7 @@ void execProc(string program, vector<string> args, bool console = true){
 	argsarr[args.size() + 1] = NULL;
 	int status = execvp(program.c_str(), (char **) argsarr);
 	delete [] argsarr;
-	// return status;
+	return status == 0;
   #elif defined _WIN32
 
 	STARTUPINFO si = {0,};
@@ -259,66 +259,35 @@ void execProc(string program, vector<string> args, bool console = true){
 
 	LPWSTR cmdwstr = winUtils::stringToLPWSTR(command);
 
-	if (!console){
-		// cout << "Running process = " << command << endl;
-		state = CreateProcess(
-			// No module name (use command line)
-			NULL,
-			// Command line
-			cmdwstr, //  winUtils::stringToLPWSTR(command.c_str()),
-			// Process handle not inheritable
-			NULL,
-			// Thread handle not inheritable
-			NULL,
-			// Set handle inheritance to FALSE
-			FALSE,
-			// No creation flags
-			CREATE_NO_WINDOW,
-			// Use parent's environment block
-			NULL,
-			// Use parent's starting directory
-			NULL,
-			// Pointer to STARTUPINFO structure
-			&si,
-			// Pointer to PROCESS_INFORMATION structure
-			&pi
-			);
-
-		delete [] cmdwstr;
-	} else{
-		cmdwstr = winUtils::stringToLPWSTR(command);
-		state = CreateProcess(
-			// No module name (use command line)
-			NULL,
-			// Command line
-			cmdwstr,
-			// Process handle not inheritable
-			NULL,
-			// Thread handle not inheritable
-			NULL,
-			// Set handle inheritance to FALSE
-			TRUE,
-			// No creation flags
-			0,
-			// Use parent's environment block
-			NULL,
-			// Use parent's starting directory
-			NULL,
-			// Pointer to STARTUPINFO structure
-			&si,
-			// Pointer to PROCESS_INFORMATION structure
-			&pi
-			);
-
-		delete [] cmdwstr;
-
-	}
+    state = CreateProcess(
+                          // No module name (use command line)
+                          NULL,
+                          // Command line
+                          cmdwstr, 
+                          // Process handle not inheritable
+                          NULL,
+                          // Thread handle not inheritable
+                          NULL,
+                          // Set handle inheritance to FALSE
+                          console ? TRUE : FALSE,
+                          // No creation flags
+                          console ? 0 : CREATE_NO_WINDOW,
+                          // Use parent's environment block
+                          NULL,
+                          // Use parent's starting directory
+                          NULL,
+                          // Pointer to STARTUPINFO structure
+                          &si,
+                          // Pointer to PROCESS_INFORMATION structure
+                          &pi
+                          );
+    delete [] cmdwstr;
+    
 	// Wait until child process exits.
 	WaitForSingleObject( pi.hProcess, INFINITE );
-
 	CloseHandle( pi.hProcess );
 	CloseHandle( pi.hThread );
-
+    return state;
   #else
   #error "Unknown platform"
   #endif
@@ -349,7 +318,12 @@ int main(int argn, char** argv){
 		pargs.push_back(argv[i]);
 	}
 	
-	execProc("java", pargs, true);
-	
+	bool status = execProc("java", pargs, true);
+    if(!status){
+      cout << "Error: Java is not installed."
+           << "Make sure java is in your PATH variable."
+           << endl ;
+      return 1;
+    }
 	return 0;
 }
