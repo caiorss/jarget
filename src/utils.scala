@@ -120,6 +120,16 @@ object Utils{
       from.close()
     }
 
+  /** Throw an exception with error message if obj parameter is null, otherwise returns it.
+    * It only should be used on situations where obj is never supposed to be null.
+    * For instance, when getting an input stream of a resource file.
+   */
+  def failIfNull[A](obj: A, errorMsg: String) = {
+    if(obj == null)
+      throw new Exception(errorMsg)
+    else
+      obj
+  }
 
   def getScalaVersion() = util.Properties.versionNumberString
 
