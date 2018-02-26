@@ -7,6 +7,43 @@ object JarBuilder{
   
   import java.util.jar.{JarOutputStream, JarEntry, JarFile}
 
+  /** Jar wrapper */
+  abstract sealed trait JWrapper
+  case object JWrapperEmpty extends JWrapper
+  /** Unix Executable wrapper */
+  case object JWrapperUEXE extends JWrapper
+  /** Windows CLI (Command Line Interface) wrapper */
+  case object JWrapperWCLI extends JWrapper
+  /** Windows GUI (Graphical User Interface) wrapper */
+  case object JWrapperWGUI extends JWrapper
+
+  def parseWrapper(name: String): JWrapper = name match {
+    case "empty" => JWrapperEmpty
+    case "uexe"  => JWrapperUEXE
+    case "wcli"  => JWrapperWCLI
+    case "wgui"  => JWrapperWGUI
+    case  _
+        => throw new java.lang.IllegalArgumentException("Error: Invalid jar wrapper option.")
+  }
+
+  def getWrapperStream(wrapper: JWrapper, cls: Class[_]) =
+      wrapper match {
+        case JWrapperEmpty
+            => None
+        case JWrapperUEXE
+            => Option(cls.getResourceAsStream("/assets/unixLoader.sh"))
+        case JWrapperWCLI
+            => Option{Utils.failIfNull(
+              cls.getResourceAsStream("/assets/loaderCLI.exe"),
+                "Error: file loaderCLI.exe not found in resource files."
+            )}
+        case JWrapperWGUI
+            => Option{Utils.failIfNull(
+                cls.getResourceAsStream("/assets/loaderGUI.exe"),
+                "Error: file loaderGUI.exe not found in resource files."
+              )}
+      }
+
 
   def addFile(zos: JarOutputStream, entry: String, file: String){
     import java.io._
