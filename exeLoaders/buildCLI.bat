@@ -12,7 +12,7 @@ rem  Compile for x86 or x64 bits
 rem ------------------------------
 set MODE=x86          
 rem set MODE=x64
-
+         
 
 call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsamd64_x86.bat" %MODE%
 
@@ -26,7 +26,8 @@ rem Build CLI - exe loader for Java (GUI) - Graphical User Interfaces
 set LINK=/entry:mainCRTStartup  
 cl.exe loader.cpp /DGUIAPP /link user32.lib /subsystem:windows /out:loaderGUI.exe 
     
-rem cl.exe -Zi loader2.cpp    
+
 
     
-      
+
+          
