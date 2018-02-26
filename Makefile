@@ -58,7 +58,12 @@ force: $(src)
 bin/jarget: $(target) $(assetfiles)
 	mkdir -p bin
 	cp -v $(exeloaders) assets || true 
-	scala jarget.jar uber -scala -sh -o $(sh) -m jarget.jar -j $(SCALA_XML_PATH) -r assets
+	scala jarget.jar uber -scala -exe uexe -o bin/jarget -m jarget.jar -j $(SCALA_XML_PATH) -r assets
+
+bin/jarget.exe: $(target) $(assetfiles)
+	mkdir -p bin
+	cp -v $(exeloaders) assets || true 
+	scala jarget.jar uber -scala -exe wcli -o bin/jarget.exe -m jarget.jar -j $(SCALA_XML_PATH) -r assets
 
 $(fatjar): 
 	mkdir -p bin
@@ -68,7 +73,7 @@ $(fatjar):
 
 # Generates files bin/jarget shrunk with proguard
 #
-sh-guard: $(target) $(assetfiles) config.pro
+bin/jarget-pro.jar: $(target) $(assetfiles) config.pro
 	mkdir -p bin
 	@# Try to copy Windows CLI and GUI Loaders
 	cp -v $(exeloaders) assets || true 
@@ -76,10 +81,15 @@ sh-guard: $(target) $(assetfiles) config.pro
 	scala jarget.jar uber -scala -o bin/jarget-uber.jar -m jarget.jar -j $(SCALA_XML_PATH) -r assets 
 	@# Shrink app with proguard 
 	java -jar proguard.jar @config.pro
-	@# Make file executable 
-	scala jarget.jar uber -exjar bin/jarget-pro.jar bin/jarget
-	@# Remove temporary files
-	rm -rf bin/jarget-uber.jar bin/jarget-pro.jar
+	rm -rf bin/jarget-uber.jar
+
+# Build Unix executable shrunk with proguard 
+pgd-unix: bin/jarget-pro.jar
+	scala jarget.jar exe uexe bin/jarget-pro.jar bin/jarget
+
+# Build Windows native executable loader with this program as payload.
+pgd-exe: bin/jarget-pro.jar
+	scala jarget.jar exe wcli bin/jarget-pro.jar bin/jarget.exe 
 
 install: bin/jarget
 	cp -v bin/jarget ~/bin
