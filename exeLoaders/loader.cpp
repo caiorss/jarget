@@ -331,7 +331,9 @@ int main(int argn, char** argv){
 	for (int i = 1; i < argn; i++){
 		pargs.push_back(argv[i]);
 	}
-	
+
+    #ifndef GUIAPP
+    //Compiles program as command line app loader
 	bool status = execProc("java", pargs, true);
     if(!status){
       cout << "Error: Java is not installed."
@@ -339,5 +341,15 @@ int main(int argn, char** argv){
            << endl ;
       return 1;
     }
+    #else
+    // Compiles program as graphical app loader
+    // and loads a java GUI.
+    bool status = execProc("java", pargs, false);
+    if(!status){
+      LPWSTR errMsg = L"Error: Java is not installed. Make sure java.exe is installed.";
+      MessageBox(0, errMsg, L"Error Report", MB_SETFOREGROUND );
+    }
+    #endif
+
 	return 0;
 }
