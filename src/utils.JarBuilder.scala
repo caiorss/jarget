@@ -106,24 +106,31 @@ object JarBuilder{
     }
   }
 
-
-  def makeJarWith(file: String, executable: Boolean = false)(fn: JarOutputStream => Unit) = {
+  /** Create a jar file with or without an executable wrapper.
+    *  @param file    - Output uber jar file or executable wrapper with jar payload.
+    *  @param wrapper - Type of executable wrapper (default empty).
+    *  @param cls     - Class where the resource files will extracted.
+    *  @param fn      - Function that writes to jar output stream.
+    */
+  def makeJarWith(
+    file:    String,
+    wrapper: JWrapper = JWrapperEmpty,
+    cls:     Class[_]
+  )(jarWriter: JarOutputStream => Unit) = {
     var os:  JarOutputStream  = null
     var fo:  java.io.FileOutputStream = null
     try {
       fo = new java.io.FileOutputStream(file)
       os = new JarOutputStream(fo)
-      if (executable) fo.write(jarHeader.getBytes())
-      fn(os)
-    } catch {
-      case ex: java.io.IOException => ex.printStackTrace()
+      for(st <- getWrapperStream(wrapper, cls))
+        Utils.copyStream(st, fo)
+      jarWriter(os)
     } finally if (os != null) {
-        //fo.close()
+      // Ensure that file handlers are closed
       os.flush()
       os.close()
-
       // Set the output file as executable if in Unix
-      if(executable) Runtime.getRuntime().exec("chmod u+x " + file)
+      if(wrapper == JWrapperUEXE) Runtime.getRuntime().exec("chmod u+x " + file)
     }
   }
 
@@ -143,6 +150,7 @@ object JarBuilder{
       @param executable - If true makes unix self-executable jar file that can be run as script ./app.jar
     */
   def makeUberJar(
+    cls:         Class[_],
     output:      String,
     main:        String,
     paths:       List[String] = List(),
@@ -151,9 +159,10 @@ object JarBuilder{
     filesEntry:  List[String] = List(),
     resources:   List[String] = List(),
     scalaLib:    Boolean      = false,
-    executable:  Boolean      = false
-  ) = makeJarWith(output, executable){ jos =>
+    wrapper:     JWrapper     = JWrapperEmpty
+  ) = makeJarWith(output, wrapper, cls){ jos =>
 
+    // Try to append scala-library.jar scala runtime to the output jar file.
     if (scalaLib) Utils.getScalaHome() match {
       case None    => throw new Exception("Error: SCALA_HOME path not found")
       case Some(p) => {
@@ -177,20 +186,20 @@ object JarBuilder{
     }}
   }
 
-
-  def makeExecutableJar(jarFile: String, outFile: String) = {
-
+  /** Turn an Uber-Jar into a Unix executable, windows cli executable or GUI executable.
+    * A Unix executable is a small shell script with a jar payload.
+    */
+  def makeExecutable(cls: Class[_], jarFile: String, outFile: String, wrapper: JWrapper = JWrapperUEXE ) = {
     var fi: java.io.FileInputStream  = null 
     var fo: java.io.FileOutputStream = null
-
     try {
       fi = new java.io.FileInputStream(jarFile)
       fo = new java.io.FileOutputStream(outFile)
-      fo.write(jarHeader.getBytes())
+      for(st <- getWrapperStream(wrapper, cls))
+        Utils.copyStream(st, fo)
       Utils.copyStream(fi, fo)
-      Runtime.getRuntime().exec("chmod u+x " + outFile)
-    } catch {
-      case ex: java.io.IOException => ex.printStackTrace()
+      if(wrapper == JWrapperUEXE)
+        Runtime.getRuntime().exec("chmod u+x " + outFile)
     } finally {
       if (fi != null) fi.close()
       if (fo != null) fo.close()
