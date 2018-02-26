@@ -21,25 +21,26 @@ target   := jarget.jar
 #sh-guard := bin/jarget  
 
 # Name of executable uber-jar file not shrunk by proguard.
-sh     := bin/jarget
+sh   := bin/jarget
 
 fatjar :=  bin/jarget-uber.jar
 
 # Scala source files necessary to build the project
 src			:= $(wildcard src/*.scala)
 
-# Assets/resources files to be bundled with the uber-jar 
+# Assets/assets files to be bundled with the uber-jar 
 assetfiles	:= $(wildcard assets/*)
 
 SCALA_XML=scala-xml_2.12-1.0.6.jar
 SCALA_XML_PATH=$(shell dirname $(shell dirname $(shell which scala)))/lib/$(SCALA_XML)
 
+exeloaders := exeLoaders/loaderCLI.exe exeLoaders/loaderGUI.exe
 
 #=============================  R U L E S =================================#
 
 all:      $(target)
 sh:       $(sh)
-# sh-quard: $(sh-guard)
+sh-quard: $(sh-guard)
 
 # This rule checks make variables 
 check:
@@ -56,18 +57,23 @@ force: $(src)
 
 bin/jarget: $(target) $(assetfiles)
 	mkdir -p bin
+	cp -v $(exeloaders) assets || true 
 	scala jarget.jar uber -scala -sh -o $(sh) -m jarget.jar -j $(SCALA_XML_PATH) -r assets
 
 $(fatjar): 
-	mkdir -p bin 
+	mkdir -p bin
+	@# Try to copy Windows CLI and GUI Loaders	
+	cp -v $(exeloaders) assets || true 
 	scala jarget.jar uber -scala -o bin/jarget-uber.jar -m jarget.jar -j $(SCALA_XML_PATH) -r assets
 
 # Generates files bin/jarget shrunk with proguard
 #
 sh-guard: $(target) $(assetfiles) config.pro
 	mkdir -p bin
-	@# Generate uber jar 
-	scala jarget.jar uber -scala -o bin/jarget-uber.jar -m jarget.jar -j $(SCALA_XML_PATH) -r assets
+	@# Try to copy Windows CLI and GUI Loaders
+	cp -v $(exeloaders) assets || true 
+	@# Generate uber jar
+	scala jarget.jar uber -scala -o bin/jarget-uber.jar -m jarget.jar -j $(SCALA_XML_PATH) -r assets 
 	@# Shrink app with proguard 
 	java -jar proguard.jar @config.pro
 	@# Make file executable 
