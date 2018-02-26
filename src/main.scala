@@ -252,10 +252,10 @@ object Main{
 
 
   /** Handles command Uber. ./jarget uber <options> */
-  def parseUberArgs(arglist: List[String],  config: AppSettings, cachePath: String) = {
+  def parseUberArgs(arglist: List[String],  config: AppSettings, cachePath: String, cls: Class[_]) = {
     val parser = new OptParse()
 
-    var sh                          = false
+    var wrapper: JarBuilder.JWrapper = JarBuilder.JWrapperEmpty
     var scala                       = false
     var output                      = "output.jar"
     var main:        Option[String] = None
@@ -274,9 +274,9 @@ object Main{
     )
 
     parser.addOption(
-      "-sh",
+      "-exe",
       "Build self-executable jar file",
-      arg => sh = true
+      arg => wrapper = JarBuilder.parseWrapper(arg.getOne())
     )
 
     parser.addOption(
@@ -315,7 +315,7 @@ object Main{
 
     parser.addOption(
       "-f",
-      "Files to appended to the jar file",
+      "Files to be added to the jar file",
       arg => files = arg.getOneOrMany()
     )
 
@@ -327,7 +327,7 @@ object Main{
 
     parser.addOption(
       "-r",
-      "Resource directories.",
+      "Resource directory.",
       arg => resources = arg.getOneOrMany()
     )
 
@@ -348,6 +348,7 @@ object Main{
       case Some(m)
           => {
             JarBuilder.makeUberJar(
+              cls,
               output,
               m,
               paths,
@@ -356,14 +357,14 @@ object Main{
               filesEntry,
               resources,
               scala,
-              sh
+              wrapper
             )
             println("Built file:  " + output + " ok")
             println("Run it with: $ java -jar " + output)
             System.exit(0)
           }
       case None
-          => println("Error: missing main file ") ; System.exit(1)
+          => println("Error: missing main jar file.") ; System.exit(1)
     }
   } // End of uberParser
 
@@ -546,23 +547,32 @@ object Main{
       // Turn an uber jar into a unix executable
       // that can be run with ./app instead of java -jar app.jar
       //
-      case List("uber", "-exjar", inputJar)
+      case List("exe", exe, inputJar)
           => {
-            val outputJar = inputJar.stripSuffix(".jar")
-            JarBuilder.makeExecutableJar(inputJar, outputJar)
+            val wrapper   = JarBuilder.parseWrapper(exe)
+            val outputJar = wrapper match {
+              case JarBuilder.JWrapperUEXE
+                  => inputJar.stripSuffix(".jar")
+              case JarBuilder.JWrapperWCLI | JarBuilder.JWrapperWGUI
+                  => inputJar.stripSuffix(".jar") + ".exe"
+              case JarBuilder.JWrapperEmpty
+                  => throw new java.lang.IllegalArgumentException("Invalid jar wrapper option.")
+            }
+            JarBuilder.makeExecutable(getClass(), inputJar, outputJar, wrapper)
             println(s"Built ${outputJar}")
             println(s"Run it with ./${outputJar}")
           }
 
-      case List("uber", "-exjar", inputJar, outputJar)
+      case List("exe", exe, inputJar, outputJar)
           => {
-            JarBuilder.makeExecutableJar(inputJar, outputJar)
+            val wrapper = JarBuilder.parseWrapper(exe)
+            JarBuilder.makeExecutable(getClass(), inputJar, outputJar, wrapper)
             println(s"Built ${outputJar}")
             println(s"Run it with ./${outputJar}")
           }
 
       case "uber"::rest
-          => parseUberArgs(rest, config, cachePath)
+          => parseUberArgs(rest, config, cachePath, getClass())
 
 
       // ------- Class Path  ----------------- //
