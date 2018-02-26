@@ -19,8 +19,14 @@ call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary
 rem Restore saved directory     
 popd 
 
-rem Compile using MSVC or Visual C++ Compiler.         
-cl.exe -Zi loader.cpp
+rem Build CLI - exe loader for Java (CLI) Command Line Applications 
+cl.exe loader.cpp /Fe:loaderCLI.exe 
+
+rem Build CLI - exe loader for Java (GUI) - Graphical User Interfaces
+set LINK=/entry:mainCRTStartup  
+cl.exe loader.cpp /DGUIAPP /link user32.lib /subsystem:windows /out:loaderGUI.exe 
+    
+rem cl.exe -Zi loader2.cpp    
 
     
       
