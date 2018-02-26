@@ -1,3 +1,17 @@
+// File:loader.cpp
+//
+// Author: Caio Rodrigues Soares Silva.
+//
+// Description: Windows Executable wrapper for Java Applications.
+//              As the name implies, it is intended to to build an
+//              executable that runs an uber-jar app embedded as
+//              a payload. This approach can make it easier to
+//              distribute and CLI and desktop apps.
+//
+// Tested: It was tested on Windows10 with MSVC C++ compiler - toolchain 2017.
+//
+//------------------------------------------------------------------------------
+
 #include<iostream>
 #include<string>
 #include<vector>
