@@ -147,8 +147,7 @@ class OptSet(name: String = "", usage: String = "", desc: String = ""){
     OptUtils.printTableOfRows(rows)
   }
 
-  def parse(argList: List[String]) = {
-
+  def parse(argList: List[String]): OptResult = {
     val switchesLST = argList.filter(_.startsWith(switchMark)) map { p => 
       p.split(switchSeparator, 2) match {
         case Array(k, v) => (k.stripPrefix(switchMark), v)
