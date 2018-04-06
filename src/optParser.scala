@@ -181,19 +181,24 @@ class OptSet(name: String = "", usage: String = "", desc: String = ""){
     _action(this.parse(argList))
 
 
-} // ---- End of class OptSet ---- //
+} // ---- End of class OptSet ---- // 
 
 
 class OptParser(programName: String = ""){
-  import scala.collection.mutable.Map
-  private val parsers = Map[String, (OptSet, OptResult => Unit)]()
+  import scala.collection.mutable.{Map, ListBuffer}
+  private val commands = ListBuffer[String]()
+  private val parsers = Map[String, OptSet]()
 
-  def add(opt: OptSet)(handler: OptResult => Unit) =
-    parsers += opt.getCommandName() -> (opt, handler)
+  def add(opt: OptSet) = {
+    commands.append(opt.getCommandName())
+    parsers += opt.getCommandName() -> opt
+    this 
+  }
 
   def showHelp() = {
-    val rows = parsers.toList.map{ case (k, v) =>
-      List(v._1.getCommandName(), v._1.getCommandDesc())
+    val rows = commands.toList map {name =>
+      val c = parsers(name)
+      List(c.getCommandName(), c.getCommandDesc())
     }
     println(s"Usage: $$ $programName [COMMAND] [OPTIONS] [<ARGS> ...]")
     println()
@@ -217,23 +222,25 @@ class OptParser(programName: String = ""){
 
       case List(command)
           => parsers.get(command) match {
-            case Some((cmd, handler)) =>
+            case Some(cmd) =>
               cmd.showHelp()
             case None => {
-              println(s"Error: invalid $command not found.")
+              println(s"Error: invalid command: $command.")
               System.exit(1)
             }
           }
       case command::rest 
         => parsers.get(command) match {
-          case Some((cmd, handler))
-              => handler(cmd.parse(rest))
+          case Some(cmd)
+              => cmd.parseRun(rest)
           case None
               => {
-                println(s"Error: Command $command not found.")
+                println(s"Error: invalid command: $command")
                 System.exit(1)
               }
         }
     }
+
+
 }
 
