@@ -365,79 +365,6 @@ object Main{
   }
 
 
-  def parseMvnArgs(args: List[String], config: AppSettings, cachePath: String ) = {
-
-    val repoUrl = Option(System.getenv("jarget.url")) getOrElse config.repoUrl
-
-    def getLibPath(path: String) = Option(System.getenv("jarget.path")) getOrElse path 
-
-    // Parse package list separated by (;)
-    //
-    def parsePackageList(plist: String) =
-      plist.split(",").map(parsePack).toList 
-
-    args.toList match {
-
-      case List("-pom", pstr)
-          => showPom(parsePack(pstr)) run repoUrl
-
-
-      case List("-show", pstr)
-          => showPackageInfo(parsePack(pstr)) run repoUrl 
-
-     //  Copy packages from cache directory to ./lib and download it
-     //  if has not been downloaded yet.
-      case List("-copy", pstr)
-          => tryMVNGet {
-            val packs = parsePackageList(pstr)
-            Packget.copyPackageFromCache(packs, cachePath, repoUrl, getLibPath("./lib"))
-          }
-
-      // Pull packages from remote repository to package cache.  
-      case List("-pull", pstr)
-          => tryMVNGet {
-            val packs = parsePackageList(pstr)
-            Packget.getPackJarsFromCache(packs, cachePath, repoUrl)
-          }
-
-      // Clean cache packages
-      case List("-clear")
-          => tryMVNGet {
-            println("Cleaning cache")
-            Utils.deleteDirectory(cachePath, true)
-          }      
- 
-      case List("-search", query)
-          => {
-            val q = java.net.URLEncoder.encode(query)
-            Utils.openUrl("https://mvnrepository.com/search?q=" + q)
-          }
-
-      case List("-search2", query)
-          => PackSearch.searchPackage(query)
-
-      case List("-search2", query, n)
-          => PackSearch.searchPackage(query, n.toInt)
-
-      case List("-browse", pstr)
-          => openUrl(parsePack(pstr))
-
-       // Open package documentation in browser  
-      case List("-open")
-          => Utils.openUrl("https://mvnrepository.com")
-
-       // Open package documentation in browser          
-      case List("-open", pstr)
-          => {
-            val pack = parsePack(pstr)
-            val url  = s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
-            Utils.openUrl(url)
-          }
-
-      case _ => println("Error: invalid command.")
-        
-    }
-  } // ----- End of parseMvnArgs ---------- //
 
   /** Displays user help stored in the asset file user-help.txt 
     */
@@ -472,9 +399,6 @@ object Main{
 
       case List("-site")
         => Utils.openUrl(config.website)
-
-      //--------- Mvn commands ------------------ //
-      case "mvn"::rest  => parseMvnArgs(rest, config, cachePath)
 
       // --------  Utils Commands ------------------- //
       case "utils"::rest => parseUtilsArgs(rest)
