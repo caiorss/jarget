@@ -195,175 +195,6 @@ object Main{
   }
 
 
-  /** Handles command Uber. ./jarget uber <options> */
-  def parseUberArgs(arglist: List[String],  config: AppSettings, cachePath: String, cls: Class[_]) = {
-    val parser = new OptParse()
-
-    var wrapper: JarBuilder.JWrapper = JarBuilder.JWrapperEmpty
-    var scala                       = false
-    var output                      = "output.jar"
-    var main:        Option[String] = None
-    var paths:       List[String]   = List()
-    var files:       List[String]   = List()
-    var filesEntry:  List[String]   = List()
-    var jarFiles:    List[String]   = List()
-    var resources:   List[String]   = List()
-    var packList:    List[PackData] = List()
-
-
-    parser.addOption(
-      "-scala",
-      "Pack Scala library with the application.",
-      arg => scala = arg.getFlag()
-    )
-
-    parser.addOption(
-      "-exe",
-      "Build self-executable jar file",
-      arg => wrapper = JarBuilder.parseWrapper(arg.getOne())
-    )
-
-    parser.addOption(
-      "-m",
-      "Main file",
-      true,
-      arg =>  main = Some(arg.getOne())
-    )
-
-
-    parser.addOption(
-      "-o",
-      "Output file",
-      arg => output = arg.getOne()
-    )
-
-    parser.addOption(
-      "-jd",
-      "Paths containing libraries (jar files)",
-       arg => paths = arg.getOneOrMany()
-    )
-
-    parser.addOption(
-      "-p",
-      "Java package with maven coordinates <group>/<artifact>/<version>",
-      false,
-      arg => { packList = arg.getOneOrMany().map(parsePack)}
-    )
-
-    parser.addOption(
-      "-j",
-      "Additional jar files.",
-      false,
-      arg => jarFiles = arg.getOneOrMany()
-    )
-
-    parser.addOption(
-      "-f",
-      "Files to be added to the jar file",
-      arg => files = arg.getOneOrMany()
-    )
-
-    parser.addOption(
-      "-fe",
-      "Files to appended to the jar file with entry separated by semicolon",
-      arg => filesEntry = arg.getOneOrMany()
-    )
-
-    parser.addOption(
-      "-r",
-      "Resource directory.",
-      arg => resources = arg.getOneOrMany()
-    )
-
-    try{
-      parser.parseArgs(arglist)
-      val packFiles =  Packget.getPackJarsFromCache(packList, cachePath, config.repoUrl)
-      jarFiles = jarFiles ++ packFiles
-    }
-    catch {
-      case ex: java.lang.IllegalArgumentException
-          => {
-            println(ex.getMessage)
-            System.exit(1)
-          }
-    }
-
-    main match {
-      case Some(m)
-          => {
-            JarBuilder.makeUberJar(
-              cls,
-              output,
-              m,
-              paths,
-              jarFiles,
-              files,
-              filesEntry,
-              resources,
-              scala,
-              wrapper
-            )
-            println("Built file:  " + output + " ok")
-            println("Run it with: $ java -jar " + output)
-            System.exit(0)
-          }
-      case None
-          => println("Error: missing main jar file.") ; System.exit(1)
-    }
-  } // End of uberParser
-
-
-  /** Handles command digest to compute crypto hashes. 
-      ./jarget digest -md5 -f <file> 
-      ./jarget digest -sha256 -s <password>
-   */
-  def parseDigestArgs(args: List[String]) = {
-
-    import jarget.crypto.Digest
-
-    //println(args)
-
-    args match {
-
-      //----- File Digest ------------ //
-      case List("-md5",    "-f", file)
-          => println(Digest.fileDigestSum("MD5", file))
-      case List("-sha1",   "-f", file)
-          => println(Digest.fileDigestSum("SHA1", file))
-      case List("-sha256", "-f", file)
-          => println(Digest.fileDigestSum("SHA-256", file))
-
-      case List("-md5",    "-f", file, hexDigest)
-          => println(Digest.fileDigestSum("MD5", file) == hexDigest)
-      case List("-sha1",   "-f", file, hexDigest)
-          => println(Digest.fileDigestSum("SHA1", file) == hexDigest)
-      case List("-sha256", "-f", file, hexDigest)
-          => println(Digest.fileDigestSum("SHA-256", file) == hexDigest)
-
-
-      // ------ String Digest -------- //
-      case List("-md5",    "-s", str)
-          => println(Digest.stringDigestSum("MD5", str))
-      case List("-sha1",   "-s", str)
-          => println(Digest.stringDigestSum("SHA1", str))
-      case List("-sha256", "-s", str)
-          => println(Digest.stringDigestSum("SHA-256", str))
-
-      case List("-md5",    "-s", str, hexDigest)
-          => println(Digest.stringDigestSum("MD5", str) == hexDigest)
-      case List("-sha1",   "-s", str, hexDigest)
-          => println(Digest.stringDigestSum("SHA1", str) == hexDigest)
-      case List("-sha256", "-s", str, hexDigest)
-          => println(Digest.stringDigestSum("SHA-256", str) == hexDigest)
-
-      case _
-          => {
-            println("Error: Invalid digest option")
-            System.exit(1)
-          }
-    }
-  }
-
 
 
   /** Displays user help stored in the asset file user-help.txt 
@@ -436,9 +267,6 @@ object Main{
             println(s"Run it with ./${outputJar}")
           }
 
-      case "uber"::rest
-          => parseUberArgs(rest, config, cachePath, getClass())
-
 
       // ------- Class Path  ----------------- //
 
@@ -448,10 +276,6 @@ object Main{
       case List("cpath", "-show", path)
           => println(JarUtils.getClasspath(path))
 
-     // ------- Crypto Utils -----------------------//
-
-      case "digest"::rest
-          => parseDigestArgs(rest)
 
 
      //-------- Package cache ----------------------- //
