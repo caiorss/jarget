@@ -156,20 +156,15 @@ object Main{
 
   /** Handles utils commands. - ./jarget utils <commands>  */
   def parseUtilsArgs(arglist: List[String]) = arglist match {
-
     // Show environment variable
     case List("-env") => Utils.showEnvironmentVars()
-
     case List("-env", evar)
         => for { v <- Option(System.getenv(evar)) } println(v)
-
      // Show Java properties
     case List("-prop")
         => Utils.showJavaProperties()
-
     case List("-prop", name)
         => Option(System.getProperty(name)) foreach println
-
     // Show PATH enviroment variable
     case List("-path")
         => for {
@@ -177,15 +172,12 @@ object Main{
           sep    <- Option(System.getProperty("path.separator"))
           paths  = pvar.split(sep)
         } paths foreach println
-
     // Show Platform Info
     case List("-info")
         => showPlatformInfo()
-
     // Show path to executable in $PATH variable
     case List("-expath", program)
         => Utils.getProgramPath(program) foreach println
-
     case _
         => {
           println("Error: Invalid Utils Commands.")
