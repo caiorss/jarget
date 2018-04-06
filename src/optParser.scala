@@ -180,7 +180,7 @@ class OptSet(name: String = "", usage: String = "", desc: String = ""){
 }
 
 
-class OptParser{
+class OptParser(programName: String = ""){
   import scala.collection.mutable.Map
   private val parsers = Map[String, (OptSet, OptResult => Unit)]()
 
