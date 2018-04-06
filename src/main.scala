@@ -507,7 +507,7 @@ object Main{
   }
 
 
-  def main(args: Array[String]) : Unit = {
+  def parseArgs(args: Array[String]) : Unit = {
 
     jarget.logger.Log.setLevel()
 
@@ -656,6 +656,83 @@ object Main{
     }
 
   }// -- End of function main() --- //
+
+  import jarget.optParser.{OptResult, OptParser, OptSet}
+
+
+  val config =
+      Utils.readResourceProperties("/assets/app.properties")
+        .map(MainUtils.getAppSettings _ )
+        .run(getClass())
+
+  val cachePath = PackCache.getCacheHome(".jarget")
+
+
+  val uberOptSet = new OptSet(
+    name  = "uber",
+    usage = "[OPTIONS] <MAIN-JAR> [<JARFILE1.jar> <JARFILE2.jar> ...]",
+    desc  = "Build uber jar file for deployment by bundling dependencies and resource files."
+  ).addOpt(
+    name      = "output",
+    shortName = "o",
+    argName   = "<file>",
+    desc      = "Output file, default out.jar"
+  ).addOpt(
+    name      = "scala",
+    shortName = "s",
+    desc      = "Bundle Scala runtime library scala-runtime.jar"
+  ).addOpt(
+    name      = "package",
+    shortName = "p",
+    argName   = "<pack>",
+    desc      = "MVN Coordinates of a java package."      
+  ).addOpt(
+    name      = "file",
+    shortName = "f",
+    argName   = "<file>",
+    desc      = "Jar files to be added to the package."
+  ).addOpt(
+    name      = "resource",
+    shortName = "r",
+    argName   = "<folder>",
+    desc      = "Resource directory"
+  ).setAction{ (res: OptResult) =>
+    println("Results are  = ")
+    println(res)
+  }
+
+
+  val parser = new OptParser()
+  parser.add(uberOptSet){(res: OptResult) =>
+    println("res = "  + res)    
+    val scalaFlag = res.getFlag("scala")
+    val packages  = res.getListStr("package")
+    val files     = res.getListStr("file")
+    val output    = res.getStr("output", "out.jar")
+    val resourcesDirs = res.getListStr("resource")
+    val mainJarFile = res.getOperands().head
+    val jarFiles = res.getOperands.tail 
+
+    val packFiles =
+      Packget.getPackJarsFromCache(
+        packages map parsePack,
+        cachePath,
+        config.repoUrl
+      )
+
+    JarBuilder.makeUberJar(
+      cls       = getClass(),
+      output    = output,  
+      main      = mainJarFile,
+      scalaLib  = scalaFlag,
+      resources = resourcesDirs,
+      jarFiles  = jarFiles ++ packFiles
+    )
+  }
+  
+  def main(args: Array[String]) : Unit  = {
+    parser.parse(args.toList)
+  }
 
   
 } // ------- End of object Main -------- //
