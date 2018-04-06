@@ -120,6 +120,7 @@ Java Runtime
 
 - java.vm.specification.version = ${System.getProperty("java.specification.version")}
 - java.runtime.version          = ${System.getProperty("java.runtime.version")}
+
 - java.vm.name                  = ${System.getProperty("java.vm.name")}
 - java.home                     = ${System.getProperty("java.home")}
    """)
@@ -201,8 +202,6 @@ object Main{
 
     args.toList match {
 
-      case List() | List("-h") | List("-help")
-          => showHelp(config.version)
 
       case List("-v") | List("-version")
           => println(config.version) 
@@ -333,7 +332,74 @@ object Main{
         .map(MainUtils.getAppSettings _ )
         .run(getClass())
 
+  val repoUrl = Option(System.getenv("jarget.url")) getOrElse config.repoUrl
+
   val cachePath = PackCache.getCacheHome(".jarget")
+
+  def getLibPath(path: String) = Option(System.getenv("jarget.path")) getOrElse path
+
+
+  val mvnShow = new OptSet(
+    name  = "mvn-show",
+    usage = "<PACKAGE>",
+    desc  = "Show package's information."
+  ).setAction{ res => 
+    val pstr = res.getOperands()(0)
+    showPackageInfo(parsePack(pstr)) run repoUrl 
+  }
+
+  val mvnSearch = new OptSet(
+    name  = "mvn-search",
+    usage = "<QUERY>",
+    desc  = "Search for a package at the site https://mvnrepository.com"
+  ).setAction{ res => 
+    val query = res.getOperands()(0)
+    Utils.openUrl("https://mvnrepository.com/search?q=" + query)
+  }
+
+
+  val mvnPom = new OptSet(
+    name  = "mvn-pom",
+    usage = "<PACKAGE>",
+    desc  = "Show package's pom.xml file."
+  ).setAction{ res => 
+    val pstr = res.getOperands()(0)
+    showPom(parsePack(pstr)) run repoUrl
+  }
+  
+
+  val mvnPull = new OptSet(
+    name  = "mvn-pull",
+    usage = "<PACKAGE1> [<PACKAGE2> ...]",
+    desc  = "Show package's pom.xml file."
+  ).setAction{ res => 
+    val pstr = res.getOperands()(0)
+    showPom(parsePack(pstr)) run repoUrl
+  }
+
+  val mvnDoc = new OptSet(
+    name  = "mvn-doc",
+    usage = "<PACKAGE>",
+    desc  = "Open package documentation in the web browser."
+  ).setAction{ res => 
+    val pstr = res.getOperands()(0)
+    val pack = parsePack(pstr)
+    val url  = s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
+    Utils.openUrl(url)
+  } 
+
+  //  Copy packages from cache directory to ./lib and download it
+  //  if has not been downloaded yet.
+  val mvnCopy = new OptSet(
+    name  = "mvn-copy",
+    usage = "<PACKAGE1> [<PACKAGE2> ...]",
+    desc  = "Copy jar packages from cache directory to ./lib downloading them if not available."
+  ).setAction{ res => 
+    val packs = res.getOperands() map parsePack
+     tryMVNGet {
+       Packget.copyPackageFromCache(packs, cachePath, repoUrl, getLibPath("./lib"))
+     }
+  }
 
 
   val uberOptSet = new OptSet(
@@ -353,7 +419,7 @@ object Main{
     name      = "package",
     shortName = "p",
     argName   = "<pack>",
-    desc      = "MVN Coordinates of a java package."      
+    desc      = "MVN Coordinates of a java package -  <group>/<artifact>/<version>."      
   ).addOpt(
     name      = "file",
     shortName = "f",
@@ -364,22 +430,26 @@ object Main{
     shortName = "r",
     argName   = "<folder>",
     desc      = "Resource directory"
+  ).addOpt(
+    name      = "jardir",
+    shortName = "jd",
+    argName   = "<folder>",
+    desc      = "Directory containing jar files to be bundled into the uber jar."
+  ).addOpt(
+    name      = "exe",
+    shortName = "e",
+    argName   = "<EXE>",
+    desc      = ""
   ).setAction{ (res: OptResult) =>
-    println("Results are  = ")
-    println(res)
-  }
-
-
-  val parser = new OptParser()
-  parser.add(uberOptSet){(res: OptResult) =>
-    println("res = "  + res)    
-    val scalaFlag = res.getFlag("scala")
-    val packages  = res.getListStr("package")
-    val files     = res.getListStr("file")
-    val output    = res.getStr("output", "out.jar")
+    
+    val scalaFlag     = res.getFlag("scala")
+    val packages      = res.getListStr("package")
+    val files         = res.getListStr("file")
+    val output        = res.getStr("output", "out.jar")
     val resourcesDirs = res.getListStr("resource")
-    val mainJarFile = res.getOperands().head
-    val jarFiles = res.getOperands.tail 
+    val exe           = JarBuilder.parseWrapper(res.getStr("exe", "empty"))
+    val mainJarFile   = res.getOperands().head
+    val jarFiles      = res.getOperands.tail
 
     val packFiles =
       Packget.getPackJarsFromCache(
@@ -394,9 +464,135 @@ object Main{
       main      = mainJarFile,
       scalaLib  = scalaFlag,
       resources = resourcesDirs,
-      jarFiles  = jarFiles ++ packFiles
+      jarFiles  = jarFiles ++ packFiles,
+      wrapper   = exe 
     )
   }
+
+  val jarManOpt = new OptSet(
+    name = "jar-man",
+    usage = "<FILE.jar>",
+    desc = "Show manifest of a jar file."
+  ).setAction{ (res: OptResult) =>
+    val file = res.getOperands()(0)
+    JarUtils.showManifest(file)
+  }
+
+  val jarMainClass = new OptSet(
+    name  = "jar-main-class",
+    usage = "<FILE.jar>",
+    desc  = "Show main class of a jar file."
+  ).setAction{ (res: OptResult) =>
+    val file = res.getOperands()(0)
+    JarUtils.getMainClass(file) foreach println
+  }
+
+  val jarShowFiles = new OptSet(
+    name = "jar-ls",
+    usage = "<FILE.jar>",
+    desc  = "Show contents of a jar file."
+  ).setAction{ (res: OptResult) =>
+    val file = res.getOperands()(0)
+    JarUtils.showFiles(file) 
+  }
+
+  val jarResources = new OptSet(
+    name = "jar-rs",
+    usage = "<FILE.jar>",
+    desc = "Show resources of a jar file ignoring *.class files."
+  ).setAction{ res =>
+    val file = res.getOperands()(0)
+    JarUtils.getAssetFiles(file) foreach println    
+  }
+
+  val jarCat = new OptSet(
+    name = "jar-cat",
+    usage = "<FILE.jar>",
+    desc = "Show content of a file in a jar package."
+  ).setAction{ res =>
+    val jarFile = res.getOperands()(0)
+    val file    = res.getOperands()(1)
+    JarUtils.printFile(jarFile, file)
+  }
+
+  val jarExtract  = new OptSet(
+    name  = "jar-ex",
+    usage =  "<FILE.jar> <file>",
+    desc  = "Extract <file> from jar file <FILE.jar> to current directory."
+  ).setAction{ res =>
+    val jarFile = res.getOperands()(0)
+    val file    = res.getOperands()(1)
+    JarUtils.extractFile(jarFile, file, ".")
+  }
+
+  val jarExtractAll = new OptSet(
+    name  = "jar-ex-all",
+    usage = "<FILE.jar>",
+    desc  = "Extract contents of <FILE.jar> to ·/<FILE> directory."
+  ).setAction{ res =>
+    val jarFile = res.getOperands()(0)
+    val path = new java.io.File(jarFile)
+      .getName()
+      .stripSuffix(".jar")
+    Utils.mkdir(path)
+    JarUtils.extract(jarFile, path, true)
+  }
+
+  val digestStrOpt = new OptSet(
+    name  = "digest-s",
+    usage = " <ALGORITHM> <STRING>",
+    desc  = "Compute crypto hash of string. - Algorithm: [md5 | sha1 | sha256 ]"
+  ).setAction{ res =>
+    import jarget.crypto.Digest
+    val algorithms = Map("md5" -> "MD5", "sha1" -> "SHA1", "sha256" -> "SHA-256")
+    val op0 = res.getOperands()(0)
+    val op1 = res.getOperands()(1)
+    val alg = algorithms.get(op0) match {
+      case Some(a) => {
+         println(Digest.stringDigestSum(a, op1))
+      }
+      case None => {
+        println("Error: algorithm not found.")
+        System.exit(1)
+      }
+    }
+  }
+
+  val digestFileOpt = new OptSet(
+    name  = "digest-f",
+    usage = " <ALGORITHM> <FILE>",
+    desc  = "Compute crypto hash of a file. - Algorithm: [md5 | sha1 | sha256 ]"
+  ).setAction{ res =>
+    import jarget.crypto.Digest
+    val algorithms = Map("md5" -> "MD5", "sha1" -> "SHA1", "sha256" -> "SHA-256")
+    val op0 = res.getOperands()(0)
+    val op1 = res.getOperands()(1)
+    val alg = algorithms.get(op0) match {
+      case Some(a) =>
+        println(Digest.fileDigestSum(a, op1))              
+      case None => {
+        println("Error: algorithm not found.")
+        System.exit(1)
+      }
+    }
+  }  
+
+  val parser = new OptParser()
+    .add(uberOptSet)
+    .add(mvnShow)
+    .add(mvnSearch)
+    .add(mvnDoc)  
+    .add(mvnPom)
+    .add(mvnPull)
+    .add(mvnCopy)
+    .add(jarManOpt)
+    .add(jarMainClass)
+    .add(jarShowFiles)
+    .add(jarResources)
+    .add(jarCat)
+    .add(jarExtract)
+    .add(digestStrOpt)
+    .add(digestFileOpt)
   
   def main(args: Array[String]) : Unit  = {
     parser.parse(args.toList)
