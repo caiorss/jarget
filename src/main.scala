@@ -188,19 +188,6 @@ object Main{
 
 
 
-
-  /** Displays user help stored in the asset file user-help.txt 
-    */
-  def showHelp(version: String) = {    
-    println(s"jarget ${version.trim()} -  Java platform Toolbox")
-    val help = Utils.readResourceFile(getClass(), "/assets/user-help.txt")
-    help match {
-      case Some(file) => println(file)
-      case None       => throw new java.io.IOException("Error: I can't find the resource file user-help.txt")
-    }
-  }
-
-
   def parseArgs(args: Array[String]) : Unit = {
 
     jarget.logger.Log.setLevel()
