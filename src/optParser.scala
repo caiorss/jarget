@@ -176,7 +176,12 @@ class OptSet(name: String = "", usage: String = "", desc: String = ""){
       throw new RuntimeException("Error: invalid options " + diff)
     new OptResult(operands, switches, options)
   }
-}
+
+  def parseRun(argList: List[String]): Unit =
+    _action(this.parse(argList))
+
+
+} // ---- End of class OptSet ---- //
 
 
 class OptParser(programName: String = ""){
