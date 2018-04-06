@@ -187,21 +187,30 @@ class OptParser(programName: String = ""){
   def add(opt: OptSet)(handler: OptResult => Unit) =
     parsers += opt.getCommandName() -> (opt, handler)
 
-  def showCommands() = {
-    println("Available Commands")
-    for(cmd <- parsers.keys) 
-      println(" - " + cmd + " <args> <operands> ")    
+  def showHelp() = {
+    val rows = parsers.toList.map{ case (k, v) =>
+      List(v._1.getCommandName(), v._1.getCommandDesc())
+    }
+    println(s"Usage: $$ $programName [COMMAND] [OPTIONS] [<ARGS> ...]")
+    println()
+    println("Commands:\n")
+    OptUtils.printTableOfRows(rows)
   }
-
 
   def parse(args: List[String]) =
     args match {
       case List()
-          => {
-            println("Show help to user")
-            showCommands()
+          => {           
+            showHelp()
             System.exit(0)
           }
+
+      case List("-h") | List("-help")
+          => {           
+            showHelp()
+            System.exit(0)
+          }        
+
       case List(command)
           => parsers.get(command) match {
             case Some((cmd, handler)) =>
