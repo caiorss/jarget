@@ -516,6 +516,38 @@ object Main{
     JarUtils.extract(jarFile, path, true)
   }
 
+
+  val jarToEXE = new OptSet(
+    name  = "jar-to-exe",
+    usage = "[OPTIONS] <FILE.jar>",
+    desc = "Embed Uber jar into Unix executable or Windows Executable (experimental)."
+  ).addOpt(
+    name      = "exe",
+    shortName = "e",
+    argName   = "<EXE>",
+    desc      = "Executable type <EXE> can be uexe for Unix executable, wcli -> Windows CLI Program ... "
+  ).addOpt(
+    name      = "output",
+    shortName = "o",
+    argName   = "<FILE>",
+    desc      = "Output file, default <FILE> without extension + .sh or .exe."
+  ).setAction{ res =>
+    val wrapper   = JarBuilder.parseWrapper(res.getStr("exe", "uexe"))
+    val inputJar  = res.getOperands()(0)
+    val defaultName = wrapper match {
+      case JarBuilder.JWrapperUEXE
+          => inputJar.stripSuffix(".jar")
+      case JarBuilder.JWrapperWCLI | JarBuilder.JWrapperWGUI
+          => inputJar.stripSuffix(".jar") + ".exe"
+      case JarBuilder.JWrapperEmpty
+          => throw new java.lang.IllegalArgumentException("Invalid jar wrapper option.")
+    }
+    val output = res.getStr("output", defaultName)
+    JarBuilder.makeExecutable(getClass(), inputJar, output, wrapper)
+    println(s"Built file ./${output}")
+  }
+
+
   // --- Crypto Hash Commands -------------------------/
 
   val digestStrOpt = new OptSet(
@@ -568,6 +600,7 @@ object Main{
     .add(mvnPull)
     .add(mvnCopy)
     .add(cachePathOpt)
+    .add(jarToEXE)
     .add(jarManOpt)
     .add(jarMainClass)
     .add(jarShowFiles)
