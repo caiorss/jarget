@@ -129,13 +129,14 @@ class OptSet(name: String = "", usage: String = "", desc: String = ""){
     val name  = this.getCommandName()
     val desc  = this.getCommandDesc()
     val usage = this.getCommandUsage()
-
-    if(name != "") {
-      println(s"Usage: $name $usage")
+    if(desc != "") {
+      println(desc)
       println()
     }
-    if(desc != "") { println(desc); println()}
-
+    if(name != "") {
+      println(s" Usage: $name $usage")
+      println()
+    }
     val rows = options.toList map {o =>
       val argName = o.getArgName()      
       List(
