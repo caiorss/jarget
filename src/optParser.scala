@@ -150,14 +150,19 @@ class OptSet(name: String = "", usage: String = "", desc: String = ""){
 
   /** Parse command line arguments */
   def parse(argList: List[String]): OptResult = {
-    val switchesLST = argList.filter(_.startsWith(switchMark)) map { p => 
-      p.split(switchSeparator, 2) match {
+    val switchesLST = argList
+      .takeWhile(_ != "--")
+      .filter(_.startsWith(switchMark))
+      .map { p => p.split(switchSeparator, 2) match {
         case Array(k, v) => (k.stripPrefix(switchMark), v)
         case Array(k)    => (k.stripPrefix(switchMark), "")
         case _           => null
       }
     }
-    val switches = switchesLST
+
+    // println("switchesLST = " + switchesLST )
+
+    var switches: Map[String, List[String]] = switchesLST
       .groupBy{case (k, v) => k}
       .map{case (k, xs) =>
         val name = options
@@ -167,11 +172,25 @@ class OptSet(name: String = "", usage: String = "", desc: String = ""){
         (name, xs map (_._2))
     }
 
-    val operands = argList.filter(!_.startsWith(switchMark))
+    // Arguments after --
+    val restArgs = argList.dropWhile(_ != "--")
+
+    restArgs match {
+      case List()      => () // ignore
+      case List("--")  => () // Ignore
+      case "--"::rest  => switches += "--" -> rest
+      case _           => ()
+    }
+
+    val operands: List[String] =
+      argList
+        .takeWhile(_ != "--")
+        .filter(!_.startsWith(switchMark))
 
     // Validate result
     val switchKeys = switches.map(_._1).toSet
-    val keys = (options.map(_.getName) ++ options.map(_.getShortName)).toSet
+    //println("switchKeys = " + switchKeys)
+    val keys = (options.map(_.getName) ++ options.map(_.getShortName)).toSet ++ Set("--")
     val diff = switchKeys.diff(keys)
 
     if(!(diff.isEmpty || diff == keys))
