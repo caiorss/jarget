@@ -244,38 +244,6 @@ object Main{
             println(s"Built ${outputJar}")
             println(s"Run it with ./${outputJar}")
           }
-
-
-      // ------- Class Path  ----------------- //
-
-      case List("cpath", "-show")
-          => println(JarUtils.getClasspath("./lib"))
-
-      case List("cpath", "-show", path)
-          => println(JarUtils.getClasspath(path))
-
-     //-------- Package cache ----------------------- //
-
-
-
-      //-------- Generic Command with Classpath ------//
-
-      case "exec"::pstr::"--"::command::args
-          => tryMVNGet {
-            val packList = pstr split(",") map parsePack toList
-            val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
-            JarUtils.runWithClassPath2(command, args, cpath)
-          }
-
-      case "script"::pstr::"--"::script::args
-          => tryMVNGet {
-            val packList = pstr split(",") map parsePack toList
-            val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
-            //println(s"Script = ${script} args = ${args}")
-            JarUtils.runWithClassPath2("scala", "-save"::script::args, cpath)
-          }
-
-      case _ => println("Error: Invalid command")
     }
 
   }// -- End of function main() --- //
