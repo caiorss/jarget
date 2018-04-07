@@ -155,40 +155,6 @@ object Main{
       case ex: Throwable => throw ex 
     }
 
-  /** Handles utils commands. - ./jarget utils <commands>  */
-  def parseUtilsArgs(arglist: List[String]) = arglist match {
-    // Show environment variable
-    case List("-env") => Utils.showEnvironmentVars()
-    case List("-env", evar)
-        => for { v <- Option(System.getenv(evar)) } println(v)
-     // Show Java properties
-    case List("-prop")
-        => Utils.showJavaProperties()
-    case List("-prop", name)
-        => Option(System.getProperty(name)) foreach println
-    // Show PATH enviroment variable
-    case List("-path")
-        => for {
-          pvar   <- Option(System.getenv("PATH"))
-          sep    <- Option(System.getProperty("path.separator"))
-          paths  = pvar.split(sep)
-        } paths foreach println
-    // Show Platform Info
-    case List("-info")
-        => showPlatformInfo()
-    // Show path to executable in $PATH variable
-    case List("-expath", program)
-        => Utils.getProgramPath(program) foreach println
-    case _
-        => {
-          println("Error: Invalid Utils Commands.")
-          println("Valid commands: utils [-env | -prop | -path | -expath]")
-          System.exit(1)
-    }
-  }
-
-
-
   def parseArgs(args: Array[String]) : Unit = {
 
     jarget.logger.Log.setLevel()
@@ -205,8 +171,7 @@ object Main{
           => println(config.version)
       case List("-site")
         => Utils.openUrl(config.website)
-      // --------  Utils Commands ------------------- //
-      case "utils"::rest => parseUtilsArgs(rest)
+
     }
 
   }// -- End of function main() --- //
