@@ -254,52 +254,8 @@ object Main{
       case List("cpath", "-show", path)
           => println(JarUtils.getClasspath(path))
 
-
-
      //-------- Package cache ----------------------- //
 
-      // Show directory where are the cached packages, jar files and pom files.
-      case List("cache", "-path")
-          => println(cachePath)
-
-
-      // Show all packages available in the cache repository 
-      case List("cache", "-pack")
-          => PackCache.getPackagesInCache(cachePath)
-          .foreach { case (group, artifact) => println(s"${group}/${artifact}") }
-
-      // Show all versions of some package available in the cache repository
-      case List("cache", "-pack", packStr)
-          => packStr.split("/") match {
-
-            case Array(groupID, artifactID)
-                => try {
-                  PackCache.showPackageInfo(groupID, artifactID, cachePath)
-                  PackCache.getPackageVersions(groupID, artifactID, cachePath)
-                    .foreach{version =>
-                    println (s"${groupID}/${artifactID}/${version}")
-                  }
-                } catch {
-                  case _ : Throwable => println("Error: package not found")
-                }
-            case _
-                => println("Error: Invalid package specification.")
-          }
-
-
-      case "cache"::"-cpath"::packList
-          => println(Packget.getPackCPathFromCache(packList map parsePack, cachePath, config.repoUrl))
-
-      // Show all jar files in the cache directory   
-      case List("cache", "-jars")
-          => PackCache.showJarFiles(cachePath)
-
-      case "cache"::"-jars"::packList
-          => Packget.getPackJarsFromCache(
-            packList map parsePack,
-            cachePath,
-            config.repoUrl)
-          .foreach(println)
 
 
       //-------- Generic Command with Classpath ------//
@@ -469,6 +425,47 @@ object Main{
     )
   }
 
+
+
+  //----- Cache commands ------------------- //
+
+  val cachePathOpt = new OptSet(
+    name = "cache",
+    usage = "<ACTION>",
+    desc = "Show packages in cache directory."
+  ).addOpt(
+    name = "path",
+    desc = "Show cache's directory path."
+  ).addOpt(
+    name = "pack",
+    desc = "Show packages in cache directory"
+  ).addOpt(
+    name = "jars",
+    desc = "Show all jar files in cache directory"
+  ).setAction{ (res: OptResult) =>
+
+    if( res.getFlag("path")){
+      println(cachePath)
+      System.exit(0)
+    }
+
+    // Show all packages available in the cache repository
+    if(res.getFlag("pack")){
+       PackCache.getPackagesInCache(cachePath)
+         .foreach { case (group, artifact) => println(s"${group}/${artifact}") }
+      System.exit(0)
+    }
+
+    if(res.getFlag("jars")){
+      PackCache.showJarFiles(cachePath)
+      System.exit(0)
+    }
+
+  }
+
+
+  //------ Jar Commadns ------------------- //
+
   val jarManOpt = new OptSet(
     name = "jar-man",
     usage = "<FILE.jar>",
@@ -538,6 +535,8 @@ object Main{
     JarUtils.extract(jarFile, path, true)
   }
 
+  // --- Crypto Hash Commands -------------------------/
+
   val digestStrOpt = new OptSet(
     name  = "digest-s",
     usage = " <ALGORITHM> <STRING>",
@@ -585,6 +584,7 @@ object Main{
     .add(mvnPom)
     .add(mvnPull)
     .add(mvnCopy)
+    .add(cachePathOpt)
     .add(jarManOpt)
     .add(jarMainClass)
     .add(jarShowFiles)
