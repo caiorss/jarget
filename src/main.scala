@@ -201,49 +201,12 @@ object Main{
     val cachePath = PackCache.getCacheHome(".jarget")
 
     args.toList match {
-
-
       case List("-v") | List("-version")
-          => println(config.version) 
-
+          => println(config.version)
       case List("-site")
         => Utils.openUrl(config.website)
-
       // --------  Utils Commands ------------------- //
       case "utils"::rest => parseUtilsArgs(rest)
-
-
-     //--------- Pom Files Inspection ---------- //
-      case "pom"::rest => rest foreach { uri => Pom.showPomDataFromUri(uri, true)}
-
-     //------------  Make Uber Jar ------------- //
-
-      // Turn an uber jar into a unix executable
-      // that can be run with ./app instead of java -jar app.jar
-      //
-      case List("exe", exe, inputJar)
-          => {
-            val wrapper   = JarBuilder.parseWrapper(exe)
-            val outputJar = wrapper match {
-              case JarBuilder.JWrapperUEXE
-                  => inputJar.stripSuffix(".jar")
-              case JarBuilder.JWrapperWCLI | JarBuilder.JWrapperWGUI
-                  => inputJar.stripSuffix(".jar") + ".exe"
-              case JarBuilder.JWrapperEmpty
-                  => throw new java.lang.IllegalArgumentException("Invalid jar wrapper option.")
-            }
-            JarBuilder.makeExecutable(getClass(), inputJar, outputJar, wrapper)
-            println(s"Built ${outputJar}")
-            println(s"Run it with ./${outputJar}")
-          }
-
-      case List("exe", exe, inputJar, outputJar)
-          => {
-            val wrapper = JarBuilder.parseWrapper(exe)
-            JarBuilder.makeExecutable(getClass(), inputJar, outputJar, wrapper)
-            println(s"Built ${outputJar}")
-            println(s"Run it with ./${outputJar}")
-          }
     }
 
   }// -- End of function main() --- //
