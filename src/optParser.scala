@@ -85,10 +85,8 @@ class OptResult(
   override def toString() = {
     val sw = new java.io.StringWriter()
     val pw = new java.io.PrintWriter(sw)
-    pw.println("Operands ")
-    this.getOperands() foreach pw.println
-    pw.println("Arguments ")
-    this.getSwitches() foreach pw.println
+    pw.println("Operands =  " + this.getOperands())
+    pw.println("Arguments = " + this.getSwitches())
     sw.toString
   }
 
