@@ -393,6 +393,56 @@ object Main{
     )
   }
 
+  val execCommand = new OptSet(
+    name  = "exec",
+    desc  = "Execute a shell command and pass -cp <CLASSPATH> of packages downloaded to it.",
+    usage = "[OPTIONS] -- <PROGRAM> [<PROGRAM ARGS> ...]"
+  ).addOpt(
+    name = "package",
+    shortName = "p",
+    argName = "<PACK>",
+    desc = "Package maven's coordinate"
+  ).setAction{ res =>
+    val packList = res.getListStr("package") map parsePack toList
+
+    if (res.getListStr("--").isEmpty){
+      println("Error: missing command after -- ")
+      System.exit(1)
+    }
+
+    val command     = res.getListStr("--").head
+    val commandArgs = res.getListStr("--").tail
+    tryMVNGet {
+      val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
+      JarUtils.runWithClassPath2(command, commandArgs, cpath)
+     }
+  }
+
+  val scriptCommand = new OptSet(
+    name = "script",
+    desc = "Run a scala script with a given set of packages from cache.",
+    usage = "[OPTIONS] -- <SCRIPT.scala> [<SCRIPT ARGS> ...]"
+  ).addOpt(
+    name = "package",
+    shortName = "p",
+    argName = "<PACK>",
+    desc = "Package maven's coordinate"
+  ).setAction{ res =>
+    val packList = res.getListStr("package") map parsePack toList
+
+    if(res.getListStr("--").isEmpty){
+      println("Error: missing command after -- ")
+      System.exit(1)
+    }
+
+    val script     = res.getListStr("--").head
+    val scriptArgs = res.getListStr("--").tail
+    tryMVNGet {
+      val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
+      //println(s"Script = ${script} args = ${args}")
+      JarUtils.runWithClassPath2("scala", "-save"::script::scriptArgs, cpath)
+    }
+  }
 
 
   //----- Cache commands ------------------- //
@@ -546,6 +596,8 @@ object Main{
 
   val parser = new OptParser()
     .add(uberOptSet)
+    .add(execCommand)
+    .add(scriptCommand)
     .add(mvnShow)
     .add(mvnSearch)
     .add(mvnDoc)  
