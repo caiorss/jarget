@@ -115,6 +115,7 @@ class OptSet(name: String = "", usage: String = "", desc: String = ""){
     this
   }
 
+  /** Set command / function to be called after results are parsed. */
   def setAction(action: OptResult => Unit) = {
     _action = action
     this
@@ -123,6 +124,7 @@ class OptSet(name: String = "", usage: String = "", desc: String = ""){
   def getOptions() =
     options.toList
 
+  /** Print help information for the user. */
   def showHelp() = {
     val name  = this.getCommandName()
     val desc  = this.getCommandDesc()
@@ -143,8 +145,9 @@ class OptSet(name: String = "", usage: String = "", desc: String = ""){
       )
     }
     OptUtils.printTableOfRows(rows)
-  }
+  } // --- EoF func showHelp() ---- //
 
+  /** Parse command line arguments */
   def parse(argList: List[String]): OptResult = {
     val switchesLST = argList.filter(_.startsWith(switchMark)) map { p => 
       p.split(switchSeparator, 2) match {
@@ -173,7 +176,8 @@ class OptSet(name: String = "", usage: String = "", desc: String = ""){
     if(!(diff.isEmpty || diff == keys))
       throw new RuntimeException("Error: invalid options " + diff)
     new OptResult(operands, switches, options)
-  }
+
+  } // -- EoF fun. parse ---- //
 
   def parseRun(argList: List[String]): Unit =
     _action(this.parse(argList))
