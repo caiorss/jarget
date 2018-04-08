@@ -1,4 +1,4 @@
-#+TITLE:  Jarget - Java Platform Command Line Toolbox
+#+TITLE:  Jarget - Command Line Toolbox for Java Platform 
 #+AUTHOR:   Caio Rodrigues - caiorss.rodrigues@gmail.com 
 #+DESCRIPTION: Command line toolbox for java platform, scala automation and dependency manager. 
 #+KEYWORDS: jarget jar tool java scala automation deployment toolbox uber fatjar 
@@ -126,208 +126,103 @@ scala>
 #+END_SRC
 
 ** User Guide
-*** Info commans 
-**** Show version 
- 
- - =$ jarget -v= or =$ jarget -version= 
+*** Info commands
 
-#+BEGIN_SRC sh 
-$ jarget -v
-2.2.0-beta
-#+END_SRC
-
-**** Show user help 
+Now the app adopts git subcommands:
 
  - =$ jarget=
 
 #+BEGIN_SRC text 
   $ jarget
-  jarget 2.2.0-beta -  Java platform Toolbox
-  General
-  -----------------------------------------------------------------
 
-   -h              - show help
-   -v | -version   - show version
-   -site           - Open jarget github repository in the web browser.
+   Jarget 3.0 - command line toolbox for Java Platform.
 
-  Maven Packages / Jar Packages
-  -----------------------------------------------------------------
+  Usage: $  [COMMAND] [OPTIONS] [<ARGS> ...]
 
-   mvn -show <pack>                      - Show package's information
+  Commands:
 
-   mvn -pom  <pack>                      - Show package's pom file
-
-   mvn -pull <pack1,pack2,pack3...>      - Download package and dependencies to cache directory.
-
-   mvn -copy <pack1,pack2,pack3..>       -  Copy packages from cache to ./lib downloading them if
-                                            they are not available.
-
-
-   mvn -search   <query>                 - Search a package in search.maven.org, opening results in
-                                           the browser.
-
-   mvn -search2  <query>                 - Search a package showing results in the console. (Experimental)
-
-   mvn -browse <package>                 - Open package official website.
-
-   mvn -open                             - Open web site https://mvnrepository.com
-   mvn -open <package>                   - Open package mvnrepository url.
-
-
-   mvn -clear                            - Clear package cache by removing all packages in cache directory.
-
-
-   Cache Control
-  -----------------------------------------------------------------
-
-   cache -path                            - Show cache directory path (directory ~/.jarget/cache)
-   cache -jars                            - Show all jar files in cache directory.
-   cache -pack                            - Show all packages available in the cache
-   cache -pack <pack>                     - Show all versions of a given package in the cache.
-
-
-   Jar Files Inspection
-  -----------------------------------------------------------------
-
-
-   jar -man  <jar>                    - Show manifest.
-   jar -main <jar>                    - Show main class.
-   jar -show <jar>                    - Show all files.
-
-   jar -resource <jar>                - Show all asset/resource files disregarding *.class files.
-   jar -resource <jar> <file>         - Print content of resource file.
-
-   jar -extract <jar> <file>          - Extract <file> from <jar> package to current directory.
-   jar -extract <jar> <file> <path>   - Extract <file> from <jar> package to <path> directory.
-
-   jar -extract-all <jar> <path>      - Extract all files from jar package to <path> directory.
-
-   jar -extract-all <jar>             - Extract jar file to directory with same name of jar file
-                                        at current directory. If file is lib/chart.jar it will
-                                        extracted to ./chart
-
-   jar -package <jar>                - Show all packages(aka namespaces) of classes within a jar file.
-   jar -package <jar> <package>      - Show all classes of within a particular package.
-
-
-  Uber Jar
-  -----------------------------------------------------------------
-
-   - Convert a jar file into a unix executable jar file
-     that can be run with ./app.sh instead of java -jar app.jar
-
-   $ ./jarget uber -exjar app.jar app.sh
-
-   $ ./jarget uber -exjar app.jar   # Gnerates ./app
-
-   - Build an scala uber jar named output.jar from main.jar which
-     contains the main class and lib1 and lib2 are the directories
-     containing jar files. It bundles the scala-library.jar runtime with
-     the application.
-
-   $ ./jarget uber -scala -o output.jar -m main.jar
-
-   $ ./jarget uber -scala -o output.jar -m main.jar -jd ./lib1 ./lib2
-
-   $ ./jarget uber -scala -sh -o output.jar -m main.jar -jd ./lib1 -j dependency1.jar -r ./resources1 ./res
-  ources2
-
-   uber <command>
-
-     -o <output file>         - (mandatory) Output jar file bundled with all dependencies.
-     -m <main jar file>       - (optional)  Jar file containing main class.
-     -p <pack1> <pack2> ...   - (optional)  Packages int the format <group>/<artifact>/<version>
-     -j <jar1.jar> <jar2.jar> - (optional)  Single jar files that will be included in the uber jar.
-     -jd <dir1> <dir2> ...    - (optional)  Directories containing jar files that will be included in the u
-  ber jar.
-     -r <dir1> <dir2> ...     - (optional)  Directories containing resource files
-     -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar
-     -sh                      - (optional)  Makes the jar file as a self-executable Unix app.
-
-
-  Classpath
-  -----------------------------------------------------------------
-
-   cpath -show                        - Get classpath from ./lib directory
-   cpath -show <path]                 - Get classpath from <path] directory
-
-
-  Exec
-  -----------------------------------------------------------------
-
-   exec <pack1,pack2...> -- <program> <arg1> <arg2>  - Executes a program passing classpath (-cp) flag with
-                                                       classpath of packages <pack1,pack2,..> separated by
-  comma.
-
-
-  Utilities
-  -----------------------------------------------------------------
-
-   utils -env                    - Show environment variables in tabular format
-   utils -env [var]              - Show environment variable [var]
-   utils -path                   - Show PATH environment variable
-   utils -prop                   - Show java properties in tabular format
-   utils -expath [program]       - Show absolute path of a program in PATH variable
-
-   utils -info                   - Show Platform Information - such as number of processors,
-                                   system default econding such as UTF-8, path separator and etc.
-
-  Crypto Hash Functions
-  -----------------------------------------------------------------
-
-   - Computes the file hash hex digest.
-   digest -md5    -f <file>
-   digest -sha1   -f <file>
-   digest -sha256 -f <file>
-
-   - Checks the file hex digest.
-   digest -md5    -f <file>  <digest>
-   digest -sha1   -f <file>  <digest>
-   digest -sha256 -f <file>  <digest>
-
-   - Computes the string hex digest.
-   digest -md5    -s <string>
-   digest -sha1   -s <string>
-   digest -sha256 -s <string>
-
-   - Checks the string hex digest.
-   digest -md5    -s <string>  <digest>
-   digest -sha1   -s <string>  <digest>
-   digest -sha256 -s <string>  <digest>
-
-  -----------------------------------------------------------------
-
-  Note: <package> is <group>/<artifact>/<version>.
-  Examples of valid packages:
-
-    - org.scalaz/scalaz-core_2.11/7.3.0-M15
-
-    - org.jfree/jfreechart/1.0.17
+    uber            Build uber jar file for deployment by bundling dependencies and resource files.
+    exec            Execute a shell command and pass -cp <CLASSPATH> of packages downloaded to it.
+    script          Run a scala script with a given set of packages from cache.
+    mvn-show        Show package's information.
+    mvn-search      Search for a package at the site https://mvnrepository.com
+    mvn-doc         Open package documentation in the web browser.
+    mvn-pom         Show package's pom.xml file.
+    mvn-pull        Show package's pom.xml file.
+    mvn-copy        Copy jar packages from cache directory to ./lib downloading them if not available.
+    cache           Show packages in cache directory.
+    jar-to-exe      Embed Uber jar into Unix executable or Windows Executable (experimental).
+    jar-man         Show manifest of a jar file.
+    jar-main-class  Show main class of a jar file.
+    jar-ls          Show contents of a jar file.
+    jar-rs          Show resources of a jar file ignoring *.class files.
+    jar-cat         Show content of a file in a jar package.
+    jar-ex          Extract <file> from jar file <FILE.jar> to current directory.
+    utils           General utilities helpers for platform information and debugging.
+    digest-s        Compute crypto hash of string. - Algorithm: [md5 | sha1 | sha256 ]
+    digest-f        Compute crypto hash of a file. - Algorithm: [md5 | sha1 | sha256 ]
 #+END_SRC
 
-**** Open jarget website 
+Each subcommand has its own help text: 
 
-Open jarget github web site. 
+ - Example: subcommand uber to build uber jars.
 
- - =$ jarget -site=
+#+BEGIN_SRC sh 
+  $ jarget uber
+  Build uber jar file for deployment by bundling dependencies and resource files.
+
+   Usage: uber [OPTIONS] <MAIN-JAR> [<JARFILE1.jar> <JARFILE2.jar> ...]
+
+    -output=<file>      -o=<file>     Output file, default out.jar
+    -scala              -s            Bundle Scala runtime library scala-runtime.jar
+    -package=<pack>     -p=<pack>     MVN Coordinates of a java package -  <group>/<artifact>/<version>.
+    -file=<file>        -f=<file>     Jar files to be added to the package.
+    -resource=<folder>  -r=<folder>   Resource directory
+    -jardir=<folder>    -jd=<folder>  Directory containing jar files to be bundled into the uber jar.
+
+#+END_SRC
+
+ - Example: subcommand cache 
+
+#+BEGIN_SRC text 
+  $ jarget cache
+  Show packages in cache directory.
+
+   Usage: cache <ACTION>
+
+    -path  -  Show cache's directory path.
+    -pack  -  Show packages in cache directory
+    -jars  -  Show all jar files in cache directory
+
+  $ jarget cache -pack
+  org.jfree/jcommon
+  org.jfree/jfreechart
+  xml-apis/xml-apis
+#+END_SRC
 
 *** Maven / Packages Commands
 **** Show package information 
 
- - =$ jarget mvn -show org.jfree/jfreechart/1.0.17=
+ - $ jarget mvn -show org.jfree/jfreechart/1.0.17
 
-#+BEGIN_SRC sh 
-  $ jarget mvn -show org.jfree/jfreechart/1.0.17
+#+BEGIN_SRC text 
+  $ jarget mvn-show
+  Show package's information.
+
+   Usage: mvn-show <PACKAGE>
+
+
+  $ jarget mvn-show org.jfree/jfreechart/1.0.17
   Package:         JFreeChart
   Packaging:       jar
   Coordinates[1]:  group = org.jfree artifact = jfreechart version = 1.0.17
   Coordinates[2]:  org.jfree/jfreechart/1.0.17
   Url:             http://www.jfree.org/jfreechart/
-  Description:     
-      JFreeChart is a class library, written in Java, for generating charts. 
-      Utilising the Java2D APIs, it currently supports bar charts, pie charts, 
+  Description:
+      JFreeChart is a class library, written in Java, for generating charts.
+      Utilising the Java2D APIs, it currently supports bar charts, pie charts,
       line charts, XY-plots and time series plots.
-      
+
 
   Dependencies:
 
@@ -335,73 +230,56 @@ Open jarget github web site.
 
     - xml-apis/xml-apis/1.3.04
 
+
+
 #+END_SRC
 **** Show package's POM file 
 
- - =$ jarget mvn -pom org.jfree/jfreechart/1.0.17=
+ - $ jarget mvn -pom org.jfree/jfreechart/1.0.17
 
 #+BEGIN_SRC sh 
-$ jarget -pom org.jfree/jfreechart/1.0.17
+  $ jarget mvn-pom
+  Show package's pom.xml file.
 
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0  ... 
+   Usage: mvn-pom <PACKAGE>
 
-    <modelVersion>4.0.0</modelVersion>
+  $ jarget mvn-pom org.jfree/jfreechart/1.0.17
+  <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                              http://maven.apache.org/maven-
+  v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
 
-    <name>JFreeChart</name>
+      <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>jfreechart</artifactId>
-    <groupId>org.jfree</groupId>
-    <version>1.0.17</version>
-    <packaging>jar</packaging>
+      <name>JFreeChart</name>
 
-    
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
+      <artifactId>jfreechart</artifactId>
+      <groupId>org.jfree</groupId>
+      <version>1.0.17</version>
+      <packaging>jar</packaging>
 
-    <organization>
-        <name>JFree.org</name>
-        <url>http://www.jfree.org/</url>
-    </organization>
-    <inceptionYear>2001</inceptionYear>
-
-    <description>
-    JFreeChart is a class library, written in Java, for generating charts. 
-    Utilising the Java2D APIs, it currently supports bar charts, pie charts, 
-    line charts, XY-plots and time series plots.
-    </description>
-
-... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.source.level>1.6</project.source.level>
-        <project.target.level>1.6</project.target.level>
-    </properties>
-</project>
+      ... ... ... .... .... ...
+      
 
 #+END_SRC
-**** Open package Maven URL 
- 
- = =$ jarget mvn -open org.jfree/jfreechart/1.0.17= 
+**** Open package Documentation Online 
 
-It will open the Mvn site of the package JFreeChart or:
- - https://mvnrepository.com/artifact/org.jfree/jfreechart/1.0.17  
+ - $ jarget mvn-doc org.jfree/jfreechart/1.0.17
 
-**** Open https://mvnrepository.com/
+It will open the package's documentation at https://mvnrepository.com.
 
-Open website: https://mvnrepository.com/ that is useful for searching
-packages.
+#+BEGIN_SRC sh  
+  $ jarget mvn-doc
+  Open package documentation in the web browser.
 
-  - =$ jarget mvn -open=
+   Usage: mvn-doc <PACKAGE>
 
-**** Install packages in the cache 
+  $ jarget mvn-doc org.jfree/jfreechart/1.0.17
+#+END_SRC
+
+**** TODO Install packages in the cache 
 
 This command installs/downloads all packages to jarget cache directory: file:~/.jarget/cache
 
- - =jarget mvn -pull <pack1,pack2,pack3...>=
+ - jarget mvn -pull -p=pack1 -p=pack2 -p=pack3...
 
 Example: Get teh packages org.jfree/jfreechart/1.0.17 and org.scalaz/scalaz-core_2.11/7.3.0-M15.
 
@@ -446,23 +324,49 @@ packages are downloaded if not available in the cache directory yet.
  - =$ jarget mvn -copy <pack1,pack2,pack3...>=
 
 #+BEGIN_SRC sh 
-$ jarget mvn -copy org.jfree/jfreechart/1.0.17,org.scalaz/scalaz-core_2.11/7.3.0-M15
+  $ jarget mvn-copy org.jfree/jfreechart/1.0.17 org.scalaz/scalaz-core_2.11/7.3.0-M15
 
-Copying jfreechart-1.0.17.jar to ./lib
-Copying jcommon-1.0.21.jar to ./lib
-Copying xml-apis-1.3.04.jar to ./lib
-Copying scalaz-core_2.11-7.3.0-M15.jar to ./lib
-Copying scala-library-2.11.11.jar to ./lib
-Copying scala-java8-compat_2.11-0.7.0.jar to ./lib
+  Downloading ---------------------
+  Downloading file /home/archbox/.jarget/cache/org/scala-lang/scala-library/2.11.11/scala-library-2.11.11.pom.
+  File /home/archbox/.jarget/cache/org/scalaz/scalaz-core_2.11/7.3.0-M15/scalaz-core_2.11-7.3.0-M15.pom downloaded. Ok.
+  Downloading file /home/archbox/.jarget/cache/org/scalaz/scalaz-core_2.11/7.3.0-M15/scalaz-core_2.11-7.3.0-M15.jar.
+  File /home/archbox/.jarget/cache/org/scala-lang/scala-library/2.11.11/scala-library-2.11.11.pom downloaded. Ok.
+  Downloading file /home/archbox/.jarget/cache/org/scala-lang/scala-library/2.11.11/scala-library-2.11.11.jar.
+  File /home/archbox/.jarget/cache/org/scala-lang/modules/scala-java8-compat_2.11/0.7.0/scala-java8-compat_2.11-0.7.0.pom downloaded. Ok.
+  Downloading file /home/archbox/.jarget/cache/org/scala-lang/modules/scala-java8-compat_2.11/0.7.0/scala-java8-compat_2.11-0.7.0.jar.
+  File /home/archbox/.jarget/cache/org/scala-lang/modules/scala-java8-compat_2.11/0.7.0/scala-java8-compat_2.11-0.7.0.jar downloaded. Ok.
+  File /home/archbox/.jarget/cache/org/scala-lang/scala-library/2.11.11/scala-library-2.11.11.jar downloaded. Ok.
+  File /home/archbox/.jarget/cache/org/scalaz/scalaz-core_2.11/7.3.0-M15/scalaz-core_2.11-7.3.0-M15.jar downloaded. Ok.
+  Download Successful
+  Copying xml-apis-1.3.04.jar to ./lib
+  Copying scalaz-core_2.11-7.3.0-M15.jar to ./lib
+  Copying scala-library-2.11.11.jar to ./lib
+  Copying jfreechart-1.0.17.jar to ./lib
+  Copying jcommon-1.0.21.jar to ./lib
+  Copying scala-java8-compat_2.11-0.7.0.jar to ./lib
 
-$ ls lib/
-jcommon-1.0.21.jar                 scala-library-2.11.11.jar
-jfreechart-1.0.17.jar              scalaz-core_2.11-7.3.0-M15.jar
-scala-java8-compat_2.11-0.7.0.jar  xml-apis-1.3.04.jar
+
+  $ ls lib/
+  jcommon-1.0.21.jar     scala-java8-compat_2.11-0.7.0.jar  scalaz-core_2.11-7.3.0-M15.jar
+  jfreechart-1.0.17.jar  scala-library-2.11.11.jar          xml-apis-1.3.04.jar
+
+  $ rm -rf lib
 
 #+END_SRC
 
-**** Clean cache removing all packages 
+# When the command is run the second time, the packages are copied from cache to ./lib.
+
+#+BEGIN_SRC sh 
+  $ jarget mvn-copy org.jfree/jfreechart/1.0.17 org.scalaz/scalaz-core_2.11/7.3.0-M15
+  Copying xml-apis-1.3.04.jar to ./lib
+  Copying scalaz-core_2.11-7.3.0-M15.jar to ./lib
+  Copying scala-library-2.11.11.jar to ./lib
+  Copying jfreechart-1.0.17.jar to ./lib
+  Copying jcommon-1.0.21.jar to ./lib
+  Copying scala-java8-compat_2.11-0.7.0.jar to ./lib
+#+END_SRC
+
+**** TODO Clean cache removing all packages 
 
  - =$ jarget mvn -clear=
 
@@ -480,10 +384,10 @@ Deleting directory: /home/archbox/.jarget/cache/xml-apis
 Deleting directory: /home/archbox/.jarget/cache
 #+END_SRC
 
-**** Execute program with packages classpath 
+**** Execute program with classpath for packages from cache 
 ***** Command 
 
- - =$ jarget <pack1,pack2, ...> -- program arg1 arg2 arg2 ...=
+ - $ jarget exec -p=pack1 -p=pack2  ...  -- program arg1 arg2 arg2 ...
 
 It will execute a program with arguments arg1, arg2 and arg3 passing
 the option =-cp <classpath of pack1,pack2,..,packn>=, where (-cp)
@@ -491,58 +395,52 @@ argument is the class path of the packages pack1,pack2... from the
 cache directory ~/.jarget/cache, to it. So the program will be
 executed with:
 
- - =$ program -cp <classpath of pack1,pack2...> arg1 arg2 arg3 ...=
+ - $ program -cp <classpath of pack1,pack2...> arg1 arg2 arg3 ...
 
-The packages are downloaded to cache if not available yet. 
+NOTE: The packages are downloaded to cache if not available yet. 
+
+Command help: 
+
+#+BEGIN_SRC text 
+  $ jarget exec
+  Execute a shell command and pass -cp <CLASSPATH> of packages downloaded to it.
+
+   Usage: exec [OPTIONS] -- <PROGRAM> [<PROGRAM ARGS> ...]
+
+    -package=<PACK>  -p=<PACK>  Package maven's coordinate
+#+END_SRC
 
 ***** Example: Running scala with a set of packages in classpath
 
 Example: Run Scala with [[https://mvnrepository.com/artifact/org.typelevel/cats-core_2.12/0.9.0][org.typelevel/cats-core_2.12/0.9.0]]
 
 #+BEGIN_SRC sh 
-$ jarget exec org.typelevel/cats-core_2.12/0.9.0 -- scala 
-Downloading ---------------------
-PackData(org.typelevel,cats-macros_2.12,0.9.0)
-PackData(org.typelevel,cats-kernel_2.12,0.9.0)
-PackData(org.typelevel,cats-core_2.12,0.9.0)
-PackData(com.github.mpilquist,simulacrum_2.12,0.10.0)
-PackData(org.typelevel,machinist_2.12,0.6.1)
-PackData(org.scala-lang,scala-library,2.12.1)
-----------------------------------
-Package path = PackData(org.typelevel,cats-macros_2.12,0.9.0)
-Downloading file /home/archbox/.jarget/cache/org/typelevel/cats-macros_2.12/0.9.0/cats-macros_2.12-0.9.0.pom.
-Package path = PackData(org.typelevel,cats-kernel_2.12,0.9.0)
-Package path = PackData(org.typelevel,cats-core_2.12,0.9.0)
-Package path = PackData(com.github.mpilquist,simulacrum_2.12,0.10.0)
-Package path = PackData(org.typelevel,machinist_2.12,0.6.1)
-Package path = PackData(org.scala-lang,scala-library,2.12.1)
-Downloading file /home/archbox/.jarget/cache/org/typelevel/cats-kernel_2.12/0.9.0/cats-kernel_2.12-0.9.0.pom.
-Downloading file /home/archbox/.jarget/cache/com/github/mpilquist/simulacrum_2.12/0.10.0/simulacrum_2.12-0.10.0.pom.
-Downloading file /home/archbox/.jarget/cache/org/typelevel/cats-core_2.12/0.9.0/cats-core_2.12-0.9.0.pom.
-File /home/archbox/.jarget/cache/org/typelevel/cats-macros_2.12/0.9.0/cats-macros_2.12-0.9.0.pom downloaded. Ok.
-Downloading file /home/archbox/.jarget/cache/org/typelevel/cats-macros_2.12/0.9.0/cats-macros_2.12-0.9.0.jar.
+  $ jarget exec -p=org.typelevel/cats-core_2.12/0.9.0 -- scala
+  Downloading ---------------------
+   ... ... ... ... 
+  Package path = PackData(org.typelevel,cats-macros_2.12,0.9.0)
+  Downloading file /home/archbox/.jarget/cache/org/typelevel/cats-macros_2.12/0.9.0/cats-macros_2.12-0.9.0.pom.
+   ... .... ... .... ... 
+  File /home/archbox/.jarget/cache/org/scala-lang/scala-library/2.12.1/scala-library-2.12.1.jar downloaded. Ok.
+  Download Successful
+  Welcome to Scala 2.12.4 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_162).
+  Type in expressions for evaluation. Or try :help.
 
-... ... ... ... ... 
+  scala> 
 
-Download Successful
-Welcome to Scala 2.12.3 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_144).
-Type in expressions for evaluation. Or try :help.
+  scala>  import cats._, cats.instances.all._ 
+  import cats._
+  import cats.instances.all._
 
-scala> 
+  scala>  val len: String => Int = _.length
+  len: String => Int = $$Lambda$1041/28318221@2ed71727
 
-scala>  import cats._, cats.instances.all._ 
-import cats._
-import cats.instances.all._
+  scala> 
 
-scala>  val len: String => Int = _.length
-len: String => Int = $$Lambda$1041/28318221@2ed71727
+  scala> Functor[List].map(List("scala", "cats")) (len)
+  res0: List[Int] = List(5, 4)
 
-scala> 
-
-scala> Functor[List].map(List("scala", "cats")) (len)
-res0: List[Int] = List(5, 4)
-
-scala> 
+  scala> 
 
 #+END_SRC
 
@@ -554,7 +452,7 @@ It runs the script [[file:scripts/chartTest.scala][scripts/chartTest.scala]] wit
 library in passed to scala classpath. 
 
 #+BEGIN_SRC sh 
-$ jarget exec org.jfree/jfreechart/1.0.17 -- scala scripts/chartTest.scala 
+$ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scala scripts/chartTest.scala 
 #+END_SRC
 
 The command above runs: 
@@ -566,20 +464,20 @@ scala -cp <classpath of  org.jfree/jfreechart/1.0.17> scripts/chartTest.scala
 *Compile scala program with dependencies* 
 
 #+BEGIN_SRC sh 
-$ jarget exec org.jfree/jfreechart/1.0.17 -- scalac scripts/chartTest.scala -d chart.jar 
+$ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scalac scripts/chartTest.scala -d chart.jar 
 
 $ file chart.jar 
 chart.jar: Java archive data (JAR)
 
 # Run the program:
-$ jarget exec org.jfree/jfreechart/1.0.17 -- scala chart.jar 
+$ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scala chart.jar 
 
 #+END_SRC
 
 *** Cache commands 
 **** Show cache path 
 
- - =$ jarget cache -path=
+ - $ jarget cache -path
 
 Example: 
 
@@ -623,7 +521,7 @@ $ tree $(jarget cache -path)
 
 **** Show all packages in cache 
 
- - =$ jarget cache -pack=
+ - $ jarget cache -pack
 
 #+BEGIN_SRC sh 
 $ jarget cache -pack 
@@ -636,41 +534,8 @@ com.github.mpilquist/simulacrum_2.12
 
 #+END_SRC
 
-**** Show all versions of a given package in cache 
-
- - =$ jarget cache -pack <pack>=
-
-Example: 
-
-#+BEGIN_SRC sh 
-$ jarget cache -pack 
-org.scala-lang/scala-library
-org.typelevel/cats-core_2.12
-org.typelevel/cats-macros_2.12
-org.typelevel/cats-kernel_2.12
-org.typelevel/machinist_2.12
-com.github.mpilquist/simulacrum_2.12
-
-$ jarget cache -pack  org.typelevel/cats-core_2.12
-Uri = /home/archbox/.jarget/cache/org/typelevel/cats-core_2.12/0.9.0/cats-core_2.12-0.9.0.pom
-Package:         Cats core
-Packaging:       jar
-Coordinates[1]:  group = org.typelevel artifact = cats-core_2.12 version = 0.9.0
-Coordinates[2]:  org.typelevel/cats-core_2.12/0.9.0
-Url:             https://github.com/typelevel/cats
-
-Description:     
-Cats core
------------------------------------------------
-
-
-
-
-org.typelevel/cats-core_2.12/0.9.0
-
-#+END_SRC
-
-**** Show all jar packages in cache
+**** TODO Show all versions of a given package in cache 
+**** Show all jar files in the cache folder
 
 #+BEGIN_SRC sh 
 $ jarget cache -jars
@@ -693,6 +558,20 @@ Jarget can be used to run scala scripts with java packages
 dependencies by downloading them if they are not available in the
 jarget package cache file:~/.jarget/cache. 
 
+
+Show command help: 
+
+#+BEGIN_SRC text 
+  $ jarget script
+  Run a scala script with a given set of packages from cache.
+
+   Usage: script [OPTIONS] -- <SCRIPT.scala> [<SCRIPT ARGS> ...]
+
+    -package=<PACK>                  -p=<PACK>               Package maven's coordinate
+    -package-str=<PACK1>,<PACK2>...  -ps=<PACK1>,<PACK2>...  Package's separated by command <pack1>,<pack2>...<packN>
+
+#+END_SRC
+
 **** Example 1 - Script with JFreeChart 
      :PROPERTIES:
      :ID:       cbb743e4-f9a8-4784-be27-b8c0e9599f8b
@@ -703,7 +582,7 @@ Example: [[file:scripts/chartScript.sh]]
 #+BEGIN_SRC scala :tangle scripts/chartScript.sh
   #!/bin/sh
   DEPS=org.jfree/jfreechart/1.0.17
-  exec jarget script "$DEPS" -- "$0" "$@"
+  exec jarget script -p="$DEPS" -- "$0" "$@"
   !#
 
   import org.jfree.chart.{ChartPanel, ChartFactory, JFreeChart, ChartUtilities}
@@ -792,7 +671,7 @@ File: [[file:scripts/qrcode.sh][file:scripts/qrcode.sh]]
 #+BEGIN_SRC scala  :tangle scripts/qrcode.sh   :tangle-mode (identity #o755) :padline no
   #!/bin/sh
   DEPS=com.google.zxing/core/2.2,com.google.zxing/javase/2.2
-  exec jarget script "$DEPS" -- "$0" "$@"
+  exec jarget script -ps="$DEPS" -- "$0" "$@"
   !#
 
   object QRCode { 
@@ -949,31 +828,62 @@ Generating QRcode image file images/qrcodeTest.png for testing URL: https://msdn
 #+END_SRC
 
 *** Command to manipulate Jar packages
+**** Overview 
+
+The commands to manipulate jars are listed below: 
+
+#+BEGIN_SRC text 
+$  jarget | grep jar
+  uber            Build uber jar file for deployment by bundling dependencies and resource files.
+  mvn-copy        Copy jar packages from cache directory to ./lib downloading them if not available.
+  jar-to-exe      Embed Uber jar into Unix executable or Windows Executable (experimental).
+  jar-man         Show manifest of a jar file.
+  jar-main-class  Show main class of a jar file.
+  jar-ls          Show contents of a jar file.
+  jar-rs          Show resources of a jar file ignoring *.class files.
+  jar-cat         Show content of a file in a jar package.
+  jar-ex          Extract <file> from jar file <FILE.jar> to current directory.
+#+END_SRC
+
+Those commands are simple and self-explanatory and easier to remember.
+
+#+BEGIN_SRC text 
+  $  jarget jar-man
+  Show manifest of a jar file.
+
+   Usage: jar-man <FILE.jar>
+
+  $  jarget jar-main-class
+  Show main class of a jar file.
+
+   Usage: jar-main-class <FILE.jar>
+
+#+END_SRC
+
 **** Show manifest file 
 
- - =$ jarget jar [jar]=
+ - $ jarget jar-man JARFILE.jar 
 
 #+BEGIN_SRC sh 
-$ jarget jar -manifest lib/jfreechart-1.0.17.jar 
-
-Manifest-Version: 1.0
-Ant-Version: Apache Ant 1.8.2
-Created-By: 1.7.0_21-b12 (Oracle Corporation)
-Specification-Title: JFreeChart
-Specification-Version: 1.0.17
-Specification-Vendor: jfree.org
-Implementation-Title: JFreeChart
-Implementation-Version: 1.0.17
-Implementation-Vendor: jfree.org
+  $  jarget jar-man lib/jfreechart-1.0.17.jar
+  Manifest-Version: 1.0
+  Ant-Version: Apache Ant 1.8.2
+  Implementation-Title: JFreeChart
+  Implementation-Version: 1.0.17
+  Specification-Vendor: jfree.org
+  Specification-Title: JFreeChart
+  Created-By: 1.7.0_21-b12 (Oracle Corporation)
+  Specification-Version: 1.0.17
+  Implementation-Vendor: jfree.org
 
 #+END_SRC
 
 **** Show contents of single file 
 
- - =$ jarget jar -cat [jar] [file]=
+ - $ jarget jar-cat [jar] [file]
 
 #+BEGIN_SRC sh 
-  $ jarget jar -cat lib/jfreechart-1.0.17.jar META-INF/MANIFEST.MF
+  $ jarget jar-cat lib/jfreechart-1.0.17.jar META-INF/MANIFEST.MF
 
   Manifest-Version: 1.0
   Ant-Version: Apache Ant 1.8.2
@@ -987,7 +897,7 @@ Implementation-Vendor: jfree.org
 
   ... .... ... .... ... .... ... .... ... ....
 
-  $ jarget jar -cat lib/jfreechart-1.0.17.jar org/jfree/chart/plot/LocalizationBundle_pt_PT.properties
+  $ jarget jar-cat lib/jfreechart-1.0.17.jar org/jfree/chart/plot/LocalizationBundle_pt_PT.properties
   # org.jfree.chart.ChartPanel ResourceBundle properties file - portuguese version
   # 
   # Changes (from 09-Set-2003)
@@ -1020,10 +930,10 @@ Implementation-Vendor: jfree.org
 
 **** List all files 
  
- - =$ jarget jar -show [jar]=
+ - $ jarget jar-ls [jar]
 
 #+BEGIN_SRC sh 
-$ jarget jar -show jarget.jar 
+$ jarget jar-ls jarget.jar 
 
 META-INF/MANIFEST.MF
 PackData.class
@@ -1045,12 +955,12 @@ Packget$$anonfun$downloadPackage$5.class
 
 **** List resource/asset files 
 
- - =$ jarget jar -resource [jar]=
+ - $ jarget jar-rs [jar]
 
 Show all resource files disregarding *.class files. 
 
 #+BEGIN_SRC sh 
-$ jarget jar -resource lib/jfreechart-1.0.17.jar 
+$ jarget jar-rs lib/jfreechart-1.0.17.jar 
 META-INF/MANIFEST.MF
 org/jfree/chart/LocalizationBundle.properties
 org/jfree/chart/LocalizationBundle_cs.properties
@@ -1065,84 +975,48 @@ org/jfree/chart/plot/LocalizationBundle_ru.properties
 org/jfree/chart/plot/LocalizationBundle_zh_CN.properties
 #+END_SRC
 
- - =$ jarget jar -resource [jar] [file]=
-
-Show a particular resource file.
-
-#+BEGIN_SRC text 
-$ jarget jar -resource lib/jfreechart-1.0.17.jar org/jfree/chart/LocalizationBundle.properties
-
-# org.jfree.chart.ChartPanel ResourceBundle properties file
-# 
-# Changes (from 31-Aug-2003)
-# --------------------------
-# 31-Aug-2003 : Initial version (AL);
-#
-
-Auto_Range=Auto Range
-All_Axes=Both Axes
-Chart=Chart
-Chart_Properties=Chart Properties
-Copy=Copy
-Domain_Axis=Domain Axis
-FILE_EXISTS_CONFIRM_OVERWRITE=The file already exists, are you sure you want to overwrite it?
-PNG_Image_Files=PNG Image Files
-PDF_Files=PDF Files
-Print...=Print...
-Properties...=Properties...
-Range_Axis=Range Axis
-Save_as...=Save as...
-SVG_Files=SVG Files
-Zoom_In=Zoom In
-Zoom_Out=Zoom Out
-#+END_SRC
-
 **** Extract file to current directory
 
- - =jarget jar -extract [jar] [file]=
+ - jarget jar -extract [jar] [file]
 
 Extract file from jar to current directory.
 
 #+BEGIN_SRC sh 
-$ jarget jar -extract lib/jfreechart-1.0.17.jar META-INF/MANIFEST.MF
+  $ jarget jar-ex
+  Extract <file> from jar file <FILE.jar> to current directory.
 
-$ cat MANIFEST.MF 
-Manifest-Version: 1.0
-Ant-Version: Apache Ant 1.8.2
-Created-By: 1.7.0_21-b12 (Oracle Corporation)
-Specification-Title: JFreeChart
-Specification-Version: 1.0.17
-Specification-Vendor: jfree.org
-Implementation-Title: JFreeChart
-Implementation-Version: 1.0.17
-Implementation-Vendor: jfree.org
+   Usage: jar-ex <FILE.jar> <file>
 
 
-#+END_SRC
-**** Extract file to a directory 
+  $ jarget jar-ex lib/jfreechart-1.0.17.jar META-INF/MANIFEST.MF
 
- - =jarget jar -extract [jar] [file] [path]=
-
-Extract file META-INF/MANIFEST.MF from jfreechart-1.0.17.jar to path ./lib.
-
-#+BEGIN_SRC sh 
-$ jarget jar -extract lib/jfreechart-1.0.17.jar META-INF/MANIFEST.MF lib
-
-$ cat lib/MANIFEST.MF 
-Manifest-Version: 1.0
-Ant-Version: Apache Ant 1.8.2
-Created-By: 1.7.0_21-b12 (Oracle Corporation)
-Specification-Title: JFreeChart
-Specification-Version: 1.0.17
-Specification-Vendor: jfree.org
-Implementation-Title: JFreeChart
-Implementation-Version: 1.0.17
-Implementation-Vendor: jfree.org
-
+  $ cat MANIFEST.MF 
+  Manifest-Version: 1.0
+  Ant-Version: Apache Ant 1.8.2
+  Created-By: 1.7.0_21-b12 (Oracle Corporation)
+  Specification-Title: JFreeChart
+  Specification-Version: 1.0.17
+  Specification-Vendor: jfree.org
+  Implementation-Title: JFreeChart
+  Implementation-Version: 1.0.17
+  Implementation-Vendor: jfree.org
 #+END_SRC
 **** Convert a jar file to executable jar file 
 
- - =$ jarget uber -exjar [application.jar] [application.jsh]=
+Help: 
+
+#+BEGIN_SRC sh 
+  $ jarget jar-to-exe
+  Embed Uber jar into Unix executable or Windows Executable (experimental).
+
+   Usage: jar-to-exe [OPTIONS] <FILE.jar>
+
+    -exe=<EXE>      -e=<EXE>   Executable type <EXE> can be uexe for Unix executable, wcli -> Windows CLI Program ...
+    -output=<FILE>  -o=<FILE>  Output file, default <FILE> without extension + .sh or .exe.
+
+#+END_SRC
+
+ - $ jarget jar-to-exe application.jar -o=application 
 
 Generates an *nix executable ./application.jsh from the file
 application.jar that can be run with =$ java -jar application.jar=
@@ -1159,69 +1033,84 @@ Example: Generate a *nix executable (runnable or self-executable jar
 file) named proguard from proguard.jar.
 
 #+BEGIN_SRC sh 
-$ java -jar proguard.jar 
-ProGuard, version 5.3.3
-Usage: java proguard.ProGuard [options ...]
+  $ java -jar proguard.jar 
+  ProGuard, version 5.3.3
+  Usage: java proguard.ProGuard [options ...]
 
-$ jarget uber -exjar proguard.jar 
-Built proguard
-Run it with ./proguard
+  # Builds Unix executable with embedded shell script 
+  $ jarget jar-to-exe proguard.jar 
+  Built proguard
+  Run it with ./proguard
 
-$ ./proguard 
-ProGuard, version 5.3.3
-Usage: java proguard.ProGuard [options ...]
+  # Build Windows executable with proguard embedded - (Experimental)
+  $  jarget jar-to-exe -exe=wcli proguard.jar
+  Built file ./proguard.exe
 
-$ proguard 
-bash: proguard: command not found
+  $ proguard 
+  bash: proguard: command not found
 
-#   If the app is moved to some directory in $PATH variable, 
-# it can be ran without forward slash (/) as any ordinary unix app 
-# such as ls, echo, ps, ... 
-$ mv proguard ~/bin
+  #   If the app is moved to some directory in $PATH variable, 
+  # it can be ran without forward slash (/) as any ordinary unix app 
+  # such as ls, echo, ps, ... 
+  $ mv proguard ~/bin
 
-$ proguard 
-ProGuard, version 5.3.3
-Usage: java proguard.ProGuard [options ...]
+  $ proguard 
+  ProGuard, version 5.3.3
+  Usage: java proguard.ProGuard [options ...]
 
-$ which proguard 
-/home/archbox/bin/proguard
+  $ which proguard 
+  /home/archbox/bin/proguard
 
-# Check the file type 
-##
-$ file /home/archbox/bin/proguard
-/home/archbox/bin/proguard: a /usr/bin/env sh script executable (binary data)
+  # Check the file type 
+  ##
+  $ file /home/archbox/bin/proguard
+  /home/archbox/bin/proguard: a /usr/bin/env sh script executable (binary data)
 
-# Check the executable header 
-##
-$ head -n 7 /home/archbox/bin/proguard
-#!/usr/bin/env sh
-if [[ -z "$JAVA_HOME" ]]
-then
-    java -jar "$0" "$@"
-else
-    "$JAVA_HOME/bin/java" -jar "$0" "$@"
-fi
+  # Check the executable header 
+  ##
+  $ head -n 7 proguard
+  #!/usr/bin/env sh
+
+  # Check if JAVA_HOME is Set
+  if [ -n "${JAVA_HOME}" ]
+  then
+      # Check if JAVA is Installed in this JAVA_HOME
+      if [ -f  "$JAVA_HOME/bin/java" ] ;
 
 #+END_SRC
+*** Build fatjar, uber Jar or executable uber jar 
 
-*** Build uber Jar or executable uber jar 
+Help: 
 
 #+BEGIN_SRC text 
- jarget uber [command]
- 
- Commands
+  $ jarget uber
+  Build uber jar file for deployment by bundling dependencies and resource files.
 
-   -o <output file>         - (mandatory) Output jar file bundled with all dependencies.
-   -m <main jar file>       - (optional)  Jar file containing main class.
-   -p <pack1> <pack2> ...   - (optional)  Packages int the format <group>/<artifact>/<version>
-   -j <jar1.jar> <jar2.jar> - (optional)  Single jar files that will be included in the uber jar.
-   -jd <dir1> <dir2> ...    - (optional)  Directories containing jar files that will be included in the uber jar.
-   -r <dir1> <dir2> ...     - (optional)  Directories containing resource files 
-   -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar 
-   -sh                      - (optional)  Makes the jar file as a self-executable Unix app.                                 
-                                
+   Usage: uber [OPTIONS] <MAIN-JAR> [<JARFILE1.jar> <JARFILE2.jar> ...]
+
+    -output=<file>      -o=<file>     Output file, default out.jar
+    -scala              -s            Bundle Scala runtime library scala-runtime.jar
+    -package=<pack>     -p=<pack>     MVN Coordinates of a java package -  <group>/<artifact>/<version>.
+    -file=<file>        -f=<file>     Jar files to be added to the package.
+    -resource=<folder>  -r=<folder>   Resource directory
+    -jardir=<folder>    -jd=<folder>  Directory containing jar files to be bundled into the uber jar.
+    -exe=<EXE>          -e=<EXE>
+    
 #+END_SRC
 
+The parameter <EXE> from -exe=<EXE> can be: 
+ 
+ + empty -> (default) Simple uber jar intended to be executed by double clicking
+   at it or by
+
+ + uexe  -> Unix executable: Shell script with uber jar payload
+
+ + wcli  -> Embed generated uber-jar into a Windows command line
+   executable. This feature is still experimental and Anti Virus
+   complains about the lack of signature.
+
+ + wgui -> Embed generated uber-jar into a Windows GUI
+   executable. This feature is still experimental. 
 
 Example: Make a scala uber-jar from the program [[file:scripts/chartTest.scala][file:scripts/chartTest.scala]] 
 
@@ -1232,7 +1121,7 @@ Example: Make a scala uber-jar from the program [[file:scripts/chartTest.scala][
   # If the dependency is not available in the cache, it will be downloaded
   # from the package default repository.
   #
-  $ jarget exec org.jfree/jfreechart/1.0.17 -- scalac scripts/chartTest.scala -d chartTest.jar
+  $ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scalac scripts/chartTest.scala -d chartTest.jar
 
   Downloading ---------------------
   PackData(org.jfree,jfreechart,1.0.17)
@@ -1249,17 +1138,22 @@ Example: Make a scala uber-jar from the program [[file:scripts/chartTest.scala][
   # The next time the command is run, the packages will no longer be downloaded as
   # they are already in the cache directory. ~/.jarget/cache/
   #
-  $ jarget exec org.jfree/jfreechart/1.0.17 -- scalac scripts/chartTest.scala -d chartTest.jar 
+  $ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scalac scripts/chartTest.scala -d chartTest.jar 
 
   # Step 2 - Run the jar file. 
   #
-  $ jarget exec org.jfree/jfreechart/1.0.17 -- scala chartTest.jar 
-
+  $ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scala chartTest.jar 
 
   # Step 3 - Compile it to an uber-jar by packing dependencies.
-  $ jarget uber -m chartTest.jar -o chartTest.sh -scala -sh -p org.jfree/jfreechart/1.0.17 
-  Built file:  chartTest.sh ok
-  Run it with: $ java -jar chartTest.sh
+
+  # -- Compile for UNIX, Linux, MacOSX ... 
+  $ jarget uber chartTest.jar -o=chartTest.sh -scala -exe=uexe -p=org.jfree/jfreechart/1.0.17
+
+  #--- Compile for Windows embedding into an Windows Executable
+  $ jarget uber chartTest.jar -o=chartTest.exe -scala -exe=wgui -p=org.jfree/jfreechart/1.0.17
+
+  $ file chartTest.exe
+  chartTest.exe: PE32 executable (GUI) Intel 80386, for MS Windows
 
   # Run the uber-jar - Way 1 
   $ ./chartTest.sh 
@@ -1283,29 +1177,37 @@ Run it with: $ java -jar jarget
 $ ./jarget 
 #+END_SRC
 
-Explanation: 
-
- + -o jarget - it will generate a uber jar file named jarget
-
- + -m jarget.jar - Jar file containing the Main class. The manifest
-   file of this file will be included in the uber jar.
-
- + -j .../scala-xml_2.12-1.0.6.jar  - Add this library to jar file.
-
- + -scala - This flag bundles the scala runtime library
-   scala-library.jar with the application.
-
- + -sh    - Makes the application an *nix executable that can be run
-   with ./application -cmd1 arg1 -cmd2 as an ordinary shell script ...
 *** System Information 
 **** Show Enviroment Variables 
+
+Command help:
+
+#+BEGIN_SRC text 
+  $ jarget utils
+  General utilities helpers for platform information and debugging.
+
+
+    Actions:
+     + env        - Show environment variables
+     + env <var>  - Show a given environment variable.
+     + prop       - Show java properties.
+     + prop <var> - Show a given a java property.
+     + path       - Show path variable
+     + info       - Show platform information.
+
+    Example: $ jarget utils info
+
+
+   Usage: utils <ACTION>
+
+#+END_SRC
 
  - =$ jarget utils -env=
 
 On Linux: 
 
 #+BEGIN_SRC text 
-$ jarget utils -env
+$ jarget utils env
    Environment Variable         Value
    ------------------------     --------------------------------------------------
    PATH                         /usr/local/sbin:/usr/local/bin:/usr/bin:/usr/li...
@@ -1329,7 +1231,7 @@ $ jarget utils -env
 On Windows: 
 
 #+BEGIN_SRC text 
-  C:\Users\archbox\Desktop>java -jar jarget utils -env
+  C:\Users\archbox\Desktop>java -jar jarget utils env
      Environment Variable          Value
      -------------------------     --------------------------------------------------
      USERDOMAIN_ROAMINGPROFILE     DESKTOP-2TJVI2H
@@ -1392,7 +1294,7 @@ On Linux:
 On Windows: 
 
 #+BEGIN_SRC text 
-  C:\Users\archbox\Desktop> java -jar jarget utils -path
+  C:\Users\archbox\Desktop> java -jar jarget utils path
 
   C:\Windows\system32
   C:\Windows
@@ -1413,7 +1315,7 @@ Show all Java properties from System.getProperties().
 On Linux:
 
 #+BEGIN_SRC text 
-$ jarget utils -prop
+$ jarget utils prop
    Java Property                     Value
    -----------------------------     --------------------------------------------------
    java.runtime.name                 OpenJDK Runtime Environment
@@ -1475,7 +1377,7 @@ $ jarget utils -prop
 On Windows: 
 
 #+BEGIN_SRC text 
-  C:\Users\archbox\Desktop>java -jar jarget utils -prop
+  C:\Users\archbox\Desktop>java -jar jarget utils prop
      Java Property                     Value
      -----------------------------     --------------------------------------------------
      java.runtime.name                 Java(TM) SE Runtime Environment
@@ -1541,13 +1443,13 @@ On Windows:
 
 **** Show Path to Program 
 
- - =$ jarget utils -expath <program>=
+ - =$ jarget utils expath <program>=
 
 #+BEGIN_SRC sh 
-$ jarget utils -expath java
+$ jarget utils expath java
 /usr/bin/java
 
-$ jarget utils -expath jarget
+$ jarget utils expath jarget
 /home/archbox/bin/jarget
 
 #+END_SRC
@@ -1559,7 +1461,7 @@ $ jarget utils -expath jarget
 Output on Linux:
 
 #+BEGIN_SRC text 
-  $ jarget utils -info
+  $ jarget utils info
 
   Operating System              = Linux
   Operating System Version      = 4.14.16-200.fc26.x86_64
@@ -1587,7 +1489,7 @@ Output on Linux:
 Output on Windows 10:
 
 #+BEGIN_SRC text 
-  C:\Users\archbox\Desktop>java -jar jarget utils -info
+  C:\Users\archbox\Desktop>java -jar jarget utils info
 
   Operating System              = Windows 10
   Operating System Version      = 10.0
@@ -1608,33 +1510,6 @@ Output on Windows 10:
   - java.runtime.version          = 1.8.0_162-b12
   - java.vm.name                  = Java HotSpot(TM) 64-Bit Server VM
   - java.home                     = C:\Program Files\Java\jdk1.8.0_162\jre
-
-#+END_SRC
-
-*** Classpath 
-
-
- - =$ jarget cpath -show=
-
-Get class file of all jar files in ./lib directory.
-
-#+BEGIN_SRC sh 
-$ ./bin/jarget cpath -show
-./lib/scala-library-2.12.1.jar:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
-
-$ scala -cp $(./bin/jarget cpath -show)
-Welcome to Scala 2.12.3 (OpenJDK 64-Bit Server VM, Java 1.8.0_141).
-Type in expressions for evaluation. Or try :help.
-
-#+END_SRC
-
- - =$ jarget cpath -show [dir]=
-
-Get class file of all jar files in a given directory.
-
-#+BEGIN_SRC sh 
-$ ./bin/jarget cpath -show ./lib
-./lib/scala-library-2.12.1.jar:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
 
 #+END_SRC
 
@@ -1667,100 +1542,50 @@ $ sh ./bin/jarget doc
 
 Build a standalone jarget redeucing the app size with proguard. 
 
- - =$ make sh-proguard=
+ - $ make pgd-unix 
 
 #+BEGIN_SRC sh
-# Build 
-$ make sh-guard 
+  # Build 
+  $ make pgd-unix -k CC=scalac
 
-scala jarget.jar uber -scala -o bin/jarget-uber.jar -m jarget.jar -j /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.jar -r assets
-Built file:  bin/jarget-uber.jar ok
-Run it with: $ java -jar bin/jarget-uber.jar
-echo bin/jarget-uber.jar
-bin/jarget-uber.jar
-java -jar proguard.jar @config.pro
-ProGuard, version 5.3.3
-Reading input...
-Reading program jar [/home/archbox/test/jarget.scala/bin/jarget-uber.jar]
-Reading library jar [/home/archbox/opt/jdk1.8.0_144/jre/lib/rt.jar]
-Initializing...
+  Makefile:63: warning: overriding recipe for target 'bin/jarget'
+  Makefile:58: warning: ignoring old recipe for target 'bin/jarget'
+  scalac src/logger.scala src/main.scala src/mvn.scala src/utils.scala src/reader.scala src/utils.JarBuilder.scala src/optPa
+  rser.scala src/crypto.scala -d jarget.jar
+  warning: there were 6 deprecation warnings (since 2.12.0); re-run with -deprecation for details
+  warning: there were 5 feature warnings; re-run with -feature for details
+  two warnings found
+  mkdir -p bin
+  cp -v exeLoaders/loaderCLI.exe exeLoaders/loaderGUI.exe assets || true
+  'exeLoaders/loaderCLI.exe' -> 'assets/loaderCLI.exe'
+  'exeLoaders/loaderGUI.exe' -> 'assets/loaderGUI.exe'
+  scala jarget.jar uber -scala -r=assets -o=bin/jarget-uber.jar jarget.jar /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.
+  jar
+  java -jar proguard.jar @config.pro
+  ProGuard, version 5.3.3
+  Reading input...
+  Reading program jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-uber.jar]
+  Reading library jar [/home/archbox/opt/java/jre/lib/rt.jar]
+  Initializing...
 
-... ... .... ... ...  ... ... ... ... 
+  ... .... ...
 
-Shrinking...
-Removing unused program classes and class elements...
-  Original number of program classes: 2777
-  Final number of program classes:    1117
-Inlining subroutines...
-Preverifying...
-Writing output...
-Preparing output jar [/home/archbox/test/jarget.scala/bin/jarget-pro.jar]
-  Copying resources from program jar [/home/archbox/test/jarget.scala/bin/jarget-uber.jar]
-scala jarget.jar uber -exjar bin/jarget-pro.jar bin/jarget
-Built bin/jarget
-Run it with ./bin/jarget
-
-# Check app size 
-$ du -h bin/jarget
-1.7M	bin/jarget
-1.7M	total
-
-# Run it as an executable  
-$ bin/jarget -v
-Jarget v1.5.0
-
-# Run it with sh 
-$ sh bin/jarget -v
-Jarget v1.5.0
-
-# Run it with java 
-$ java -jar bin/jarget -v
-Jarget v1.5.0
-
-$ bin/jarget utils -prop java.home
-/home/archbox/opt/jdk1.8.0_144/jre
-
-# Check the executable header 
-$ head -n 7 bin/jarget
-
-#!/usr/bin/env sh
-if [[ -z "$JAVA_HOME" ]]
-then
-    java -jar "$0" "$@"
-else
-    "$JAVA_HOME/bin/java" -jar "$0" "$@"
-fi
+    Final number of program classes:    1123
+  Inlining subroutines...
+  Preverifying...
+  Writing output...
+  Preparing output jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-pro.jar]
+    Copying resources from program jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-uber.jar]
+  rm -rf bin/jarget-uber.jar
+  scala jarget.jar jar-to-exe -exe=uexe bin/jarget-pro.jar bin/jarget
+  Built file ./bin/jarget-pro
 
 
 #+END_SRC
 
 *** Install jarget tool in ~/bin 
 
- - =$ make install=
-
-#+BEGIN_SRC sh 
-# Build and install 
-#
-$ make install
-scala jarget.jar uber -scala -sh -o bin/jarget -m jarget.jar -j /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.jar
-Built file:  bin/jarget ok
-Run it with: $ java -jar bin/jarget
-cp -v bin/jarget ~/bin
-'bin/jarget' -> '/home/archbox/bin/jarget'
-
-# Run it - Assuming that ~/bin is in $PATH. 
-#
-$ jarget
-jarget - Tool to download jar packages.
-
-Maven Packages / Jar Packages
-
- mvn -show [package]                 - Show package's information
-
- mvn -pom  [package]                 - Show package's pom file
-
-... ... ... 
-#+END_SRC
+ - make pgd-unix -k CC=scalac && make install
 
 ** Getting a Binary Release 
 
@@ -1854,11 +1679,11 @@ jarget - Tool to download jar packages.
  - [ ]  - Show all versions of a given package available in the repository.
  - [ ]  - Support multiple repositories. 
  - [ ]  - Support project configuration file. 
- - [ ]  - Improve command line handling 
- - [ ]  - Improve error handling. 
+ - [X]  - Improve command line handling 
+ - [X]  - Improve error handling. 
  - [X]  - Feature to make Uber Jar 
  - [X]  - Shrink the generated uber jar using Pro-guard. 
- - [ ]  - Create a Windows exe wrapper
+ - [X]  - Create a Windows exe wrapper
  - [X]  - Crypto Hash commands such as md5sum, sha256sum ... 
  - [X]  - Improve project's web site design.
    
