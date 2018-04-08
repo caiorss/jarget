@@ -10,7 +10,7 @@
 #
 # $ make sh			-> Build bin/jarget - uber jar file for testing.
 #
-# $ make sh-guard	-> Build bin/jarget - uber jar shrunk with proguard. 
+# $ make pgd-unix   -> Build bin/jarget-pro - unix executable uber jar shrunk with proguard. 
 #
 # $ make install    -> Copy file bin/jarget to ~/bin/jarget or $HOME/bin/jarget 
 #
@@ -36,11 +36,13 @@ SCALA_XML_PATH=$(shell dirname $(shell dirname $(shell which scala)))/lib/$(SCAL
 
 exeloaders := exeLoaders/loaderCLI.exe exeLoaders/loaderGUI.exe
 
+CC := fsc 
+
 #=============================  R U L E S =================================#
 
-all:      $(target)
-sh:       $(sh)
-sh-quard: $(sh-guard)
+all:  $(target)
+sh:   $(sh)        # Build uber jar embedded in shell script
+pgd:  $(sh-guard)  # Build uber jar embedded in shell script optmized with proguard 
 
 # This rule checks make variables 
 check:
@@ -50,26 +52,23 @@ check:
 
 
 $(target) : $(src)
-	fsc $(src) -d jarget.jar
-
-force: $(src)
-	scalac $(src) -d jarget.jar 
+	$(CC) $(src) -d jarget.jar
 
 bin/jarget: $(target) $(assetfiles)
 	mkdir -p bin
 	cp -v $(exeloaders) assets || true 
-	scala jarget.jar uber -scala -exe uexe -o bin/jarget -m jarget.jar -j $(SCALA_XML_PATH) -r assets
+	scala jarget.jar uber -scala -exe=uexe -r=./assets -o=bin/jarget  jarget.jar $(SCALA_XML_PATH) 
 
-bin/jarget.exe: $(target) $(assetfiles)
+bin/jarget: $(target) $(assetfiles)
 	mkdir -p bin
 	cp -v $(exeloaders) assets || true 
-	scala jarget.jar uber -scala -exe wcli -o bin/jarget.exe -m jarget.jar -j $(SCALA_XML_PATH) -r assets
+	scala jarget.jar uber -scala -exe=uexe -r=assets -o=bin/jarget.exe jarget.jar $(SCALA_XML_PATH) 
 
 $(fatjar): 
 	mkdir -p bin
 	@# Try to copy Windows CLI and GUI Loaders	
 	cp -v $(exeloaders) assets || true 
-	scala jarget.jar uber -scala -o bin/jarget-uber.jar -m jarget.jar -j $(SCALA_XML_PATH) -r assets
+	scala jarget.jar uber -scala -r=assets -o=bin/jarget-uber.jar jarget.jar $(SCALA_XML_PATH) 
 
 # Generates files bin/jarget shrunk with proguard
 #
@@ -78,18 +77,18 @@ bin/jarget-pro.jar: $(target) $(assetfiles) config.pro
 	@# Try to copy Windows CLI and GUI Loaders
 	cp -v $(exeloaders) assets || true 
 	@# Generate uber jar
-	scala jarget.jar uber -scala -o bin/jarget-uber.jar -m jarget.jar -j $(SCALA_XML_PATH) -r assets 
+	scala jarget.jar uber -scala -r=assets -o=bin/jarget-uber.jar jarget.jar $(SCALA_XML_PATH) 
 	@# Shrink app with proguard 
 	java -jar proguard.jar @config.pro
 	rm -rf bin/jarget-uber.jar
 
 # Build Unix executable shrunk with proguard 
 pgd-unix: bin/jarget-pro.jar
-	scala jarget.jar exe uexe bin/jarget-pro.jar bin/jarget
+	scala jarget.jar jar-to-exe -exe=uexe bin/jarget-pro.jar bin/jarget
 
 # Build Windows native executable loader with this program as payload.
 pgd-exe: bin/jarget-pro.jar
-	scala jarget.jar exe wcli bin/jarget-pro.jar bin/jarget.exe 
+	scala jarget.jar jar-to-exe -exe=wcli bin/jarget-pro.jar bin/jarget.exe 
 
 install: bin/jarget
 	cp -v bin/jarget ~/bin
