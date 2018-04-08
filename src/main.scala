@@ -610,7 +610,11 @@ object Main{
     }
   }
 
-  val parser = new OptParser()
+  val desc = """
+ Jarget - command line toolbox for Java Platform.
+"""
+
+  val parser = new OptParser(desc = desc)
     .add(uberOptSet)
     .add(execCommand)
     .add(scriptCommand)
