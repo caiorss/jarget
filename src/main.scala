@@ -554,10 +554,24 @@ object Main{
     }
   }
 
+
+
   val utilsOpt = new OptSet(
-    name = "utils",
-    usage = "<ACTION>",
-    desc = "General utilities helpers for platform information and debugging."
+    name     = "utils",
+    usage    = "<ACTION>",
+    desc     = "General utilities helpers for platform information and debugging.",
+    longDesc = """
+  Actions:
+   + env        - Show environment variables
+   + env <var>  - Show a given environment variable.
+   + prop       - Show java properties.
+   + prop <var> - Show a given a java property.
+   + path       - Show path variable
+   + info       - Show platform information.
+
+  Example: $ jarget utils info
+
+   """
   ).setAction{ res =>
     val args = res.getOperands()
     args match {
