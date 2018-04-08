@@ -63,6 +63,21 @@ class OptResult(
   def getOperands() = operands
   def getSwitches() = switches
 
+  def getOperand(index: Int, default: String, errorMsg: String = "") = {
+    if(index >= operands.size)
+      default
+    else
+      operands(index)
+  }
+
+  def getOperandOrExit(index: Int, errorMsg: String = "") = {
+    if(index >= operands.size || index < 0){
+      println(if (errorMsg == "") s"Error: expected operand $index" else errorMsg)
+      System.exit(1)
+    }
+    operands(index)
+  }
+
   def getListStr(name: String) = 
     switches.get(name) getOrElse List()
 
