@@ -1625,7 +1625,20 @@ From version >= 1.5 jarget will be shrunk with proguard.
    edge-case bug and also added command jarget utils -info to show
    platform informations such as number of processors, version of
    operating system, default line separator '\r', '\n', '\r\n', path
-   separator and so on. 
+   separator and so on.
+
+ - Release [[https://github.com/caiorss/jarget/blob/554a56e4bcc42d3b8fa3ce134bf7f0984f9e1701/jarget?raw%3Dtrue][jarget-v3.0]]
+
+   + Improved command line handling allowing future scalability and
+     implementation of new functionalities.
+
+   + Improved user interface. Now jarget has git-like
+     subcommands. Each command works as it was a separated command
+     line application in similar fashion to git and busybox.
+
+   + Implemented generation of uber jars embedded in Windows' native
+     executables. - (Still experimental.)
+
 
 Or it can be downloaded with those shell commands below: 
 
