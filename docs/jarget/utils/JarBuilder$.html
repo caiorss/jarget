@@ -65,9 +65,7 @@
         <span class="kind">package</span>
       </span>
       <span class="symbol">
-        <a title="" href="../../index.html">
-              <span class="name">root</span>
-            </a>
+        <a title="" href="../../index.html"><span class="name">root</span></a>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../index.html" class="extype" name="_root_">root</a></dd></dl></div>
@@ -83,9 +81,7 @@
         <span class="kind">package</span>
       </span>
       <span class="symbol">
-        <a title="" href="../index.html">
-              <span class="name">jarget</span>
-            </a>
+        <a title="" href="../index.html"><span class="name">jarget</span></a>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../index.html" class="extype" name="_root_">root</a></dd></dl></div>
@@ -101,42 +97,30 @@
         <span class="kind">package</span>
       </span>
       <span class="symbol">
-        <a title="" href="index.html">
-              <span class="name">utils</span>
-            </a>
+        <a title="" href="index.html"><span class="name">utils</span></a>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="jarget">jarget</a></dd></dl></div>
     </li><li class="current-entities indented2">
                         <span class="separator"></span>
                         <a class="object" href="" title="Provide functions to build Uber jars (aka fat-jars)"></a>
-                        <a href="" title="Provide functions to build Uber jars (aka fat-jars)">
-                          JarBuilder
-                        </a>
+                        <a href="" title="Provide functions to build Uber jars (aka fat-jars)">JarBuilder</a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
                         <a class="object" href="JarUtils$.html" title="Provides functions to inspect and check jar files"></a>
-                        <a href="JarUtils$.html" title="Provides functions to inspect and check jar files">
-                          JarUtils
-                        </a>
+                        <a href="JarUtils$.html" title="Provides functions to inspect and check jar files">JarUtils</a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
                         <a class="class" href="OptParse.html" title=""></a>
-                        <a href="OptParse.html" title="">
-                          OptParse
-                        </a>
+                        <a href="OptParse.html" title="">OptParse</a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
                         <a class="object" href="OptParseUtils$.html" title=""></a>
-                        <a href="OptParseUtils$.html" title="">
-                          OptParseUtils
-                        </a>
+                        <a href="OptParseUtils$.html" title="">OptParseUtils</a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
                         <a class="object" href="Utils$.html" title="General utility functions"></a>
-                        <a href="Utils$.html" title="General utility functions">
-                          Utils
-                        </a>
+                        <a href="Utils$.html" title="General utility functions">Utils</a>
                       </li>
               </ul>
             </div>
@@ -165,7 +149,7 @@
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Provide functions to build Uber jars (aka fat-jars)</p></div><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/caiorss/jarget" target="_blank">jarget.utils.scala</a></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Provide functions to build Uber jars (aka fat-jars)</p></div><dl class="attributes block"> <dt>Source</dt><dd><a href="https://github.com/caiorss/jarget" target="_blank">utils.JarBuilder.scala</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -215,7 +199,26 @@
         <div id="allMembers">
         
 
-        
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="jarget.utils.JarBuilder.JWrapper" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="JWrapperextendsAnyRef"></a><a id="JWrapper:JWrapper"></a>
+      <span class="permalink">
+      <a href="../../jarget/utils/JarBuilder$.html#JWrapperextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a title="Jar wrapper" href="JarBuilder$$JWrapper.html"><span class="name">JWrapper</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Jar wrapper</p>
+    </li></ol>
+            </div>
 
         
 
@@ -366,6 +369,8 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
                 <span class="name">@throws</span><span class="args">(<span>
       
       <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
@@ -441,7 +446,26 @@
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="jarget.utils.JarBuilder#getWrapperStream" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getWrapperStream(wrapper:jarget.utils.JarBuilder.JWrapper,cls:Class[_]):Option[java.io.InputStream]"></a><a id="getWrapperStream(JWrapper,Class[_]):Option[InputStream]"></a>
+      <span class="permalink">
+      <a href="../../jarget/utils/JarBuilder$.html#getWrapperStream(wrapper:jarget.utils.JarBuilder.JWrapper,cls:Class[_]):Option[java.io.InputStream]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getWrapperStream</span><span class="params">(<span name="wrapper">wrapper: <a href="JarBuilder$$JWrapper.html" class="extype" name="jarget.utils.JarBuilder.JWrapper">JWrapper</a></span>, <span name="cls">cls: <span class="extype" name="scala.Predef.Class">Class</span>[_]</span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.io.InputStream">InputStream</span>]</span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">
@@ -457,7 +481,10 @@
         <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
@@ -474,10 +501,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="jarget.utils.JarBuilder#makeExecutableJar" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="makeExecutableJar(jarFile:String,outFile:String):Any"></a><a id="makeExecutableJar(String,String):Any"></a>
+    </li><li name="jarget.utils.JarBuilder#makeExecutable" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="makeExecutable(cls:Class[_],jarFile:String,outFile:String,wrapper:jarget.utils.JarBuilder.JWrapper):Any"></a><a id="makeExecutable(Class[_],String,String,JWrapper):Any"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarBuilder$.html#makeExecutableJar(jarFile:String,outFile:String):Any" title="Permalink">
+      <a href="../../jarget/utils/JarBuilder$.html#makeExecutable(cls:Class[_],jarFile:String,outFile:String,wrapper:jarget.utils.JarBuilder.JWrapper):Any" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -486,14 +513,16 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">makeExecutableJar</span><span class="params">(<span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="outFile">outFile: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Any">Any</span></span>
+        <span class="name">makeExecutable</span><span class="params">(<span name="cls">cls: <span class="extype" name="scala.Predef.Class">Class</span>[_]</span>, <span name="jarFile">jarFile: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="outFile">outFile: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="wrapper">wrapper: <a href="JarBuilder$$JWrapper.html" class="extype" name="jarget.utils.JarBuilder.JWrapper">JWrapper</a> = <span class="symbol"><span class="name"><a href="JarBuilder$$JWrapperUEXE$.html">JWrapperUEXE</a></span></span></span>)</span><span class="result">: <span class="extype" name="scala.Any">Any</span></span>
       </span>
       
-      
-    </li><li name="jarget.utils.JarBuilder#makeJarWith" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="makeJarWith(file:String,executable:Boolean)(fn:java.util.jar.JarOutputStream=&gt;Unit):Unit"></a><a id="makeJarWith(String,Boolean)((JarOutputStream)⇒Unit):Unit"></a>
+      <p class="shortcomment cmt">Turn an Uber-Jar into a Unix executable, windows cli executable or GUI executable.</p><div class="fullcomment"><div class="comment cmt"><p>Turn an Uber-Jar into a Unix executable, windows cli executable or GUI executable.
+A Unix executable is a small shell script with a jar payload.
+</p></div></div>
+    </li><li name="jarget.utils.JarBuilder#makeJarWith" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="makeJarWith(file:String,wrapper:jarget.utils.JarBuilder.JWrapper,cls:Class[_])(jarWriter:java.util.jar.JarOutputStream=&gt;Unit):Unit"></a><a id="makeJarWith(String,JWrapper,Class[_])((JarOutputStream)⇒Unit):Unit"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarBuilder$.html#makeJarWith(file:String,executable:Boolean)(fn:java.util.jar.JarOutputStream=&gt;Unit):Unit" title="Permalink">
+      <a href="../../jarget/utils/JarBuilder$.html#makeJarWith(file:String,wrapper:jarget.utils.JarBuilder.JWrapper,cls:Class[_])(jarWriter:java.util.jar.JarOutputStream=&gt;Unit):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -502,14 +531,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">makeJarWith</span><span class="params">(<span name="file">file: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="executable">executable: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="params">(<span name="fn">fn: (<span class="extype" name="java.util.jar.JarOutputStream">JarOutputStream</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">makeJarWith</span><span class="params">(<span name="file">file: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="wrapper">wrapper: <a href="JarBuilder$$JWrapper.html" class="extype" name="jarget.utils.JarBuilder.JWrapper">JWrapper</a> = <span class="symbol"><span class="name"><a href="JarBuilder$$JWrapperEmpty$.html">JWrapperEmpty</a></span></span></span>, <span name="cls">cls: <span class="extype" name="scala.Predef.Class">Class</span>[_]</span>)</span><span class="params">(<span name="jarWriter">jarWriter: (<span class="extype" name="java.util.jar.JarOutputStream">JarOutputStream</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
-      
+      <p class="shortcomment cmt">Create a jar file with or without an executable wrapper.</p><div class="fullcomment"><div class="comment cmt"><p>Create a jar file with or without an executable wrapper.</p></div><dl class="paramcmts block"><dt class="param">file</dt><dd class="cmt"><p>- Output uber jar file or executable wrapper with jar payload.</p></dd><dt class="param">wrapper</dt><dd class="cmt"><p>- Type of executable wrapper (default empty).</p></dd><dt class="param">cls</dt><dd class="cmt"><p>- Class where the resource files will extracted.</p></dd></dl></div>
     </li><li name="jarget.utils.JarBuilder#makeUberJar" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="makeUberJar(output:String,main:String,paths:List[String],jarFiles:List[String],files:List[String],filesEntry:List[String],resources:List[String],scalaLib:Boolean,executable:Boolean):Unit"></a><a id="makeUberJar(String,String,List[String],List[String],List[String],List[String],List[String],Boolean,Boolean):Unit"></a>
+      <a id="makeUberJar(cls:Class[_],output:String,main:String,paths:List[String],jarFiles:List[String],files:List[String],filesEntry:List[String],resources:List[String],scalaLib:Boolean,wrapper:jarget.utils.JarBuilder.JWrapper):Unit"></a><a id="makeUberJar(Class[_],String,String,List[String],List[String],List[String],List[String],List[String],Boolean,JWrapper):Unit"></a>
       <span class="permalink">
-      <a href="../../jarget/utils/JarBuilder$.html#makeUberJar(output:String,main:String,paths:List[String],jarFiles:List[String],files:List[String],filesEntry:List[String],resources:List[String],scalaLib:Boolean,executable:Boolean):Unit" title="Permalink">
+      <a href="../../jarget/utils/JarBuilder$.html#makeUberJar(cls:Class[_],output:String,main:String,paths:List[String],jarFiles:List[String],files:List[String],filesEntry:List[String],resources:List[String],scalaLib:Boolean,wrapper:jarget.utils.JarBuilder.JWrapper):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -518,14 +547,14 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">makeUberJar</span><span class="params">(<span name="output">output: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="main">main: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="paths">paths: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">List()</span></span>, <span name="jarFiles">jarFiles: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">List()</span></span>, <span name="files">files: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">List()</span></span>, <span name="filesEntry">filesEntry: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">List()</span></span>, <span name="resources">resources: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">List()</span></span>, <span name="scalaLib">scalaLib: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="executable">executable: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">makeUberJar</span><span class="params">(<span name="cls">cls: <span class="extype" name="scala.Predef.Class">Class</span>[_]</span>, <span name="output">output: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="main">main: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="paths">paths: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">List()</span></span>, <span name="jarFiles">jarFiles: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">List()</span></span>, <span name="files">files: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">List()</span></span>, <span name="filesEntry">filesEntry: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">List()</span></span>, <span name="resources">resources: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">List()</span></span>, <span name="scalaLib">scalaLib: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="wrapper">wrapper: <a href="JarBuilder$$JWrapper.html" class="extype" name="jarget.utils.JarBuilder.JWrapper">JWrapper</a> = <span class="symbol"><span class="name"><a href="JarBuilder$$JWrapperEmpty$.html">JWrapperEmpty</a></span></span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
       <p class="shortcomment cmt">      Build an uber jar (aka fat jar) bundling an application with
       all its dependencies:
 </p><div class="fullcomment"><div class="comment cmt"><p>      Build an uber jar (aka fat jar) bundling an application with
       all its dependencies:
-</p></div><dl class="paramcmts block"><dt class="param">output</dt><dd class="cmt"><p>- output file</p></dd><dt class="param">main</dt><dd class="cmt"><p>- Main jar file containing main class</p></dd><dt class="param">paths</dt><dd class="cmt"><p>- List of paths to directories containing jar files</p></dd><dt class="param">jarFiles</dt><dd class="cmt"><p>- List of jar files to be added to the output jar</p></dd><dt class="param">files</dt><dd class="cmt"><p>- List of asset files to be added to the output uber jar</p></dd><dt class="param">filesEntry</dt><dd class="cmt"><p>- List of asset files such as file1.txt:texts/entry.txt /tmp/file2.txt:entry2.txt</p></dd><dt class="param">resources</dt><dd class="cmt"><p>- Append a list of resource directories to the jar files.</p></dd><dt class="param">scalaLib</dt><dd class="cmt"><p>- If true bundles the scala run-time scala-library.jar with the app.</p></dd><dt class="param">executable</dt><dd class="cmt"><p>- If true makes unix self-executable jar file that can be run as script ./app.jar</p></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">output</dt><dd class="cmt"><p>- output file</p></dd><dt class="param">main</dt><dd class="cmt"><p>- Main jar file containing main class</p></dd><dt class="param">paths</dt><dd class="cmt"><p>- List of paths to directories containing jar files</p></dd><dt class="param">jarFiles</dt><dd class="cmt"><p>- List of jar files to be added to the output jar</p></dd><dt class="param">files</dt><dd class="cmt"><p>- List of asset files to be added to the output uber jar</p></dd><dt class="param">filesEntry</dt><dd class="cmt"><p>- List of asset files such as file1.txt:texts/entry.txt /tmp/file2.txt:entry2.txt</p></dd><dt class="param">resources</dt><dd class="cmt"><p>- Append a list of resource directories to the jar files.</p></dd><dt class="param">scalaLib</dt><dd class="cmt"><p>- If true bundles the scala run-time scala-library.jar with the app.</p></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -557,7 +586,10 @@
         <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
       <span class="permalink">
@@ -573,7 +605,26 @@
         <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="jarget.utils.JarBuilder#parseWrapper" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="parseWrapper(name:String):jarget.utils.JarBuilder.JWrapper"></a><a id="parseWrapper(String):JWrapper"></a>
+      <span class="permalink">
+      <a href="../../jarget/utils/JarBuilder$.html#parseWrapper(name:String):jarget.utils.JarBuilder.JWrapper" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">parseWrapper</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="JarBuilder$$JWrapper.html" class="extype" name="jarget.utils.JarBuilder.JWrapper">JWrapper</a></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
@@ -666,12 +717,78 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
                 <span class="name">@throws</span><span class="args">(<span>
       
       <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="jarget.utils.JarBuilder.JWrapperEmpty" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JWrapperEmpty"></a><a id="JWrapperEmpty:JWrapperEmpty"></a>
+      <span class="permalink">
+      <a href="../../jarget/utils/JarBuilder$.html#JWrapperEmpty" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="JarBuilder$$JWrapperEmpty$.html"><span class="name">JWrapperEmpty</span></a><span class="result"> extends <a href="JarBuilder$$JWrapper.html" class="extype" name="jarget.utils.JarBuilder.JWrapper">JWrapper</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      
+    </li><li name="jarget.utils.JarBuilder.JWrapperUEXE" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JWrapperUEXE"></a><a id="JWrapperUEXE:JWrapperUEXE"></a>
+      <span class="permalink">
+      <a href="../../jarget/utils/JarBuilder$.html#JWrapperUEXE" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="Unix Executable wrapper" href="JarBuilder$$JWrapperUEXE$.html"><span class="name">JWrapperUEXE</span></a><span class="result"> extends <a href="JarBuilder$$JWrapper.html" class="extype" name="jarget.utils.JarBuilder.JWrapper">JWrapper</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Unix Executable wrapper</p>
+    </li><li name="jarget.utils.JarBuilder.JWrapperWCLI" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JWrapperWCLI"></a><a id="JWrapperWCLI:JWrapperWCLI"></a>
+      <span class="permalink">
+      <a href="../../jarget/utils/JarBuilder$.html#JWrapperWCLI" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="Windows CLI (Command Line Interface) wrapper" href="JarBuilder$$JWrapperWCLI$.html"><span class="name">JWrapperWCLI</span></a><span class="result"> extends <a href="JarBuilder$$JWrapper.html" class="extype" name="jarget.utils.JarBuilder.JWrapper">JWrapper</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Windows CLI (Command Line Interface) wrapper</p>
+    </li><li name="jarget.utils.JarBuilder.JWrapperWGUI" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JWrapperWGUI"></a><a id="JWrapperWGUI:JWrapperWGUI"></a>
+      <span class="permalink">
+      <a href="../../jarget/utils/JarBuilder$.html#JWrapperWGUI" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="Windows GUI (Graphical User Interface) wrapper" href="JarBuilder$$JWrapperWGUI$.html"><span class="name">JWrapperWGUI</span></a><span class="result"> extends <a href="JarBuilder$$JWrapper.html" class="extype" name="jarget.utils.JarBuilder.JWrapper">JWrapper</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Windows GUI (Graphical User Interface) wrapper</p>
     </li>
               </ol>
             </div>

@@ -3,8 +3,8 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<title>Jarget - Java Platform Command Line Toolbox</title>
-<!-- 2018-02-17 Sat 22:07 -->
+<title>Jarget - Command Line Toolbox for Java Platform</title>
+<!-- 2018-04-08 Sun 16:51 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues - caiorss.rodrigues@gmail.com" />
@@ -185,7 +185,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
-<h1 class="title">Jarget - Java Platform Command Line Toolbox</h1>
+<h1 class="title">Jarget - Command Line Toolbox for Java Platform</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
@@ -196,14 +196,13 @@ for the JavaScript code in this tag.
 <li><a href="#sec-1-2">1.2. Use Case Example</a></li>
 <li><a href="#sec-1-3">1.3. User Guide</a>
 <ul>
-<li><a href="#sec-1-3-1">1.3.1. Info commans</a></li>
+<li><a href="#sec-1-3-1">1.3.1. Info commands</a></li>
 <li><a href="#sec-1-3-2">1.3.2. Maven / Packages Commands</a></li>
 <li><a href="#sec-1-3-3">1.3.3. Cache commands</a></li>
 <li><a href="#sec-1-3-4">1.3.4. Scripting with jarget</a></li>
 <li><a href="#sec-1-3-5">1.3.5. Command to manipulate Jar packages</a></li>
-<li><a href="#sec-1-3-6">1.3.6. Build uber Jar or executable uber jar</a></li>
+<li><a href="#sec-1-3-6">1.3.6. Build fatjar, uber Jar or executable uber jar</a></li>
 <li><a href="#sec-1-3-7">1.3.7. System Information</a></li>
-<li><a href="#sec-1-3-8">1.3.8. Classpath</a></li>
 </ul>
 </li>
 <li><a href="#sec-1-4">1.4. Building Instructions</a>
@@ -325,7 +324,7 @@ It is possible to:
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget mvn -show org.typelevel/cats_2.11/0.7.2
+<pre class="src src-sh">$ jarget mvn-show org.typelevel/cats_2.11/0.7.2
 <span class="org-function-name">Package</span>:         catsJVM
 <span class="org-function-name">Packaging</span>:       jar
 <span class="org-function-name">Coordinates</span>[<span class="org-compilation-line-number">1</span>]:  group = org.typelevel artifact = cats_2.11 version = 0.7.2
@@ -369,7 +368,7 @@ package:
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget exec org.typelevel/cats-core_2.12/0.9.0 -- scala 
+<pre class="src src-sh">$ jarget exec -p=org.typelevel/cats-core_2.12/0.9.0 -- scala 
 Welcome to Scala 2.12.3 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_144)<span class="org-builtin">.</span>
 Type<span class="org-keyword"> in</span> expressions for evaluation. Or try :help.
 
@@ -394,24 +393,12 @@ scala&gt;
 <h3 id="sec-1-3"><span class="section-number-3">1.3</span> User Guide</h3>
 <div class="outline-text-3" id="text-1-3">
 </div><div id="outline-container-sec-1-3-1" class="outline-4">
-<h4 id="sec-1-3-1"><span class="section-number-4">1.3.1</span> Info commans</h4>
+<h4 id="sec-1-3-1"><span class="section-number-4">1.3.1</span> Info commands</h4>
 <div class="outline-text-4" id="text-1-3-1">
-</div><ol class="org-ol"><li><a id="sec-1-3-1-1" name="sec-1-3-1-1"></a>Show version<br  /><div class="outline-text-5" id="text-1-3-1-1">
-<ul class="org-ul">
-<li><code>$ jarget -v</code> or <code>$ jarget -version</code> 
-</li>
-</ul>
+<p>
+Now the app adopts git subcommands:
+</p>
 
-<div class="org-src-container">
-
-<pre class="src src-sh">$ jarget -v
-2.2.0-beta
-</pre>
-</div>
-</div>
-</li>
-
-<li><a id="sec-1-3-1-2" name="sec-1-3-1-2"></a>Show user help<br  /><div class="outline-text-5" id="text-1-3-1-2">
 <ul class="org-ul">
 <li><code>$ jarget</code>
 </li>
@@ -420,183 +407,84 @@ scala&gt;
 <div class="org-src-container">
 
 <pre class="src src-text">$ jarget
-jarget 2.2.0-beta -  Java platform Toolbox
-General
------------------------------------------------------------------
 
- -h              - show help
- -v | -version   - show version
- -site           - Open jarget github repository in the web browser.
+ Jarget 3.0 - command line toolbox for Java Platform.
 
-Maven Packages / Jar Packages
------------------------------------------------------------------
+Usage: $  [COMMAND] [OPTIONS] [&lt;ARGS&gt; ...]
 
- mvn -show &lt;pack&gt;                      - Show package's information
+Commands:
 
- mvn -pom  &lt;pack&gt;                      - Show package's pom file
-
- mvn -pull &lt;pack1,pack2,pack3...&gt;      - Download package and dependencies to cache directory.
-
- mvn -copy &lt;pack1,pack2,pack3..&gt;       -  Copy packages from cache to ./lib downloading them if
-                                          they are not available.
-
-
- mvn -search   &lt;query&gt;                 - Search a package in search.maven.org, opening results in
-                                         the browser.
-
- mvn -search2  &lt;query&gt;                 - Search a package showing results in the console. (Experimental)
-
- mvn -browse &lt;package&gt;                 - Open package official website.
-
- mvn -open                             - Open web site https://mvnrepository.com
- mvn -open &lt;package&gt;                   - Open package mvnrepository url.
-
-
- mvn -clear                            - Clear package cache by removing all packages in cache directory.
-
-
- Cache Control
------------------------------------------------------------------
-
- cache -path                            - Show cache directory path (directory ~/.jarget/cache)
- cache -jars                            - Show all jar files in cache directory.
- cache -pack                            - Show all packages available in the cache
- cache -pack &lt;pack&gt;                     - Show all versions of a given package in the cache.
-
-
- Jar Files Inspection
------------------------------------------------------------------
-
-
- jar -man  &lt;jar&gt;                    - Show manifest.
- jar -main &lt;jar&gt;                    - Show main class.
- jar -show &lt;jar&gt;                    - Show all files.
-
- jar -resource &lt;jar&gt;                - Show all asset/resource files disregarding *.class files.
- jar -resource &lt;jar&gt; &lt;file&gt;         - Print content of resource file.
-
- jar -extract &lt;jar&gt; &lt;file&gt;          - Extract &lt;file&gt; from &lt;jar&gt; package to current directory.
- jar -extract &lt;jar&gt; &lt;file&gt; &lt;path&gt;   - Extract &lt;file&gt; from &lt;jar&gt; package to &lt;path&gt; directory.
-
- jar -extract-all &lt;jar&gt; &lt;path&gt;      - Extract all files from jar package to &lt;path&gt; directory.
-
- jar -extract-all &lt;jar&gt;             - Extract jar file to directory with same name of jar file
-                                      at current directory. If file is lib/chart.jar it will
-                                      extracted to ./chart
-
- jar -package &lt;jar&gt;                - Show all packages(aka namespaces) of classes within a jar file.
- jar -package &lt;jar&gt; &lt;package&gt;      - Show all classes of within a particular package.
-
-
-Uber Jar
------------------------------------------------------------------
-
- - Convert a jar file into a unix executable jar file
-   that can be run with ./app.sh instead of java -jar app.jar
-
- $ ./jarget uber -exjar app.jar app.sh
-
- $ ./jarget uber -exjar app.jar   # Gnerates ./app
-
- - Build an scala uber jar named output.jar from main.jar which
-   contains the main class and lib1 and lib2 are the directories
-   containing jar files. It bundles the scala-library.jar runtime with
-   the application.
-
- $ ./jarget uber -scala -o output.jar -m main.jar
-
- $ ./jarget uber -scala -o output.jar -m main.jar -jd ./lib1 ./lib2
-
- $ ./jarget uber -scala -sh -o output.jar -m main.jar -jd ./lib1 -j dependency1.jar -r ./resources1 ./res
-ources2
-
- uber &lt;command&gt;
-
-   -o &lt;output file&gt;         - (mandatory) Output jar file bundled with all dependencies.
-   -m &lt;main jar file&gt;       - (optional)  Jar file containing main class.
-   -p &lt;pack1&gt; &lt;pack2&gt; ...   - (optional)  Packages int the format &lt;group&gt;/&lt;artifact&gt;/&lt;version&gt;
-   -j &lt;jar1.jar&gt; &lt;jar2.jar&gt; - (optional)  Single jar files that will be included in the uber jar.
-   -jd &lt;dir1&gt; &lt;dir2&gt; ...    - (optional)  Directories containing jar files that will be included in the u
-ber jar.
-   -r &lt;dir1&gt; &lt;dir2&gt; ...     - (optional)  Directories containing resource files
-   -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar
-   -sh                      - (optional)  Makes the jar file as a self-executable Unix app.
-
-
-Classpath
------------------------------------------------------------------
-
- cpath -show                        - Get classpath from ./lib directory
- cpath -show &lt;path]                 - Get classpath from &lt;path] directory
-
-
-Exec
------------------------------------------------------------------
-
- exec &lt;pack1,pack2...&gt; -- &lt;program&gt; &lt;arg1&gt; &lt;arg2&gt;  - Executes a program passing classpath (-cp) flag with
-                                                     classpath of packages &lt;pack1,pack2,..&gt; separated by
-comma.
-
-
-Utilities
------------------------------------------------------------------
-
- utils -env                    - Show environment variables in tabular format
- utils -env [var]              - Show environment variable [var]
- utils -path                   - Show PATH environment variable
- utils -prop                   - Show java properties in tabular format
- utils -expath [program]       - Show absolute path of a program in PATH variable
-
- utils -info                   - Show Platform Information - such as number of processors,
-                                 system default econding such as UTF-8, path separator and etc.
-
-Crypto Hash Functions
------------------------------------------------------------------
-
- - Computes the file hash hex digest.
- digest -md5    -f &lt;file&gt;
- digest -sha1   -f &lt;file&gt;
- digest -sha256 -f &lt;file&gt;
-
- - Checks the file hex digest.
- digest -md5    -f &lt;file&gt;  &lt;digest&gt;
- digest -sha1   -f &lt;file&gt;  &lt;digest&gt;
- digest -sha256 -f &lt;file&gt;  &lt;digest&gt;
-
- - Computes the string hex digest.
- digest -md5    -s &lt;string&gt;
- digest -sha1   -s &lt;string&gt;
- digest -sha256 -s &lt;string&gt;
-
- - Checks the string hex digest.
- digest -md5    -s &lt;string&gt;  &lt;digest&gt;
- digest -sha1   -s &lt;string&gt;  &lt;digest&gt;
- digest -sha256 -s &lt;string&gt;  &lt;digest&gt;
-
------------------------------------------------------------------
-
-Note: &lt;package&gt; is &lt;group&gt;/&lt;artifact&gt;/&lt;version&gt;.
-Examples of valid packages:
-
-  - org.scalaz/scalaz-core_2.11/7.3.0-M15
-
-  - org.jfree/jfreechart/1.0.17
+  uber            Build uber jar file for deployment by bundling dependencies and resource files.
+  exec            Execute a shell command and pass -cp &lt;CLASSPATH&gt; of packages downloaded to it.
+  script          Run a scala script with a given set of packages from cache.
+  mvn-show        Show package's information.
+  mvn-search      Search for a package at the site https://mvnrepository.com
+  mvn-doc         Open package documentation in the web browser.
+  mvn-pom         Show package's pom.xml file.
+  mvn-pull        Show package's pom.xml file.
+  mvn-copy        Copy jar packages from cache directory to ./lib downloading them if not available.
+  cache           Show packages in cache directory.
+  jar-to-exe      Embed Uber jar into Unix executable or Windows Executable (experimental).
+  jar-man         Show manifest of a jar file.
+  jar-main-class  Show main class of a jar file.
+  jar-ls          Show contents of a jar file.
+  jar-rs          Show resources of a jar file ignoring *.class files.
+  jar-cat         Show content of a file in a jar package.
+  jar-ex          Extract &lt;file&gt; from jar file &lt;FILE.jar&gt; to current directory.
+  utils           General utilities helpers for platform information and debugging.
+  digest-s        Compute crypto hash of string. - Algorithm: [md5 | sha1 | sha256 ]
+  digest-f        Compute crypto hash of a file. - Algorithm: [md5 | sha1 | sha256 ]
 </pre>
 </div>
-</div>
-</li>
 
-<li><a id="sec-1-3-1-3" name="sec-1-3-1-3"></a>Open jarget website<br  /><div class="outline-text-5" id="text-1-3-1-3">
 <p>
-Open jarget github web site. 
+Each subcommand has its own help text: 
 </p>
 
 <ul class="org-ul">
-<li><code>$ jarget -site</code>
+<li>Example: subcommand uber to build uber jars.
 </li>
 </ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ jarget uber
+Build uber jar file for deployment by bundling dependencies and resource files.
+
+ Usage: uber [OPTIONS] &lt;MAIN-JAR&gt; [&lt;JARFILE1.jar&gt; &lt;JARFILE2.jar&gt; ...]
+
+  -output=<span class="org-keyword">&lt;file&gt;</span>      -o=<span class="org-keyword">&lt;file&gt;</span>     Output file, default out.jar
+  -scala              -s            Bundle Scala runtime library scala-runtime.jar
+  -package=&lt;pack&gt;     -p=&lt;pack&gt;     MVN Coordinates of a java package -  &lt;group&gt;/&lt;artifact&gt;/&lt;version&gt;.
+  -file=&lt;file&gt;        -f=&lt;file&gt;     Jar files to be added to the package.
+  -resource=&lt;folder&gt;  -r=&lt;folder&gt;   Resource directory
+  -jardir=&lt;folder&gt;    -jd=&lt;folder&gt;  Directory containing jar files to be bundled into the uber jar.
+</pre>
 </div>
-</li></ol>
+
+<ul class="org-ul">
+<li>Example: subcommand cache 
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-text">$ jarget cache
+Show packages in cache directory.
+
+ Usage: cache &lt;ACTION&gt;
+
+  -path  -  Show cache's directory path.
+  -pack  -  Show packages in cache directory
+  -jars  -  Show all jar files in cache directory
+
+$ jarget cache -pack
+org.jfree/jcommon
+org.jfree/jfreechart
+xml-apis/xml-apis
+</pre>
+</div>
+</div>
 </div>
 
 <div id="outline-container-sec-1-3-2" class="outline-4">
@@ -604,25 +492,31 @@ Open jarget github web site.
 <div class="outline-text-4" id="text-1-3-2">
 </div><ol class="org-ol"><li><a id="sec-1-3-2-1" name="sec-1-3-2-1"></a>Show package information<br  /><div class="outline-text-5" id="text-1-3-2-1">
 <ul class="org-ul">
-<li><code>$ jarget mvn -show org.jfree/jfreechart/1.0.17</code>
+<li>$ jarget mvn -show org.jfree/jfreechart/1.0.17
 </li>
 </ul>
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget mvn -show org.jfree/jfreechart/1.0.17
-<span class="org-function-name">Package</span>:         JFreeChart
-<span class="org-function-name">Packaging</span>:       jar
-<span class="org-function-name">Coordinates</span>[<span class="org-compilation-line-number">1</span>]:  group = org.jfree artifact = jfreechart version = 1.0.17
-<span class="org-function-name">Coordinates</span>[<span class="org-compilation-line-number">2</span>]:  org.jfree/jfreechart/1.0.17
-<span class="org-function-name">Url</span>:             http://www.jfree.org/jfreechart/
-<span class="org-function-name">Description</span>:     
-    JFreeChart is a class library, written<span class="org-keyword"> in</span> Java, for generating charts. 
-    Utilising the Java2D APIs, it currently supports bar charts, pie charts, 
+<pre class="src src-text">$ jarget mvn-show
+Show package's information.
+
+ Usage: mvn-show &lt;PACKAGE&gt;
+
+
+$ jarget mvn-show org.jfree/jfreechart/1.0.17
+Package:         JFreeChart
+Packaging:       jar
+Coordinates[1]:  group = org.jfree artifact = jfreechart version = 1.0.17
+Coordinates[2]:  org.jfree/jfreechart/1.0.17
+Url:             http://www.jfree.org/jfreechart/
+Description:
+    JFreeChart is a class library, written in Java, for generating charts.
+    Utilising the Java2D APIs, it currently supports bar charts, pie charts,
     line charts, XY-plots and time series plots.
 
 
-<span class="org-function-name">Dependencies</span>:
+Dependencies:
 
   - org.jfree/jcommon/1.0.21
 
@@ -633,15 +527,20 @@ Open jarget github web site.
 </li>
 <li><a id="sec-1-3-2-2" name="sec-1-3-2-2"></a>Show package's POM file<br  /><div class="outline-text-5" id="text-1-3-2-2">
 <ul class="org-ul">
-<li><code>$ jarget mvn -pom org.jfree/jfreechart/1.0.17</code>
+<li>$ jarget mvn -pom org.jfree/jfreechart/1.0.17
 </li>
 </ul>
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget -pom org.jfree/jfreechart/1.0.17
+<pre class="src src-sh">$ jarget mvn-pom
+Show package<span class="org-string">'s pom.xml file.</span>
 
-&lt;project xsi:<span class="org-variable-name">schemaLocation</span>=<span class="org-string">"http://maven.apache.org/POM/4.0.0  ... </span>
+<span class="org-string"> Usage: mvn-pom &lt;PACKAGE&gt;</span>
+
+<span class="org-string">$ jarget mvn-pom org.jfree/jfreechart/1.0.17</span>
+<span class="org-string">&lt;project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                              http://maven.apache.org/maven-</span>
+<span class="org-string">v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"&gt;</span>
 
 <span class="org-string">    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span>
 
@@ -652,72 +551,41 @@ Open jarget github web site.
 <span class="org-string">    &lt;version&gt;1.0.17&lt;/version&gt;</span>
 <span class="org-string">    &lt;packaging&gt;jar&lt;/packaging&gt;</span>
 
-
-<span class="org-string">    &lt;parent&gt;</span>
-<span class="org-string">        &lt;groupId&gt;org.sonatype.oss&lt;/groupId&gt;</span>
-<span class="org-string">        &lt;artifactId&gt;oss-parent&lt;/artifactId&gt;</span>
-<span class="org-string">        &lt;version&gt;7&lt;/version&gt;</span>
-<span class="org-string">    &lt;/parent&gt;</span>
-
-<span class="org-string">    &lt;organization&gt;</span>
-<span class="org-string">        &lt;name&gt;JFree.org&lt;/name&gt;</span>
-<span class="org-string">        &lt;url&gt;http://www.jfree.org/&lt;/url&gt;</span>
-<span class="org-string">    &lt;/organization&gt;</span>
-<span class="org-string">    &lt;inceptionYear&gt;2001&lt;/inceptionYear&gt;</span>
-
-<span class="org-string">    &lt;description&gt;</span>
-<span class="org-string">    JFreeChart is a class library, written in Java, for generating charts. </span>
-<span class="org-string">    Utilising the Java2D APIs, it currently supports bar charts, pie charts, </span>
-<span class="org-string">    line charts, XY-plots and time series plots.</span>
-<span class="org-string">    &lt;/description&gt;</span>
-
-<span class="org-string">... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...</span>
-
-<span class="org-string">    &lt;properties&gt;</span>
-<span class="org-string">        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</span>
-<span class="org-string">        &lt;project.source.level&gt;1.6&lt;/project.source.level&gt;</span>
-<span class="org-string">        &lt;project.target.level&gt;1.6&lt;/project.target.level&gt;</span>
-<span class="org-string">    &lt;/properties&gt;</span>
-<span class="org-string">&lt;/project&gt;</span>
+<span class="org-string">    ... ... ... .... .... ...</span>
 </pre>
 </div>
 </div>
 </li>
-<li><a id="sec-1-3-2-3" name="sec-1-3-2-3"></a>Open package Maven URL<br  /><div class="outline-text-5" id="text-1-3-2-3">
-<p>
-= <code>$ jarget mvn -open org.jfree/jfreechart/1.0.17</code> 
-</p>
-
-<p>
-It will open the Mvn site of the package JFreeChart or:
-</p>
+<li><a id="sec-1-3-2-3" name="sec-1-3-2-3"></a>Open package Documentation Online<br  /><div class="outline-text-5" id="text-1-3-2-3">
 <ul class="org-ul">
-<li><a href="https://mvnrepository.com/artifact/org.jfree/jfreechart/1.0.17">https://mvnrepository.com/artifact/org.jfree/jfreechart/1.0.17</a>  
+<li>$ jarget mvn-doc org.jfree/jfreechart/1.0.17
 </li>
 </ul>
+
+<p>
+It will open the package's documentation at <a href="https://mvnrepository.com">https://mvnrepository.com</a>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ jarget mvn-doc
+Open package documentation<span class="org-keyword"> in</span> the web browser.
+
+ Usage: mvn-doc &lt;PACKAGE&gt;
+
+$ jarget mvn-doc org.jfree/jfreechart/1.0.17
+</pre>
+</div>
 </div>
 </li>
 
-<li><a id="sec-1-3-2-4" name="sec-1-3-2-4"></a>Open <a href="https://mvnrepository.com/">https://mvnrepository.com/</a><br  /><div class="outline-text-5" id="text-1-3-2-4">
-<p>
-Open website: <a href="https://mvnrepository.com/">https://mvnrepository.com/</a> that is useful for searching
-packages.
-</p>
-
-<ul class="org-ul">
-<li><code>$ jarget mvn -open</code>
-</li>
-</ul>
-</div>
-</li>
-
-<li><a id="sec-1-3-2-5" name="sec-1-3-2-5"></a>Install packages in the cache<br  /><div class="outline-text-5" id="text-1-3-2-5">
+<li><a id="sec-1-3-2-4" name="sec-1-3-2-4"></a><span class="todo TODO">TODO</span> Install packages in the cache<br  /><div class="outline-text-5" id="text-1-3-2-4">
 <p>
 This command installs/downloads all packages to jarget cache directory: <a href="file:///home/archbox/.jarget/cache">file:///home/archbox/.jarget/cache</a>
 </p>
 
 <ul class="org-ul">
-<li><code>jarget mvn -pull &lt;pack1,pack2,pack3...&gt;</code>
+<li>jarget mvn -pull -p=pack1 -p=pack2 -p=pack3&#x2026;
 </li>
 </ul>
 
@@ -765,7 +633,7 @@ org.jfree/jfreechart
 </div>
 </li>
 
-<li><a id="sec-1-3-2-6" name="sec-1-3-2-6"></a>Copy packages from cache to local directory<br  /><div class="outline-text-5" id="text-1-3-2-6">
+<li><a id="sec-1-3-2-5" name="sec-1-3-2-5"></a>Copy packages from cache to local directory<br  /><div class="outline-text-5" id="text-1-3-2-5">
 <p>
 This command copies a package from cache to ./lib directory. The
 packages are downloaded if not available in the cache directory yet.
@@ -778,25 +646,51 @@ packages are downloaded if not available in the cache directory yet.
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget mvn -copy org.jfree/jfreechart/1.0.17,org.scalaz/scalaz-core_2.11/7.3.0-M15
+<pre class="src src-sh">$ jarget mvn-copy org.jfree/jfreechart/1.0.17 org.scalaz/scalaz-core_2.11/7.3.0-M15
 
-Copying jfreechart-1.0.17.jar to ./lib
-Copying jcommon-1.0.21.jar to ./lib
+Downloading ---------------------
+Downloading file /home/archbox/.jarget/cache/org/scala-lang/scala-library/2.11.11/scala-library-2.11.11.pom.
+File /home/archbox/.jarget/cache/org/scalaz/scalaz-core_2.11/7.3.0-M15/scalaz-core_2.11-7.3.0-M15.pom downloaded. Ok.
+Downloading file /home/archbox/.jarget/cache/org/scalaz/scalaz-core_2.11/7.3.0-M15/scalaz-core_2.11-7.3.0-M15.jar.
+File /home/archbox/.jarget/cache/org/scala-lang/scala-library/2.11.11/scala-library-2.11.11.pom downloaded. Ok.
+Downloading file /home/archbox/.jarget/cache/org/scala-lang/scala-library/2.11.11/scala-library-2.11.11.jar.
+File /home/archbox/.jarget/cache/org/scala-lang/modules/scala-java8-compat_2.11/0.7.0/scala-java8-compat_2.11-0.7.0.pom downloaded. Ok.
+Downloading file /home/archbox/.jarget/cache/org/scala-lang/modules/scala-java8-compat_2.11/0.7.0/scala-java8-compat_2.11-0.7.0.jar.
+File /home/archbox/.jarget/cache/org/scala-lang/modules/scala-java8-compat_2.11/0.7.0/scala-java8-compat_2.11-0.7.0.jar downloaded. Ok.
+File /home/archbox/.jarget/cache/org/scala-lang/scala-library/2.11.11/scala-library-2.11.11.jar downloaded. Ok.
+File /home/archbox/.jarget/cache/org/scalaz/scalaz-core_2.11/7.3.0-M15/scalaz-core_2.11-7.3.0-M15.jar downloaded. Ok.
+Download Successful
 Copying xml-apis-1.3.04.jar to ./lib
 Copying scalaz-core_2.11-7.3.0-M15.jar to ./lib
 Copying scala-library-2.11.11.jar to ./lib
+Copying jfreechart-1.0.17.jar to ./lib
+Copying jcommon-1.0.21.jar to ./lib
 Copying scala-java8-compat_2.11-0.7.0.jar to ./lib
 
+
 $ ls lib/
-jcommon-1.0.21.jar                 scala-library-2.11.11.jar
-jfreechart-1.0.17.jar              scalaz-core_2.11-7.3.0-M15.jar
-scala-java8-compat_2.11-0.7.0.jar  xml-apis-1.3.04.jar
+jcommon-1.0.21.jar     scala-java8-compat_2.11-0.7.0.jar  scalaz-core_2.11-7.3.0-M15.jar
+jfreechart-1.0.17.jar  scala-library-2.11.11.jar          xml-apis-1.3.04.jar
+
+$ rm -rf lib
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ jarget mvn-copy org.jfree/jfreechart/1.0.17 org.scalaz/scalaz-core_2.11/7.3.0-M15
+Copying xml-apis-1.3.04.jar to ./lib
+Copying scalaz-core_2.11-7.3.0-M15.jar to ./lib
+Copying scala-library-2.11.11.jar to ./lib
+Copying jfreechart-1.0.17.jar to ./lib
+Copying jcommon-1.0.21.jar to ./lib
+Copying scala-java8-compat_2.11-0.7.0.jar to ./lib
 </pre>
 </div>
 </div>
 </li>
 
-<li><a id="sec-1-3-2-7" name="sec-1-3-2-7"></a>Clean cache removing all packages<br  /><div class="outline-text-5" id="text-1-3-2-7">
+<li><a id="sec-1-3-2-6" name="sec-1-3-2-6"></a><span class="todo TODO">TODO</span> Clean cache removing all packages<br  /><div class="outline-text-5" id="text-1-3-2-6">
 <ul class="org-ul">
 <li><code>$ jarget mvn -clear</code>
 </li>
@@ -820,9 +714,9 @@ Deleting directory: /home/archbox/.jarget/cache
 </div>
 </li>
 
-<li><a id="sec-1-3-2-8" name="sec-1-3-2-8"></a>Execute program with packages classpath<br  /><ol class="org-ol"><li><a id="sec-1-3-2-8-1" name="sec-1-3-2-8-1"></a>Command<br  /><div class="outline-text-6" id="text-1-3-2-8-1">
+<li><a id="sec-1-3-2-7" name="sec-1-3-2-7"></a>Execute program with classpath for packages from cache<br  /><ol class="org-ol"><li><a id="sec-1-3-2-7-1" name="sec-1-3-2-7-1"></a>Command<br  /><div class="outline-text-6" id="text-1-3-2-7-1">
 <ul class="org-ul">
-<li><code>$ jarget &lt;pack1,pack2, ...&gt; -- program arg1 arg2 arg2 ...</code>
+<li>$ jarget exec -p=pack1 -p=pack2  &#x2026;  &#x2013; program arg1 arg2 arg2 &#x2026;
 </li>
 </ul>
 
@@ -835,49 +729,47 @@ executed with:
 </p>
 
 <ul class="org-ul">
-<li><code>$ program -cp &lt;classpath of pack1,pack2...&gt; arg1 arg2 arg3 ...</code>
+<li>$ program -cp &lt;classpath of pack1,pack2&#x2026;&gt; arg1 arg2 arg3 &#x2026;
 </li>
 </ul>
 
 <p>
-The packages are downloaded to cache if not available yet. 
+NOTE: The packages are downloaded to cache if not available yet. 
 </p>
+
+<p>
+Command help: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">$ jarget exec
+Execute a shell command and pass -cp &lt;CLASSPATH&gt; of packages downloaded to it.
+
+ Usage: exec [OPTIONS] -- &lt;PROGRAM&gt; [&lt;PROGRAM ARGS&gt; ...]
+
+  -package=&lt;PACK&gt;  -p=&lt;PACK&gt;  Package maven's coordinate
+</pre>
+</div>
 </div>
 </li>
 
-<li><a id="sec-1-3-2-8-2" name="sec-1-3-2-8-2"></a>Example: Running scala with a set of packages in classpath<br  /><div class="outline-text-6" id="text-1-3-2-8-2">
+<li><a id="sec-1-3-2-7-2" name="sec-1-3-2-7-2"></a>Example: Running scala with a set of packages in classpath<br  /><div class="outline-text-6" id="text-1-3-2-7-2">
 <p>
 Example: Run Scala with <a href="https://mvnrepository.com/artifact/org.typelevel/cats-core_2.12/0.9.0">org.typelevel/cats-core_2.12/0.9.0</a>
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget exec org.typelevel/cats-core_2.12/0.9.0 -- scala 
+<pre class="src src-sh">$ jarget exec -p=org.typelevel/cats-core_2.12/0.9.0 -- scala
 Downloading ---------------------
-<span class="org-function-name">PackData</span>(org.typelevel,cats-macros_2.12,0.9.0)
-<span class="org-function-name">PackData</span>(org.typelevel,cats-kernel_2.12,0.9.0)
-<span class="org-function-name">PackData</span>(org.typelevel,cats-core_2.12,0.9.0)
-<span class="org-function-name">PackData</span>(com.github.mpilquist,simulacrum_2.12,0.10.0)
-<span class="org-function-name">PackData</span>(org.typelevel,machinist_2.12,0.6.1)
-<span class="org-function-name">PackData</span>(org.scala-lang,scala-library,2.12.1)
-----------------------------------
+ ... ... ... ... 
 Package path = PackData(org.typelevel,cats-macros_2.12,0.9.0)
 Downloading file /home/archbox/.jarget/cache/org/typelevel/cats-macros_2.12/0.9.0/cats-macros_2.12-0.9.0.pom.
-Package path = PackData(org.typelevel,cats-kernel_2.12,0.9.0)
-Package path = PackData(org.typelevel,cats-core_2.12,0.9.0)
-Package path = PackData(com.github.mpilquist,simulacrum_2.12,0.10.0)
-Package path = PackData(org.typelevel,machinist_2.12,0.6.1)
-Package path = PackData(org.scala-lang,scala-library,2.12.1)
-Downloading file /home/archbox/.jarget/cache/org/typelevel/cats-kernel_2.12/0.9.0/cats-kernel_2.12-0.9.0.pom.
-Downloading file /home/archbox/.jarget/cache/com/github/mpilquist/simulacrum_2.12/0.10.0/simulacrum_2.12-0.10.0.pom.
-Downloading file /home/archbox/.jarget/cache/org/typelevel/cats-core_2.12/0.9.0/cats-core_2.12-0.9.0.pom.
-File /home/archbox/.jarget/cache/org/typelevel/cats-macros_2.12/0.9.0/cats-macros_2.12-0.9.0.pom downloaded. Ok.
-Downloading file /home/archbox/.jarget/cache/org/typelevel/cats-macros_2.12/0.9.0/cats-macros_2.12-0.9.0.jar.
-
-... ... ... ... ... 
-
+ ... .... ... .... ... 
+File /home/archbox/.jarget/cache/org/scala-lang/scala-library/2.12.1/scala-library-2.12.1.jar downloaded. Ok.
 Download Successful
-Welcome to Scala 2.12.3 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_144)<span class="org-builtin">.</span>
+Welcome to Scala 2.12.4 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_162)<span class="org-builtin">.</span>
 Type<span class="org-keyword"> in</span> expressions for evaluation. Or try :help.
 
 scala&gt; 
@@ -900,7 +792,7 @@ scala&gt;
 </div>
 </li>
 
-<li><a id="sec-1-3-2-8-3" name="sec-1-3-2-8-3"></a>Example: Running scalac with ase packages in classpath<br  /><div class="outline-text-6" id="text-1-3-2-8-3">
+<li><a id="sec-1-3-2-7-3" name="sec-1-3-2-7-3"></a>Example: Running scalac with ase packages in classpath<br  /><div class="outline-text-6" id="text-1-3-2-7-3">
 <p>
 <b>Run script with scala and dependencies</b>
 </p>
@@ -912,7 +804,7 @@ library in passed to scala classpath.
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget exec org.jfree/jfreechart/1.0.17 -- scala scripts/chartTest.scala
+<pre class="src src-sh">$ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scala scripts/chartTest.scala
 </pre>
 </div>
 
@@ -932,13 +824,13 @@ The command above runs:
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget exec org.jfree/jfreechart/1.0.17 -- scalac scripts/chartTest.scala -d chart.jar 
+<pre class="src src-sh">$ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scalac scripts/chartTest.scala -d chart.jar 
 
 $ file chart.jar 
 <span class="org-function-name">chart.jar</span>: Java archive data (JAR)
 
 <span class="org-comment-delimiter"># </span><span class="org-comment">Run the program:</span>
-$ jarget exec org.jfree/jfreechart/1.0.17 -- scala chart.jar
+$ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scala chart.jar
 </pre>
 </div>
 </div>
@@ -951,7 +843,7 @@ $ jarget exec org.jfree/jfreechart/1.0.17 -- scala chart.jar
 <div class="outline-text-4" id="text-1-3-3">
 </div><ol class="org-ol"><li><a id="sec-1-3-3-1" name="sec-1-3-3-1"></a>Show cache path<br  /><div class="outline-text-5" id="text-1-3-3-1">
 <ul class="org-ul">
-<li><code>$ jarget cache -path</code>
+<li>$ jarget cache -path
 </li>
 </ul>
 
@@ -1003,7 +895,7 @@ $ tree $(<span class="org-sh-quoted-exec">jarget</span> cache -path)
 
 <li><a id="sec-1-3-3-2" name="sec-1-3-3-2"></a>Show all packages in cache<br  /><div class="outline-text-5" id="text-1-3-3-2">
 <ul class="org-ul">
-<li><code>$ jarget cache -pack</code>
+<li>$ jarget cache -pack
 </li>
 </ul>
 
@@ -1021,48 +913,8 @@ com.github.mpilquist/simulacrum_2.12
 </div>
 </li>
 
-<li><a id="sec-1-3-3-3" name="sec-1-3-3-3"></a>Show all versions of a given package in cache<br  /><div class="outline-text-5" id="text-1-3-3-3">
-<ul class="org-ul">
-<li><code>$ jarget cache -pack &lt;pack&gt;</code>
-</li>
-</ul>
-
-<p>
-Example: 
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-sh">$ jarget cache -pack 
-org.scala-lang/scala-library
-org.typelevel/cats-core_2.12
-org.typelevel/cats-macros_2.12
-org.typelevel/cats-kernel_2.12
-org.typelevel/machinist_2.12
-com.github.mpilquist/simulacrum_2.12
-
-$ jarget cache -pack  org.typelevel/cats-core_2.12
-Uri = /home/archbox/.jarget/cache/org/typelevel/cats-core_2.12/0.9.0/cats-core_2.12-0.9.0.pom
-<span class="org-function-name">Package</span>:         Cats core
-<span class="org-function-name">Packaging</span>:       jar
-<span class="org-function-name">Coordinates</span>[<span class="org-compilation-line-number">1</span>]:  group = org.typelevel artifact = cats-core_2.12 version = 0.9.0
-<span class="org-function-name">Coordinates</span>[<span class="org-compilation-line-number">2</span>]:  org.typelevel/cats-core_2.12/0.9.0
-<span class="org-function-name">Url</span>:             https://github.com/typelevel/cats
-
-<span class="org-function-name">Description</span>:     
-Cats core
------------------------------------------------
-
-
-
-
-org.typelevel/cats-core_2.12/0.9.0
-</pre>
-</div>
-</div>
-</li>
-
-<li><a id="sec-1-3-3-4" name="sec-1-3-3-4"></a>Show all jar packages in cache<br  /><div class="outline-text-5" id="text-1-3-3-4">
+<li><a id="sec-1-3-3-3" name="sec-1-3-3-3"></a><span class="todo TODO">TODO</span> Show all versions of a given package in cache<br  /></li>
+<li><a id="sec-1-3-3-4" name="sec-1-3-3-4"></a>Show all jar files in the cache folder<br  /><div class="outline-text-5" id="text-1-3-3-4">
 <div class="org-src-container">
 
 <pre class="src src-sh">$ jarget cache -jars
@@ -1088,6 +940,23 @@ Jarget can be used to run scala scripts with java packages
 dependencies by downloading them if they are not available in the
 jarget package cache <a href="file:///home/archbox/.jarget/cache">file:///home/archbox/.jarget/cache</a>. 
 </p>
+
+
+<p>
+Show command help: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">$ jarget script
+Run a scala script with a given set of packages from cache.
+
+ Usage: script [OPTIONS] -- &lt;SCRIPT.scala&gt; [&lt;SCRIPT ARGS&gt; ...]
+
+  -package=&lt;PACK&gt;                  -p=&lt;PACK&gt;               Package maven's coordinate
+  -package-str=&lt;PACK1&gt;,&lt;PACK2&gt;...  -ps=&lt;PACK1&gt;,&lt;PACK2&gt;...  Package's separated by command &lt;pack1&gt;,&lt;pack2&gt;...&lt;packN&gt;
+</pre>
+</div>
 </div>
 </li>
 
@@ -1101,7 +970,7 @@ Example: <a href="scripts/chartScript.sh">scripts/chartScript.sh</a>
 
 <pre class="src src-scala"><span class="org-comment">#!/bin/sh</span>
 <span class="org-constant">DEPS</span><span class="org-keyword">=</span>org.jfree/jfreechart/<span class="org-constant">1.0.17</span>
-exec jarget script <span class="org-string">"$DEPS"</span> -- <span class="org-string">"$0"</span> <span class="org-string">"$@"</span>
+exec jarget script -p<span class="org-keyword">=</span><span class="org-string">"</span><span class="org-variable-name">$DEPS</span><span class="org-string">"</span> -- <span class="org-string">"$0"</span> <span class="org-string">"$@"</span>
 !#
 
 <span class="org-keyword">import</span> org.jfree.chart.<span class="org-rainbow-delimiters-depth-1">{</span><span class="org-constant">ChartPanel</span>, <span class="org-constant">ChartFactory</span>, <span class="org-constant">JFreeChart</span>, <span class="org-constant">ChartUtilities</span><span class="org-rainbow-delimiters-depth-1">}</span>
@@ -1198,7 +1067,7 @@ File: <a href="scripts/qrcode.sh"><a href="scripts/qrcode.sh">scripts/qrcode.sh<
 
 <pre class="src src-scala"><span class="org-comment">#!/bin/sh</span>
 <span class="org-constant">DEPS</span><span class="org-keyword">=</span>com.google.zxing/core/<span class="org-constant">2.2</span>,com.google.zxing/javase/<span class="org-constant">2.2</span>
-exec jarget script <span class="org-string">"$DEPS"</span> -- <span class="org-string">"$0"</span> <span class="org-string">"$@"</span>
+exec jarget script -ps<span class="org-keyword">=</span><span class="org-string">"</span><span class="org-variable-name">$DEPS</span><span class="org-string">"</span> -- <span class="org-string">"$0"</span> <span class="org-string">"$@"</span>
 !#
 
 <span class="org-keyword">object</span> <span class="org-constant">QRCode</span> <span class="org-rainbow-delimiters-depth-1">{</span> 
@@ -1379,39 +1248,78 @@ Generating QRcode image file images/qrcodeTest.png for testing URL: https://msdn
 <div id="outline-container-sec-1-3-5" class="outline-4">
 <h4 id="sec-1-3-5"><span class="section-number-4">1.3.5</span> Command to manipulate Jar packages</h4>
 <div class="outline-text-4" id="text-1-3-5">
-</div><ol class="org-ol"><li><a id="sec-1-3-5-1" name="sec-1-3-5-1"></a>Show manifest file<br  /><div class="outline-text-5" id="text-1-3-5-1">
+</div><ol class="org-ol"><li><a id="sec-1-3-5-1" name="sec-1-3-5-1"></a>Overview<br  /><div class="outline-text-5" id="text-1-3-5-1">
+<p>
+The commands to manipulate jars are listed below: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">$  jarget | grep jar
+  uber            Build uber jar file for deployment by bundling dependencies and resource files.
+  mvn-copy        Copy jar packages from cache directory to ./lib downloading them if not available.
+  jar-to-exe      Embed Uber jar into Unix executable or Windows Executable (experimental).
+  jar-man         Show manifest of a jar file.
+  jar-main-class  Show main class of a jar file.
+  jar-ls          Show contents of a jar file.
+  jar-rs          Show resources of a jar file ignoring *.class files.
+  jar-cat         Show content of a file in a jar package.
+  jar-ex          Extract &lt;file&gt; from jar file &lt;FILE.jar&gt; to current directory.
+</pre>
+</div>
+
+<p>
+Those commands are simple and self-explanatory and easier to remember.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">$  jarget jar-man
+Show manifest of a jar file.
+
+ Usage: jar-man &lt;FILE.jar&gt;
+
+$  jarget jar-main-class
+Show main class of a jar file.
+
+ Usage: jar-main-class &lt;FILE.jar&gt;
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-1-3-5-2" name="sec-1-3-5-2"></a>Show manifest file<br  /><div class="outline-text-5" id="text-1-3-5-2">
 <ul class="org-ul">
-<li><code>$ jarget jar [jar]</code>
+<li>$ jarget jar-man JARFILE.jar 
 </li>
 </ul>
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget jar -manifest lib/jfreechart-1.0.17.jar 
-
+<pre class="src src-sh">$  jarget jar-man lib/jfreechart-1.0.17.jar
 <span class="org-function-name">Manifest-Version</span>: 1.0
 <span class="org-function-name">Ant-Version</span>: Apache Ant 1.8.2
-<span class="org-function-name">Created-By</span>: 1.7.0_21-b12 (Oracle Corporation)
-<span class="org-function-name">Specification-Title</span>: JFreeChart
-<span class="org-function-name">Specification-Version</span>: 1.0.17
-<span class="org-function-name">Specification-Vendor</span>: jfree.org
 <span class="org-function-name">Implementation-Title</span>: JFreeChart
 <span class="org-function-name">Implementation-Version</span>: 1.0.17
+<span class="org-function-name">Specification-Vendor</span>: jfree.org
+<span class="org-function-name">Specification-Title</span>: JFreeChart
+<span class="org-function-name">Created-By</span>: 1.7.0_21-b12 (Oracle Corporation)
+<span class="org-function-name">Specification-Version</span>: 1.0.17
 <span class="org-function-name">Implementation-Vendor</span>: jfree.org
 </pre>
 </div>
 </div>
 </li>
 
-<li><a id="sec-1-3-5-2" name="sec-1-3-5-2"></a>Show contents of single file<br  /><div class="outline-text-5" id="text-1-3-5-2">
+<li><a id="sec-1-3-5-3" name="sec-1-3-5-3"></a>Show contents of single file<br  /><div class="outline-text-5" id="text-1-3-5-3">
 <ul class="org-ul">
-<li><code>$ jarget jar -cat [jar] [file]</code>
+<li>$ jarget jar-cat [jar] [file]
 </li>
 </ul>
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget jar -cat lib/jfreechart-1.0.17.jar META-INF/MANIFEST.MF
+<pre class="src src-sh">$ jarget jar-cat lib/jfreechart-1.0.17.jar META-INF/MANIFEST.MF
 
 <span class="org-function-name">Manifest-Version</span>: 1.0
 <span class="org-function-name">Ant-Version</span>: Apache Ant 1.8.2
@@ -1425,7 +1333,7 @@ Generating QRcode image file images/qrcodeTest.png for testing URL: https://msdn
 
 ... .... ... .... ... .... ... .... ... ....
 
-$ jarget jar -cat lib/jfreechart-1.0.17.jar org/jfree/chart/plot/LocalizationBundle_pt_PT.properties
+$ jarget jar-cat lib/jfreechart-1.0.17.jar org/jfree/chart/plot/LocalizationBundle_pt_PT.properties
 <span class="org-comment-delimiter"># </span><span class="org-comment">org.jfree.chart.ChartPanel ResourceBundle properties file - portuguese version</span>
 <span class="org-comment-delimiter"># </span>
 <span class="org-comment-delimiter"># </span><span class="org-comment">Changes (from 09-Set-2003)</span>
@@ -1457,15 +1365,15 @@ $ jarget jar -cat lib/jfreechart-1.0.17.jar org/jfree/chart/plot/LocalizationBun
 </div>
 </li>
 
-<li><a id="sec-1-3-5-3" name="sec-1-3-5-3"></a>List all files<br  /><div class="outline-text-5" id="text-1-3-5-3">
+<li><a id="sec-1-3-5-4" name="sec-1-3-5-4"></a>List all files<br  /><div class="outline-text-5" id="text-1-3-5-4">
 <ul class="org-ul">
-<li><code>$ jarget jar -show [jar]</code>
+<li>$ jarget jar-ls [jar]
 </li>
 </ul>
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget jar -show jarget.jar 
+<pre class="src src-sh">$ jarget jar-ls jarget.jar 
 
 META-INF/MANIFEST.MF
 PackData.class
@@ -1487,9 +1395,9 @@ Packget$<span class="org-variable-name">$anonfun</span>$<span class="org-variabl
 </div>
 </li>
 
-<li><a id="sec-1-3-5-4" name="sec-1-3-5-4"></a>List resource/asset files<br  /><div class="outline-text-5" id="text-1-3-5-4">
+<li><a id="sec-1-3-5-5" name="sec-1-3-5-5"></a>List resource/asset files<br  /><div class="outline-text-5" id="text-1-3-5-5">
 <ul class="org-ul">
-<li><code>$ jarget jar -resource [jar]</code>
+<li>$ jarget jar-rs [jar]
 </li>
 </ul>
 
@@ -1499,7 +1407,7 @@ Show all resource files disregarding *.class files.
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget jar -resource lib/jfreechart-1.0.17.jar 
+<pre class="src src-sh">$ jarget jar-rs lib/jfreechart-1.0.17.jar 
 META-INF/MANIFEST.MF
 org/jfree/chart/LocalizationBundle.properties
 org/jfree/chart/LocalizationBundle_cs.properties
@@ -1514,51 +1422,12 @@ org/jfree/chart/plot/LocalizationBundle_ru.properties
 org/jfree/chart/plot/LocalizationBundle_zh_CN.properties
 </pre>
 </div>
-
-<ul class="org-ul">
-<li><code>$ jarget jar -resource [jar] [file]</code>
-</li>
-</ul>
-
-<p>
-Show a particular resource file.
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-text">$ jarget jar -resource lib/jfreechart-1.0.17.jar org/jfree/chart/LocalizationBundle.properties
-
-# org.jfree.chart.ChartPanel ResourceBundle properties file
-# 
-# Changes (from 31-Aug-2003)
-# --------------------------
-# 31-Aug-2003 : Initial version (AL);
-#
-
-Auto_Range=Auto Range
-All_Axes=Both Axes
-Chart=Chart
-Chart_Properties=Chart Properties
-Copy=Copy
-Domain_Axis=Domain Axis
-FILE_EXISTS_CONFIRM_OVERWRITE=The file already exists, are you sure you want to overwrite it?
-PNG_Image_Files=PNG Image Files
-PDF_Files=PDF Files
-Print...=Print...
-Properties...=Properties...
-Range_Axis=Range Axis
-Save_as...=Save as...
-SVG_Files=SVG Files
-Zoom_In=Zoom In
-Zoom_Out=Zoom Out
-</pre>
-</div>
 </div>
 </li>
 
-<li><a id="sec-1-3-5-5" name="sec-1-3-5-5"></a>Extract file to current directory<br  /><div class="outline-text-5" id="text-1-3-5-5">
+<li><a id="sec-1-3-5-6" name="sec-1-3-5-6"></a>Extract file to current directory<br  /><div class="outline-text-5" id="text-1-3-5-6">
 <ul class="org-ul">
-<li><code>jarget jar -extract [jar] [file]</code>
+<li>jarget jar -extract [jar] [file]
 </li>
 </ul>
 
@@ -1568,7 +1437,13 @@ Extract file from jar to current directory.
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget jar -extract lib/jfreechart-1.0.17.jar META-INF/MANIFEST.MF
+<pre class="src src-sh">$ jarget jar-ex
+Extract &lt;file&gt; from jar file &lt;FILE.jar&gt; to current directory.
+
+ Usage: jar-ex &lt;FILE.jar&gt; &lt;file&gt;
+
+
+$ jarget jar-ex lib/jfreechart-1.0.17.jar META-INF/MANIFEST.MF
 
 $ cat MANIFEST.MF 
 <span class="org-function-name">Manifest-Version</span>: 1.0
@@ -1584,37 +1459,25 @@ $ cat MANIFEST.MF
 </div>
 </div>
 </li>
-<li><a id="sec-1-3-5-6" name="sec-1-3-5-6"></a>Extract file to a directory<br  /><div class="outline-text-5" id="text-1-3-5-6">
-<ul class="org-ul">
-<li><code>jarget jar -extract [jar] [file] [path]</code>
-</li>
-</ul>
-
+<li><a id="sec-1-3-5-7" name="sec-1-3-5-7"></a>Convert a jar file to executable jar file<br  /><div class="outline-text-5" id="text-1-3-5-7">
 <p>
-Extract file META-INF/MANIFEST.MF from jfreechart-1.0.17.jar to path ./lib.
+Help: 
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget jar -extract lib/jfreechart-1.0.17.jar META-INF/MANIFEST.MF lib
+<pre class="src src-sh">$ jarget jar-to-exe
+Embed Uber jar into Unix executable or Windows Executable (experimental)<span class="org-builtin">.</span>
 
-$ cat lib/MANIFEST.MF 
-<span class="org-function-name">Manifest-Version</span>: 1.0
-<span class="org-function-name">Ant-Version</span>: Apache Ant 1.8.2
-<span class="org-function-name">Created-By</span>: 1.7.0_21-b12 (Oracle Corporation)
-<span class="org-function-name">Specification-Title</span>: JFreeChart
-<span class="org-function-name">Specification-Version</span>: 1.0.17
-<span class="org-function-name">Specification-Vendor</span>: jfree.org
-<span class="org-function-name">Implementation-Title</span>: JFreeChart
-<span class="org-function-name">Implementation-Version</span>: 1.0.17
-<span class="org-function-name">Implementation-Vendor</span>: jfree.org
+ Usage: jar-to-exe [OPTIONS] &lt;FILE.jar&gt;
+
+  -exe=&lt;EXE&gt;      -e=&lt;EXE&gt;   Executable type &lt;EXE&gt; can be uexe for Unix executable, wcli -&gt; Windows CLI Program ...
+  -output=<span class="org-keyword">&lt;FILE&gt;</span>  -o=<span class="org-keyword">&lt;FILE&gt;</span>  Output file, default &lt;FILE&gt; without extension + .sh or .exe.
 </pre>
 </div>
-</div>
-</li>
-<li><a id="sec-1-3-5-7" name="sec-1-3-5-7"></a>Convert a jar file to executable jar file<br  /><div class="outline-text-5" id="text-1-3-5-7">
+
 <ul class="org-ul">
-<li><code>$ jarget uber -exjar [application.jar] [application.jsh]</code>
+<li>$ jarget jar-to-exe application.jar -o=application 
 </li>
 </ul>
 
@@ -1649,13 +1512,14 @@ file) named proguard from proguard.jar.
 ProGuard, version 5.3.3
 <span class="org-function-name">Usage</span>: java proguard.ProGuard [options ...]
 
-$ jarget uber -exjar proguard.jar 
+<span class="org-comment-delimiter"># </span><span class="org-comment">Builds Unix executable with embedded shell script </span>
+$ jarget jar-to-exe proguard.jar 
 Built proguard
 Run it with ./proguard
 
-$ ./proguard 
-ProGuard, version 5.3.3
-<span class="org-function-name">Usage</span>: java proguard.ProGuard [options ...]
+<span class="org-comment-delimiter"># </span><span class="org-comment">Build Windows executable with proguard embedded - (Experimental)</span>
+$  jarget jar-to-exe -exe=wcli proguard.jar
+Built file ./proguard.exe
 
 $ proguard 
 <span class="org-function-name">bash</span>: proguard: command not found
@@ -1679,40 +1543,64 @@ $ file /home/archbox/bin/proguard
 
 <span class="org-comment-delimiter"># </span><span class="org-comment">Check the executable header </span>
 <span class="org-comment-delimiter">##</span>
-$ head -n 7 /home/archbox/bin/proguard
+$ head -n 7 proguard
 <span class="org-comment-delimiter">#</span><span class="org-comment">!/usr/bin/env sh</span>
-<span class="org-keyword">if</span> [[ -z <span class="org-string">"$JAVA_HOME"</span> ]]
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Check if JAVA_HOME is Set</span>
+<span class="org-keyword">if</span> [ -n <span class="org-string">"${JAVA_HOME}"</span> ]
 <span class="org-keyword">then</span>
-    java -jar <span class="org-string">"$0"</span> <span class="org-string">"$@"</span>
-<span class="org-keyword">else</span>
-    <span class="org-string">"$JAVA_HOME/bin/java"</span> -jar <span class="org-string">"$0"</span> <span class="org-string">"$@"</span>
-<span class="org-keyword">fi</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">Check if JAVA is Installed in this JAVA_HOME</span>
+    <span class="org-keyword">if</span> [ -f  <span class="org-string">"$JAVA_HOME/bin/java"</span> ] ;
 </pre>
 </div>
 </div>
 </li></ol>
 </div>
-
 <div id="outline-container-sec-1-3-6" class="outline-4">
-<h4 id="sec-1-3-6"><span class="section-number-4">1.3.6</span> Build uber Jar or executable uber jar</h4>
+<h4 id="sec-1-3-6"><span class="section-number-4">1.3.6</span> Build fatjar, uber Jar or executable uber jar</h4>
 <div class="outline-text-4" id="text-1-3-6">
+<p>
+Help: 
+</p>
+
 <div class="org-src-container">
 
-<pre class="src src-text">jarget uber [command]
+<pre class="src src-text">$ jarget uber
+Build uber jar file for deployment by bundling dependencies and resource files.
 
-Commands
+ Usage: uber [OPTIONS] &lt;MAIN-JAR&gt; [&lt;JARFILE1.jar&gt; &lt;JARFILE2.jar&gt; ...]
 
-  -o &lt;output file&gt;         - (mandatory) Output jar file bundled with all dependencies.
-  -m &lt;main jar file&gt;       - (optional)  Jar file containing main class.
-  -p &lt;pack1&gt; &lt;pack2&gt; ...   - (optional)  Packages int the format &lt;group&gt;/&lt;artifact&gt;/&lt;version&gt;
-  -j &lt;jar1.jar&gt; &lt;jar2.jar&gt; - (optional)  Single jar files that will be included in the uber jar.
-  -jd &lt;dir1&gt; &lt;dir2&gt; ...    - (optional)  Directories containing jar files that will be included in the uber jar.
-  -r &lt;dir1&gt; &lt;dir2&gt; ...     - (optional)  Directories containing resource files 
-  -scala                   - (optional)  Bundles the scala-library.jar file with the uber.jar 
-  -sh                      - (optional)  Makes the jar file as a self-executable Unix app.
+  -output=&lt;file&gt;      -o=&lt;file&gt;     Output file, default out.jar
+  -scala              -s            Bundle Scala runtime library scala-runtime.jar
+  -package=&lt;pack&gt;     -p=&lt;pack&gt;     MVN Coordinates of a java package -  &lt;group&gt;/&lt;artifact&gt;/&lt;version&gt;.
+  -file=&lt;file&gt;        -f=&lt;file&gt;     Jar files to be added to the package.
+  -resource=&lt;folder&gt;  -r=&lt;folder&gt;   Resource directory
+  -jardir=&lt;folder&gt;    -jd=&lt;folder&gt;  Directory containing jar files to be bundled into the uber jar.
+  -exe=&lt;EXE&gt;          -e=&lt;EXE&gt;
 </pre>
 </div>
 
+<p>
+The parameter &lt;EXE&gt; from -exe=&lt;EXE&gt; can be: 
+</p>
+
+<ul class="org-ul">
+<li>empty -&gt; (default) Simple uber jar intended to be executed by double clicking
+at it or by
+</li>
+
+<li>uexe  -&gt; Unix executable: Shell script with uber jar payload
+</li>
+
+<li>wcli  -&gt; Embed generated uber-jar into a Windows command line
+executable. This feature is still experimental and Anti Virus
+complains about the lack of signature.
+</li>
+
+<li>wgui -&gt; Embed generated uber-jar into a Windows GUI
+executable. This feature is still experimental. 
+</li>
+</ul>
 
 <p>
 Example: Make a scala uber-jar from the program <a href="scripts/chartTest.scala"><a href="scripts/chartTest.scala">scripts/chartTest.scala</a></a> 
@@ -1725,7 +1613,7 @@ Example: Make a scala uber-jar from the program <a href="scripts/chartTest.scala
 <span class="org-comment-delimiter"># </span><span class="org-comment">If the dependency is not available in the cache, it will be downloaded</span>
 <span class="org-comment-delimiter"># </span><span class="org-comment">from the package default repository.</span>
 <span class="org-comment-delimiter">#</span>
-$ jarget exec org.jfree/jfreechart/1.0.17 -- scalac scripts/chartTest.scala -d chartTest.jar
+$ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scalac scripts/chartTest.scala -d chartTest.jar
 
 Downloading ---------------------
 <span class="org-function-name">PackData</span>(org.jfree,jfreechart,1.0.17)
@@ -1742,17 +1630,22 @@ Download Successful
 <span class="org-comment-delimiter"># </span><span class="org-comment">The next time the command is run, the packages will no longer be downloaded as</span>
 <span class="org-comment-delimiter"># </span><span class="org-comment">they are already in the cache directory. ~/.jarget/cache/</span>
 <span class="org-comment-delimiter">#</span>
-$ jarget exec org.jfree/jfreechart/1.0.17 -- scalac scripts/chartTest.scala -d chartTest.jar 
+$ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scalac scripts/chartTest.scala -d chartTest.jar 
 
 <span class="org-comment-delimiter"># </span><span class="org-comment">Step 2 - Run the jar file. </span>
 <span class="org-comment-delimiter">#</span>
-$ jarget exec org.jfree/jfreechart/1.0.17 -- scala chartTest.jar 
-
+$ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scala chartTest.jar 
 
 <span class="org-comment-delimiter"># </span><span class="org-comment">Step 3 - Compile it to an uber-jar by packing dependencies.</span>
-$ jarget uber -m chartTest.jar -o <span class="org-keyword">chartTest.sh</span> -scala -sh -p org.jfree/jfreechart/1.0.17 
-Built file:  chartTest.sh ok
-Run it with: $ java -jar chartTest.sh
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">-- Compile for UNIX, Linux, MacOSX ... </span>
+$ jarget uber chartTest.jar -o=<span class="org-keyword">chartTest.sh</span> -scala -exe=uexe -p=org.jfree/jfreechart/1.0.17
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">--- Compile for Windows embedding into an Windows Executable</span>
+$ jarget uber chartTest.jar -o=<span class="org-keyword">chartTest.exe</span> -scala -exe=wgui -p=org.jfree/jfreechart/1.0.17
+
+$ file chartTest.exe
+<span class="org-function-name">chartTest.exe</span>: PE32 executable (GUI) Intel 80386, for MS Windows
 
 <span class="org-comment-delimiter"># </span><span class="org-comment">Run the uber-jar - Way 1 </span>
 $ ./chartTest.sh 
@@ -1779,36 +1672,38 @@ Run it with: $ java -jar jarget
 $ ./jarget
 </pre>
 </div>
-
-<p>
-Explanation: 
-</p>
-
-<ul class="org-ul">
-<li>-o jarget - it will generate a uber jar file named jarget
-</li>
-
-<li>-m jarget.jar - Jar file containing the Main class. The manifest
-file of this file will be included in the uber jar.
-</li>
-
-<li>-j &#x2026;/scala-xml_2.12-1.0.6.jar  - Add this library to jar file.
-</li>
-
-<li>-scala - This flag bundles the scala runtime library
-scala-library.jar with the application.
-</li>
-
-<li>-sh    - Makes the application an *nix executable that can be run
-with ./application -cmd1 arg1 -cmd2 as an ordinary shell script &#x2026;
-</li>
-</ul>
 </div>
 </div>
+
 <div id="outline-container-sec-1-3-7" class="outline-4">
 <h4 id="sec-1-3-7"><span class="section-number-4">1.3.7</span> System Information</h4>
 <div class="outline-text-4" id="text-1-3-7">
 </div><ol class="org-ol"><li><a id="sec-1-3-7-1" name="sec-1-3-7-1"></a>Show Enviroment Variables<br  /><div class="outline-text-5" id="text-1-3-7-1">
+<p>
+Command help:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">$ jarget utils
+General utilities helpers for platform information and debugging.
+
+
+  Actions:
+   + env        - Show environment variables
+   + env &lt;var&gt;  - Show a given environment variable.
+   + prop       - Show java properties.
+   + prop &lt;var&gt; - Show a given a java property.
+   + path       - Show path variable
+   + info       - Show platform information.
+
+  Example: $ jarget utils info
+
+
+ Usage: utils &lt;ACTION&gt;
+</pre>
+</div>
+
 <ul class="org-ul">
 <li><code>$ jarget utils -env</code>
 </li>
@@ -1820,7 +1715,7 @@ On Linux:
 
 <div class="org-src-container">
 
-<pre class="src src-text">$ jarget utils -env
+<pre class="src src-text">$ jarget utils env
    Environment Variable         Value
    ------------------------     --------------------------------------------------
    PATH                         /usr/local/sbin:/usr/local/bin:/usr/bin:/usr/li...
@@ -1846,7 +1741,7 @@ On Windows:
 
 <div class="org-src-container">
 
-<pre class="src src-text">C:\Users\archbox\Desktop&gt;java -jar jarget utils -env
+<pre class="src src-text">C:\Users\archbox\Desktop&gt;java -jar jarget utils env
    Environment Variable          Value
    -------------------------     --------------------------------------------------
    USERDOMAIN_ROAMINGPROFILE     DESKTOP-2TJVI2H
@@ -1919,7 +1814,7 @@ On Windows:
 
 <div class="org-src-container">
 
-<pre class="src src-text">C:\Users\archbox\Desktop&gt; java -jar jarget utils -path
+<pre class="src src-text">C:\Users\archbox\Desktop&gt; java -jar jarget utils path
 
 C:\Windows\system32
 C:\Windows
@@ -1949,7 +1844,7 @@ On Linux:
 
 <div class="org-src-container">
 
-<pre class="src src-text">$ jarget utils -prop
+<pre class="src src-text">$ jarget utils prop
    Java Property                     Value
    -----------------------------     --------------------------------------------------
    java.runtime.name                 OpenJDK Runtime Environment
@@ -2014,7 +1909,7 @@ On Windows:
 
 <div class="org-src-container">
 
-<pre class="src src-text">C:\Users\archbox\Desktop&gt;java -jar jarget utils -prop
+<pre class="src src-text">C:\Users\archbox\Desktop&gt;java -jar jarget utils prop
    Java Property                     Value
    -----------------------------     --------------------------------------------------
    java.runtime.name                 Java(TM) SE Runtime Environment
@@ -2082,16 +1977,16 @@ On Windows:
 
 <li><a id="sec-1-3-7-4" name="sec-1-3-7-4"></a>Show Path to Program<br  /><div class="outline-text-5" id="text-1-3-7-4">
 <ul class="org-ul">
-<li><code>$ jarget utils -expath &lt;program&gt;</code>
+<li><code>$ jarget utils expath &lt;program&gt;</code>
 </li>
 </ul>
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget utils -expath java
+<pre class="src src-sh">$ jarget utils expath java
 /usr/bin/java
 
-$ jarget utils -expath jarget
+$ jarget utils expath jarget
 /home/archbox/bin/jarget
 </pre>
 </div>
@@ -2110,7 +2005,7 @@ Output on Linux:
 
 <div class="org-src-container">
 
-<pre class="src src-text">$ jarget utils -info
+<pre class="src src-text">$ jarget utils info
 
 Operating System              = Linux
 Operating System Version      = 4.14.16-200.fc26.x86_64
@@ -2140,7 +2035,7 @@ Output on Windows 10:
 
 <div class="org-src-container">
 
-<pre class="src src-text">C:\Users\archbox\Desktop&gt;java -jar jarget utils -info
+<pre class="src src-text">C:\Users\archbox\Desktop&gt;java -jar jarget utils info
 
 Operating System              = Windows 10
 Operating System Version      = 10.0
@@ -2165,47 +2060,6 @@ Java Runtime
 </div>
 </div>
 </li></ol>
-</div>
-
-<div id="outline-container-sec-1-3-8" class="outline-4">
-<h4 id="sec-1-3-8"><span class="section-number-4">1.3.8</span> Classpath</h4>
-<div class="outline-text-4" id="text-1-3-8">
-<ul class="org-ul">
-<li><code>$ jarget cpath -show</code>
-</li>
-</ul>
-
-<p>
-Get class file of all jar files in ./lib directory.
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-sh">$ ./bin/jarget cpath -show
-<span class="org-function-name">./lib/scala-library-2.12.1.jar</span>:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
-
-$ scala -cp $(<span class="org-sh-quoted-exec">./bin/jarget</span> cpath -show)
-Welcome to Scala 2.12.3 (OpenJDK 64-Bit Server VM, Java 1.8.0_141)<span class="org-builtin">.</span>
-Type<span class="org-keyword"> in</span> expressions for evaluation. Or try :help.
-</pre>
-</div>
-
-<ul class="org-ul">
-<li><code>$ jarget cpath -show [dir]</code>
-</li>
-</ul>
-
-<p>
-Get class file of all jar files in a given directory.
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-sh">$ ./bin/jarget cpath -show ./lib
-<span class="org-function-name">./lib/scala-library-2.12.1.jar</span>:./lib/cats-macros_2.12-0.9.0.jar:./lib/cats-kernel_2.12-0.9.0.jar:./lib/cats-core_2.12-0.9.0.jar:./lib/machinist_2.12-0.6.1.jar:./lib/simulacrum_2.12-0.10.0.jar:.
-</pre>
-</div>
-</div>
 </div>
 </div>
 
@@ -2253,72 +2107,46 @@ Build a standalone jarget redeucing the app size with proguard.
 </p>
 
 <ul class="org-ul">
-<li><code>$ make sh-proguard</code>
+<li>$ make pgd-unix 
 </li>
 </ul>
 
 <div class="org-src-container">
 
 <pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">Build </span>
-$ make sh-guard 
+$ make pgd-unix -k <span class="org-variable-name">CC</span>=scalac
 
-scala jarget.jar uber -scala -o <span class="org-keyword">bin/jarget-uber.jar</span> -m jarget.jar -j /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.jar -r assets
-Built file:  bin/jarget-uber.jar ok
-Run it with: $ java -jar bin/jarget-uber.jar
-<span class="org-builtin">echo</span> bin/jarget-uber.jar
-bin/jarget-uber.jar
+<span class="org-function-name">Makefile</span>:63: warning: overriding recipe for target <span class="org-string">'bin/jarget'</span>
+<span class="org-function-name">Makefile</span>:58: warning: ignoring old recipe for target <span class="org-string">'bin/jarget'</span>
+scalac src/logger.scala src/main.scala src/mvn.scala src/utils.scala src/reader.scala src/utils.JarBuilder.scala src/optPa
+rser.scala src/crypto.scala -d jarget.jar
+<span class="org-function-name">warning</span>: there were 6 deprecation warnings (since 2.12.0); re-run with -deprecation for details
+<span class="org-function-name">warning</span>: there were 5 feature warnings; re-run with -feature for details
+two warnings found
+mkdir -p bin
+cp -v exeLoaders/loaderCLI.exe exeLoaders/loaderGUI.exe assets || true
+<span class="org-string">'exeLoaders/loaderCLI.exe'</span> -&gt; <span class="org-string">'assets/loaderCLI.exe'</span>
+<span class="org-string">'exeLoaders/loaderGUI.exe'</span> -&gt; <span class="org-string">'assets/loaderGUI.exe'</span>
+scala jarget.jar uber -scala -r=assets -o=<span class="org-keyword">bin/jarget-uber.jar</span> jarget.jar /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.
+jar
 java -jar proguard.jar @config.pro
 ProGuard, version 5.3.3
 Reading input...
-Reading program jar [/home/archbox/test/jarget.scala/bin/jarget-uber.jar]
-Reading library jar [/home/archbox/opt/jdk1.8.0_144/jre/lib/rt.jar]
+Reading program jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-uber.jar]
+Reading library jar [/home/archbox/opt/java/jre/lib/rt.jar]
 Initializing...
 
-... ... .... ... ...  ... ... ... ... 
+... .... ...
 
-Shrinking...
-Removing unused program classes and class elements...
-  Original number of program classes: 2777
-  Final number of program classes:    1117
+  Final number of program classes:    1123
 Inlining subroutines...
 Preverifying...
 Writing output...
-Preparing output jar [/home/archbox/test/jarget.scala/bin/jarget-pro.jar]
-  Copying resources from program jar [/home/archbox/test/jarget.scala/bin/jarget-uber.jar]
-scala jarget.jar uber -exjar bin/jarget-pro.jar bin/jarget
-Built bin/jarget
-Run it with ./bin/jarget
-
-<span class="org-comment-delimiter"># </span><span class="org-comment">Check app size </span>
-$ du -h bin/jarget
-1.7M    bin/jarget
-1.7M    total
-
-<span class="org-comment-delimiter"># </span><span class="org-comment">Run it as an executable  </span>
-$ bin/jarget -v
-Jarget v1.5.0
-
-<span class="org-comment-delimiter"># </span><span class="org-comment">Run it with sh </span>
-$ sh bin/jarget -v
-Jarget v1.5.0
-
-<span class="org-comment-delimiter"># </span><span class="org-comment">Run it with java </span>
-$ java -jar bin/jarget -v
-Jarget v1.5.0
-
-$ bin/jarget utils -prop java.home
-/home/archbox/opt/jdk1.8.0_144/jre
-
-<span class="org-comment-delimiter"># </span><span class="org-comment">Check the executable header </span>
-$ head -n 7 bin/jarget
-
-<span class="org-comment-delimiter">#</span><span class="org-comment">!/usr/bin/env sh</span>
-<span class="org-keyword">if</span> [[ -z <span class="org-string">"$JAVA_HOME"</span> ]]
-<span class="org-keyword">then</span>
-    java -jar <span class="org-string">"$0"</span> <span class="org-string">"$@"</span>
-<span class="org-keyword">else</span>
-    <span class="org-string">"$JAVA_HOME/bin/java"</span> -jar <span class="org-string">"$0"</span> <span class="org-string">"$@"</span>
-<span class="org-keyword">fi</span>
+Preparing output jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-pro.jar]
+  Copying resources from program jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-uber.jar]
+rm -rf bin/jarget-uber.jar
+scala jarget.jar jar-to-exe -exe=uexe bin/jarget-pro.jar bin/jarget
+Built file ./bin/jarget-pro
 </pre>
 </div>
 </div>
@@ -2328,35 +2156,9 @@ $ head -n 7 bin/jarget
 <h4 id="sec-1-4-3"><span class="section-number-4">1.4.3</span> Install jarget tool in ~/bin</h4>
 <div class="outline-text-4" id="text-1-4-3">
 <ul class="org-ul">
-<li><code>$ make install</code>
+<li>make pgd-unix -k CC=scalac &amp;&amp; make install
 </li>
 </ul>
-
-<div class="org-src-container">
-
-<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">Build and install </span>
-<span class="org-comment-delimiter">#</span>
-$ make install
-scala jarget.jar uber -scala -sh -o <span class="org-keyword">bin/jarget</span> -m jarget.jar -j /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.jar
-Built file:  bin/jarget ok
-Run it with: $ java -jar bin/jarget
-cp -v bin/jarget ~/bin
-<span class="org-string">'bin/jarget'</span> -&gt; <span class="org-string">'/home/archbox/bin/jarget'</span>
-
-<span class="org-comment-delimiter"># </span><span class="org-comment">Run it - Assuming that ~/bin is in $PATH. </span>
-<span class="org-comment-delimiter">#</span>
-$ jarget
-jarget - Tool to download jar packages.
-
-Maven Packages / Jar Packages
-
- mvn -show [package]                 - Show package<span class="org-string">'s information</span>
-
-<span class="org-string"> mvn -pom  [package]                 - Show package'</span>s pom file
-
-... ... ...
-</pre>
-</div>
 </div>
 </div>
 </div>
@@ -2420,9 +2222,28 @@ documentation.
 edge-case bug and also added command jarget utils -info to show
 platform informations such as number of processors, version of
 operating system, default line separator '\r', '\n', '\r\n', path
-separator and so on. 
+separator and so on.
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/blob/554a56e4bcc42d3b8fa3ce134bf7f0984f9e1701/jarget?raw=true">jarget-v3.0</a>
+
+<ul class="org-ul">
+<li>Improved command line handling allowing future scalability and
+implementation of new functionalities.
+</li>
+
+<li>Improved user interface. Now jarget has git-like
+subcommands. Each command works as it was a separated command
+line application in similar fashion to git and busybox.
+</li>
+
+<li>Implemented generation of uber jars embedded in Windows' native
+executables. - (Still experimental.)
 </li>
 </ul>
+</li>
+</ul>
+
 
 <p>
 Or it can be downloaded with those shell commands below: 
@@ -2498,15 +2319,15 @@ jarget - Tool to download jar packages.
 </li>
 <li><code>[&#xa0;]</code> - Support project configuration file. 
 </li>
-<li><code>[&#xa0;]</code> - Improve command line handling 
+<li><code>[X]</code> - Improve command line handling 
 </li>
-<li><code>[&#xa0;]</code> - Improve error handling. 
+<li><code>[X]</code> - Improve error handling. 
 </li>
 <li><code>[X]</code> - Feature to make Uber Jar 
 </li>
 <li><code>[X]</code> - Shrink the generated uber jar using Pro-guard. 
 </li>
-<li><code>[&#xa0;]</code> - Create a Windows exe wrapper
+<li><code>[X]</code> - Create a Windows exe wrapper
 </li>
 <li><code>[X]</code> - Crypto Hash commands such as md5sum, sha256sum &#x2026; 
 </li>
@@ -2519,7 +2340,7 @@ jarget - Tool to download jar packages.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues - caiorss.rodrigues@gmail.com</p>
-<p class="date">Created: 2018-02-17 Sat 22:07</p>
+<p class="date">Created: 2018-04-08 Sun 16:51</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
