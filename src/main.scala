@@ -350,12 +350,18 @@ object Main{
     desc = "Run a scala script with a given set of packages from cache.",
     usage = "[OPTIONS] -- <SCRIPT.scala> [<SCRIPT ARGS> ...]"
   ).addOpt(
-    name = "package",
+    name      = "package",
     shortName = "p",
-    argName = "<PACK>",
-    desc = "Package maven's coordinate"
+    argName   = "<PACK>",
+    desc      = "Package maven's coordinate"
+  ).addOpt(
+    name      = "package-str",
+    argName   = "<PACK1>,<PACK2>...",
+    shortName = "ps",
+    desc      = "Package's separated by command <pack1>,<pack2>...<packN> "
   ).setAction{ res =>
-    val packList = res.getListStr("package") map parsePack toList
+    val packList1 = res.getListStr("package").map(parsePack).toList
+    val packList2 = res.getStr("package-str", "").split(",").map(parsePack).toList 
 
     if(res.getListStr("--").isEmpty){
       println("Error: missing command after -- ")
@@ -365,7 +371,7 @@ object Main{
     val script     = res.getListStr("--").head
     val scriptArgs = res.getListStr("--").tail
     tryMVNGet {
-      val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
+      val cpath = Packget.getPackCPathFromCache(packList1 ++ packList2, cachePath, config.repoUrl)
       //println(s"Script = ${script} args = ${args}")
       JarUtils.runWithClassPath2("scala", "-save"::script::scriptArgs, cpath)
     }
