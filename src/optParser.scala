@@ -1,6 +1,6 @@
 package jarget.optParser
 
-private object OptUtils{
+private object OptFun{
   /** Print Table of rows (list of strings) as table */
   def printTableOfRows(xs: Seq[List[String]], space: Int = 1, left: Int = 2) = {
     val sizes = xs.transpose.map{col => col.map(_.length).max}
@@ -151,7 +151,7 @@ class OptSet(
         o.getDesc()
       )
     }
-    OptUtils.printTableOfRows(rows)
+    OptFun.printTableOfRows(rows)
   } // --- EoF func showHelp() ---- //
 
   /** Parse command line arguments */
@@ -228,7 +228,6 @@ class OptParser(programName: String = "", usage: String = "", desc: String = "")
       val c = parsers(name)
       List(c.getCommandName(), c.getCommandDesc())
     }
-
     println(desc)
     if(usage == "")
       println(s"Usage: $$ $programName [COMMAND] [OPTIONS] [<ARGS> ...]")
@@ -236,7 +235,7 @@ class OptParser(programName: String = "", usage: String = "", desc: String = "")
       println(usage)
     println()
     println("Commands:\n")
-    OptUtils.printTableOfRows(rows)
+    OptFun.printTableOfRows(rows)
   }
 
   def parse(args: List[String]) =
