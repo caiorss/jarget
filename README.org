@@ -68,7 +68,7 @@ It is possible to:
  1. Get information about the library. Note: 2.11 is the Scala version.
 
 #+BEGIN_SRC sh 
-$ jarget mvn -show org.typelevel/cats_2.11/0.7.2
+$ jarget mvn-show org.typelevel/cats_2.11/0.7.2
 Package:         catsJVM
 Packaging:       jar
 Coordinates[1]:  group = org.typelevel artifact = cats_2.11 version = 0.7.2
@@ -106,7 +106,7 @@ Load Scala REPL with all jars from ./lib in classpath and test the
 package: 
 
 #+BEGIN_SRC sh 
-$ jarget exec org.typelevel/cats-core_2.12/0.9.0 -- scala 
+$ jarget exec -p=org.typelevel/cats-core_2.12/0.9.0 -- scala 
 Welcome to Scala 2.12.3 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_144).
 Type in expressions for evaluation. Or try :help.
 
