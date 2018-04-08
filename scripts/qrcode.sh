@@ -1,6 +1,6 @@
 #!/bin/sh
 DEPS=com.google.zxing/core/2.2,com.google.zxing/javase/2.2
-exec jarget script "$DEPS" -- "$0" "$@"
+exec jarget script -ps="$DEPS" -- "$0" "$@"
 !#
 
 object QRCode { 

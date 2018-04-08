@@ -1,6 +1,6 @@
 #!/bin/sh
 DEPS=org.jfree/jfreechart/1.0.17
-exec jarget script "$DEPS" -- "$0" "$@"
+exec jarget script -ps="$DEPS" -- "$0" "$@"
 !#
 
 import org.jfree.chart.{ChartPanel, ChartFactory, JFreeChart, ChartUtilities}

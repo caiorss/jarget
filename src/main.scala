@@ -2,7 +2,6 @@ package jarget.main
 
 import jarget.utils.{Utils, JarUtils}
 import jarget.utils.JarBuilder
-import jarget.utils.OptParse
 import jarget.mvn._
 import jarget.reader._
 
@@ -120,6 +119,7 @@ Java Runtime
 
 - java.vm.specification.version = ${System.getProperty("java.specification.version")}
 - java.runtime.version          = ${System.getProperty("java.runtime.version")}
+
 - java.vm.name                  = ${System.getProperty("java.vm.name")}
 - java.home                     = ${System.getProperty("java.home")}
    """)
@@ -154,359 +154,7 @@ object Main{
       case ex: Throwable => throw ex 
     }
 
-  /** Handles utils commands. - ./jarget utils <commands>  */
-  def parseUtilsArgs(arglist: List[String]) = arglist match {
-
-    // Show environment variable
-    case List("-env") => Utils.showEnvironmentVars()
-
-    case List("-env", evar)
-        => for { v <- Option(System.getenv(evar)) } println(v)
-
-     // Show Java properties
-    case List("-prop")
-        => Utils.showJavaProperties()
-
-    case List("-prop", name)
-        => Option(System.getProperty(name)) foreach println
-
-    // Show PATH enviroment variable
-    case List("-path")
-        => for {
-          pvar   <- Option(System.getenv("PATH"))
-          sep    <- Option(System.getProperty("path.separator"))
-          paths  = pvar.split(sep)
-        } paths foreach println
-
-    // Show Platform Info
-    case List("-info")
-        => showPlatformInfo()
-
-    // Show path to executable in $PATH variable
-    case List("-expath", program)
-        => Utils.getProgramPath(program) foreach println
-
-    case _
-        => {
-          println("Error: Invalid Utils Commands.")
-          println("Valid commands: utils [-env | -prop | -path | -expath]")
-          System.exit(1)
-    }
-  }
-
-  /** Handles jar commands. - ./jarget jar <commands> */
-  def parseJarArgs(arglist: List[String]) = arglist match {
-
-    case List()
-        => println("Jar commands: [ -man | -main | -show | -cat | -assets | -extract | -extract-all ]")
-
-    // Print Jar manifest file or "META-INF/MANIFEST.MF"
-    case List("-man", jarFile)
-        => JarUtils.showManifest(jarFile)
-
-    // Pint Main class
-    case List("-main", jarFile)
-        => JarUtils.getMainClass(jarFile) foreach println
-
-    case List("-show", jarFile)
-        => JarUtils.showFiles(jarFile)
-      
-    case List("-package", jarFile)
-        => JarUtils.getPackages(jarFile) foreach println
-
-    case List("-package", jarFile, clsName)
-        => JarUtils.getPackageClasses(jarFile, clsName) foreach println
-
-    // Show only asset files ignoring class files.
-    case List("-resource", jarFile)
-        => JarUtils.getAssetFiles(jarFile) foreach println
-
-    case List("-resource", jarFile, file)
-        => JarUtils.printFile(jarFile, file)
-
-    case List("-cat", jarFile, file)
-        => JarUtils.printFile(jarFile, file)
-
-    case List("-extract", jarFile, file)
-        => JarUtils.extractFile(jarFile, file, ".")
-
-    case List("-extract", jarFile, file, path)
-        => JarUtils.extractFile(jarFile, file, path)
-
-    case List("-extract-all", jarFile)
-        => {
-          val path = new java.io.File(jarFile)
-            .getName()
-            .stripSuffix(".jar")
-          Utils.mkdir(path)
-          JarUtils.extract(jarFile, path, true)
-
-        }
-
-    case List("-extract-all", jarFile, path)
-        => JarUtils.extract(jarFile, path, true)
-
-    case _ => println("Error: Invalid jar argument")
-
-  } //------- EOF function parseJarArgs ------- //
-
-
-  /** Handles command Uber. ./jarget uber <options> */
-  def parseUberArgs(arglist: List[String],  config: AppSettings, cachePath: String) = {
-    val parser = new OptParse()
-
-    var sh                          = false
-    var scala                       = false
-    var output                      = "output.jar"
-    var main:        Option[String] = None
-    var paths:       List[String]   = List()
-    var files:       List[String]   = List()
-    var filesEntry:  List[String]   = List()
-    var jarFiles:    List[String]   = List()
-    var resources:   List[String]   = List()
-    var packList:    List[PackData] = List()
-
-
-    parser.addOption(
-      "-scala",
-      "Pack Scala library with the application.",
-      arg => scala = arg.getFlag()
-    )
-
-    parser.addOption(
-      "-sh",
-      "Build self-executable jar file",
-      arg => sh = true
-    )
-
-    parser.addOption(
-      "-m",
-      "Main file",
-      true,
-      arg =>  main = Some(arg.getOne())
-    )
-
-
-    parser.addOption(
-      "-o",
-      "Output file",
-      arg => output = arg.getOne()
-    )
-
-    parser.addOption(
-      "-jd",
-      "Paths containing libraries (jar files)",
-       arg => paths = arg.getOneOrMany()
-    )
-
-    parser.addOption(
-      "-p",
-      "Java package with maven coordinates <group>/<artifact>/<version>",
-      false,
-      arg => { packList = arg.getOneOrMany().map(parsePack)}
-    )
-
-    parser.addOption(
-      "-j",
-      "Additional jar files.",
-      false,
-      arg => jarFiles = arg.getOneOrMany()
-    )
-
-    parser.addOption(
-      "-f",
-      "Files to appended to the jar file",
-      arg => files = arg.getOneOrMany()
-    )
-
-    parser.addOption(
-      "-fe",
-      "Files to appended to the jar file with entry separated by semicolon",
-      arg => filesEntry = arg.getOneOrMany()
-    )
-
-    parser.addOption(
-      "-r",
-      "Resource directories.",
-      arg => resources = arg.getOneOrMany()
-    )
-
-    try{
-      parser.parseArgs(arglist)
-      val packFiles =  Packget.getPackJarsFromCache(packList, cachePath, config.repoUrl)
-      jarFiles = jarFiles ++ packFiles
-    }
-    catch {
-      case ex: java.lang.IllegalArgumentException
-          => {
-            println(ex.getMessage)
-            System.exit(1)
-          }
-    }
-
-    main match {
-      case Some(m)
-          => {
-            JarBuilder.makeUberJar(
-              output,
-              m,
-              paths,
-              jarFiles,
-              files,
-              filesEntry,
-              resources,
-              scala,
-              sh
-            )
-            println("Built file:  " + output + " ok")
-            println("Run it with: $ java -jar " + output)
-            System.exit(0)
-          }
-      case None
-          => println("Error: missing main file ") ; System.exit(1)
-    }
-  } // End of uberParser
-
-
-  /** Handles command digest to compute crypto hashes. 
-      ./jarget digest -md5 -f <file> 
-      ./jarget digest -sha256 -s <password>
-   */
-  def parseDigestArgs(args: List[String]) = {
-
-    import jarget.crypto.Digest
-
-    //println(args)
-
-    args match {
-
-      //----- File Digest ------------ //
-      case List("-md5",    "-f", file)
-          => println(Digest.fileDigestSum("MD5", file))
-      case List("-sha1",   "-f", file)
-          => println(Digest.fileDigestSum("SHA1", file))
-      case List("-sha256", "-f", file)
-          => println(Digest.fileDigestSum("SHA-256", file))
-
-      case List("-md5",    "-f", file, hexDigest)
-          => println(Digest.fileDigestSum("MD5", file) == hexDigest)
-      case List("-sha1",   "-f", file, hexDigest)
-          => println(Digest.fileDigestSum("SHA1", file) == hexDigest)
-      case List("-sha256", "-f", file, hexDigest)
-          => println(Digest.fileDigestSum("SHA-256", file) == hexDigest)
-
-
-      // ------ String Digest -------- //
-      case List("-md5",    "-s", str)
-          => println(Digest.stringDigestSum("MD5", str))
-      case List("-sha1",   "-s", str)
-          => println(Digest.stringDigestSum("SHA1", str))
-      case List("-sha256", "-s", str)
-          => println(Digest.stringDigestSum("SHA-256", str))
-
-      case List("-md5",    "-s", str, hexDigest)
-          => println(Digest.stringDigestSum("MD5", str) == hexDigest)
-      case List("-sha1",   "-s", str, hexDigest)
-          => println(Digest.stringDigestSum("SHA1", str) == hexDigest)
-      case List("-sha256", "-s", str, hexDigest)
-          => println(Digest.stringDigestSum("SHA-256", str) == hexDigest)
-
-      case _
-          => {
-            println("Error: Invalid digest option")
-            System.exit(1)
-          }
-    }
-  }
-
-
-  def parseMvnArgs(args: List[String], config: AppSettings, cachePath: String ) = {
-
-    val repoUrl = Option(System.getenv("jarget.url")) getOrElse config.repoUrl
-
-    def getLibPath(path: String) = Option(System.getenv("jarget.path")) getOrElse path 
-
-    // Parse package list separated by (;)
-    //
-    def parsePackageList(plist: String) =
-      plist.split(",").map(parsePack).toList 
-
-    args.toList match {
-
-      case List("-pom", pstr)
-          => showPom(parsePack(pstr)) run repoUrl
-
-
-      case List("-show", pstr)
-          => showPackageInfo(parsePack(pstr)) run repoUrl 
-
-     //  Copy packages from cache directory to ./lib and download it
-     //  if has not been downloaded yet.
-      case List("-copy", pstr)
-          => tryMVNGet {
-            val packs = parsePackageList(pstr)
-            Packget.copyPackageFromCache(packs, cachePath, repoUrl, getLibPath("./lib"))
-          }
-
-      // Pull packages from remote repository to package cache.  
-      case List("-pull", pstr)
-          => tryMVNGet {
-            val packs = parsePackageList(pstr)
-            Packget.getPackJarsFromCache(packs, cachePath, repoUrl)
-          }
-
-      // Clean cache packages
-      case List("-clear")
-          => tryMVNGet {
-            println("Cleaning cache")
-            Utils.deleteDirectory(cachePath, true)
-          }      
- 
-      case List("-search", query)
-          => {
-            val q = java.net.URLEncoder.encode(query)
-            Utils.openUrl("https://mvnrepository.com/search?q=" + q)
-          }
-
-      case List("-search2", query)
-          => PackSearch.searchPackage(query)
-
-      case List("-search2", query, n)
-          => PackSearch.searchPackage(query, n.toInt)
-
-      case List("-browse", pstr)
-          => openUrl(parsePack(pstr))
-
-       // Open package documentation in browser  
-      case List("-open")
-          => Utils.openUrl("https://mvnrepository.com")
-
-       // Open package documentation in browser          
-      case List("-open", pstr)
-          => {
-            val pack = parsePack(pstr)
-            val url  = s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
-            Utils.openUrl(url)
-          }
-
-      case _ => println("Error: invalid command.")
-        
-    }
-  } // ----- End of parseMvnArgs ---------- //
-
-  /** Displays user help stored in the asset file user-help.txt 
-    */
-  def showHelp(version: String) = {    
-    println(s"jarget ${version.trim()} -  Java platform Toolbox")
-    val help = Utils.readResourceFile(getClass(), "/assets/user-help.txt")
-    help match {
-      case Some(file) => println(file)
-      case None       => throw new java.io.IOException("Error: I can't find the resource file user-help.txt")
-    }
-  }
-
-
-  def main(args: Array[String]) : Unit = {
+  def parseArgs(args: Array[String]) : Unit = {
 
     jarget.logger.Log.setLevel()
 
@@ -518,134 +166,484 @@ object Main{
     val cachePath = PackCache.getCacheHome(".jarget")
 
     args.toList match {
-
-      case List() | List("-h") | List("-help")
-          => showHelp(config.version)
-
       case List("-v") | List("-version")
-          => println(config.version) 
-
+          => println(config.version)
       case List("-site")
         => Utils.openUrl(config.website)
 
-      //--------- Mvn commands ------------------ //
-      case "mvn"::rest  => parseMvnArgs(rest, config, cachePath)
-
-      // --------  Utils Commands ------------------- //
-      case "utils"::rest => parseUtilsArgs(rest)
-
-      // ------ Jar package inspection and manipulation -- //
-      case "jar"::rest
-          =>  JarUtils.withJarException{ parseJarArgs(rest) }
-
-     //--------- Pom Files Inspection ---------- //
-      case "pom"::rest => rest foreach { uri => Pom.showPomDataFromUri(uri, true)}
-
-     //------------  Make Uber Jar ------------- //
-
-      // Turn an uber jar into a unix executable
-      // that can be run with ./app instead of java -jar app.jar
-      //
-      case List("uber", "-exjar", inputJar)
-          => {
-            val outputJar = inputJar.stripSuffix(".jar")
-            JarBuilder.makeExecutableJar(inputJar, outputJar)
-            println(s"Built ${outputJar}")
-            println(s"Run it with ./${outputJar}")
-          }
-
-      case List("uber", "-exjar", inputJar, outputJar)
-          => {
-            JarBuilder.makeExecutableJar(inputJar, outputJar)
-            println(s"Built ${outputJar}")
-            println(s"Run it with ./${outputJar}")
-          }
-
-      case "uber"::rest
-          => parseUberArgs(rest, config, cachePath)
-
-
-      // ------- Class Path  ----------------- //
-
-      case List("cpath", "-show")
-          => println(JarUtils.getClasspath("./lib"))
-
-      case List("cpath", "-show", path)
-          => println(JarUtils.getClasspath(path))
-
-     // ------- Crypto Utils -----------------------//
-
-      case "digest"::rest
-          => parseDigestArgs(rest)
-
-
-     //-------- Package cache ----------------------- //
-
-      // Show directory where are the cached packages, jar files and pom files.
-      case List("cache", "-path")
-          => println(cachePath)
-
-
-      // Show all packages available in the cache repository 
-      case List("cache", "-pack")
-          => PackCache.getPackagesInCache(cachePath)
-          .foreach { case (group, artifact) => println(s"${group}/${artifact}") }
-
-      // Show all versions of some package available in the cache repository
-      case List("cache", "-pack", packStr)
-          => packStr.split("/") match {
-
-            case Array(groupID, artifactID)
-                => try {
-                  PackCache.showPackageInfo(groupID, artifactID, cachePath)
-                  PackCache.getPackageVersions(groupID, artifactID, cachePath)
-                    .foreach{version =>
-                    println (s"${groupID}/${artifactID}/${version}")
-                  }
-                } catch {
-                  case _ : Throwable => println("Error: package not found")
-                }
-            case _
-                => println("Error: Invalid package specification.")
-          }
-
-
-      case "cache"::"-cpath"::packList
-          => println(Packget.getPackCPathFromCache(packList map parsePack, cachePath, config.repoUrl))
-
-      // Show all jar files in the cache directory   
-      case List("cache", "-jars")
-          => PackCache.showJarFiles(cachePath)
-
-      case "cache"::"-jars"::packList
-          => Packget.getPackJarsFromCache(
-            packList map parsePack,
-            cachePath,
-            config.repoUrl)
-          .foreach(println)
-
-
-      //-------- Generic Command with Classpath ------//
-
-      case "exec"::pstr::"--"::command::args
-          => tryMVNGet {
-            val packList = pstr split(",") map parsePack toList
-            val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
-            JarUtils.runWithClassPath2(command, args, cpath)
-          }
-
-      case "script"::pstr::"--"::script::args
-          => tryMVNGet {
-            val packList = pstr split(",") map parsePack toList
-            val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
-            //println(s"Script = ${script} args = ${args}")
-            JarUtils.runWithClassPath2("scala", "-save"::script::args, cpath)
-          }
-
-      case _ => println("Error: Invalid command")
     }
 
   }// -- End of function main() --- //
+
+  import jarget.optParser.{OptResult, OptParser, OptSet}
+
+
+  val config =
+      Utils.readResourceProperties("/assets/app.properties")
+        .map(MainUtils.getAppSettings _ )
+        .run(getClass())
+
+  val repoUrl = Option(System.getenv("jarget.url")) getOrElse config.repoUrl
+
+  val cachePath = PackCache.getCacheHome(".jarget")
+
+  def getLibPath(path: String) = Option(System.getenv("jarget.path")) getOrElse path
+
+
+  val mvnShow = new OptSet(
+    name  = "mvn-show",
+    usage = "<PACKAGE>",
+    desc  = "Show package's information."
+  ).setAction{ res => 
+    val pstr = res.getOperands()(0)
+    showPackageInfo(parsePack(pstr)) run repoUrl 
+  }
+
+  val mvnSearch = new OptSet(
+    name  = "mvn-search",
+    usage = "<QUERY>",
+    desc  = "Search for a package at the site https://mvnrepository.com"
+  ).setAction{ res => 
+    val query = res.getOperands()(0)
+    Utils.openUrl("https://mvnrepository.com/search?q=" + query)
+  }
+
+
+  val mvnPom = new OptSet(
+    name  = "mvn-pom",
+    usage = "<PACKAGE>",
+    desc  = "Show package's pom.xml file."
+  ).setAction{ res => 
+    val pstr = res.getOperands()(0)
+    showPom(parsePack(pstr)) run repoUrl
+  }
+  
+
+  val mvnPull = new OptSet(
+    name  = "mvn-pull",
+    usage = "<PACKAGE1> [<PACKAGE2> ...]",
+    desc  = "Show package's pom.xml file."
+  ).setAction{ res => 
+    val pstr = res.getOperands()(0)
+    showPom(parsePack(pstr)) run repoUrl
+  }
+
+  val mvnDoc = new OptSet(
+    name  = "mvn-doc",
+    usage = "<PACKAGE>",
+    desc  = "Open package documentation in the web browser."
+  ).setAction{ res => 
+    val pstr = res.getOperands()(0)
+    val pack = parsePack(pstr)
+    val url  = s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
+    Utils.openUrl(url)
+  } 
+
+  //  Copy packages from cache directory to ./lib and download it
+  //  if has not been downloaded yet.
+  val mvnCopy = new OptSet(
+    name  = "mvn-copy",
+    usage = "<PACKAGE1> [<PACKAGE2> ...]",
+    desc  = "Copy jar packages from cache directory to ./lib downloading them if not available."
+  ).setAction{ res => 
+    val packs = res.getOperands() map parsePack
+     tryMVNGet {
+       Packget.copyPackageFromCache(packs, cachePath, repoUrl, getLibPath("./lib"))
+     }
+  }
+
+
+  val uberOptSet = new OptSet(
+    name  = "uber",
+    usage = "[OPTIONS] <MAIN-JAR> [<JARFILE1.jar> <JARFILE2.jar> ...]",
+    desc  = "Build uber jar file for deployment by bundling dependencies and resource files."
+  ).addOpt(
+    name      = "output",
+    shortName = "o",
+    argName   = "<file>",
+    desc      = "Output file, default out.jar"
+  ).addOpt(
+    name      = "scala",
+    shortName = "s",
+    desc      = "Bundle Scala runtime library scala-runtime.jar"
+  ).addOpt(
+    name      = "package",
+    shortName = "p",
+    argName   = "<pack>",
+    desc      = "MVN Coordinates of a java package -  <group>/<artifact>/<version>."      
+  ).addOpt(
+    name      = "file",
+    shortName = "f",
+    argName   = "<file>",
+    desc      = "Jar files to be added to the package."
+  ).addOpt(
+    name      = "resource",
+    shortName = "r",
+    argName   = "<folder>",
+    desc      = "Resource directory"
+  ).addOpt(
+    name      = "jardir",
+    shortName = "jd",
+    argName   = "<folder>",
+    desc      = "Directory containing jar files to be bundled into the uber jar."
+  ).addOpt(
+    name      = "exe",
+    shortName = "e",
+    argName   = "<EXE>",
+    desc      = ""
+  ).setAction{ (res: OptResult) =>
+    
+    val scalaFlag     = res.getFlag("scala")
+    val packages      = res.getListStr("package")
+    val files         = res.getListStr("file")
+    val output        = res.getStr("output", "out.jar")
+    val resourcesDirs = res.getListStr("resource")
+    val exe           = JarBuilder.parseWrapper(res.getStr("exe", "empty"))
+    val mainJarFile   = res.getOperandOrExit(0, "Error: missing main jar file.")
+    val jarFiles      = res.getOperands.tail
+
+    val packFiles =
+      Packget.getPackJarsFromCache(
+        packages map parsePack,
+        cachePath,
+        config.repoUrl
+      )
+
+    JarBuilder.makeUberJar(
+      cls       = getClass(),
+      output    = output,  
+      main      = mainJarFile,
+      scalaLib  = scalaFlag,
+      resources = resourcesDirs,
+      jarFiles  = jarFiles ++ packFiles,
+      wrapper   = exe 
+    )
+  }
+
+  val execCommand = new OptSet(
+    name  = "exec",
+    desc  = "Execute a shell command and pass -cp <CLASSPATH> of packages downloaded to it.",
+    usage = "[OPTIONS] -- <PROGRAM> [<PROGRAM ARGS> ...]"
+  ).addOpt(
+    name = "package",
+    shortName = "p",
+    argName = "<PACK>",
+    desc = "Package maven's coordinate"
+  ).setAction{ res =>
+    val packList = res.getListStr("package") map parsePack toList
+
+    if (res.getListStr("--").isEmpty){
+      println("Error: missing command after -- ")
+      System.exit(1)
+    }
+
+    val command     = res.getListStr("--").head
+    val commandArgs = res.getListStr("--").tail
+    tryMVNGet {
+      val cpath = Packget.getPackCPathFromCache(packList, cachePath, config.repoUrl)
+      JarUtils.runWithClassPath2(command, commandArgs, cpath)
+     }
+  }
+
+  val scriptCommand = new OptSet(
+    name = "script",
+    desc = "Run a scala script with a given set of packages from cache.",
+    usage = "[OPTIONS] -- <SCRIPT.scala> [<SCRIPT ARGS> ...]"
+  ).addOpt(
+    name      = "package",
+    shortName = "p",
+    argName   = "<PACK>",
+    desc      = "Package maven's coordinate"
+  ).addOpt(
+    name      = "package-str",
+    argName   = "<PACK1>,<PACK2>...",
+    shortName = "ps",
+    desc      = "Package's separated by command <pack1>,<pack2>...<packN> "
+  ).setAction{ res =>
+    val packList1 = res.getListStr("package").map(parsePack).toList
+    val packList2 = res.getStr("package-str", "").split(",").map(parsePack).toList 
+
+    if(res.getListStr("--").isEmpty){
+      println("Error: missing command after -- ")
+      System.exit(1)
+    }
+
+    val script     = res.getListStr("--").head
+    val scriptArgs = res.getListStr("--").tail
+    tryMVNGet {
+      val cpath = Packget.getPackCPathFromCache(packList1 ++ packList2, cachePath, config.repoUrl)
+      //println(s"Script = ${script} args = ${args}")
+      JarUtils.runWithClassPath2("scala", "-save"::script::scriptArgs, cpath)
+    }
+  }
+
+
+  //----- Cache commands ------------------- //
+
+  val cachePathOpt = new OptSet(
+    name = "cache",
+    usage = "<ACTION>",
+    desc = "Show packages in cache directory."
+  ).addOpt(
+    name = "path",
+    desc = "Show cache's directory path."
+  ).addOpt(
+    name = "pack",
+    desc = "Show packages in cache directory"
+  ).addOpt(
+    name = "jars",
+    desc = "Show all jar files in cache directory"
+  ).setAction{ (res: OptResult) =>
+
+    if( res.getFlag("path")){
+      println(cachePath)
+      System.exit(0)
+    }
+
+    // Show all packages available in the cache repository
+    if(res.getFlag("pack")){
+       PackCache.getPackagesInCache(cachePath)
+         .foreach { case (group, artifact) => println(s"${group}/${artifact}") }
+      System.exit(0)
+    }
+
+    if(res.getFlag("jars")){
+      PackCache.showJarFiles(cachePath)
+      System.exit(0)
+    }
+
+  }
+
+
+  //------ Jar Commadns ------------------- //
+
+  val jarManOpt = new OptSet(
+    name = "jar-man",
+    usage = "<FILE.jar>",
+    desc = "Show manifest of a jar file."
+  ).setAction{ (res: OptResult) =>
+    val file = res.getOperands()(0)
+    JarUtils.showManifest(file)
+  }
+
+  val jarMainClass = new OptSet(
+    name  = "jar-main-class",
+    usage = "<FILE.jar>",
+    desc  = "Show main class of a jar file."
+  ).setAction{ (res: OptResult) =>
+    val file = res.getOperands()(0)
+    JarUtils.getMainClass(file) foreach println
+  }
+
+  val jarShowFiles = new OptSet(
+    name = "jar-ls",
+    usage = "<FILE.jar>",
+    desc  = "Show contents of a jar file."
+  ).setAction{ (res: OptResult) =>
+    val file = res.getOperandOrExit(0, "Error: missing jar file.")
+    JarUtils.showFiles(file) 
+  }
+
+  val jarResources = new OptSet(
+    name = "jar-rs",
+    usage = "<FILE.jar>",
+    desc = "Show resources of a jar file ignoring *.class files."
+  ).setAction{ res =>
+    val file = res.getOperands()(0)
+    JarUtils.getAssetFiles(file) foreach println    
+  }
+
+  val jarCat = new OptSet(
+    name = "jar-cat",
+    usage = "<FILE.jar> <FILE>",
+    desc = "Show content of a file in a jar package."
+  ).setAction{ res =>
+    val jarFile = res.getOperandOrExit(0, "Error: missing jar file.")
+    val file    = res.getOperandOrExit(1, "Error: missing file name.")
+    JarUtils.printFile(jarFile, file)
+  }
+
+  val jarExtract  = new OptSet(
+    name  = "jar-ex",
+    usage =  "<FILE.jar> <file>",
+    desc  = "Extract <file> from jar file <FILE.jar> to current directory."
+  ).setAction{ res =>
+    val jarFile = res.getOperands()(0)
+    val file    = res.getOperands()(1)
+    JarUtils.extractFile(jarFile, file, ".")
+  }
+
+  val jarExtractAll = new OptSet(
+    name  = "jar-ex-all",
+    usage = "<FILE.jar>",
+    desc  = "Extract contents of <FILE.jar> to ·/<FILE> directory."
+  ).setAction{ res =>
+    val jarFile = res.getOperands()(0)
+    val path = new java.io.File(jarFile)
+      .getName()
+      .stripSuffix(".jar")
+    Utils.mkdir(path)
+    JarUtils.extract(jarFile, path, true)
+  }
+
+
+  val jarToEXE = new OptSet(
+    name  = "jar-to-exe",
+    usage = "[OPTIONS] <FILE.jar>",
+    desc = "Embed Uber jar into Unix executable or Windows Executable (experimental)."
+  ).addOpt(
+    name      = "exe",
+    shortName = "e",
+    argName   = "<EXE>",
+    desc      = "Executable type <EXE> can be uexe for Unix executable, wcli -> Windows CLI Program ... "
+  ).addOpt(
+    name      = "output",
+    shortName = "o",
+    argName   = "<FILE>",
+    desc      = "Output file, default <FILE> without extension + .sh or .exe."
+  ).setAction{ res =>
+    val wrapper   = JarBuilder.parseWrapper(res.getStr("exe", "uexe"))
+    val inputJar  = res.getOperands()(0)
+    val defaultName = wrapper match {
+      case JarBuilder.JWrapperUEXE
+          => inputJar.stripSuffix(".jar")
+      case JarBuilder.JWrapperWCLI | JarBuilder.JWrapperWGUI
+          => inputJar.stripSuffix(".jar") + ".exe"
+      case JarBuilder.JWrapperEmpty
+          => throw new java.lang.IllegalArgumentException("Invalid jar wrapper option.")
+    }
+    val output = res.getStr("output", defaultName)
+    JarBuilder.makeExecutable(getClass(), inputJar, output, wrapper)
+    println(s"Built file ./${output}")
+  }
+
+
+  // --- Crypto Hash Commands -------------------------/
+
+  val digestStrOpt = new OptSet(
+    name  = "digest-s",
+    usage = " <ALGORITHM> <STRING>",
+    desc  = "Compute crypto hash of string. - Algorithm: [md5 | sha1 | sha256 ]"
+  ).setAction{ res =>
+    import jarget.crypto.Digest
+    val algorithms = Map("md5" -> "MD5", "sha1" -> "SHA1", "sha256" -> "SHA-256")
+    val op0 = res.getOperandOrExit(0, "Error: missing algorithm: md5, sha1, or sha256.")
+    val op1 = res.getOperandOrExit(1, "Error: missing string.")
+    val alg = algorithms.get(op0) match {
+      case Some(a) => {
+         println(Digest.stringDigestSum(a, op1))
+      }
+      case None => {
+        println("Error: algorithm not found.")
+        System.exit(1)
+      }
+    }
+  }
+
+  val digestFileOpt = new OptSet(
+    name  = "digest-f",
+    usage = " <ALGORITHM> <FILE>",
+    desc  = "Compute crypto hash of a file. - Algorithm: [md5 | sha1 | sha256 ]"
+  ).setAction{ res =>
+    import jarget.crypto.Digest
+    val algorithms = Map("md5" -> "MD5", "sha1" -> "SHA1", "sha256" -> "SHA-256")
+    val op0 = res.getOperandOrExit(0, "Error: missing algorithm: md5, sha1, or sha256.")
+    val op1 = res.getOperandOrExit(1, "Error: missing file.")
+    val alg = algorithms.get(op0) match {
+      case Some(a) =>
+        println(Digest.fileDigestSum(a, op1))              
+      case None => {
+        println("Error: algorithm not found.")
+        System.exit(1)
+      }
+    }
+  }
+
+
+
+  val utilsOpt = new OptSet(
+    name     = "utils",
+    usage    = "<ACTION>",
+    desc     = "General utilities helpers for platform information and debugging.",
+    longDesc = """
+  Actions:
+   + env        - Show environment variables
+   + env <var>  - Show a given environment variable.
+   + prop       - Show java properties.
+   + prop <var> - Show a given a java property.
+   + path       - Show path variable
+   + info       - Show platform information.
+
+  Example: $ jarget utils info
+
+   """
+  ).setAction{ res =>
+    val args = res.getOperands()
+    args match {
+      // Show environment variable
+      case List("env")
+          => Utils.showEnvironmentVars()
+      // Show a specific environment variable
+      case List("env", evar)
+          => for { v <- Option(System.getenv(evar)) } println(v)
+      // Show Java properties
+      case List("prop")
+          => Utils.showJavaProperties()
+      // Show an specific property
+      case List("prop", name)
+          => Option(System.getProperty(name)) foreach println
+    // Show PATH enviroment variable
+    case List("path")
+        => for {
+          pvar   <- Option(System.getenv("PATH"))
+          sep    <- Option(System.getProperty("path.separator"))
+          paths  = pvar.split(sep)
+        } paths foreach println
+
+   // Show Platform Info
+      case List("info")
+          => showPlatformInfo()
+
+      // Show path to executable in $PATH variable
+      case List("expath", program)
+        => Utils.getProgramPath(program) foreach println
+
+      case _ => {
+        println("Error: invalid command.")
+        System.exit(1)
+      }
+    }
+  }
+
+  val desc = """
+ Jarget 3.0 - command line toolbox for Java Platform.
+"""
+
+  val parser = new OptParser(desc = desc)
+    .add(uberOptSet)
+    .add(execCommand)
+    .add(scriptCommand)
+    .add(mvnShow)
+    .add(mvnSearch)
+    .add(mvnDoc)  
+    .add(mvnPom)
+    .add(mvnPull)
+    .add(mvnCopy)
+    .add(cachePathOpt)
+    .add(jarToEXE)
+    .add(jarManOpt)
+    .add(jarMainClass)
+    .add(jarShowFiles)
+    .add(jarResources)
+    .add(jarCat)
+    .add(jarExtract)
+    .add(utilsOpt)
+    .add(digestStrOpt)
+    .add(digestFileOpt)
+  
+  def main(args: Array[String]) : Unit  = {
+    parser.parse(args.toList)
+  }
 
   
 } // ------- End of object Main -------- //

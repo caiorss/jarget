@@ -7,39 +7,43 @@ object JarBuilder{
   
   import java.util.jar.{JarOutputStream, JarEntry, JarFile}
 
-  val jarHeader = """#!/usr/bin/env sh 
-# Check if JAVA_HOME is Set 
-if [ -n "${JAVA_HOME}" ]
-then
-    # Check if JAVA is Installed in this JAVA_HOME
-    if [ -f  "$JAVA_HOME/bin/java" ] ;
-    then
-        "$JAVA_HOME/bin/java" -jar "$0" "$@"
-    # Try to use JAVA from $PATH Variable
-    else
-        # Check if Java is Installed 
-        if hash java 2>/dev/null;
-        then
-            java -jar "$0" "$@"
-        else
-            echo "Error: Java not available in PATH variable or in \$JAVA_HOME"
-            echo "Make sure Java is installed"
-            exit 1
-        fi 
-    fi 
-else
-    # Check if Java is Installed 
-    if hash java 2>/dev/null;
-    then
-        java -jar "$0" "$@"
-    else
-        echo "Error: Java not available in PATH variable"
-        echo "Make sure Java is installed"
-        exit 1
-    fi     
-fi
-exit 0
-"""
+  /** Jar wrapper */
+  abstract sealed trait JWrapper
+  case object JWrapperEmpty extends JWrapper
+  /** Unix Executable wrapper */
+  case object JWrapperUEXE extends JWrapper
+  /** Windows CLI (Command Line Interface) wrapper */
+  case object JWrapperWCLI extends JWrapper
+  /** Windows GUI (Graphical User Interface) wrapper */
+  case object JWrapperWGUI extends JWrapper
+
+  def parseWrapper(name: String): JWrapper = name match {
+    case "empty" => JWrapperEmpty
+    case "uexe"  => JWrapperUEXE
+    case "wcli"  => JWrapperWCLI
+    case "wgui"  => JWrapperWGUI
+    case  _
+        => throw new java.lang.IllegalArgumentException("Error: Invalid jar wrapper option.")
+  }
+
+  def getWrapperStream(wrapper: JWrapper, cls: Class[_]) =
+      wrapper match {
+        case JWrapperEmpty
+            => None
+        case JWrapperUEXE
+            => Option(cls.getResourceAsStream("/assets/unixLoader.sh"))
+        case JWrapperWCLI
+            => Option{Utils.failIfNull(
+              cls.getResourceAsStream("/assets/loaderCLI.exe"),
+                "Error: file loaderCLI.exe not found in resource files."
+            )}
+        case JWrapperWGUI
+            => Option{Utils.failIfNull(
+                cls.getResourceAsStream("/assets/loaderGUI.exe"),
+                "Error: file loaderGUI.exe not found in resource files."
+              )}
+      }
+
 
   def addFile(zos: JarOutputStream, entry: String, file: String){
     import java.io._
@@ -102,24 +106,31 @@ exit 0
     }
   }
 
-
-  def makeJarWith(file: String, executable: Boolean = false)(fn: JarOutputStream => Unit) = {
+  /** Create a jar file with or without an executable wrapper.
+    *  @param file    - Output uber jar file or executable wrapper with jar payload.
+    *  @param wrapper - Type of executable wrapper (default empty).
+    *  @param cls     - Class where the resource files will extracted.
+    *  @param fn      - Function that writes to jar output stream.
+    */
+  def makeJarWith(
+    file:    String,
+    wrapper: JWrapper = JWrapperEmpty,
+    cls:     Class[_]
+  )(jarWriter: JarOutputStream => Unit) = {
     var os:  JarOutputStream  = null
     var fo:  java.io.FileOutputStream = null
     try {
       fo = new java.io.FileOutputStream(file)
       os = new JarOutputStream(fo)
-      if (executable) fo.write(jarHeader.getBytes())
-      fn(os)
-    } catch {
-      case ex: java.io.IOException => ex.printStackTrace()
+      for(st <- getWrapperStream(wrapper, cls))
+        Utils.copyStream(st, fo)
+      jarWriter(os)
     } finally if (os != null) {
-        //fo.close()
+      // Ensure that file handlers are closed
       os.flush()
       os.close()
-
       // Set the output file as executable if in Unix
-      if(executable) Runtime.getRuntime().exec("chmod u+x " + file)
+      if(wrapper == JWrapperUEXE) Runtime.getRuntime().exec("chmod u+x " + file)
     }
   }
 
@@ -139,6 +150,7 @@ exit 0
       @param executable - If true makes unix self-executable jar file that can be run as script ./app.jar
     */
   def makeUberJar(
+    cls:         Class[_],
     output:      String,
     main:        String,
     paths:       List[String] = List(),
@@ -147,9 +159,10 @@ exit 0
     filesEntry:  List[String] = List(),
     resources:   List[String] = List(),
     scalaLib:    Boolean      = false,
-    executable:  Boolean      = false
-  ) = makeJarWith(output, executable){ jos =>
+    wrapper:     JWrapper     = JWrapperEmpty
+  ) = makeJarWith(output, wrapper, cls){ jos =>
 
+    // Try to append scala-library.jar scala runtime to the output jar file.
     if (scalaLib) Utils.getScalaHome() match {
       case None    => throw new Exception("Error: SCALA_HOME path not found")
       case Some(p) => {
@@ -173,20 +186,20 @@ exit 0
     }}
   }
 
-
-  def makeExecutableJar(jarFile: String, outFile: String) = {
-
+  /** Turn an Uber-Jar into a Unix executable, windows cli executable or GUI executable.
+    * A Unix executable is a small shell script with a jar payload.
+    */
+  def makeExecutable(cls: Class[_], jarFile: String, outFile: String, wrapper: JWrapper = JWrapperUEXE ) = {
     var fi: java.io.FileInputStream  = null 
     var fo: java.io.FileOutputStream = null
-
     try {
       fi = new java.io.FileInputStream(jarFile)
       fo = new java.io.FileOutputStream(outFile)
-      fo.write(jarHeader.getBytes())
+      for(st <- getWrapperStream(wrapper, cls))
+        Utils.copyStream(st, fo)
       Utils.copyStream(fi, fo)
-      Runtime.getRuntime().exec("chmod u+x " + outFile)
-    } catch {
-      case ex: java.io.IOException => ex.printStackTrace()
+      if(wrapper == JWrapperUEXE)
+        Runtime.getRuntime().exec("chmod u+x " + outFile)
     } finally {
       if (fi != null) fi.close()
       if (fo != null) fo.close()

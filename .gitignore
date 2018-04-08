@@ -15,3 +15,7 @@ notes/*
 /README.html
 /tags
 cache/*
+*~
+*.ilk
+*.obj
+*.pdb
