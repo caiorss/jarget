@@ -93,7 +93,12 @@ class OptResult(
 }
 
 
-class OptSet(name: String = "", usage: String = "", desc: String = ""){
+class OptSet(
+  name:     String = "",
+  usage:    String = "",
+  desc:     String = "",
+  longDesc: String = ""
+){
   import scala.collection.mutable.ListBuffer
   val switchMark = "-"
   val switchSeparator = "="
@@ -133,10 +138,11 @@ class OptSet(name: String = "", usage: String = "", desc: String = ""){
       println(desc)
       println()
     }
+    if(this.longDesc != "") println(this.longDesc)
     if(name != "") {
       println(s" Usage: $name $usage")
       println()
-    }
+    }    
     val rows = options.toList map {o =>
       val argName = o.getArgName()      
       List(
@@ -206,7 +212,7 @@ class OptSet(name: String = "", usage: String = "", desc: String = ""){
 } // ---- End of class OptSet ---- // 
 
 
-class OptParser(programName: String = ""){
+class OptParser(programName: String = "", usage: String = "", desc: String = ""){
   import scala.collection.mutable.{Map, ListBuffer}
   private val commands = ListBuffer[String]()
   private val parsers = Map[String, OptSet]()
@@ -222,7 +228,12 @@ class OptParser(programName: String = ""){
       val c = parsers(name)
       List(c.getCommandName(), c.getCommandDesc())
     }
-    println(s"Usage: $$ $programName [COMMAND] [OPTIONS] [<ARGS> ...]")
+
+    println(desc)
+    if(usage == "")
+      println(s"Usage: $$ $programName [COMMAND] [OPTIONS] [<ARGS> ...]")
+    else
+      println(usage)
     println()
     println("Commands:\n")
     OptUtils.printTableOfRows(rows)
