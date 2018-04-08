@@ -299,7 +299,7 @@ object Main{
     val output        = res.getStr("output", "out.jar")
     val resourcesDirs = res.getListStr("resource")
     val exe           = JarBuilder.parseWrapper(res.getStr("exe", "empty"))
-    val mainJarFile   = res.getOperands().head
+    val mainJarFile   = res.getOperandOrExit(0, "Error: missing main jar file.")
     val jarFiles      = res.getOperands.tail
 
     val packFiles =
@@ -434,7 +434,7 @@ object Main{
     usage = "<FILE.jar>",
     desc  = "Show contents of a jar file."
   ).setAction{ (res: OptResult) =>
-    val file = res.getOperands()(0)
+    val file = res.getOperandOrExit(0, "Error: missing jar file.")
     JarUtils.showFiles(file) 
   }
 
@@ -449,11 +449,11 @@ object Main{
 
   val jarCat = new OptSet(
     name = "jar-cat",
-    usage = "<FILE.jar>",
+    usage = "<FILE.jar> <FILE>",
     desc = "Show content of a file in a jar package."
   ).setAction{ res =>
-    val jarFile = res.getOperands()(0)
-    val file    = res.getOperands()(1)
+    val jarFile = res.getOperandOrExit(0, "Error: missing jar file.")
+    val file    = res.getOperandOrExit(1, "Error: missing file name.")
     JarUtils.printFile(jarFile, file)
   }
 
@@ -521,8 +521,8 @@ object Main{
   ).setAction{ res =>
     import jarget.crypto.Digest
     val algorithms = Map("md5" -> "MD5", "sha1" -> "SHA1", "sha256" -> "SHA-256")
-    val op0 = res.getOperands()(0)
-    val op1 = res.getOperands()(1)
+    val op0 = res.getOperandOrExit(0, "Error: missing algorithm: md5, sha1, or sha256.")
+    val op1 = res.getOperandOrExit(1, "Error: missing string.")
     val alg = algorithms.get(op0) match {
       case Some(a) => {
          println(Digest.stringDigestSum(a, op1))
@@ -541,8 +541,8 @@ object Main{
   ).setAction{ res =>
     import jarget.crypto.Digest
     val algorithms = Map("md5" -> "MD5", "sha1" -> "SHA1", "sha256" -> "SHA-256")
-    val op0 = res.getOperands()(0)
-    val op1 = res.getOperands()(1)
+    val op0 = res.getOperandOrExit(0, "Error: missing algorithm: md5, sha1, or sha256.")
+    val op1 = res.getOperandOrExit(1, "Error: missing file.")
     val alg = algorithms.get(op0) match {
       case Some(a) =>
         println(Digest.fileDigestSum(a, op1))              
@@ -610,7 +610,7 @@ object Main{
   }
 
   val desc = """
- Jarget - command line toolbox for Java Platform.
+ Jarget 3.0 - command line toolbox for Java Platform.
 """
 
   val parser = new OptParser(desc = desc)
