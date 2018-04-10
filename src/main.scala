@@ -424,6 +424,29 @@ object Main{
     }
   }
 
+  val scalaCommand = makeCommandWithCPATH(
+    name  = "scala",
+    desc  = "Run a scala script with a given set of packages from cache.",
+    usage = "[OPTIONS] -- [<SCALA ARGS> ...]"
+  ){ res =>
+    // println("Running scala command")
+    val packList1 = res.getListStr("package").map(parsePack).toList
+    // println("packaList1 = " + packList1)
+    val packList2 = res.getStr("package-str", "").split(",") match {
+      case Array("") => List()
+      case xs        => xs.map(parsePack).toList
+    }
+    // println("packaList2 = " + packList2)
+    val scalaArgs = res.getListStr("--")
+    // println("args = " + scalaArgs)
+    tryMVNGet {
+      val cpath = Packget.getPackCPathFromCache(packList1 ++ packList2, cachePath, config.repoUrl)
+      // println("cpath = " + cpath)
+      //println(s"Script = ${script} args = ${args}")
+      JarUtils.runWithClassPath2("scala", scalaArgs, cpath)
+    }
+ }
+
 
   //----- Cache commands ------------------- //
 
