@@ -579,7 +579,9 @@ object Main{
     desc      = "Output file, default <FILE> without extension + .sh or .exe."
   ).setAction{ res =>
     val wrapper   = JarBuilder.parseWrapper(res.getStr("exe", "uexe"))
-    val inputJar  = res.getOperands()(0)
+    val inputJar  = res.getOperandOrExit(0,
+      "Error: missing input jar file. Use option -h to show help."
+    )
     val defaultName = wrapper match {
       case JarBuilder.JWrapperUEXE
           => inputJar.stripSuffix(".jar")
