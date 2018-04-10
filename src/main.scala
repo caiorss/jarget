@@ -381,23 +381,17 @@ object Main{
     )
   }
 
-  val execCommand = new OptSet(
+  val execCommand = makeCommandWithCPATH(
     name  = "exec",
     desc  = "Execute a shell command and pass -cp <CLASSPATH> of packages downloaded to it.",
     usage = "[OPTIONS] -- <PROGRAM> [<PROGRAM ARGS> ...]"
-  ).addOpt(
-    name = "package",
-    shortName = "p",
-    argName = "<PACK>",
-    desc = "Package maven's coordinate"
-  ).setAction{ res =>
+  ){ res =>
     val packList = res.getListStr("package") map parsePack toList
 
     if (res.getListStr("--").isEmpty){
       println("Error: missing command after -- ")
       System.exit(1)
     }
-
     val command     = res.getListStr("--").head
     val commandArgs = res.getListStr("--").tail
     tryMVNGet {
@@ -406,29 +400,21 @@ object Main{
      }
   }
 
-  val scriptCommand = new OptSet(
+  val scriptCommand = makeCommandWithCPATH(
     name = "script",
     desc = "Run a scala script with a given set of packages from cache.",
     usage = "[OPTIONS] -- <SCRIPT.scala> [<SCRIPT ARGS> ...]"
-  ).addOpt(
-    name      = "package",
-    shortName = "p",
-    argName   = "<PACK>",
-    desc      = "Package maven's coordinate"
-  ).addOpt(
-    name      = "package-str",
-    argName   = "<PACK1>,<PACK2>...",
-    shortName = "ps",
-    desc      = "Package's separated by command <pack1>,<pack2>...<packN> "
-  ).setAction{ res =>
+  ){ res =>
     val packList1 = res.getListStr("package").map(parsePack).toList
-    val packList2 = res.getStr("package-str", "").split(",").map(parsePack).toList 
+    val packList2 = res.getStr("package-str", "").split(",") match {
+      case Array("") => List()
+      case xs        => xs.map(parsePack).toList
+    }
 
     if(res.getListStr("--").isEmpty){
       println("Error: missing command after -- ")
       System.exit(1)
     }
-
     val script     = res.getListStr("--").head
     val scriptArgs = res.getListStr("--").tail
     tryMVNGet {      
