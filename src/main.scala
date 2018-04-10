@@ -560,12 +560,18 @@ object Main{
   val jarToEXE = new OptSet(
     name  = "jar-to-exe",
     usage = "[OPTIONS] <FILE.jar>",
-    desc = "Embed Uber jar into Unix executable or Windows Executable (experimental)."
+    desc = "Embed Uber jar into Unix executable or Windows Executable (experimental).",
+    longDesc = """
+    Note - <EXE> can be:
+      + uexe - for Unix executable - Shell script with embedded uber-jar payload.
+      + wcli - for Windows CLI command line executable. *.exe file.
+      + wgui - for Windows GUI with user interface. -> *.exe file.
+   """
   ).addOpt(
     name      = "exe",
     shortName = "e",
     argName   = "<EXE>",
-    desc      = "Executable type <EXE> can be uexe for Unix executable, wcli -> Windows CLI Program ... "
+    desc      = "Executable type."
   ).addOpt(
     name      = "output",
     shortName = "o",
@@ -693,6 +699,7 @@ object Main{
     .add(uberOptSet)
     .add(execCommand)
     .add(scriptCommand)
+    .add(scalaCommand)
     .add(mvnShow)
     .add(mvnSearch)
     .add(mvnDoc)  
