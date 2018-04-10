@@ -159,8 +159,8 @@ class OptSet(
     val rows = options.toList map {o =>
       val argName = o.getArgName()      
       List(
-        "-" + o.getName + (if (argName != "") ("=" + argName) else ""),
-        "-" + o.getShortName() + (if (argName != "") ("=" + argName) else ""),
+        "-" + o.getName + (if (argName != "") ("=" + argName) else "") + ", ",
+        "-" + o.getShortName(),
         o.getDesc()
       )
     }
