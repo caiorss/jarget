@@ -91,7 +91,7 @@ pgd-exe: bin/jarget-pro.jar
 	scala jarget.jar jar-to-exe -exe=wcli bin/jarget-pro.jar bin/jarget.exe 
 
 install: bin/jarget-pro
-	cp -v bin/jarget-pro ~/bin
+	cp -v bin/jarget-pro ~/bin/jarget
 
 clean:
 	rm -rf jarget.jar bin/jarget bin/jarget-fat.jar
