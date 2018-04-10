@@ -178,9 +178,7 @@ class OptSet(
         case _           => null
       }
     }
-
     // println("switchesLST = " + switchesLST )
-
     var switches: Map[String, List[String]] = switchesLST
       .groupBy{case (k, v) => k}
       .map{case (k, xs) =>
@@ -265,7 +263,8 @@ class OptParser(programName: String = "", usage: String = "", desc: String = "")
             System.exit(0)
           }        
 
-      case List(command)
+      // Show sub-command help 
+      case List(command, "-h") 
           => parsers.get(command) match {
             case Some(cmd) =>
               cmd.showHelp()
@@ -274,6 +273,18 @@ class OptParser(programName: String = "", usage: String = "", desc: String = "")
               System.exit(1)
             }
           }
+
+      // Show sub-command help         
+      case List(command, "-help") 
+          => parsers.get(command) match {
+            case Some(cmd) =>
+              cmd.showHelp()
+            case None => {
+              println(s"Error: invalid command: $command.")
+              System.exit(1)
+            }
+          }
+
       case command::rest 
         => parsers.get(command) match {
           case Some(cmd)
@@ -285,7 +296,5 @@ class OptParser(programName: String = "", usage: String = "", desc: String = "")
               }
         }
     }
-
-
 }
 
