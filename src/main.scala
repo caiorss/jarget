@@ -218,6 +218,31 @@ object Main{
   def getLibPath(path: String) = Option(System.getenv("jarget.path")) getOrElse path
 
 
+  def makeCommandWithCPATH(
+    name:      String,
+    desc:      String = "",
+    usage:     String = "",
+    longDesc:  String = ""
+  )(action: OptResult => Unit) =
+    new OptSet(
+        name,
+        desc,
+        usage,
+        longDesc
+      ).addOpt(
+        name      = "package",
+        shortName = "p",
+        argName   = "<PACK>",
+        desc      = "Package maven's coordinate"
+      ).addOpt(
+        name      = "package-str",
+        argName   = "<PACK1>,<PACK2>...",
+        shortName = "ps",
+        desc      = "Package's separated by command <pack1>,<pack2>...<packN> "
+    ).setAction(action)
+
+
+
   val mvnShow = new OptSet(
     name  = "mvn-show",
     usage = "<PACKAGE>",
