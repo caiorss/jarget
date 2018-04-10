@@ -22,7 +22,7 @@
     IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
     OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
     ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-    OTHER DEALINGS IN THE SOFTWARE.
+    OTHER DEALINGS IN THE SOFTWARE.  
 
  =============================================================== */
 
@@ -376,7 +376,8 @@ object PackCache {
   /** Show all jar files in the cache repository */
   def showJarFiles(cachePath: String) = {
     import java.nio.file.{Files, Paths}
-    Files.walk(Paths.get(cachePath)).filter(_.toString().endsWith(".jar")).forEach(println)
+    Files.walk(Paths.get(cachePath))
+      .filter(_.toString().endsWith(".jar")).forEach(println)
   }
 
 } //---------- End of PackCache object ---------- // 
