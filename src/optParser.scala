@@ -153,11 +153,9 @@ class OptSet(
       println(desc)
       println()
     }
-    if(this.longDesc != "") println(this.longDesc)
-    if(name != "") {
-      println(s" Usage: $name $usage")
-      println()
-    }    
+    if(name != "") println(s" Usage: $name $usage")
+    if(longDesc != "") println(longDesc)
+    
     val rows = options.toList map {o =>
       val argName = o.getArgName()      
       List(
