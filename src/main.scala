@@ -251,11 +251,16 @@ object Main{
     name  = "mvn-pull",
     usage = "<PACKAGE1> [<PACKAGE2> ...]",
     desc  = "Download package to cache directory.",
-    longDesc = "The package ins the format <group>/<name>/<version>"
+    longDesc = """
+ Note: The package ins the format <group>/<artifact>/<version>
+
+ Example: 
+  $ jarget mvn-pull org.scalaz/scalaz-core_2.11/7.3.0-M15 org.jfree/jfreechart/1.0.17                 
+               """
   ).setAction{ res =>
     tryMVNGet{
       val packs = res.getOperands() map parsePack
-      Packget.getPackCPathFromCache(packs, cachePath, config.repoUrl)
+      Packget.getPackJarsFromCache(packs, cachePath, repoUrl)
     }
   }
 
@@ -401,7 +406,7 @@ object Main{
 
     val script     = res.getListStr("--").head
     val scriptArgs = res.getListStr("--").tail
-    tryMVNGet {
+    tryMVNGet {      
       val cpath = Packget.getPackCPathFromCache(packList1 ++ packList2, cachePath, config.repoUrl)
       //println(s"Script = ${script} args = ${args}")
       JarUtils.runWithClassPath2("scala", "-save"::script::scriptArgs, cpath)
