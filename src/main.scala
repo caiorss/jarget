@@ -248,7 +248,7 @@ object Main{
     usage = "<PACKAGE>",
     desc  = "Show package's information."
   ).setAction{ res => 
-    val pstr = res.getOperands()(0)
+    val pstr = res.getOperandOrExit(0, "Error: missing package. Use -h or -help to show help.")
     showPackageInfo(parsePack(pstr)) run repoUrl 
   }
 
@@ -257,7 +257,7 @@ object Main{
     usage = "<QUERY>",
     desc  = "Search for a package at the site https://mvnrepository.com"
   ).setAction{ res => 
-    val query = res.getOperands()(0)
+    val query = res.getOperandOrExit(0, "Error: missing query. Use -h to show help.")
     Utils.openUrl("https://mvnrepository.com/search?q=" + query)
   }
 
@@ -267,7 +267,7 @@ object Main{
     usage = "<PACKAGE>",
     desc  = "Show package's pom.xml file."
   ).setAction{ res => 
-    val pstr = res.getOperands()(0)
+    val pstr = res.getOperandOrExit(0, "Error: missing package. Use -h or -help to show help.")
     showPom(parsePack(pstr)) run repoUrl
   }
   
@@ -294,7 +294,7 @@ object Main{
     usage = "<PACKAGE>",
     desc  = "Open package documentation in the web browser."
   ).setAction{ res => 
-    val pstr = res.getOperands()(0)
+    val pstr = res.getOperandOrExit(0, "Error: missing query. Use -h to show help.")
     val pack = parsePack(pstr)
     val url  = s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
     Utils.openUrl(url)
@@ -492,7 +492,7 @@ object Main{
     usage = "<FILE.jar>",
     desc = "Show manifest of a jar file."
   ).setAction{ (res: OptResult) =>
-    val file = res.getOperands()(0)
+    val file = res.getOperandOrExit(0, "Error: missing package. Use -h or -help to show help.")
     JarUtils.showManifest(file)
   }
 
@@ -501,7 +501,7 @@ object Main{
     usage = "<FILE.jar>",
     desc  = "Show main class of a jar file."
   ).setAction{ (res: OptResult) =>
-    val file = res.getOperands()(0)
+    val file = res.getOperandOrExit(0, "Error: missing package. Use -h or -help to show help.")
     JarUtils.getMainClass(file) foreach println
   }
 
@@ -519,7 +519,7 @@ object Main{
     usage = "<FILE.jar>",
     desc = "Show resources of a jar file ignoring *.class files."
   ).setAction{ res =>
-    val file = res.getOperands()(0)
+    val file = res.getOperandOrExit(0, "Error: missing jar file. Use -h or -help to show help.")
     JarUtils.getAssetFiles(file) foreach println    
   }
 
@@ -538,8 +538,8 @@ object Main{
     usage =  "<FILE.jar> <file>",
     desc  = "Extract <file> from jar file <FILE.jar> to current directory."
   ).setAction{ res =>
-    val jarFile = res.getOperands()(0)
-    val file    = res.getOperands()(1)
+    val jarFile = res.getOperandOrExit(0, "Error: missing jar file. Use -h to show help.")
+    val file    = res.getOperandOrExit(1, "Error: missing file name. Use -h to show help.")
     JarUtils.extractFile(jarFile, file, ".")
   }
 
@@ -548,7 +548,7 @@ object Main{
     usage = "<FILE.jar>",
     desc  = "Extract contents of <FILE.jar> to ·/<FILE> directory."
   ).setAction{ res =>
-    val jarFile = res.getOperands()(0)
+    val jarFile = res.getOperandOrExit(0, "Error: missing jar file. Use -h or -help to show help.")
     val path = new java.io.File(jarFile)
       .getName()
       .stripSuffix(".jar")
