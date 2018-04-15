@@ -228,7 +228,8 @@ object Main{
       name = name,
       desc = desc,
       usage = usage,
-      longDesc = longDesc
+      longDesc = longDesc,
+      helpFlag = true
       ).addOpt(
         name      = "package",
         shortName = "p",
@@ -246,7 +247,8 @@ object Main{
   val mvnShow = new OptSet(
     name  = "mvn-show",
     usage = "<PACKAGE>",
-    desc  = "Show package's information."
+    desc  = "Show package's information.",
+    helpFlag = true 
   ).setAction{ res => 
     val pstr = res.getOperandOrExit(0, "Error: missing package. Use -h or -help to show help.")
     showPackageInfo(parsePack(pstr)) run repoUrl 
@@ -255,7 +257,8 @@ object Main{
   val mvnSearch = new OptSet(
     name  = "mvn-search",
     usage = "<QUERY>",
-    desc  = "Search for a package at the site https://mvnrepository.com"
+    desc  = "Search for a package at the site https://mvnrepository.com",
+    helpFlag = true
   ).setAction{ res => 
     val query = res.getOperandOrExit(0, "Error: missing query. Use -h to show help.")
     Utils.openUrl("https://mvnrepository.com/search?q=" + query)
@@ -265,7 +268,8 @@ object Main{
   val mvnPom = new OptSet(
     name  = "mvn-pom",
     usage = "<PACKAGE>",
-    desc  = "Show package's pom.xml file."
+    desc  = "Show package's pom.xml file.",
+    helpFlag = true
   ).setAction{ res => 
     val pstr = res.getOperandOrExit(0, "Error: missing package. Use -h or -help to show help.")
     showPom(parsePack(pstr)) run repoUrl
@@ -275,7 +279,8 @@ object Main{
   val mvnPull = new OptSet(
     name  = "mvn-pull",
     usage = "<PACKAGE1> [<PACKAGE2> ...]",
-    desc  = "Download package to cache directory.",
+    helpFlag = true,
+    desc  = "Download package to cache directory.",    
     longDesc = """
  Note: The package ins the format <group>/<artifact>/<version>
 
@@ -292,7 +297,8 @@ object Main{
   val mvnDoc = new OptSet(
     name  = "mvn-doc",
     usage = "<PACKAGE>",
-    desc  = "Open package documentation in the web browser."
+    desc  = "Open package documentation in the web browser.",
+    helpFlag = true
   ).setAction{ res => 
     val pstr = res.getOperandOrExit(0, "Error: missing query. Use -h to show help.")
     val pack = parsePack(pstr)
@@ -305,7 +311,8 @@ object Main{
   val mvnCopy = new OptSet(
     name  = "mvn-copy",
     usage = "<PACKAGE1> [<PACKAGE2> ...]",
-    desc  = "Copy jar packages from cache directory to ./lib downloading them if not available."
+    desc  = "Copy jar packages from cache directory to ./lib downloading them if not available.",
+    helpFlag = true
   ).setAction{ res => 
     val packs = res.getOperands() map parsePack
      tryMVNGet {
@@ -317,7 +324,8 @@ object Main{
   val uberOptSet = new OptSet(
     name  = "uber",
     usage = "[OPTIONS] <MAIN-JAR> [<JARFILE1.jar> <JARFILE2.jar> ...]",
-    desc  = "Build uber jar file for deployment by bundling dependencies and resource files."
+    desc  = "Build uber jar file for deployment by bundling dependencies and resource files.",
+    helpFlag = true
   ).addOpt(
     name      = "output",
     shortName = "o",
@@ -453,7 +461,8 @@ object Main{
   val cachePathOpt = new OptSet(
     name = "cache",
     usage = "<ACTION>",
-    desc = "Show packages in cache directory."
+    desc = "Show packages in cache directory.",
+    helpFlag = true 
   ).addOpt(
     name = "path",
     desc = "Show cache's directory path."
@@ -637,12 +646,11 @@ object Main{
     }
   }
 
-
-
   val utilsOpt = new OptSet(
     name     = "utils",
     usage    = "<ACTION>",
     desc     = "General utilities helpers for platform information and debugging.",
+    helpFlag = true,
     longDesc = """
   Actions:
    + env        - Show environment variables
