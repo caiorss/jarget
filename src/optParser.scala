@@ -112,7 +112,8 @@ class OptSet(
   name:     String = "",
   usage:    String = "",
   desc:     String = "",
-  longDesc: String = ""
+  longDesc: String = "",
+  helpFlag: Boolean = false
 ){
   import scala.collection.mutable.ListBuffer
   val switchMark = "-"
@@ -123,7 +124,7 @@ class OptSet(
 
   def getCommandName()  = name
   def getCommandDesc()  = desc
-  def getCommandUsage() = usage 
+  def getCommandUsage() = usage
 
   def addOpt(
     name:      String,
@@ -217,7 +218,16 @@ class OptSet(
   } // -- EoF fun. parse ---- //
 
   def parseRun(argList: List[String]): Unit =
-    _action(this.parse(argList))
+    argList match {
+      case List()
+          => if(this.helpFlag)
+            this.showHelp()
+          else
+            _action(this.parse(argList))
+      case _
+          =>
+        _action(this.parse(argList))
+  }
 
 
 } // ---- End of class OptSet ---- // 
