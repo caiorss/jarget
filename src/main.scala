@@ -225,10 +225,10 @@ object Main{
     longDesc:  String = ""
   )(action: OptResult => Unit) =
     new OptSet(
-        name,
-        desc,
-        usage,
-        longDesc
+      name = name,
+      desc = desc,
+      usage = usage,
+      longDesc = longDesc
       ).addOpt(
         name      = "package",
         shortName = "p",
