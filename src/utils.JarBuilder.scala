@@ -36,14 +36,26 @@ object JarBuilder{
   import java.util.jar.{JarOutputStream, JarEntry, JarFile}
 
   /** Jar wrapper */
-  abstract sealed trait JWrapper
-  case object JWrapperEmpty extends JWrapper
+  abstract sealed trait JWrapper {
+    def getExt(): String
+  }
+
+  case object JWrapperEmpty extends JWrapper {
+    def getExt() = ".jar"
+  }
   /** Unix Executable wrapper */
-  case object JWrapperUEXE extends JWrapper
+  case object JWrapperUEXE extends JWrapper {
+    def getExt() = ".sh"
+  }
   /** Windows CLI (Command Line Interface) wrapper */
-  case object JWrapperWCLI extends JWrapper
+  case object JWrapperWCLI extends JWrapper {
+    def getExt() = ".exe"
+  }
+
   /** Windows GUI (Graphical User Interface) wrapper */
-  case object JWrapperWGUI extends JWrapper
+  case object JWrapperWGUI extends JWrapper {
+    def getExt() = ".exe"
+  }
 
   def parseWrapper(name: String): JWrapper = name match {
     case "empty" => JWrapperEmpty
