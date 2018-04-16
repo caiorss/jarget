@@ -586,7 +586,8 @@ object Main{
       + uexe - for Unix executable - Shell script with embedded uber-jar payload.
       + wcli - for Windows CLI command line executable. *.exe file.
       + wgui - for Windows GUI with user interface. -> *.exe file.
-   """
+   """,
+    helpFlag = true
   ).addOpt(
     name      = "exe",
     shortName = "e",
