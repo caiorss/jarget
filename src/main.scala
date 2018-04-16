@@ -371,11 +371,14 @@ object Main{
     val scalaFlag     = res.getFlag("scala")
     val packages      = res.getListStr("package")
     val files         = res.getListStr("file")
-    val output        = res.getStr("output", "out.jar")
     val resourcesDirs = res.getListStr("resource")
-    val exe           = JarBuilder.parseWrapper(res.getStr("exe", "empty"))
     val mainJarFile   = res.getOperandOrExit(0, "Error: missing main jar file.")
     val jarFiles      = res.getOperands.tail
+
+    val exe         = JarBuilder.parseWrapper(res.getStr("exe", "empty"))
+
+    // Output file
+    val output =  res.getStr("output", mainJarFile.stripSuffix(".jar") + "-out" + exe.getExt())
 
     val packFiles =
       Packget.getPackJarsFromCache(
@@ -393,6 +396,8 @@ object Main{
       jarFiles  = jarFiles ++ packFiles,
       wrapper   = exe 
     )
+
+    println("Built file: "  + output )
   }
 
   val execCommand = makeCommandWithCPATH(
