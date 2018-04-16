@@ -325,6 +325,12 @@ object Main{
     name  = "uber",
     usage = "[OPTIONS] <MAIN-JAR> [<JARFILE1.jar> <JARFILE2.jar> ...]",
     desc  = "Build uber jar file for deployment by bundling dependencies and resource files.",
+    longDesc = """
+    Note - <EXE> can be:
+      + uexe - for Unix executable - Shell script with embedded uber-jar payload.
+      + wcli - for Windows CLI command line executable. *.exe file.
+      + wgui - for Windows GUI with user interface. -> *.exe file.
+   """,
     helpFlag = true
   ).addOpt(
     name      = "output",
