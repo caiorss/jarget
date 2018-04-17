@@ -130,6 +130,16 @@ class Separator(name: String) extends IOptCommand{
   def parseRun(argList: List[String]) = ()
 }
 
+/** Sub command action that executes without any switch. */
+class OptCommandAction(name: String, desc: String)(action: => Unit){
+  def getCommandName()  = name
+  def getCommandDesc()  = desc 
+  def getCommandUsage() = ""
+  def showHelp() = println(desc)
+  def parseRun(argList: List[String]) =
+    action 
+}
+
 class OptCommand (
   name:     String = "",
   usage:    String = "",
