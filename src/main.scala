@@ -294,6 +294,31 @@ object Main{
     }
   }
 
+  val mvnRun = new OptSet(
+    name  = "mvn-run",
+    desc  = "Run main method of executable jar package in repository.",
+    usage = "<PACKAGE>  [<ARGS>...]",
+    helpFlag = true,
+    longDesc = """ 
+   Example 1 :  $ jarget mvn-run net.sf.proguard/proguard-base/6.0.2
+     - This command download the file proguard-base-6.0.2.jar to cache repository and run 
+       the command below. Once the file was downloaded, it will be run from cache repository.
+       $ java -jar ~/<path-to-jar>/proguard-base-6.0.2.jar
+
+   Example 2 : $ jarget mvn-run org.codehaus.groovy/groovy/2.5.0-rc-1 -- file1.groovy 
+    - Run groovy script file1.groovy with version 2.5.0-rc-1  
+    
+   """
+  ).setAction{ res =>
+    tryMVNGet{
+      val pack = parsePack(res.getOperandOrExit(0, "Error: missing package."))
+      val args = res.getListStr("--")
+      val jarPath = Packget.getPackJarsFromCache(List(pack), cachePath, config.repoUrl).head
+      // println("cpath = " + jarPath + "\n")
+      Utils.execl("java", List("-jar", jarPath) ++ args)
+    }
+  }
+
   val mvnDoc = new OptSet(
     name  = "mvn-doc",
     usage = "<PACKAGE>",
@@ -327,7 +352,7 @@ object Main{
     desc  = "Build uber jar file for deployment by bundling dependencies and resource files.",
     longDesc = """
     Note - <EXE> can be:
-      + empty - (default) for jar file without any executable wrapper.
+      + empty - (default) for jar file without any executable wrapper. 
       + uexe  - for Unix executable - Shell script with embedded uber-jar payload.
       + wcli  - for Windows CLI command line executable. *.exe file.
       + wgui  - for Windows GUI with user interface. -> *.exe file.
@@ -725,7 +750,8 @@ object Main{
     .add(scalaCommand)
     .add(mvnShow)
     .add(mvnSearch)
-    .add(mvnDoc)  
+    .add(mvnDoc)
+    .add(mvnRun)
     .add(mvnPom)
     .add(mvnPull)
     .add(mvnCopy)
