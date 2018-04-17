@@ -744,7 +744,7 @@ object Main{
   }
 
   val desc = """
- Jarget 3.0 - command line toolbox for Java Platform.
+ Jarget 3.1 - command line toolbox for Java Platform.
 """
 
   val parser = new OptParser(desc = desc)
