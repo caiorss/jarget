@@ -327,9 +327,10 @@ object Main{
     desc  = "Build uber jar file for deployment by bundling dependencies and resource files.",
     longDesc = """
     Note - <EXE> can be:
-      + uexe - for Unix executable - Shell script with embedded uber-jar payload.
-      + wcli - for Windows CLI command line executable. *.exe file.
-      + wgui - for Windows GUI with user interface. -> *.exe file.
+      + empty - (default) for jar file without any executable wrapper.
+      + uexe  - for Unix executable - Shell script with embedded uber-jar payload.
+      + wcli  - for Windows CLI command line executable. *.exe file.
+      + wgui  - for Windows GUI with user interface. -> *.exe file.
    """,
     helpFlag = true
   ).addOpt(
@@ -365,7 +366,7 @@ object Main{
     name      = "exe",
     shortName = "e",
     argName   = "<EXE>",
-    desc      = ""
+    desc      = "Executable wrapper - default (empty)."
   ).setAction{ (res: OptResult) =>
     
     val scalaFlag     = res.getFlag("scala")
