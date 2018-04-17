@@ -17,7 +17,8 @@ private object OptFun{
   }
 }
 
-class CmdOpt(
+/** Command line switch */
+class OptSwitch(
   name:      String = "",
   shortName: String = "",
   argName:   String = "",  
@@ -57,7 +58,7 @@ class CmdOpt(
 class OptResult(
   operands: List[String],
   switches: Map[String, List[String]],
-  options: scala.collection.mutable.ListBuffer[CmdOpt]
+  options: scala.collection.mutable.ListBuffer[OptSwitch]
 ){
 
   def getOperands() = operands
@@ -118,7 +119,7 @@ class OptSet(
   import scala.collection.mutable.ListBuffer
   val switchMark = "-"
   val switchSeparator = "="
-  private val options  = ListBuffer[CmdOpt]()
+  private val options  = ListBuffer[OptSwitch]()
   private var operands = List[String]()
   private var _action = (res: OptResult) => println("results  = " + res)
 
@@ -132,7 +133,7 @@ class OptSet(
     argName:   String  = "",
     desc:      String  = "",
     ) = {
-    this.options.append(new CmdOpt(name, shortName, argName, desc))
+    this.options.append(new OptSwitch(name, shortName, argName, desc))
     this
   }
 
