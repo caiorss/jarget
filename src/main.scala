@@ -307,6 +307,9 @@ object Main{
 
    Example 2 : $ jarget mvn-run org.codehaus.groovy/groovy/2.5.0-rc-1 -- file1.groovy 
     - Run groovy script file1.groovy with version 2.5.0-rc-1  
+
+   Example 3:  $ jarget mvn-run org.clojure/clojure/1.8.0 -- --help 
+    - Show Clojure help, to run the repl remove (--help) switch.
     
    """
   ).setAction{ res =>
