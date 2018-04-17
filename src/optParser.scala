@@ -109,13 +109,30 @@ class OptResult(
 }
 
 
-class OptCommand(
+
+trait IOptCommand{
+  def getCommandName():   String
+  def getCommandDesc():   String
+  def getCommandUsage():  String
+
+  /** Show command help */
+  def showHelp():         Unit
+
+  /** Parse command line and execute action */
+  def parseRun(argList: List[String]): Unit
+}
+
+
+
+class OptCommand (
   name:     String = "",
   usage:    String = "",
   desc:     String = "",
   longDesc: String = "",
   helpFlag: Boolean = false
-){
+
+  ) extends IOptCommand {
+
   import scala.collection.mutable.ListBuffer
   val switchMark = "-"
   val switchSeparator = "="
@@ -237,9 +254,9 @@ class OptCommand(
 class OptParser(programName: String = "", usage: String = "", desc: String = ""){
   import scala.collection.mutable.{Map, ListBuffer}
   private val commands = ListBuffer[String]()
-  private val parsers = Map[String, OptCommand]()
+  private val parsers = Map[String, IOptCommand]()
 
-  def add(opt: OptCommand) = {
+  def add(opt: IOptCommand) = {
     commands.append(opt.getCommandName())
     parsers += opt.getCommandName() -> opt
     this 
