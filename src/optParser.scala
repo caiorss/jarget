@@ -122,7 +122,13 @@ trait IOptCommand{
   def parseRun(argList: List[String]): Unit
 }
 
-
+class Separator(name: String) extends IOptCommand{
+  def getCommandName()  = s"\n[$name]\n"
+  def getCommandDesc()  = ""
+  def getCommandUsage() = ""
+  def showHelp() = ()
+  def parseRun(argList: List[String]) = ()
+}
 
 class OptCommand (
   name:     String = "",
