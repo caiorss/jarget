@@ -203,7 +203,7 @@ object Main{
 
   }// -- End of function main() --- //
 
-  import jarget.optParser.{OptResult, OptParser, OptSet}
+  import jarget.optParser.{OptResult, OptParser, OptCommand}
 
 
   val config =
@@ -224,7 +224,7 @@ object Main{
     usage:     String = "",
     longDesc:  String = ""
   )(action: OptResult => Unit) =
-    new OptSet(
+    new OptCommand(
       name = name,
       desc = desc,
       usage = usage,
@@ -244,7 +244,7 @@ object Main{
 
 
 
-  val mvnShow = new OptSet(
+  val mvnShow = new OptCommand(
     name  = "mvn-show",
     usage = "<PACKAGE>",
     desc  = "Show package's information.",
@@ -254,7 +254,7 @@ object Main{
     showPackageInfo(parsePack(pstr)) run repoUrl 
   }
 
-  val mvnSearch = new OptSet(
+  val mvnSearch = new OptCommand(
     name  = "mvn-search",
     usage = "<QUERY>",
     desc  = "Search for a package at the site https://mvnrepository.com",
@@ -265,7 +265,7 @@ object Main{
   }
 
 
-  val mvnPom = new OptSet(
+  val mvnPom = new OptCommand(
     name  = "mvn-pom",
     usage = "<PACKAGE>",
     desc  = "Show package's pom.xml file.",
@@ -276,7 +276,7 @@ object Main{
   }
   
 
-  val mvnPull = new OptSet(
+  val mvnPull = new OptCommand(
     name  = "mvn-pull",
     usage = "<PACKAGE1> [<PACKAGE2> ...]",
     helpFlag = true,
@@ -294,7 +294,7 @@ object Main{
     }
   }
 
-  val mvnRun = new OptSet(
+  val mvnRun = new OptCommand(
     name  = "mvn-run",
     desc  = "Run main method of executable jar package in repository.",
     usage = "<PACKAGE> --  [<ARGS>...]",
@@ -322,7 +322,7 @@ object Main{
     }
   }
 
-  val mvnDoc = new OptSet(
+  val mvnDoc = new OptCommand(
     name  = "mvn-doc",
     usage = "<PACKAGE>",
     desc  = "Open package documentation in the web browser.",
@@ -336,7 +336,7 @@ object Main{
 
   //  Copy packages from cache directory to ./lib and download it
   //  if has not been downloaded yet.
-  val mvnCopy = new OptSet(
+  val mvnCopy = new OptCommand(
     name  = "mvn-copy",
     usage = "<PACKAGE1> [<PACKAGE2> ...]",
     desc  = "Copy jar packages from cache directory to ./lib downloading them if not available.",
@@ -349,7 +349,7 @@ object Main{
   }
 
 
-  val uberOptSet = new OptSet(
+  val uberOptCommand = new OptCommand(
     name  = "uber",
     usage = "[OPTIONS] <MAIN-JAR> [<JARFILE1.jar> <JARFILE2.jar> ...]",
     desc  = "Build uber jar file for deployment by bundling dependencies and resource files.",
@@ -498,7 +498,7 @@ object Main{
 
   //----- Cache commands ------------------- //
 
-  val cachePathOpt = new OptSet(
+  val cachePathOpt = new OptCommand(
     name = "cache",
     usage = "<ACTION>",
     desc = "Show packages in cache directory.",
@@ -536,7 +536,7 @@ object Main{
 
   //------ Jar Commadns ------------------- //
 
-  val jarManOpt = new OptSet(
+  val jarManOpt = new OptCommand(
     name = "jar-man",
     usage = "<FILE.jar>",
     desc = "Show manifest of a jar file."
@@ -545,7 +545,7 @@ object Main{
     JarUtils.showManifest(file)
   }
 
-  val jarMainClass = new OptSet(
+  val jarMainClass = new OptCommand(
     name  = "jar-main-class",
     usage = "<FILE.jar>",
     desc  = "Show main class of a jar file."
@@ -554,7 +554,7 @@ object Main{
     JarUtils.getMainClass(file) foreach println
   }
 
-  val jarShowFiles = new OptSet(
+  val jarShowFiles = new OptCommand(
     name = "jar-ls",
     usage = "<FILE.jar>",
     desc  = "Show contents of a jar file."
@@ -563,7 +563,7 @@ object Main{
     JarUtils.showFiles(file) 
   }
 
-  val jarResources = new OptSet(
+  val jarResources = new OptCommand(
     name = "jar-rs",
     usage = "<FILE.jar>",
     desc = "Show resources of a jar file ignoring *.class files."
@@ -572,7 +572,7 @@ object Main{
     JarUtils.getAssetFiles(file) foreach println    
   }
 
-  val jarCat = new OptSet(
+  val jarCat = new OptCommand(
     name = "jar-cat",
     usage = "<FILE.jar> <FILE>",
     desc = "Show content of a file in a jar package."
@@ -582,7 +582,7 @@ object Main{
     JarUtils.printFile(jarFile, file)
   }
 
-  val jarExtract  = new OptSet(
+  val jarExtract  = new OptCommand(
     name  = "jar-ex",
     usage =  "<FILE.jar> <file>",
     desc  = "Extract <file> from jar file <FILE.jar> to current directory."
@@ -592,7 +592,7 @@ object Main{
     JarUtils.extractFile(jarFile, file, ".")
   }
 
-  val jarExtractAll = new OptSet(
+  val jarExtractAll = new OptCommand(
     name  = "jar-ex-all",
     usage = "<FILE.jar>",
     desc  = "Extract contents of <FILE.jar> to ·/<FILE> directory."
@@ -606,7 +606,7 @@ object Main{
   }
 
 
-  val jarToEXE = new OptSet(
+  val jarToEXE = new OptCommand(
     name  = "jar-to-exe",
     usage = "[OPTIONS] <FILE.jar>",
     desc = "Embed Uber jar into Unix executable or Windows Executable (experimental).",
@@ -648,7 +648,7 @@ object Main{
 
   // --- Crypto Hash Commands -------------------------/
 
-  val digestStrOpt = new OptSet(
+  val digestStrOpt = new OptCommand(
     name  = "digest-s",
     usage = " <ALGORITHM> <STRING>",
     desc  = "Compute crypto hash of string. - Algorithm: [md5 | sha1 | sha256 ]"
@@ -668,7 +668,7 @@ object Main{
     }
   }
 
-  val digestFileOpt = new OptSet(
+  val digestFileOpt = new OptCommand(
     name  = "digest-f",
     usage = " <ALGORITHM> <FILE>",
     desc  = "Compute crypto hash of a file. - Algorithm: [md5 | sha1 | sha256 ]"
@@ -687,7 +687,7 @@ object Main{
     }
   }
 
-  val utilsOpt = new OptSet(
+  val utilsOpt = new OptCommand(
     name     = "utils",
     usage    = "<ACTION>",
     desc     = "General utilities helpers for platform information and debugging.",
@@ -747,7 +747,7 @@ object Main{
 """
 
   val parser = new OptParser(desc = desc)
-    .add(uberOptSet)
+    .add(uberOptCommand)
     .add(execCommand)
     .add(scriptCommand)
     .add(scalaCommand)

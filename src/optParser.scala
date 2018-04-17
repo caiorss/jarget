@@ -54,7 +54,7 @@ class OptSwitch(
   }
 }
 
-
+/** Result of command line parsing */ 
 class OptResult(
   operands: List[String],
   switches: Map[String, List[String]],
@@ -109,7 +109,7 @@ class OptResult(
 }
 
 
-class OptSet(
+class OptCommand(
   name:     String = "",
   usage:    String = "",
   desc:     String = "",
@@ -230,15 +230,16 @@ class OptSet(
   }
 
 
-} // ---- End of class OptSet ---- // 
+} // ---- End of class OptCommand ---- // 
 
 
+/** Command line parser with git and busybox like sub-commands or services. */
 class OptParser(programName: String = "", usage: String = "", desc: String = ""){
   import scala.collection.mutable.{Map, ListBuffer}
   private val commands = ListBuffer[String]()
-  private val parsers = Map[String, OptSet]()
+  private val parsers = Map[String, OptCommand]()
 
-  def add(opt: OptSet) = {
+  def add(opt: OptCommand) = {
     commands.append(opt.getCommandName())
     parsers += opt.getCommandName() -> opt
     this 
