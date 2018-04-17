@@ -297,7 +297,7 @@ object Main{
   val mvnRun = new OptSet(
     name  = "mvn-run",
     desc  = "Run main method of executable jar package in repository.",
-    usage = "<PACKAGE>  [<ARGS>...]",
+    usage = "<PACKAGE> --  [<ARGS>...]",
     helpFlag = true,
     longDesc = """ 
    Example 1 :  $ jarget mvn-run net.sf.proguard/proguard-base/6.0.2
