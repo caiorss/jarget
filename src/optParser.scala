@@ -17,7 +17,8 @@ private object OptFun{
   }
 }
 
-class CmdOpt(
+/** Command line switch */
+class OptSwitch(
   name:      String = "",
   shortName: String = "",
   argName:   String = "",  
@@ -53,11 +54,11 @@ class CmdOpt(
   }
 }
 
-
+/** Result of command line parsing */ 
 class OptResult(
   operands: List[String],
   switches: Map[String, List[String]],
-  options: scala.collection.mutable.ListBuffer[CmdOpt]
+  options: scala.collection.mutable.ListBuffer[OptSwitch]
 ){
 
   def getOperands() = operands
@@ -108,17 +109,50 @@ class OptResult(
 }
 
 
-class OptSet(
+
+trait IOptCommand{
+  def getCommandName():   String
+  def getCommandDesc():   String
+  def getCommandUsage():  String
+
+  /** Show command help */
+  def showHelp():         Unit
+
+  /** Parse command line and execute action */
+  def parseRun(argList: List[String]): Unit
+}
+
+class Separator(name: String) extends IOptCommand{
+  def getCommandName()  = s"\n[$name]\n"
+  def getCommandDesc()  = ""
+  def getCommandUsage() = ""
+  def showHelp() = ()
+  def parseRun(argList: List[String]) = ()
+}
+
+/** Sub command action that executes without any switch. */
+class OptCommandAction(name: String, desc: String)(action: => Unit){
+  def getCommandName()  = name
+  def getCommandDesc()  = desc 
+  def getCommandUsage() = ""
+  def showHelp() = println(desc)
+  def parseRun(argList: List[String]) =
+    action 
+}
+
+class OptCommand (
   name:     String = "",
   usage:    String = "",
   desc:     String = "",
   longDesc: String = "",
   helpFlag: Boolean = false
-){
+
+  ) extends IOptCommand {
+
   import scala.collection.mutable.ListBuffer
   val switchMark = "-"
   val switchSeparator = "="
-  private val options  = ListBuffer[CmdOpt]()
+  private val options  = ListBuffer[OptSwitch]()
   private var operands = List[String]()
   private var _action = (res: OptResult) => println("results  = " + res)
 
@@ -132,7 +166,7 @@ class OptSet(
     argName:   String  = "",
     desc:      String  = "",
     ) = {
-    this.options.append(new CmdOpt(name, shortName, argName, desc))
+    this.options.append(new OptSwitch(name, shortName, argName, desc))
     this
   }
 
@@ -229,15 +263,16 @@ class OptSet(
   }
 
 
-} // ---- End of class OptSet ---- // 
+} // ---- End of class OptCommand ---- // 
 
 
+/** Command line parser with git and busybox like sub-commands or services. */
 class OptParser(programName: String = "", usage: String = "", desc: String = ""){
   import scala.collection.mutable.{Map, ListBuffer}
   private val commands = ListBuffer[String]()
-  private val parsers = Map[String, OptSet]()
+  private val parsers = Map[String, IOptCommand]()
 
-  def add(opt: OptSet) = {
+  def add(opt: IOptCommand) = {
     commands.append(opt.getCommandName())
     parsers += opt.getCommandName() -> opt
     this 
