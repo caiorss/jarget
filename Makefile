@@ -54,15 +54,15 @@ check:
 $(target) : $(src)
 	$(CC) $(src) -d jarget.jar
 
-bin/jarget: $(target) $(assetfiles)
+bin/jarget.sh: $(target) $(assetfiles)
 	mkdir -p bin
 	cp -v $(exeloaders) assets || true 
-	scala jarget.jar uber -scala -exe=uexe -r=./assets -o=bin/jarget  jarget.jar $(SCALA_XML_PATH) 
+	scala jarget.jar uber -scala -exe=uexe -r=./assets -o=bin/jarget.sh  jarget.jar $(SCALA_XML_PATH) 
 
-bin/jarget: $(target) $(assetfiles)
-	mkdir -p bin
-	cp -v $(exeloaders) assets || true 
-	scala jarget.jar uber -scala -exe=uexe -r=assets -o=bin/jarget.exe jarget.jar $(SCALA_XML_PATH) 
+# bin/jarget.sh: $(target) $(assetfiles)
+# 	mkdir -p bin
+# 	cp -v $(exeloaders) assets || true 
+# 	scala jarget.jar uber -scala -exe=uexe -r=assets -o=bin/jarget.sh jarget.jar $(SCALA_XML_PATH) 
 
 $(fatjar): 
 	mkdir -p bin
