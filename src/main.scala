@@ -203,7 +203,8 @@ object Main{
 
   }// -- End of function main() --- //
 
-  import jarget.optParser.{OptResult, OptParser, OptCommand}
+
+  import jarget.optParser.{OptResult, OptParser, OptCommand, Separator}
 
 
   val config =
@@ -747,10 +748,12 @@ object Main{
 """
 
   val parser = new OptParser(desc = desc)
+    .add(new Separator("Main Commands"))
     .add(uberOptCommand)
     .add(execCommand)
     .add(scriptCommand)
     .add(scalaCommand)
+    .add(new Separator("Mvn Commands"))
     .add(mvnShow)
     .add(mvnSearch)
     .add(mvnDoc)
@@ -759,6 +762,7 @@ object Main{
     .add(mvnPull)
     .add(mvnCopy)
     .add(cachePathOpt)
+    .add(new Separator("Jar Commands"))
     .add(jarToEXE)
     .add(jarManOpt)
     .add(jarMainClass)
@@ -766,13 +770,13 @@ object Main{
     .add(jarResources)
     .add(jarCat)
     .add(jarExtract)
+    .add(new Separator("Misc Commands"))
     .add(utilsOpt)
     .add(digestStrOpt)
     .add(digestFileOpt)
   
-  def main(args: Array[String]) : Unit  = {
+  def main(args: Array[String]) : Unit  = 
     parser.parse(args.toList)
-  }
-
+  
   
 } // ------- End of object Main -------- //
