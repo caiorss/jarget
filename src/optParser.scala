@@ -114,8 +114,7 @@ class OptResult(
     sw.toString
   }
 
-}
-
+} /** End of class OptResult */
 
 
 trait IOptCommand{
@@ -128,7 +127,9 @@ trait IOptCommand{
 
   /** Parse command line and execute action */
   def parseRun(argList: List[String]): Unit
-}
+
+} /* End of trait IOptCommand */
+
 
 class Separator(name: String) extends IOptCommand{
   def getCommandName()  = s"\n[$name]\n"
@@ -148,13 +149,22 @@ class OptCommandAction(name: String, desc: String)(action: => Unit){
     action 
 }
 
-class OptCommand (
-  name:     String = "",
-  usage:    String = "",
-  desc:     String = "",
-  longDesc: String = "",
-  helpFlag: Boolean = false
 
+/** Main command or subcommand like log from $ git log. 
+    @param name     Subcommand name such as log from - $ git log
+    @param usage    Short usage string similar to usage: [OPTIONS] [ARGS]
+    @param desc     Brief one-line description about the subcommand / command. 
+    @param longDesc Long description about the subcommand / command.
+    @param example  Examples about the command.
+    @param helpFlag If true, shows the command help when invoked without arguments. 
+  */
+class OptCommand (
+  name:     String = "",  
+  usage:    String = "",  
+  desc:     String = "",  
+  longDesc: String = "",
+  example:  String = "",
+  helpFlag: Boolean = false
   ) extends IOptCommand {
 
   import scala.collection.mutable.ListBuffer
@@ -207,11 +217,14 @@ class OptCommand (
       )
     }
     OptFun.printTableOfRows(rows)
+    if(example != "") {
+      println()
+      println(example)
+    }
   } // --- EoF func showHelp() ---- //
 
   /** Parse command line arguments */
   def parse(argList: List[String]): OptResult = {
-
     /* Java properties, aka switches like -Dserver.storage=/path */
     val properties =
       argList
@@ -224,7 +237,6 @@ class OptCommand (
         }
       }.toMap
 
-    // println("Properties = " + properties)
 
     /* Get command line switches of type -<switch>=<value> or -<switch>
        for instance,  -o=output.exe, -i=input.jar -flag
@@ -276,6 +288,7 @@ class OptCommand (
     new OptResult(operands, switches, properties)
 
   } // -- EoF fun. parse ---- //
+
 
   def parseRun(argList: List[String]): Unit =
     argList match {
