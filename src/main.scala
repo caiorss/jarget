@@ -293,23 +293,22 @@ object Main{
     }
   }
 
-  val mvnRun = new OptCommand(
-    name  = "mvn-run",
+  val mvnRunJar = new OptCommand(
+    name  = "mvn-run-jar",
     desc  = "Run main method of executable jar package in repository.",
     usage = "<PACKAGE> --  [<ARGS>...]",
     helpFlag = true,
-    longDesc = """ 
-   Example 1 :  $ jarget mvn-run net.sf.proguard/proguard-base/6.0.2
-     - This command download the file proguard-base-6.0.2.jar to cache repository and run 
-       the command below. Once the file was downloaded, it will be run from cache repository.
-       $ java -jar ~/<path-to-jar>/proguard-base-6.0.2.jar
+    example = """
+ Example 1 :  This command download the file proguard-base-6.0.2.jar
+ to the cache repository and runs the command java -jar <path-to-jar>/proguard-base-6.0.2.jar
+ Once the file was downloaded, it will be run from cache repository.
+  >> $ jarget mvn-run-jar net.sf.proguard/proguard-base/6.0.2
 
-   Example 2 : $ jarget mvn-run org.codehaus.groovy/groovy/2.5.0-rc-1 -- file1.groovy 
-    - Run groovy script file1.groovy with version 2.5.0-rc-1  
+ Example 2 :
+   >> $ jarget mvn-run-jar org.codehaus.groovy/groovy/2.5.0-rc-1 -- file1.groovy
 
-   Example 3:  $ jarget mvn-run org.clojure/clojure/1.8.0 -- --help 
-    - Show Clojure help, to run the repl remove (--help) switch.
-    
+ Example 3:  Show Clojure help, to run the repl remove (--help) switch.
+  >> $ jarget mvn-run-jar org.clojure/clojure/1.8.0 -- --help
    """
   ).setAction{ res =>
     tryMVNGet{
