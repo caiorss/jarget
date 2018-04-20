@@ -260,7 +260,7 @@ object Main{
     usage = "<QUERY>",
     desc  = "Search for a package at the site https://mvnrepository.com",
     helpFlag = true
-  ).setAction{ res => 
+  ).setAction{ res =>
     val query = res.getOperandOrExit(0, "Error: missing query. Use -h to show help.")
     Utils.openUrl("https://mvnrepository.com/search?q=" + query)
   }
@@ -321,6 +321,26 @@ object Main{
       // println("cpath = " + jarPath + "\n")
       Utils.execl("java", List("-jar", jarPath) ++ args)
     }
+  }
+
+
+  val mvnRunClass = new OptCommand(
+    name  = "mvn-run-class",
+    desc  = "Run a main class of a java package.",
+    usage = "<PACKAGE> <CLASS> [<JAVA-PROPERTIES> ...] --  [<ARGS>...]",
+    helpFlag = true
+  ).setAction{ res =>
+    tryMVNGet{      
+      val pack = parsePack(res.getOperandOrExit(0, "Error: missing package."))
+      val cls  = res.getOperandOrExit(1, "Error: missing main class.")
+      val args = res.getListStr("--")
+      val properties = res.getProperties()
+        .toList
+        .map{ case (k, v) => "-D" + k + "=" + v }
+      val classPath  = Packget.getPackCPathFromCache(List(pack), cachePath, config.repoUrl)
+      Utils.execl("java", properties ++ List("-cp", classPath, cls) ++ args)
+    }
+
   }
 
   val mvnDoc = new OptCommand(
@@ -758,6 +778,7 @@ object Main{
     .add(mvnSearch)
     .add(mvnDoc)
     .add(mvnRun)
+    .add(mvnRunClass)
     .add(mvnPom)
     .add(mvnPull)
     .add(mvnCopy)
