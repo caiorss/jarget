@@ -321,9 +321,9 @@ object Main{
   }
 
 
-  val mvnRunClass = new OptCommand(
-    name  = "mvn-run-class",
-    desc  = "Run a main class of a java package.",
+  val mvnRunCls = new OptCommand(
+    name  = "mvn-run-cls",
+    desc  = "Run a main class of a java package (class with main static method).",
     usage = "<PACKAGE> <CLASS> [<JAVA-PROPERTIES> ...] --  [<ARGS>...]",
     helpFlag = true
   ).setAction{ res =>
@@ -774,8 +774,8 @@ object Main{
     .add(mvnShow)
     .add(mvnSearch)
     .add(mvnDoc)
-    .add(mvnRun)
-    .add(mvnRunClass)
+    .add(mvnRunJar)
+    .add(mvnRunCls)
     .add(mvnPom)
     .add(mvnPull)
     .add(mvnCopy)
