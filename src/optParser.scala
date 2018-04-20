@@ -56,13 +56,21 @@ class OptSwitch(
 
 /** Result of command line parsing */ 
 class OptResult(
-  operands: List[String],
-  switches: Map[String, List[String]],
-  options: scala.collection.mutable.ListBuffer[OptSwitch]
+  operands:   List[String],
+  switches:   Map[String, List[String]],
+  properties: Map[String, String]
 ){
 
+  /** Get operands that are arguments without command line switches and 
+      are also not Java properties (which starts with -D<prop>=<value>) 
+    */
   def getOperands() = operands
+
+  /** Get command line switches -<key>=<value> or -<flag> */
   def getSwitches() = switches
+
+  /** Get java properties -D<name>=value */
+  def getProperties() = properties
 
   def getOperand(index: Int, default: String, errorMsg: String = "") = {
     if(index >= operands.size)
@@ -203,9 +211,27 @@ class OptCommand (
 
   /** Parse command line arguments */
   def parse(argList: List[String]): OptResult = {
+
+    /* Java properties, aka switches like -Dserver.storage=/path */
+    val properties =
+      argList
+        .filter(_.startsWith("-D"))
+        .map{s => s.stripPrefix("-D").split("=", 2) match {
+          case Array(key)         => (key, "")
+          case Array(key, "")     => (key, "")            
+          case Array(key, value)  => (key, value)
+          case p => throw new RuntimeException("Error: Invalid property: " + p)
+        }
+      }.toMap
+
+    // println("Properties = " + properties)
+
+    /* Get command line switches of type -<switch>=<value> or -<switch>
+       for instance,  -o=output.exe, -i=input.jar -flag
+     */
     val switchesLST = argList
       .takeWhile(_ != "--")
-      .filter(_.startsWith(switchMark))
+      .filter(s => s.startsWith(switchMark) && !s.startsWith("-D"))
       .map { p => p.split(switchSeparator, 2) match {
         case Array(k, v) => (k.stripPrefix(switchMark), v)
         case Array(k)    => (k.stripPrefix(switchMark), "")
@@ -246,7 +272,8 @@ class OptCommand (
 
     if(!(diff.isEmpty || diff == keys))
       throw new RuntimeException("Error: invalid options " + diff)
-    new OptResult(operands, switches, options)
+
+    new OptResult(operands, switches, properties)
 
   } // -- EoF fun. parse ---- //
 
