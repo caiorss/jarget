@@ -207,7 +207,13 @@ class OptCommand (
       println()
     }
     if(longDesc != "") println(longDesc)    
-    if(name != "") println(s" Usage: $name $usage")    
+    if(name != "") println(s" Usage: $name $usage")
+
+    if(!options.isEmpty){
+      println() ; println("OPTIONS:")
+    }
+    
+    /** Print options (Command line switches) */
     val rows = options.toList map {o =>
       val argName = o.getArgName()      
       List(
@@ -221,6 +227,7 @@ class OptCommand (
       println()
       println(example)
     }
+
   } // --- EoF func showHelp() ---- //
 
   /** Parse command line arguments */
