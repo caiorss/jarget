@@ -760,7 +760,7 @@ object Main{
   }
 
   val desc = """
- Jarget 3.1 - command line toolbox for Java Platform.
+ Jarget 3.2 - command line toolbox for Scala and the Java Platform.
 """
 
   val parser = new OptParser(desc = desc)
