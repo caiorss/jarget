@@ -674,11 +674,11 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
     name  = "jar-to-exe",
     usage = "[OPTIONS] <FILE.jar>",
     desc = "Embed Uber jar into Unix executable or Windows Executable (experimental).",
-    longDesc = """
-    Note - <EXE> can be:
-      + uexe - for Unix executable - Shell script with embedded uber-jar payload.
-      + wcli - for Windows CLI command line executable. *.exe file.
-      + wgui - for Windows GUI with user interface. -> *.exe file.
+    example = """
+ Note - <EXE> can be:
+   + uexe - for Unix executable - Shell script with embedded uber-jar payload.
+   + wcli - for Windows CLI command line executable. *.exe file.
+   + wgui - for Windows GUI with user interface. -> *.exe file.
    """,
     helpFlag = true
   ).addOpt(
