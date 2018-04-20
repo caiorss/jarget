@@ -562,7 +562,7 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
 
   //----- Cache commands ------------------- //
 
-  val cachePathOpt = new OptCommand(
+  val cacheCommand = new OptCommand(
     name = "cache",
     usage = "<ACTION>",
     desc = "Show packages in cache directory.",
@@ -826,7 +826,7 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
     .add(mvnPom)
     .add(mvnPull)
     .add(mvnCopy)
-    .add(cachePathOpt)
+    .add(cacheCommand)
     .add(new Separator("Jar Commands"))
     .add(jarToEXE)
     .add(jarManOpt)
