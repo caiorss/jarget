@@ -324,7 +324,19 @@ object Main{
   val mvnRunCls = new OptCommand(
     name  = "mvn-run-cls",
     desc  = "Run a main class of a java package (class with main static method).",
+    longDesc = "Note: this command is useful to run packages with multiple entry points.",
     usage = "<PACKAGE> <CLASS> [<JAVA-PROPERTIES> ...] --  [<ARGS>...]",
+    example = """
+ Example 1: Run scala compiler and invokes -help by calling class scala.tools.nsc.Main.
+ If the scala compiler packages are not in the cache, they will be downloaded. Further 
+ commands needing those packages will no longer downloaded them.
+  >>> $ jarget mvn-run-cls org.scala-lang.virtualized/scala-compiler/2.11.2  \
+      scala.tools.nsc.Main -Dscala.usejavacp=true -- -help 
+
+ Example 2: It will run the Scala REPL.
+  >>> $ jarget mvn-run-cls org.scala-lang.virtualized/scala-compiler/2.11.2  \
+       scala.tools.nsc.MainGenericRunner -Dscala.usejavacp=true 
+ """,
     helpFlag = true
   ).setAction{ res =>
     tryMVNGet{      
@@ -337,7 +349,6 @@ object Main{
       val classPath  = Packget.getPackCPathFromCache(List(pack), cachePath, config.repoUrl)
       Utils.execl("java", properties ++ List("-cp", classPath, cls) ++ args)
     }
-
   }
 
   val mvnDoc = new OptCommand(
