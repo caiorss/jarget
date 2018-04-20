@@ -276,18 +276,16 @@ object Main{
     showPom(parsePack(pstr)) run repoUrl
   }
   
-
   val mvnPull = new OptCommand(
     name  = "mvn-pull",
     usage = "<PACKAGE1> [<PACKAGE2> ...]",
     helpFlag = true,
     desc  = "Download package to cache directory.",    
-    longDesc = """
- Note: The package ins the format <group>/<artifact>/<version>
-
- Example: 
-  $ jarget mvn-pull org.scalaz/scalaz-core_2.11/7.3.0-M15 org.jfree/jfreechart/1.0.17                 
-               """
+    longDesc = """Note: Packages are in the the format <group>/<artifact>/<version>""",
+    example = """
+   Example:
+    $ jarget mvn-pull org.scalaz/scalaz-core_2.11/7.3.0-M15 org.jfree/jfreechart/1.0.17
+    """
   ).setAction{ res =>
     tryMVNGet{
       val packs = res.getOperands() map parsePack
