@@ -294,7 +294,11 @@ class OptCommand (
 
 
 /** Command line parser with git and busybox like sub-commands or services. */
-class OptParser(programName: String = "", usage: String = "", desc: String = ""){
+class OptParser(
+  programName: String = "",
+  usage:       String = "",
+  desc:        String = "",
+  ){
   import scala.collection.mutable.{Map, ListBuffer}
   private val commands = ListBuffer[String]()
   private val parsers = Map[String, IOptCommand]()
