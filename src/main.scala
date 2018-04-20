@@ -183,25 +183,19 @@ object Main{
     }
 
   def parseArgs(args: Array[String]) : Unit = {
-
     jarget.logger.Log.setLevel()
-
     val config =
       Utils.readResourceProperties("/assets/app.properties")
         .map(MainUtils.getAppSettings _ )
         .run(getClass())
-
     val cachePath = PackCache.getCacheHome(".jarget")
-
     args.toList match {
       case List("-v") | List("-version")
           => println(config.version)
       case List("-site")
         => Utils.openUrl(config.website)
-
     }
-
-  }// -- End of function main() --- //
+  }// -- End of function parseArgs() --- //
 
 
   import jarget.optParser.{OptResult, OptParser, OptCommand, Separator}
@@ -521,7 +515,49 @@ object Main{
       //println(s"Script = ${script} args = ${args}")
       JarUtils.runWithClassPath2("scala", scalaArgs, cpath)
     }
- }
+  }
+
+
+
+  val runCommand = new OptCommand(
+    name  = "run",
+    desc  = "Run a main class from a set of jar file passing the classpath of packages in repository.",
+    usage = "[OPTIONS] <MAIN-CLASS> <JAR0> [<JAR1> ....] [<JAVA-PROPERTIES> ...] -- [<ARGS>...]",
+    example = """ 
+ + <MAIN-CLASS> : Is the a class with a main static method that will be executed.
+ + <JAR0>       : Is a jar package such as ImageViewer.jar 
+ + <ARGS>       : Are the arguments passed to the main class.
+
+ Example and use case: Run the class Main from the jar
+ demoImageViewer.jar passing the classpath of the package
+ com.jtattoo/JTattoo/1.6.11 from (http://www.jtattoo.net/) and setting
+ the property swing.defaultlaf that changes to Java Swing default look
+ and feel theme.
+ 
+$  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
+   -Dswing.defaultlaf=com.jtattoo.plaf.hifi.HiFiLookAndFeel
+    """,
+    helpFlag = true
+  ).addOpt(
+    name      = "package",
+    shortName = "p",
+    argName   = "<pack>",
+    desc      = "MVN Coordinates of a java package -  <group>/<artifact>/<version>."      
+  ).setAction{ res =>
+    tryMVNGet{
+      val cls   = res.getOperandOrExit(0, "Error: missing main class.")
+      val jar0  = res.getOperandOrExit(1, "Error: missing jar package 0.")
+      val otherJars = res.getOperands().drop(2)
+      val packages  = res.getListStr("package") map parsePack
+      val args = res.getListStr("--")
+      val properties = res.getProperties()
+        .toList
+        .map{ case (k, v) => "-D" + k + "=" + v }
+      val jarsClassPath =  (List(jar0) ++ otherJars).mkString(":")
+      val repoClassPath  = Packget.getPackCPathFromCache(packages, cachePath, config.repoUrl)
+      Utils.execl("java", properties ++ List("-cp", repoClassPath + ":" + jarsClassPath, cls) ++ args)
+    }
+  }
 
 
   //----- Cache commands ------------------- //
@@ -780,6 +816,7 @@ object Main{
     .add(execCommand)
     .add(scriptCommand)
     .add(scalaCommand)
+    .add(runCommand)
     .add(new Separator("Mvn Commands"))
     .add(mvnShow)
     .add(mvnSearch)
