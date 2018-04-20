@@ -476,7 +476,6 @@ object Main{
       case Array("") => List()
       case xs        => xs.map(parsePack).toList
     }
-
     if(res.getListStr("--").isEmpty){
       println("Error: missing command after -- ")
       System.exit(1)
@@ -492,7 +491,7 @@ object Main{
 
   val scalaCommand = makeCommandWithCPATH(
     name  = "scala",
-    desc  = "Run a scala script with a given set of packages from cache.",
+    desc  = "Run Scala REPL (scala) passing the class of packages from the repository.",
     usage = "[OPTIONS] -- [<SCALA ARGS> ...]"
   ){ res =>
     // println("Running scala command")
