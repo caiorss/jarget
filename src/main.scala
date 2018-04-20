@@ -576,6 +576,9 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
   ).addOpt(
     name = "jars",
     desc = "Show all jar files in cache directory"
+  ).addOpt(
+    name = "clean",
+    desc = "Clean cache directory freeing space."
   ).setAction{ (res: OptResult) =>
 
     if( res.getFlag("path")){
@@ -592,6 +595,11 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
 
     if(res.getFlag("jars")){
       PackCache.showJarFiles(cachePath)
+      System.exit(0)
+    }
+
+    if(res.getFlag("clean")){
+      Utils.deleteDirectory(cachePath, true)
       System.exit(0)
     }
 
