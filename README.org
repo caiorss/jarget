@@ -214,6 +214,181 @@ Build a standalone jarget redeucing the app size with proguard.
 *** Install jarget tool in ~/bin 
 
  - make pgd-unix -k CC=scalac && make install
+** Getting a Binary Release 
+
+An fat-jar executable binary release can be downloaded from this link:
+
+ - Most update Snapshot [[https://github.com/caiorss/jarget/raw/gh-pages/jarget][jarget Download]]
+
+ - Release [[https://github.com/caiorss/jarget/raw/v1.0-release/jarget][jarget v1.0]]
+
+ - Release [[https://github.com/caiorss/jarget/raw/v1.1-release/jarget][jarget v1.1]]
+
+ - Release [[https://github.com/caiorss/jarget/raw/v1.2-release/jarget][jarget v1.2]]
+
+ - Release [[https://github.com/caiorss/jarget/raw/v1.3-release/jarget][jarget v1.3]]
+
+ - Release [[https://github.com/caiorss/jarget/raw/v1.3.1-release/jarget][jarget v1.3.1]]
+
+ - Release [[https://github.com/caiorss/jarget/raw/v1.3.2-release/jarget][jarget v1.3.2]]
+
+ - Release [[https://github.com/caiorss/jarget/raw/v1.4-release/jarget][jarget v1.4.0]] (5.7 MB)
+
+From version >= 1.5 jarget will be shrunk with proguard.
+
+ - Release [[https://github.com/caiorss/jarget/raw/v1.5-release/jarget][jarget v1.5.0]] (1.7 MB)
+
+ - Release [[https://github.com/caiorss/jarget/raw/v1.5.1-release/jarget][jarget v1.5.1]] 
+
+ - Release [[https://github.com/caiorss/jarget/raw/v2.0-beta-release/jarget][jarget v2.0-beta]]   - Added pacakge caching feature.
+
+ - Release [[https://github.com/caiorss/jarget/raw/v2.0.1-beta/jarget][jarget v2.0.1-beta]] - Allows scripting with dependencies (maven coordinates).
+
+ - Release [[https://github.com/caiorss/jarget/raw/v2.1.0-beta-release/jarget][jarget v2.1.0-beta]] - Uber-jars can be built with maven
+   coordinates specifications and added more examples to
+   documentation.
+
+ - Release [[https://github.com/caiorss/jarget/raw/v2.0.2-beta-release/jarget][jarget-v2.2.0-beta]] - Fixed uber-jars shell script header
+   edge-case bug and also added command jarget utils -info to show
+   platform informations such as number of processors, version of
+   operating system, default line separator '\r', '\n', '\r\n', path
+   separator and so on.
+
+ - Release [[https://github.com/caiorss/jarget/blob/554a56e4bcc42d3b8fa3ce134bf7f0984f9e1701/jarget?raw%3Dtrue][jarget-v3.0]]
+
+   + Improved command line handling allowing future scalability and
+     implementation of new functionalities.
+
+   + Improved user interface. Now jarget has git-like
+     subcommands. Each command works as it was a separated command
+     line application in similar fashion to git and busybox.
+
+   + Implemented generation of uber jars embedded in Windows' native
+     executables. - (Still experimental.)
+
+ - Release [[https://github.com/caiorss/jarget/blob/e8ad0cf55d8831ba9f87d65d0f912bcd8f19f30b/jarget?raw%3Dtrue][jarget-v3.2]]
+
+   + Enhance commnand line help readability.
+
+   + Add commands jarget run
+
+   + Added more command examples in the sub-commands help.
+
+   + Add command jarget mvn-run-jar - to run standalone jar file from
+     cache downloading it if not available yet. It allows to run
+     proguard, rhino javascript engine, clojure and so on.
+
+   + Add command jarget mvn-run-cls - to run main class of java
+     package. It is similar to mvn-run-jar, but mvn-run-cls is useful
+     to run jars with multiple entry points (main classes).
+
+Or it can be downloaded with those shell commands below: 
+
+#+BEGIN_SRC sh
+$ curl -O -L https://github.com/caiorss/jarget/raw/gh-pages/jarget
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   130  100   130    0     0     28      0  0:00:04  0:00:04 --:--:--    32
+100 5675k  100 5675k    0     0   490k      0  0:00:11  0:00:11 --:--:-- 1011k
+
+$ chmod +x jarget
+
+$ ./jarget 
+jarget - Tool to download jar packages.
+
+ -show [package]                 - Show package's information
+
+ -pom  [package]                 - Show package's pom file
+
+... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... 
+#+END_SRC
+
+Or 
+
+#+BEGIN_SRC sh 
+$ curl -O -L https://github.com/caiorss/jarget/raw/gh-pages/jarget && chmod +x jarget && ./jarget 
+#+END_SRC
+
+On Windows the application can be executed with: 
+
+#+BEGIN_SRC sh 
+  $ java -jar jarget
+
+   Jarget 3.2 - command line toolbox for Scala and the Java Platform.
+
+  Usage: $  [COMMAND] [OPTIONS] [<ARGS> ...]
+
+  Commands:
+
+
+  [Main Commands]
+
+    uber               Build uber jar file for deployment by bundling dependencies and resource files.
+    exec               Execute a shell command and pass -cp <CLASSPATH> of packages downloaded to it.
+    script             Run a scala script with a given set of packages from cache.
+    scala              Run Scala REPL (scala) passing the class of packages from the repository.
+    run                Run a main class from a set of jar file passing the classpath of packages in repository.
+
+  ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... 
+#+END_SRC
+   
+On the Windows Operating Systems, the app can also be installed by
+running the commands below in the cmd.exe shell:
+
+ - Step 1 - Add ~/bin directory in $PATH variable. 
+
+#+BEGIN_SRC sh 
+# Create directory ~/bin or C:\Users\<user>\bin 
+C:\Users\archbox> mkdir %USERPROFILE%\bin
+
+# Add bin directory in $PATH variable 
+setx PATH=%PATH%;%USERPROFILE%\bin
+#+END_SRC
+
+ - Step 2 - Copy jarget to ~C:\Users\<user>\bin~
+
+ - Step 3 - Create a batch script to load the app at this directory,
+   named jarget.bat with the contents below.
+
+File: jarget.batch 
+
+#+BEGIN_SRC sh 
+  @echo off
+  java -jar %~dp0\jarget %*
+  exit /b 
+#+END_SRC
+
+ - Step 4 - Open another cmd.exe shell to test. After typing $ jarget,
+   it will show the user help below:
+
+#+BEGIN_SRC sh 
+  Microsoft Windows [Version 10.0.16299.371]
+  (c) 2017 Microsoft Corporation. All rights reserved.
+
+  C:\Users\archbox> jarget
+
+   Jarget 3.2 - command line toolbox for Scala and the Java Platform.
+
+  Usage: $  [COMMAND] [OPTIONS] [<ARGS> ...]
+
+  Commands:
+
+
+  C:\Users\archbox>
+  C:\Users\archbox>jarget.bat
+
+   Jarget 3.2 - command line toolbox for Scala and the Java Platform.
+
+  Usage: $  [COMMAND] [OPTIONS] [<ARGS> ...]
+
+  Commands:
+
+
+  C:\Users\archbox> where jarget
+  C:\Users\archbox\bin\jarget.bat
+
+#+END_SRC
+
 * User Guide
 ** Info commands
 
@@ -588,6 +763,155 @@ chart.jar: Java archive data (JAR)
 
 # Run the program:
 $ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scala chart.jar 
+
+#+END_SRC
+
+*** Download and run executable jar from repository (mvn-run-jar)
+
+This sub command runs an executable jar (uber jar) from cache
+repository, the package is downloaded if not available yet.
+
+Command help:
+
+#+BEGIN_SRC sh  
+$ jarget mvn-run-jar
+Run main method of executable jar package in repository.
+
+ Usage: mvn-run-jar <PACKAGE> --  [<ARGS>...]
+
+
+ Example 1 :  This command download the file proguard-base-6.0.2.jar
+ to the cache repository and runs the command java -jar <path-to-jar>/proguard-base-6.0.2.jar
+ Once the file was downloaded, it will be run from cache repository.
+  >> $ jarget mvn-run-jar net.sf.proguard/proguard-base/6.0.2
+
+ Example 2 :
+   >> $ jarget mvn-run-jar org.codehaus.groovy/groovy/2.5.0-rc-1 -- file1.groovy
+
+ Example 3:  Show Clojure help, to run the repl remove (--help) switch.
+  >> $ jarget mvn-run-jar org.clojure/clojure/1.8.0 -- --help
+
+#+END_SRC
+
+Example: It downloads the clojure 1.8.0 package and runs the command 
+
+ - $ java -jar <path-to-package>/clojure-1.8.0.jar
+
+#+BEGIN_SRC sh
+  $  jarget mvn-run-jar org.clojure/clojure/1.8.0
+  Downloading ---------------------
+  PackData(org.clojure,clojure,1.8.0)
+  ----------------------------------
+  Package path = PackData(org.clojure,clojure,1.8.0)
+  Downloading file /home/archbox/.jarget/cache/org/clojure/clojure/1.8.0/clojure-1.8.0.pom.
+  File /home/archbox/.jarget/cache/org/clojure/clojure/1.8.0/clojure-1.8.0.pom downloaded. Ok.
+  Downloading file /home/archbox/.jarget/cache/org/clojure/clojure/1.8.0/clojure-1.8.0.jar.
+  File /home/archbox/.jarget/cache/org/clojure/clojure/1.8.0/clojure-1.8.0.jar downloaded. Ok.
+  Download Successful
+  Clojure 1.8.0
+  user=>
+
+  user=> (+ 1 2 3 4 5 6)
+  21
+  user=> (* 1 2 3 4 5 6)
+  720
+  user=>
+
+#+END_SRC
+
+*** Run a main class of a java package - (mvn-run-cls)
+
+#+BEGIN_SRC text 
+$  jarget mvn-run-cls
+Run a main class of a java package (class with main static method).
+
+Note: this command is useful to run packages with multiple entry points.
+ Usage: mvn-run-cls <PACKAGE> <CLASS> [<JAVA-PROPERTIES> ...] --  [<ARGS>...]
+
+
+ Example 1: Run scala compiler and invokes -help by calling class scala.tools.nsc.Main.
+ If the scala compiler packages are not in the cache, they will be downloaded. Further
+ commands needing those packages will no longer downloaded them.
+  >>> $ jarget mvn-run-cls org.scala-lang.virtualized/scala-compiler/2.11.2  \
+      scala.tools.nsc.Main -Dscala.usejavacp=true -- -help
+
+ Example 2: It will run the Scala REPL.
+  >>> $ jarget mvn-run-cls org.scala-lang.virtualized/scala-compiler/2.11.2  \
+       scala.tools.nsc.MainGenericRunner -Dscala.usejavacp=true
+
+#+END_SRC
+
+
+Example: This command downloads the package rg.scala-lang.virtualized/scala-compiler/2.11.2 and all its 
+dependencies if not available at cache repository, then it runs the class scala.tools.nsc.MainGenericRunner
+which invokes the Scala's REPL interactive shell. 
+
+This command is useful to run classes of packages with multiple entry-points (main classes).
+
+#+BEGIN_SRC sh 
+  $ jarget mvn-run-cls org.scala-lang.virtualized/scala-compiler/2.11.2  \
+         scala.tools.nsc.MainGenericRunner -Dscala.usejavacp=true
+
+  $ jarget mvn-run-cls org.scala-lang.virtualized/scala-compiler/2.11.2  \
+  >        scala.tools.nsc.MainGenericRunner -Dscala.usejavacp=true
+  Downloading ---------------------
+  PackData(org.scala-lang.virtualized,scala-compiler,2.11.2)
+  PackData(org.scala-lang.modules,scala-xml_2.11,1.0.2)
+  PackData(org.scala-lang.virtualized,scala-library,2.11.2)
+  PackData(org.scala-lang.virtualized,scala-reflect,2.11.2)
+  PackData(jline,jline,2.12)
+  PackData(org.scala-lang.modules,scala-parser-combinators_2.11,1.0.1)
+  ----------------------------------
+  Package path = PackData(org.scala-lang.virtualized,scala-compiler,2.11.2)
+  Downloading file /home/archbox/.jarget/cache/org/scala-lang/virtualized/scala-compiler/2.11.2/scala-compiler-2.11.2.pom.
+  Package path = PackData(org.scala-lang.modules,scala-xml_2.11,1.0.2)
+  Package path = PackData(org.scala-lang.virtualized,scala-library,2.11.2)
+
+  ... .... ... ...
+
+  Download Successful
+  Welcome to Scala version 2.11.2 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_162).
+  Type in expressions to have them evaluated.
+  Type :help for more information.
+
+  scala>
+
+  scala> import javax.swing._
+  import javax.swing._
+
+  scala> val frame = new JFrame("Hello world")
+  frame: javax.swing.JFrame = javax.swing.JFrame[frame0,0,27,0x0,invalid,.... ....
+
+  scala> frame.setSize(400, 500)
+
+  scala> frame.setVisible(true)
+
+#+END_SRC
+
+*** Command "run"
+
+#+BEGIN_SRC sh 
+  $ jarget run
+  Run a main class from a set of jar file passing the classpath of packages in repository.
+
+   Usage: run [OPTIONS] <MAIN-CLASS> <JAR0> [<JAR1> ....] [<JAVA-PROPERTIES> ...] -- [<ARGS>...]
+
+  OPTIONS:
+    -package=<pack>,   -p  MVN Coordinates of a java package -  <group>/<artifact>/<version>.
+
+
+   + <MAIN-CLASS> : Is the a class with a main static method that will be executed.
+   + <JAR0>       : Is a jar package such as ImageViewer.jar
+   + <ARGS>       : Are the arguments passed to the main class.
+
+   Example and use case: Run the class Main from the jar
+   demoImageViewer.jar passing the classpath of the package
+   com.jtattoo/JTattoo/1.6.11 from (http://www.jtattoo.net/) and setting
+   the property swing.defaultlaf that changes to Java Swing default look
+   and feel theme.
+
+  $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
+     -Dswing.defaultlaf=com.jtattoo.plaf.hifi.HiFiLookAndFeel
 
 #+END_SRC
 
@@ -1659,101 +1983,4 @@ Output on Windows 10:
   - java.home                     = C:\Program Files\Java\jdk1.8.0_162\jre
 
 #+END_SRC
-** Getting a Binary Release 
 
-An fat-jar executable binary release can be downloaded from this link:
-
- - Most update Snapshot [[https://github.com/caiorss/jarget/raw/gh-pages/jarget][jarget Download]]
-
- - Release [[https://github.com/caiorss/jarget/raw/v1.0-release/jarget][jarget v1.0]]
-
- - Release [[https://github.com/caiorss/jarget/raw/v1.1-release/jarget][jarget v1.1]]
-
- - Release [[https://github.com/caiorss/jarget/raw/v1.2-release/jarget][jarget v1.2]]
-
- - Release [[https://github.com/caiorss/jarget/raw/v1.3-release/jarget][jarget v1.3]]
-
- - Release [[https://github.com/caiorss/jarget/raw/v1.3.1-release/jarget][jarget v1.3.1]]
-
- - Release [[https://github.com/caiorss/jarget/raw/v1.3.2-release/jarget][jarget v1.3.2]]
-
- - Release [[https://github.com/caiorss/jarget/raw/v1.4-release/jarget][jarget v1.4.0]] (5.7 MB)
-
-From version >= 1.5 jarget will be shrunk with proguard.
-
- - Release [[https://github.com/caiorss/jarget/raw/v1.5-release/jarget][jarget v1.5.0]] (1.7 MB)
-
- - Release [[https://github.com/caiorss/jarget/raw/v1.5.1-release/jarget][jarget v1.5.1]] 
-
- - Release [[https://github.com/caiorss/jarget/raw/v2.0-beta-release/jarget][jarget v2.0-beta]]   - Added pacakge caching feature.
-
- - Release [[https://github.com/caiorss/jarget/raw/v2.0.1-beta/jarget][jarget v2.0.1-beta]] - Allows scripting with dependencies (maven coordinates).
-
- - Release [[https://github.com/caiorss/jarget/raw/v2.1.0-beta-release/jarget][jarget v2.1.0-beta]] - Uber-jars can be built with maven
-   coordinates specifications and added more examples to
-   documentation.
-
- - Release [[https://github.com/caiorss/jarget/raw/v2.0.2-beta-release/jarget][jarget-v2.2.0-beta]] - Fixed uber-jars shell script header
-   edge-case bug and also added command jarget utils -info to show
-   platform informations such as number of processors, version of
-   operating system, default line separator '\r', '\n', '\r\n', path
-   separator and so on.
-
- - Release [[https://github.com/caiorss/jarget/blob/554a56e4bcc42d3b8fa3ce134bf7f0984f9e1701/jarget?raw%3Dtrue][jarget-v3.0]]
-
-   + Improved command line handling allowing future scalability and
-     implementation of new functionalities.
-
-   + Improved user interface. Now jarget has git-like
-     subcommands. Each command works as it was a separated command
-     line application in similar fashion to git and busybox.
-
-   + Implemented generation of uber jars embedded in Windows' native
-     executables. - (Still experimental.)
-
-
-Or it can be downloaded with those shell commands below: 
-
-#+BEGIN_SRC sh
-$ curl -O -L https://github.com/caiorss/jarget/raw/gh-pages/jarget
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   130  100   130    0     0     28      0  0:00:04  0:00:04 --:--:--    32
-100 5675k  100 5675k    0     0   490k      0  0:00:11  0:00:11 --:--:-- 1011k
-
-$ chmod +x jarget
-
-$ ./jarget 
-jarget - Tool to download jar packages.
-
- -show [package]                 - Show package's information
-
- -pom  [package]                 - Show package's pom file
-
-... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... 
-#+END_SRC
-
-Or 
-
-#+BEGIN_SRC sh 
-$ curl -O -L https://github.com/caiorss/jarget/raw/gh-pages/jarget && chmod +x jarget && ./jarget 
-#+END_SRC
-
-On Windows the application can be executed with: 
-
-#+BEGIN_SRC sh 
-$ java -jar jarget 
-
-jarget - Tool to download jar packages.
-
- -show [package]                 - Show package's information
-
- -pom  [package]                 - Show package's pom file
-
- -get  [package]                 - Download package and dependencies to ./lib
-
- -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
-
-... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... 
-#+END_SRC
-   
