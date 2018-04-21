@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Jarget - Command Line Toolbox for Java Platform</title>
-<!-- 2018-04-08 Sun 16:51 -->
+<!-- 2018-04-20 Fri 23:20 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues - caiorss.rodrigues@gmail.com" />
@@ -194,17 +194,7 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#sec-1-1">1.1. Overview</a></li>
 <li><a href="#sec-1-2">1.2. Use Case Example</a></li>
-<li><a href="#sec-1-3">1.3. User Guide</a>
-<ul>
-<li><a href="#sec-1-3-1">1.3.1. Info commands</a></li>
-<li><a href="#sec-1-3-2">1.3.2. Maven / Packages Commands</a></li>
-<li><a href="#sec-1-3-3">1.3.3. Cache commands</a></li>
-<li><a href="#sec-1-3-4">1.3.4. Scripting with jarget</a></li>
-<li><a href="#sec-1-3-5">1.3.5. Command to manipulate Jar packages</a></li>
-<li><a href="#sec-1-3-6">1.3.6. Build fatjar, uber Jar or executable uber jar</a></li>
-<li><a href="#sec-1-3-7">1.3.7. System Information</a></li>
-</ul>
-</li>
+<li><a href="#sec-1-3">1.3. <span class="todo TODO">TODO</span> Tasks</a></li>
 <li><a href="#sec-1-4">1.4. Building Instructions</a>
 <ul>
 <li><a href="#sec-1-4-1">1.4.1. Build Standalone app</a></li>
@@ -213,7 +203,61 @@ for the JavaScript code in this tag.
 </ul>
 </li>
 <li><a href="#sec-1-5">1.5. Getting a Binary Release</a></li>
-<li><a href="#sec-1-6">1.6. <span class="todo TODO">TODO</span> Tasks</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. User Guide</a>
+<ul>
+<li><a href="#sec-2-1">2.1. Info commands</a></li>
+<li><a href="#sec-2-2">2.2. Maven / Packages Commands</a>
+<ul>
+<li><a href="#sec-2-2-1">2.2.1. Show package information</a></li>
+<li><a href="#sec-2-2-2">2.2.2. Show package's POM file</a></li>
+<li><a href="#sec-2-2-3">2.2.3. Open package Documentation Online</a></li>
+<li><a href="#sec-2-2-4">2.2.4. <span class="todo TODO">TODO</span> Install packages in the cache</a></li>
+<li><a href="#sec-2-2-5">2.2.5. Copy packages from cache to local directory</a></li>
+<li><a href="#sec-2-2-6">2.2.6. <span class="todo TODO">TODO</span> Clean cache removing all packages</a></li>
+<li><a href="#sec-2-2-7">2.2.7. Execute program with classpath for packages from cache</a></li>
+<li><a href="#sec-2-2-8">2.2.8. Download and run executable jar from repository (mvn-run-jar)</a></li>
+<li><a href="#sec-2-2-9">2.2.9. Run a main class of a java package - (mvn-run-cls)</a></li>
+<li><a href="#sec-2-2-10">2.2.10. Command "run"</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-3">2.3. Cache commands</a>
+<ul>
+<li><a href="#sec-2-3-1">2.3.1. Show cache path</a></li>
+<li><a href="#sec-2-3-2">2.3.2. Show all packages in cache</a></li>
+<li><a href="#sec-2-3-3">2.3.3. <span class="todo TODO">TODO</span> Show all versions of a given package in cache</a></li>
+<li><a href="#sec-2-3-4">2.3.4. Show all jar files in the cache folder</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-4">2.4. Scripting with jarget</a>
+<ul>
+<li><a href="#sec-2-4-1">2.4.1. Overview</a></li>
+<li><a href="#sec-2-4-2">2.4.2. Example 1 - Script with JFreeChart</a></li>
+<li><a href="#sec-2-4-3">2.4.3. Example 2 - Script that generates QRCode</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-5">2.5. Command to manipulate Jar packages</a>
+<ul>
+<li><a href="#sec-2-5-1">2.5.1. Overview</a></li>
+<li><a href="#sec-2-5-2">2.5.2. Show manifest file</a></li>
+<li><a href="#sec-2-5-3">2.5.3. Show contents of single file</a></li>
+<li><a href="#sec-2-5-4">2.5.4. List all files</a></li>
+<li><a href="#sec-2-5-5">2.5.5. List resource/asset files</a></li>
+<li><a href="#sec-2-5-6">2.5.6. Extract file to current directory</a></li>
+<li><a href="#sec-2-5-7">2.5.7. Convert a jar file to executable jar file</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-6">2.6. Build fatjar, uber Jar or executable uber jar</a></li>
+<li><a href="#sec-2-7">2.7. System Information</a>
+<ul>
+<li><a href="#sec-2-7-1">2.7.1. Show Enviroment Variables</a></li>
+<li><a href="#sec-2-7-2">2.7.2. Show PATH Environment Variable</a></li>
+<li><a href="#sec-2-7-3">2.7.3. Show Java Properties</a></li>
+<li><a href="#sec-2-7-4">2.7.4. Show Path to Program</a></li>
+<li><a href="#sec-2-7-5">2.7.5. Show Platform Information</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -390,11 +434,390 @@ scala&gt;
 </div>
 
 <div id="outline-container-sec-1-3" class="outline-3">
-<h3 id="sec-1-3"><span class="section-number-3">1.3</span> User Guide</h3>
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> <span class="todo TODO">TODO</span> Tasks</h3>
 <div class="outline-text-3" id="text-1-3">
-</div><div id="outline-container-sec-1-3-1" class="outline-4">
-<h4 id="sec-1-3-1"><span class="section-number-4">1.3.1</span> Info commands</h4>
-<div class="outline-text-4" id="text-1-3-1">
+<ul class="org-ul">
+<li><code>[&#xa0;]</code> - Add search in console feature.  
+</li>
+<li><code>[X]</code> - Add search in browser feature.
+</li>
+<li><code>[X]</code> - Add package cache 
+</li>
+<li><code>[&#xa0;]</code> - Show all versions of a given package available in the repository.
+</li>
+<li><code>[&#xa0;]</code> - Support multiple repositories. 
+</li>
+<li><code>[&#xa0;]</code> - Support project configuration file. 
+</li>
+<li><code>[X]</code> - Improve command line handling 
+</li>
+<li><code>[X]</code> - Improve error handling. 
+</li>
+<li><code>[X]</code> - Feature to make Uber Jar 
+</li>
+<li><code>[X]</code> - Shrink the generated uber jar using Pro-guard. 
+</li>
+<li><code>[X]</code> - Create a Windows exe wrapper
+</li>
+<li><code>[X]</code> - Crypto Hash commands such as md5sum, sha256sum &#x2026; 
+</li>
+<li><code>[X]</code> - Improve project's web site design.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> Building Instructions</h3>
+<div class="outline-text-3" id="text-1-4">
+</div><div id="outline-container-sec-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1"><span class="section-number-4">1.4.1</span> Build Standalone app</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<p>
+Build a standalone jarget by running 
+</p>
+
+<ul class="org-ul">
+<li><code>$ make sh</code> 
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">Build </span>
+$ make sh
+scala jarget.jar uber -scala -sh -o <span class="org-keyword">bin/jarget</span> -m jarget.jar -j /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.jar
+Built file:  bin/jarget ok
+Run it with: $ java -jar bin/jarget
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Run it with </span>
+$ ./bin/jarget 
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Or run it with </span>
+$ java -jar bin/jarget
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Or run it with </span>
+$ sh ./bin/jarget doc
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2"><span class="section-number-4">1.4.2</span> Build standalone app and shrink its size with proguard</h4>
+<div class="outline-text-4" id="text-1-4-2">
+<p>
+Build a standalone jarget redeucing the app size with proguard. 
+</p>
+
+<ul class="org-ul">
+<li>$ make pgd-unix 
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">Build </span>
+$ make pgd-unix -k <span class="org-variable-name">CC</span>=scalac
+
+<span class="org-function-name">Makefile</span>:63: warning: overriding recipe for target <span class="org-string">'bin/jarget'</span>
+<span class="org-function-name">Makefile</span>:58: warning: ignoring old recipe for target <span class="org-string">'bin/jarget'</span>
+scalac src/logger.scala src/main.scala src/mvn.scala src/utils.scala src/reader.scala src/utils.JarBuilder.scala src/optPa
+rser.scala src/crypto.scala -d jarget.jar
+<span class="org-function-name">warning</span>: there were 6 deprecation warnings (since 2.12.0); re-run with -deprecation for details
+<span class="org-function-name">warning</span>: there were 5 feature warnings; re-run with -feature for details
+two warnings found
+mkdir -p bin
+cp -v exeLoaders/loaderCLI.exe exeLoaders/loaderGUI.exe assets || true
+<span class="org-string">'exeLoaders/loaderCLI.exe'</span> -&gt; <span class="org-string">'assets/loaderCLI.exe'</span>
+<span class="org-string">'exeLoaders/loaderGUI.exe'</span> -&gt; <span class="org-string">'assets/loaderGUI.exe'</span>
+scala jarget.jar uber -scala -r=assets -o=<span class="org-keyword">bin/jarget-uber.jar</span> jarget.jar /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.
+jar
+java -jar proguard.jar @config.pro
+ProGuard, version 5.3.3
+Reading input...
+Reading program jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-uber.jar]
+Reading library jar [/home/archbox/opt/java/jre/lib/rt.jar]
+Initializing...
+
+... .... ...
+
+  Final number of program classes:    1123
+Inlining subroutines...
+Preverifying...
+Writing output...
+Preparing output jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-pro.jar]
+  Copying resources from program jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-uber.jar]
+rm -rf bin/jarget-uber.jar
+scala jarget.jar jar-to-exe -exe=uexe bin/jarget-pro.jar bin/jarget
+Built file ./bin/jarget-pro
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4-3" class="outline-4">
+<h4 id="sec-1-4-3"><span class="section-number-4">1.4.3</span> Install jarget tool in ~/bin</h4>
+<div class="outline-text-4" id="text-1-4-3">
+<ul class="org-ul">
+<li>make pgd-unix -k CC=scalac &amp;&amp; make install
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-5" class="outline-3">
+<h3 id="sec-1-5"><span class="section-number-3">1.5</span> Getting a Binary Release</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+An fat-jar executable binary release can be downloaded from this link:
+</p>
+
+<ul class="org-ul">
+<li>Most update Snapshot <a href="https://github.com/caiorss/jarget/raw/gh-pages/jarget">jarget Download</a>
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.0-release/jarget">jarget v1.0</a>
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.1-release/jarget">jarget v1.1</a>
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.2-release/jarget">jarget v1.2</a>
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.3-release/jarget">jarget v1.3</a>
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.3.1-release/jarget">jarget v1.3.1</a>
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.3.2-release/jarget">jarget v1.3.2</a>
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.4-release/jarget">jarget v1.4.0</a> (5.7 MB)
+</li>
+</ul>
+
+<p>
+From version &gt;= 1.5 jarget will be shrunk with proguard.
+</p>
+
+<ul class="org-ul">
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.5-release/jarget">jarget v1.5.0</a> (1.7 MB)
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.5.1-release/jarget">jarget v1.5.1</a> 
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v2.0-beta-release/jarget">jarget v2.0-beta</a>   - Added pacakge caching feature.
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v2.0.1-beta/jarget">jarget v2.0.1-beta</a> - Allows scripting with dependencies (maven coordinates).
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v2.1.0-beta-release/jarget">jarget v2.1.0-beta</a> - Uber-jars can be built with maven
+coordinates specifications and added more examples to
+documentation.
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/raw/v2.0.2-beta-release/jarget">jarget-v2.2.0-beta</a> - Fixed uber-jars shell script header
+edge-case bug and also added command jarget utils -info to show
+platform informations such as number of processors, version of
+operating system, default line separator '\r', '\n', '\r\n', path
+separator and so on.
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/blob/554a56e4bcc42d3b8fa3ce134bf7f0984f9e1701/jarget?raw=true">jarget-v3.0</a>
+
+<ul class="org-ul">
+<li>Improved command line handling allowing future scalability and
+implementation of new functionalities.
+</li>
+
+<li>Improved user interface. Now jarget has git-like
+subcommands. Each command works as it was a separated command
+line application in similar fashion to git and busybox.
+</li>
+
+<li>Implemented generation of uber jars embedded in Windows' native
+executables. - (Still experimental.)
+</li>
+</ul>
+</li>
+
+<li>Release <a href="https://github.com/caiorss/jarget/blob/e8ad0cf55d8831ba9f87d65d0f912bcd8f19f30b/jarget?raw=true">jarget-v3.2</a>
+
+<ul class="org-ul">
+<li>Enhance commnand line help readability.
+</li>
+
+<li>Add commands jarget run
+</li>
+
+<li>Added more command examples in the sub-commands help.
+</li>
+
+<li>Add command jarget mvn-run-jar - to run standalone jar file from
+cache downloading it if not available yet. It allows to run
+proguard, rhino javascript engine, clojure and so on.
+</li>
+
+<li>Add command jarget mvn-run-cls - to run main class of java
+package. It is similar to mvn-run-jar, but mvn-run-cls is useful
+to run jars with multiple entry points (main classes).
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Or it can be downloaded with those shell commands below: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ curl -O -L https://github.com/caiorss/jarget/raw/gh-pages/jarget
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   130  100   130    0     0     28      0  0:00:04  0:00:04 --:--:--    32
+100 5675k  100 5675k    0     0   490k      0  0:00:11  0:00:11 --:--:-- 1011k
+
+$ chmod +x jarget
+
+$ ./jarget 
+jarget - Tool to download jar packages.
+
+ -show [package]                 - Show package<span class="org-string">'s information</span>
+
+<span class="org-string"> -pom  [package]                 - Show package'</span>s pom file
+
+... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
+</pre>
+</div>
+
+<p>
+Or 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ curl -O -L https://github.com/caiorss/jarget/raw/gh-pages/jarget &amp;&amp; chmod +x jarget &amp;&amp; ./jarget
+</pre>
+</div>
+
+<p>
+On Windows the application can be executed with: 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ java -jar jarget
+
+ Jarget 3.2 - command line toolbox for Scala and the Java Platform.
+
+<span class="org-function-name">Usage</span>: $  [COMMAND] [OPTIONS] [&lt;ARGS&gt; ...]
+
+<span class="org-function-name">Commands</span>:
+
+
+[Main Commands]
+
+  uber               Build uber jar file for deployment by bundling dependencies and resource files.
+  <span class="org-keyword">exec</span>               Execute a shell command and pass -cp &lt;CLASSPATH&gt; of packages downloaded to it.
+  script             Run a scala script with a given set of packages from cache.
+  scala              Run Scala REPL (scala) passing the class of packages from the repository.
+  run                Run a main class from a set of jar file passing the classpath of packages<span class="org-keyword"> in</span> repository.
+
+... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
+</pre>
+</div>
+
+<p>
+On the Windows Operating Systems, the app can also be installed by
+running the commands below in the cmd.exe shell:
+</p>
+
+<ul class="org-ul">
+<li>Step 1 - Add ~/bin directory in $PATH variable. 
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">Create directory ~/bin or C:\Users\&lt;user&gt;\bin </span>
+<span class="org-function-name">C</span>:\Users\archbox&gt; mkdir %USERPROFILE%\bin
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Add bin directory in $PATH variable </span>
+setx <span class="org-variable-name">PATH</span>=%PATH%;%USERPROFILE%\bin
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Step 2 - Copy jarget to <code>C:\Users\&lt;user&gt;\bin</code>
+</li>
+
+<li>Step 3 - Create a batch script to load the app at this directory,
+named jarget.bat with the contents below.
+</li>
+</ul>
+
+<p>
+File: jarget.batch 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">@echo off
+java -jar %~dp0\jarget %*
+<span class="org-keyword">exit</span> /b
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Step 4 - Open another cmd.exe shell to test. After typing $ jarget,
+it will show the user help below:
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">Microsoft Windows [Version 10.0.16299.371]
+(c) 2017 Microsoft Corporation. All rights reserved.
+
+<span class="org-function-name">C</span>:\Users\archbox&gt; jarget
+
+ Jarget 3.2 - command line toolbox for Scala and the Java Platform.
+
+<span class="org-function-name">Usage</span>: $  [COMMAND] [OPTIONS] [&lt;ARGS&gt; ...]
+
+<span class="org-function-name">Commands</span>:
+
+
+<span class="org-function-name">C</span>:\Users\archbox&gt;
+<span class="org-function-name">C</span>:\Users\archbox&gt;jarget.bat
+
+ Jarget 3.2 - command line toolbox for Scala and the Java Platform.
+
+<span class="org-function-name">Usage</span>: $  [COMMAND] [OPTIONS] [&lt;ARGS&gt; ...]
+
+<span class="org-function-name">Commands</span>:
+
+
+<span class="org-function-name">C</span>:\Users\archbox&gt; where jarget
+<span class="org-function-name">C</span>:\Users\archbox\bin\jarget.bat
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> User Guide</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Info commands</h3>
+<div class="outline-text-3" id="text-2-1">
 <p>
 Now the app adopts git subcommands:
 </p>
@@ -408,37 +831,53 @@ Now the app adopts git subcommands:
 
 <pre class="src src-text">$ jarget
 
- Jarget 3.0 - command line toolbox for Java Platform.
+ Jarget 3.2 - command line toolbox for Scala and the Java Platform.
 
 Usage: $  [COMMAND] [OPTIONS] [&lt;ARGS&gt; ...]
 
 Commands:
 
-  uber            Build uber jar file for deployment by bundling dependencies and resource files.
-  exec            Execute a shell command and pass -cp &lt;CLASSPATH&gt; of packages downloaded to it.
-  script          Run a scala script with a given set of packages from cache.
-  mvn-show        Show package's information.
-  mvn-search      Search for a package at the site https://mvnrepository.com
-  mvn-doc         Open package documentation in the web browser.
-  mvn-pom         Show package's pom.xml file.
-  mvn-pull        Show package's pom.xml file.
-  mvn-copy        Copy jar packages from cache directory to ./lib downloading them if not available.
-  cache           Show packages in cache directory.
-  jar-to-exe      Embed Uber jar into Unix executable or Windows Executable (experimental).
-  jar-man         Show manifest of a jar file.
-  jar-main-class  Show main class of a jar file.
-  jar-ls          Show contents of a jar file.
-  jar-rs          Show resources of a jar file ignoring *.class files.
-  jar-cat         Show content of a file in a jar package.
-  jar-ex          Extract &lt;file&gt; from jar file &lt;FILE.jar&gt; to current directory.
-  utils           General utilities helpers for platform information and debugging.
-  digest-s        Compute crypto hash of string. - Algorithm: [md5 | sha1 | sha256 ]
-  digest-f        Compute crypto hash of a file. - Algorithm: [md5 | sha1 | sha256 ]
+
+[Main Commands]
+
+  uber               Build uber jar file for deployment by bundling dependencies and resource files.
+  exec               Execute a shell command and pass -cp &lt;CLASSPATH&gt; of packages downloaded to it.
+  script             Run a scala script with a given set of packages from cache.
+  scala              Run Scala REPL (scala) passing the class of packages from the repository.
+  run                Run a main class from a set of jar file passing the classpath of packages in repository.
+
+[Mvn Commands]
+
+  mvn-show           Show package's information.
+  mvn-search         Search for a package at the site https://mvnrepository.com
+  mvn-doc            Open package documentation in the web browser.
+  mvn-run-jar        Run main method of executable jar package in repository.
+  mvn-run-cls        Run a main class of a java package (class with main static method).
+  mvn-pom            Show package's pom.xml file.
+  mvn-pull           Download package to cache directory.
+  mvn-copy           Copy jar packages from cache directory to ./lib downloading them if not available.
+  cache              Show packages in cache directory.
+
+[Jar Commands]
+
+  jar-to-exe         Embed Uber jar into Unix executable or Windows Executable (experimental).
+  jar-man            Show manifest of a jar file.
+  jar-main-class     Show main class of a jar file.
+  jar-ls             Show contents of a jar file.
+  jar-rs             Show resources of a jar file ignoring *.class files.
+  jar-cat            Show content of a file in a jar package.
+  jar-ex             Extract &lt;file&gt; from jar file &lt;FILE.jar&gt; to current directory.
+
+[Misc Commands]
+
+  utils              General utilities helpers for platform information and debugging.
+  digest-s           Compute crypto hash of string. - Algorithm: [md5 | sha1 | sha256 ]
+  digest-f           Compute crypto hash of a file. - Algorithm: [md5 | sha1 | sha256 ]
 </pre>
 </div>
 
 <p>
-Each subcommand has its own help text: 
+Each sub-command has its own help: 
 </p>
 
 <ul class="org-ul">
@@ -451,14 +890,23 @@ Each subcommand has its own help text:
 <pre class="src src-sh">$ jarget uber
 Build uber jar file for deployment by bundling dependencies and resource files.
 
+
+    Note - &lt;EXE&gt; can be:
+      + empty - (default) <span class="org-keyword">for</span> jar file without any executable wrapper.
+      + uexe  - for Unix executable - Shell script with embedded uber-jar payload.
+      + wcli  - for Windows CLI command line executable. *.exe file.
+      + wgui  - for Windows GUI with user interface. -&gt; *.exe file.
+
  Usage: uber [OPTIONS] &lt;MAIN-JAR&gt; [&lt;JARFILE1.jar&gt; &lt;JARFILE2.jar&gt; ...]
 
-  -output=<span class="org-keyword">&lt;file&gt;</span>      -o=<span class="org-keyword">&lt;file&gt;</span>     Output file, default out.jar
-  -scala              -s            Bundle Scala runtime library scala-runtime.jar
-  -package=&lt;pack&gt;     -p=&lt;pack&gt;     MVN Coordinates of a java package -  &lt;group&gt;/&lt;artifact&gt;/&lt;version&gt;.
-  -file=&lt;file&gt;        -f=&lt;file&gt;     Jar files to be added to the package.
-  -resource=&lt;folder&gt;  -r=&lt;folder&gt;   Resource directory
-  -jardir=&lt;folder&gt;    -jd=&lt;folder&gt;  Directory containing jar files to be bundled into the uber jar.
+<span class="org-function-name">OPTIONS</span>:
+  -output=<span class="org-keyword">&lt;file&gt;,</span>       -o   Output file, default out.jar
+  -scala,               -s   Bundle Scala runtime library scala-runtime.jar
+  -package=&lt;pack&gt;,      -p   MVN Coordinates of a java package -  &lt;group&gt;/&lt;artifact&gt;/&lt;version&gt;.
+  -file=&lt;file&gt;,         -f   Jar files to be added to the package.
+  -resource=&lt;folder&gt;,   -r   Resource directory
+  -jardir=&lt;folder&gt;,     -jd  Directory containing jar files to be bundled into the uber jar.
+  -exe=&lt;EXE&gt;,           -e   Executable wrapper - default (empty)<span class="org-builtin">.</span>
 </pre>
 </div>
 
@@ -474,25 +922,24 @@ Show packages in cache directory.
 
  Usage: cache &lt;ACTION&gt;
 
-  -path  -  Show cache's directory path.
-  -pack  -  Show packages in cache directory
-  -jars  -  Show all jar files in cache directory
-
-$ jarget cache -pack
-org.jfree/jcommon
-org.jfree/jfreechart
-xml-apis/xml-apis
+OPTIONS:
+  -path,    -  Show cache's directory path.
+  -pack,    -  Show packages in cache directory
+  -jars,    -  Show all jar files in cache directory
+  -clean,   -  Clean cache directory freeing space.
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-sec-1-3-2" class="outline-4">
-<h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> Maven / Packages Commands</h4>
-<div class="outline-text-4" id="text-1-3-2">
-</div><ol class="org-ol"><li><a id="sec-1-3-2-1" name="sec-1-3-2-1"></a>Show package information<br  /><div class="outline-text-5" id="text-1-3-2-1">
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Maven / Packages Commands</h3>
+<div class="outline-text-3" id="text-2-2">
+</div><div id="outline-container-sec-2-2-1" class="outline-4">
+<h4 id="sec-2-2-1"><span class="section-number-4">2.2.1</span> Show package information</h4>
+<div class="outline-text-4" id="text-2-2-1">
 <ul class="org-ul">
-<li>$ jarget mvn -show org.jfree/jfreechart/1.0.17
+<li>$ jarget mvn-show org.jfree/jfreechart/1.0.17
 </li>
 </ul>
 
@@ -524,10 +971,12 @@ Dependencies:
 </pre>
 </div>
 </div>
-</li>
-<li><a id="sec-1-3-2-2" name="sec-1-3-2-2"></a>Show package's POM file<br  /><div class="outline-text-5" id="text-1-3-2-2">
+</div>
+<div id="outline-container-sec-2-2-2" class="outline-4">
+<h4 id="sec-2-2-2"><span class="section-number-4">2.2.2</span> Show package's POM file</h4>
+<div class="outline-text-4" id="text-2-2-2">
 <ul class="org-ul">
-<li>$ jarget mvn -pom org.jfree/jfreechart/1.0.17
+<li>$ jarget mvn-pom org.jfree/jfreechart/1.0.17
 </li>
 </ul>
 
@@ -555,8 +1004,10 @@ Show package<span class="org-string">'s pom.xml file.</span>
 </pre>
 </div>
 </div>
-</li>
-<li><a id="sec-1-3-2-3" name="sec-1-3-2-3"></a>Open package Documentation Online<br  /><div class="outline-text-5" id="text-1-3-2-3">
+</div>
+<div id="outline-container-sec-2-2-3" class="outline-4">
+<h4 id="sec-2-2-3"><span class="section-number-4">2.2.3</span> Open package Documentation Online</h4>
+<div class="outline-text-4" id="text-2-2-3">
 <ul class="org-ul">
 <li>$ jarget mvn-doc org.jfree/jfreechart/1.0.17
 </li>
@@ -577,9 +1028,11 @@ $ jarget mvn-doc org.jfree/jfreechart/1.0.17
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-2-4" name="sec-1-3-2-4"></a><span class="todo TODO">TODO</span> Install packages in the cache<br  /><div class="outline-text-5" id="text-1-3-2-4">
+<div id="outline-container-sec-2-2-4" class="outline-4">
+<h4 id="sec-2-2-4"><span class="section-number-4">2.2.4</span> <span class="todo TODO">TODO</span> Install packages in the cache</h4>
+<div class="outline-text-4" id="text-2-2-4">
 <p>
 This command installs/downloads all packages to jarget cache directory: <a href="file:///home/archbox/.jarget/cache">file:///home/archbox/.jarget/cache</a>
 </p>
@@ -595,22 +1048,27 @@ Example: Get teh packages org.jfree/jfreechart/1.0.17 and org.scalaz/scalaz-core
 
 <div class="org-src-container">
 
-<pre class="src src-text">$ jarget mvn -pull org.jfree/jfreechart/1.0.17,org.scalaz/scalaz-core_2.11/7.3.0-M15
+<pre class="src src-text">$ jarget mvn-pull
+Download package to cache directory.
+
+Note: Packages are in the the format &lt;group&gt;/&lt;artifact&gt;/&lt;version&gt;
+ Usage: mvn-pull &lt;PACKAGE1&gt; [&lt;PACKAGE2&gt; ...]
+
+
+   Example:
+    $ jarget mvn-pull org.scalaz/scalaz-core_2.11/7.3.0-M15 org.jfree/jfreechart/1.0.17
+
+
+$ jarget mvn-pull org.scalaz/scalaz-core_2.11/7.3.0-M15 org.jfree/jfreechart/1.0.17
 Downloading ---------------------
-PackData(org.jfree,jfreechart,1.0.17)
-PackData(org.jfree,jcommon,1.0.21)
-PackData(xml-apis,xml-apis,1.3.04)
-----------------------------------
-Package path = PackData(org.jfree,jfreechart,1.0.17)
-Downloading file /home/archbox/.jarget/cache/org/jfree/jfreechart/1.0.17/jfreechart-1.0.17.pom.
-Package path = PackData(org.jfree,jcommon,1.0.21)
-Package path = PackData(xml-apis,xml-apis,1.3.04)
-Downloading file /home/archbox/.jarget/cache/org/jfree/jcommon/1.0.21/jcommon-1.0.21.pom.
-Downloading file /home/archbox/.jarget/cache/xml-apis/xml-apis/1.3.04/xml-apis-1.3.04.pom.
-File /home/archbox/.jarget/cache/org/jfree/jfreechart/1.0.17/jfreechart-1.0.17.pom downloaded. Ok.
-Downloading file /home/archbox/.jarget/cache/org/jfree/jfreechart/1.0.17/jfreechart-1.0.17.jar.
-File /home/archbox/.jarget/cache/xml-apis/xml-apis/1.3.04/xml-apis-1.3.04.pom downloaded. Ok.
-.... ... ... 
+PackData(org.scalaz,scalaz-core_2.11,7.3.0-M15)
+PackData(org.scala-lang,scala-library,2.11.11)
+PackData(org.scala-lang.modules,scala-java8-compat_2.11,0.7.0)
+
+... ... ...  ... ... ...  ... ... ...  ... 
+
+File /home/archbox/.jarget/cache/org/jfree/jcommon/1.0.21/jcommon-1.0.21.jar downloaded. Ok.
+File /home/archbox/.jarget/cache/org/jfree/jfreechart/1.0.17/jfreechart-1.0.17.jar downloaded. Ok.
 Download Successful
 </pre>
 </div>
@@ -631,18 +1089,15 @@ org.jfree/jfreechart
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-2-5" name="sec-1-3-2-5"></a>Copy packages from cache to local directory<br  /><div class="outline-text-5" id="text-1-3-2-5">
+<div id="outline-container-sec-2-2-5" class="outline-4">
+<h4 id="sec-2-2-5"><span class="section-number-4">2.2.5</span> Copy packages from cache to local directory</h4>
+<div class="outline-text-4" id="text-2-2-5">
 <p>
 This command copies a package from cache to ./lib directory. The
 packages are downloaded if not available in the cache directory yet.
 </p>
-
-<ul class="org-ul">
-<li><code>$ jarget mvn -copy &lt;pack1,pack2,pack3...&gt;</code>
-</li>
-</ul>
 
 <div class="org-src-container">
 
@@ -676,6 +1131,10 @@ $ rm -rf lib
 </pre>
 </div>
 
+<p>
+When the command is run the second time, the packages are copied from cache to ./lib.
+</p>
+
 <div class="org-src-container">
 
 <pre class="src src-sh">$ jarget mvn-copy org.jfree/jfreechart/1.0.17 org.scalaz/scalaz-core_2.11/7.3.0-M15
@@ -688,11 +1147,13 @@ Copying scala-java8-compat_2.11-0.7.0.jar to ./lib
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-2-6" name="sec-1-3-2-6"></a><span class="todo TODO">TODO</span> Clean cache removing all packages<br  /><div class="outline-text-5" id="text-1-3-2-6">
+<div id="outline-container-sec-2-2-6" class="outline-4">
+<h4 id="sec-2-2-6"><span class="section-number-4">2.2.6</span> <span class="todo TODO">TODO</span> Clean cache removing all packages</h4>
+<div class="outline-text-4" id="text-2-2-6">
 <ul class="org-ul">
-<li><code>$ jarget mvn -clear</code>
+<li>$ jarget mvn -clear
 </li>
 </ul>
 
@@ -712,9 +1173,12 @@ Deleting directory: /home/archbox/.jarget/cache
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-2-7" name="sec-1-3-2-7"></a>Execute program with classpath for packages from cache<br  /><ol class="org-ol"><li><a id="sec-1-3-2-7-1" name="sec-1-3-2-7-1"></a>Command<br  /><div class="outline-text-6" id="text-1-3-2-7-1">
+<div id="outline-container-sec-2-2-7" class="outline-4">
+<h4 id="sec-2-2-7"><span class="section-number-4">2.2.7</span> Execute program with classpath for packages from cache</h4>
+<div class="outline-text-4" id="text-2-2-7">
+</div><ol class="org-ol"><li><a id="sec-2-2-7-1" name="sec-2-2-7-1"></a>Command<br  /><div class="outline-text-5" id="text-2-2-7-1">
 <ul class="org-ul">
 <li>$ jarget exec -p=pack1 -p=pack2  &#x2026;  &#x2013; program arg1 arg2 arg2 &#x2026;
 </li>
@@ -754,7 +1218,7 @@ Execute a shell command and pass -cp &lt;CLASSPATH&gt; of packages downloaded to
 </div>
 </li>
 
-<li><a id="sec-1-3-2-7-2" name="sec-1-3-2-7-2"></a>Example: Running scala with a set of packages in classpath<br  /><div class="outline-text-6" id="text-1-3-2-7-2">
+<li><a id="sec-2-2-7-2" name="sec-2-2-7-2"></a>Example: Running scala with a set of packages in classpath<br  /><div class="outline-text-5" id="text-2-2-7-2">
 <p>
 Example: Run Scala with <a href="https://mvnrepository.com/artifact/org.typelevel/cats-core_2.12/0.9.0">org.typelevel/cats-core_2.12/0.9.0</a>
 </p>
@@ -792,7 +1256,7 @@ scala&gt;
 </div>
 </li>
 
-<li><a id="sec-1-3-2-7-3" name="sec-1-3-2-7-3"></a>Example: Running scalac with ase packages in classpath<br  /><div class="outline-text-6" id="text-1-3-2-7-3">
+<li><a id="sec-2-2-7-3" name="sec-2-2-7-3"></a>Example: Running scalac with ase packages in classpath<br  /><div class="outline-text-5" id="text-2-2-7-3">
 <p>
 <b>Run script with scala and dependencies</b>
 </p>
@@ -835,13 +1299,191 @@ $ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scala chart.jar
 </div>
 </div>
 </li></ol>
-</li></ol>
 </div>
 
-<div id="outline-container-sec-1-3-3" class="outline-4">
-<h4 id="sec-1-3-3"><span class="section-number-4">1.3.3</span> Cache commands</h4>
-<div class="outline-text-4" id="text-1-3-3">
-</div><ol class="org-ol"><li><a id="sec-1-3-3-1" name="sec-1-3-3-1"></a>Show cache path<br  /><div class="outline-text-5" id="text-1-3-3-1">
+<div id="outline-container-sec-2-2-8" class="outline-4">
+<h4 id="sec-2-2-8"><span class="section-number-4">2.2.8</span> Download and run executable jar from repository (mvn-run-jar)</h4>
+<div class="outline-text-4" id="text-2-2-8">
+<p>
+This sub command runs an executable jar (uber jar) from cache
+repository, the package is downloaded if not available yet.
+</p>
+
+<p>
+Command help:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ jarget mvn-run-jar
+Run main method of executable jar package<span class="org-keyword"> in</span> repository.
+
+ Usage: mvn-run-jar &lt;PACKAGE&gt; --  [&lt;ARGS&gt;...]
+
+
+ Example 1 :  This command download the file proguard-base-6.0.2.jar
+ to the cache repository and runs the command java -jar &lt;path-to-jar&gt;/proguard-base-6.0.2.jar
+ Once the file was downloaded, it will be run from cache repository.
+  &gt;&gt; $ jarget mvn-run-jar net.sf.proguard/proguard-base/6.0.2
+
+ Example 2 :
+   &gt;&gt; $ jarget mvn-run-jar org.codehaus.groovy/groovy/2.5.0-rc-1 -- file1.groovy
+
+ Example 3:  Show Clojure help, to run the repl remove (--help) switch.
+  &gt;&gt; $ jarget mvn-run-jar org.clojure/clojure/1.8.0 -- --help
+</pre>
+</div>
+
+<p>
+Example: It downloads the clojure 1.8.0 package and runs the command 
+</p>
+
+<ul class="org-ul">
+<li>$ java -jar &lt;path-to-package&gt;/clojure-1.8.0.jar
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$  jarget mvn-run-jar org.clojure/clojure/1.8.0
+Downloading ---------------------
+<span class="org-function-name">PackData</span>(org.clojure,clojure,1.8.0)
+----------------------------------
+Package path = PackData(org.clojure,clojure,1.8.0)
+Downloading file /home/archbox/.jarget/cache/org/clojure/clojure/1.8.0/clojure-1.8.0.pom.
+File /home/archbox/.jarget/cache/org/clojure/clojure/1.8.0/clojure-1.8.0.pom downloaded. Ok.
+Downloading file /home/archbox/.jarget/cache/org/clojure/clojure/1.8.0/clojure-1.8.0.jar.
+File /home/archbox/.jarget/cache/org/clojure/clojure/1.8.0/clojure-1.8.0.jar downloaded. Ok.
+Download Successful
+Clojure 1.8.0
+<span class="org-variable-name">user</span>=&gt;
+
+<span class="org-variable-name">user</span>=&gt; (+ 1 2 3 4 5 6)
+21
+<span class="org-variable-name">user</span>=&gt; (* 1 2 3 4 5 6)
+720
+<span class="org-variable-name">user</span>=&gt;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-9" class="outline-4">
+<h4 id="sec-2-2-9"><span class="section-number-4">2.2.9</span> Run a main class of a java package - (mvn-run-cls)</h4>
+<div class="outline-text-4" id="text-2-2-9">
+<div class="org-src-container">
+
+<pre class="src src-text">$  jarget mvn-run-cls
+Run a main class of a java package (class with main static method).
+
+Note: this command is useful to run packages with multiple entry points.
+ Usage: mvn-run-cls &lt;PACKAGE&gt; &lt;CLASS&gt; [&lt;JAVA-PROPERTIES&gt; ...] --  [&lt;ARGS&gt;...]
+
+
+ Example 1: Run scala compiler and invokes -help by calling class scala.tools.nsc.Main.
+ If the scala compiler packages are not in the cache, they will be downloaded. Further
+ commands needing those packages will no longer downloaded them.
+  &gt;&gt;&gt; $ jarget mvn-run-cls org.scala-lang.virtualized/scala-compiler/2.11.2  \
+      scala.tools.nsc.Main -Dscala.usejavacp=true -- -help
+
+ Example 2: It will run the Scala REPL.
+  &gt;&gt;&gt; $ jarget mvn-run-cls org.scala-lang.virtualized/scala-compiler/2.11.2  \
+       scala.tools.nsc.MainGenericRunner -Dscala.usejavacp=true
+</pre>
+</div>
+
+
+<p>
+Example: This command downloads the package rg.scala-lang.virtualized/scala-compiler/2.11.2 and all its 
+dependencies if not available at cache repository, then it runs the class scala.tools.nsc.MainGenericRunner
+which invokes the Scala's REPL interactive shell. 
+</p>
+
+<p>
+This command is useful to run classes of packages with multiple entry-points (main classes).
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ jarget mvn-run-cls org.scala-lang.virtualized/scala-compiler/2.11.2  <span class="org-sh-escaped-newline">\</span>
+       scala.tools.nsc.MainGenericRunner -Dscala.usejavacp=true
+
+$ jarget mvn-run-cls org.scala-lang.virtualized/scala-compiler/2.11.2  <span class="org-sh-escaped-newline">\</span>
+&gt;        scala.tools.nsc.MainGenericRunner -Dscala.usejavacp=true
+Downloading ---------------------
+<span class="org-function-name">PackData</span>(org.scala-lang.virtualized,scala-compiler,2.11.2)
+<span class="org-function-name">PackData</span>(org.scala-lang.modules,scala-xml_2.11,1.0.2)
+<span class="org-function-name">PackData</span>(org.scala-lang.virtualized,scala-library,2.11.2)
+<span class="org-function-name">PackData</span>(org.scala-lang.virtualized,scala-reflect,2.11.2)
+<span class="org-function-name">PackData</span>(jline,jline,2.12)
+<span class="org-function-name">PackData</span>(org.scala-lang.modules,scala-parser-combinators_2.11,1.0.1)
+----------------------------------
+Package path = PackData(org.scala-lang.virtualized,scala-compiler,2.11.2)
+Downloading file /home/archbox/.jarget/cache/org/scala-lang/virtualized/scala-compiler/2.11.2/scala-compiler-2.11.2.pom.
+Package path = PackData(org.scala-lang.modules,scala-xml_2.11,1.0.2)
+Package path = PackData(org.scala-lang.virtualized,scala-library,2.11.2)
+
+... .... ... ...
+
+Download Successful
+Welcome to Scala version 2.11.2 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_162)<span class="org-builtin">.</span>
+Type<span class="org-keyword"> in</span> expressions to have them evaluated.
+<span class="org-function-name">Type</span> :help for more information.
+
+scala&gt;
+
+scala&gt; import javax.swing._
+import javax.swing._
+
+scala&gt; val frame = new JFrame(<span class="org-string">"Hello world"</span>)
+<span class="org-function-name">frame</span>: javax.swing.JFrame = javax.swing.JFrame[frame0,0,27,0x0,invalid,.... ....
+
+scala&gt; frame.setSize(400, 500)
+
+scala&gt; frame.setVisible(true)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-10" class="outline-4">
+<h4 id="sec-2-2-10"><span class="section-number-4">2.2.10</span> Command "run"</h4>
+<div class="outline-text-4" id="text-2-2-10">
+<div class="org-src-container">
+
+<pre class="src src-sh">$ jarget run
+Run a main class from a set of jar file passing the classpath of packages<span class="org-keyword"> in</span> repository.
+
+ Usage: run [OPTIONS] &lt;MAIN-CLASS&gt; &lt;JAR0&gt; [&lt;JAR1&gt; ....] [&lt;JAVA-PROPERTIES&gt; ...] -- [&lt;ARGS&gt;...]
+
+<span class="org-function-name">OPTIONS</span>:
+  -package=&lt;pack&gt;,   -p  MVN Coordinates of a java package -  &lt;group&gt;/&lt;artifact&gt;/&lt;version&gt;.
+
+
+ + &lt;MAIN-CLASS&gt; : Is the a class with a main static method that will be executed.
+ + &lt;JAR0&gt;       : Is a jar package such as ImageViewer.jar
+ + &lt;ARGS&gt;       : Are the arguments passed to the main class.
+
+ Example and use case: Run the class Main from the jar
+ demoImageViewer.jar passing the classpath of the package
+ com.jtattoo/JTattoo/1.6.11 from (http://www.jtattoo.net/) and setting
+ the property swing.defaultlaf that changes to Java Swing default look
+ and feel theme.
+
+$  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 <span class="org-sh-escaped-newline">\</span>
+   -Dswing.defaultlaf=com.jtattoo.plaf.hifi.HiFiLookAndFeel
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> Cache commands</h3>
+<div class="outline-text-3" id="text-2-3">
+</div><div id="outline-container-sec-2-3-1" class="outline-4">
+<h4 id="sec-2-3-1"><span class="section-number-4">2.3.1</span> Show cache path</h4>
+<div class="outline-text-4" id="text-2-3-1">
 <ul class="org-ul">
 <li>$ jarget cache -path
 </li>
@@ -891,9 +1533,11 @@ $ tree $(<span class="org-sh-quoted-exec">jarget</span> cache -path)
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-3-2" name="sec-1-3-3-2"></a>Show all packages in cache<br  /><div class="outline-text-5" id="text-1-3-3-2">
+<div id="outline-container-sec-2-3-2" class="outline-4">
+<h4 id="sec-2-3-2"><span class="section-number-4">2.3.2</span> Show all packages in cache</h4>
+<div class="outline-text-4" id="text-2-3-2">
 <ul class="org-ul">
 <li>$ jarget cache -pack
 </li>
@@ -911,10 +1555,14 @@ com.github.mpilquist/simulacrum_2.12
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-3-3" name="sec-1-3-3-3"></a><span class="todo TODO">TODO</span> Show all versions of a given package in cache<br  /></li>
-<li><a id="sec-1-3-3-4" name="sec-1-3-3-4"></a>Show all jar files in the cache folder<br  /><div class="outline-text-5" id="text-1-3-3-4">
+<div id="outline-container-sec-2-3-3" class="outline-4">
+<h4 id="sec-2-3-3"><span class="section-number-4">2.3.3</span> <span class="todo TODO">TODO</span> Show all versions of a given package in cache</h4>
+</div>
+<div id="outline-container-sec-2-3-4" class="outline-4">
+<h4 id="sec-2-3-4"><span class="section-number-4">2.3.4</span> Show all jar files in the cache folder</h4>
+<div class="outline-text-4" id="text-2-3-4">
 <div class="org-src-container">
 
 <pre class="src src-sh">$ jarget cache -jars
@@ -927,14 +1575,16 @@ com.github.mpilquist/simulacrum_2.12
 </pre>
 </div>
 </div>
-</li></ol>
+</div>
 </div>
 
-<div id="outline-container-sec-1-3-4" class="outline-4">
-<h4 id="sec-1-3-4"><a id="ID-b900cee2-b19f-41ae-8ad6-006ab37b9dfc" name="ID-b900cee2-b19f-41ae-8ad6-006ab37b9dfc"></a><span class="section-number-4">1.3.4</span> Scripting with jarget</h4>
-<div class="outline-text-4" id="text-1-3-4">
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4"><a id="ID-b900cee2-b19f-41ae-8ad6-006ab37b9dfc" name="ID-b900cee2-b19f-41ae-8ad6-006ab37b9dfc"></a><span class="section-number-3">2.4</span> Scripting with jarget</h3>
+<div class="outline-text-3" id="text-2-4">
 </div>
-<ol class="org-ol"><li><a id="sec-1-3-4-1" name="sec-1-3-4-1"></a>Overview<br  /><div class="outline-text-5" id="text-1-3-4-1">
+<div id="outline-container-sec-2-4-1" class="outline-4">
+<h4 id="sec-2-4-1"><span class="section-number-4">2.4.1</span> Overview</h4>
+<div class="outline-text-4" id="text-2-4-1">
 <p>
 Jarget can be used to run scala scripts with java packages
 dependencies by downloading them if they are not available in the
@@ -953,14 +1603,17 @@ Run a scala script with a given set of packages from cache.
 
  Usage: script [OPTIONS] -- &lt;SCRIPT.scala&gt; [&lt;SCRIPT ARGS&gt; ...]
 
-  -package=&lt;PACK&gt;                  -p=&lt;PACK&gt;               Package maven's coordinate
-  -package-str=&lt;PACK1&gt;,&lt;PACK2&gt;...  -ps=&lt;PACK1&gt;,&lt;PACK2&gt;...  Package's separated by command &lt;pack1&gt;,&lt;pack2&gt;...&lt;packN&gt;
+OPTIONS:
+  -package=&lt;PACK&gt;,                   -p   Package maven's coordinate
+  -package-str=&lt;PACK1&gt;,&lt;PACK2&gt;...,   -ps  Package's separated by command &lt;pack1&gt;,&lt;pack2&gt;...&lt;packN&gt;
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-4-2" name="sec-1-3-4-2"></a><a id="ID-cbb743e4-f9a8-4784-be27-b8c0e9599f8b" name="ID-cbb743e4-f9a8-4784-be27-b8c0e9599f8b"></a>Example 1 - Script with JFreeChart<br  /><div class="outline-text-5" id="text-1-3-4-2">
+<div id="outline-container-sec-2-4-2" class="outline-4">
+<h4 id="sec-2-4-2"><a id="ID-cbb743e4-f9a8-4784-be27-b8c0e9599f8b" name="ID-cbb743e4-f9a8-4784-be27-b8c0e9599f8b"></a><span class="section-number-4">2.4.2</span> Example 1 - Script with JFreeChart</h4>
+<div class="outline-text-4" id="text-2-4-2">
 
 <p>
 Example: <a href="scripts/chartScript.sh">scripts/chartScript.sh</a>
@@ -970,7 +1623,7 @@ Example: <a href="scripts/chartScript.sh">scripts/chartScript.sh</a>
 
 <pre class="src src-scala"><span class="org-comment">#!/bin/sh</span>
 <span class="org-constant">DEPS</span><span class="org-keyword">=</span>org.jfree/jfreechart/<span class="org-constant">1.0.17</span>
-exec jarget script -p<span class="org-keyword">=</span><span class="org-string">"</span><span class="org-variable-name">$DEPS</span><span class="org-string">"</span> -- <span class="org-string">"$0"</span> <span class="org-string">"$@"</span>
+exec jarget script -ps<span class="org-keyword">=</span><span class="org-string">"</span><span class="org-variable-name">$DEPS</span><span class="org-string">"</span> -- <span class="org-string">"$0"</span> <span class="org-string">"$@"</span>
 !#
 
 <span class="org-keyword">import</span> org.jfree.chart.<span class="org-rainbow-delimiters-depth-1">{</span><span class="org-constant">ChartPanel</span>, <span class="org-constant">ChartFactory</span>, <span class="org-constant">JFreeChart</span>, <span class="org-constant">ChartUtilities</span><span class="org-rainbow-delimiters-depth-1">}</span>
@@ -1051,8 +1704,10 @@ $ ./chartScript.sh
 </pre>
 </div>
 </div>
-</li>
-<li><a id="sec-1-3-4-3" name="sec-1-3-4-3"></a><a id="ID-121d73f6-37d4-4a7d-9774-9092d7bf23a9" name="ID-121d73f6-37d4-4a7d-9774-9092d7bf23a9"></a>Example 2 - Script that generates QRCode<br  /><div class="outline-text-5" id="text-1-3-4-3">
+</div>
+<div id="outline-container-sec-2-4-3" class="outline-4">
+<h4 id="sec-2-4-3"><a id="ID-121d73f6-37d4-4a7d-9774-9092d7bf23a9" name="ID-121d73f6-37d4-4a7d-9774-9092d7bf23a9"></a><span class="section-number-4">2.4.3</span> Example 2 - Script that generates QRCode</h4>
+<div class="outline-text-4" id="text-2-4-3">
 
 <p>
 This script generates a <a href="https://en.wikipedia.org/wiki/QR_code">QRCode</a> from argument passed from command line
@@ -1242,29 +1897,33 @@ Generating QRcode image file images/qrcodeTest.png for testing URL: https://msdn
 </pre>
 </div>
 </div>
-</li></ol>
+</div>
 </div>
 
-<div id="outline-container-sec-1-3-5" class="outline-4">
-<h4 id="sec-1-3-5"><span class="section-number-4">1.3.5</span> Command to manipulate Jar packages</h4>
-<div class="outline-text-4" id="text-1-3-5">
-</div><ol class="org-ol"><li><a id="sec-1-3-5-1" name="sec-1-3-5-1"></a>Overview<br  /><div class="outline-text-5" id="text-1-3-5-1">
+<div id="outline-container-sec-2-5" class="outline-3">
+<h3 id="sec-2-5"><span class="section-number-3">2.5</span> Command to manipulate Jar packages</h3>
+<div class="outline-text-3" id="text-2-5">
+</div><div id="outline-container-sec-2-5-1" class="outline-4">
+<h4 id="sec-2-5-1"><span class="section-number-4">2.5.1</span> Overview</h4>
+<div class="outline-text-4" id="text-2-5-1">
 <p>
 The commands to manipulate jars are listed below: 
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-text">$  jarget | grep jar
-  uber            Build uber jar file for deployment by bundling dependencies and resource files.
-  mvn-copy        Copy jar packages from cache directory to ./lib downloading them if not available.
-  jar-to-exe      Embed Uber jar into Unix executable or Windows Executable (experimental).
-  jar-man         Show manifest of a jar file.
-  jar-main-class  Show main class of a jar file.
-  jar-ls          Show contents of a jar file.
-  jar-rs          Show resources of a jar file ignoring *.class files.
-  jar-cat         Show content of a file in a jar package.
-  jar-ex          Extract &lt;file&gt; from jar file &lt;FILE.jar&gt; to current directory.
+<pre class="src src-text">$ jarget | grep jar
+  uber               Build uber jar file for deployment by bundling dependencies and resource files.
+  run                Run a main class from a set of jar file passing the classpath of packages in repository.
+  mvn-run-jar        Run main method of executable jar package in repository.
+  mvn-copy           Copy jar packages from cache directory to ./lib downloading them if not available.
+  jar-to-exe         Embed Uber jar into Unix executable or Windows Executable (experimental).
+  jar-man            Show manifest of a jar file.
+  jar-main-class     Show main class of a jar file.
+  jar-ls             Show contents of a jar file.
+  jar-rs             Show resources of a jar file ignoring *.class files.
+  jar-cat            Show content of a file in a jar package.
+  jar-ex             Extract &lt;file&gt; from jar file &lt;FILE.jar&gt; to current directory.
 </pre>
 </div>
 
@@ -1274,21 +1933,38 @@ Those commands are simple and self-explanatory and easier to remember.
 
 <div class="org-src-container">
 
-<pre class="src src-text">$  jarget jar-man
-Show manifest of a jar file.
+<pre class="src src-sh">$ jarget jar-ls -h
+Show contents of a jar file.
 
- Usage: jar-man &lt;FILE.jar&gt;
+ Usage: jar-ls &lt;FILE.jar&gt;
 
-$  jarget jar-main-class
-Show main class of a jar file.
+$ jarget jar-ex -h
+Extract &lt;file&gt; from jar file &lt;FILE.jar&gt; to current directory.
 
- Usage: jar-main-class &lt;FILE.jar&gt;
+ Usage: jar-ex &lt;FILE.jar&gt; &lt;file&gt;
+
+$ jarget jar-to-exe
+Embed Uber jar into Unix executable or Windows Executable (experimental)<span class="org-builtin">.</span>
+
+ Usage: jar-to-exe [OPTIONS] &lt;FILE.jar&gt;
+
+<span class="org-function-name">OPTIONS</span>:
+  -exe=&lt;EXE&gt;,       -e  Executable type.
+  -output=<span class="org-keyword">&lt;FILE&gt;,</span>   -o  Output file, default &lt;FILE&gt; without extension + .sh or .exe.
+
+
+ Note - &lt;EXE&gt; can be:
+   + uexe - for Unix executable - Shell script with embedded uber-jar payload.
+   + wcli - for Windows CLI command line executable. *.exe file.
+   + wgui - for Windows GUI with user interface. -&gt; *.exe file.
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-5-2" name="sec-1-3-5-2"></a>Show manifest file<br  /><div class="outline-text-5" id="text-1-3-5-2">
+<div id="outline-container-sec-2-5-2" class="outline-4">
+<h4 id="sec-2-5-2"><span class="section-number-4">2.5.2</span> Show manifest file</h4>
+<div class="outline-text-4" id="text-2-5-2">
 <ul class="org-ul">
 <li>$ jarget jar-man JARFILE.jar 
 </li>
@@ -1309,9 +1985,11 @@ Show main class of a jar file.
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-5-3" name="sec-1-3-5-3"></a>Show contents of single file<br  /><div class="outline-text-5" id="text-1-3-5-3">
+<div id="outline-container-sec-2-5-3" class="outline-4">
+<h4 id="sec-2-5-3"><span class="section-number-4">2.5.3</span> Show contents of single file</h4>
+<div class="outline-text-4" id="text-2-5-3">
 <ul class="org-ul">
 <li>$ jarget jar-cat [jar] [file]
 </li>
@@ -1363,9 +2041,11 @@ $ jarget jar-cat lib/jfreechart-1.0.17.jar org/jfree/chart/plot/LocalizationBund
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-5-4" name="sec-1-3-5-4"></a>List all files<br  /><div class="outline-text-5" id="text-1-3-5-4">
+<div id="outline-container-sec-2-5-4" class="outline-4">
+<h4 id="sec-2-5-4"><span class="section-number-4">2.5.4</span> List all files</h4>
+<div class="outline-text-4" id="text-2-5-4">
 <ul class="org-ul">
 <li>$ jarget jar-ls [jar]
 </li>
@@ -1393,9 +2073,11 @@ Packget$<span class="org-variable-name">$anonfun</span>$<span class="org-variabl
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-5-5" name="sec-1-3-5-5"></a>List resource/asset files<br  /><div class="outline-text-5" id="text-1-3-5-5">
+<div id="outline-container-sec-2-5-5" class="outline-4">
+<h4 id="sec-2-5-5"><span class="section-number-4">2.5.5</span> List resource/asset files</h4>
+<div class="outline-text-4" id="text-2-5-5">
 <ul class="org-ul">
 <li>$ jarget jar-rs [jar]
 </li>
@@ -1423,9 +2105,11 @@ org/jfree/chart/plot/LocalizationBundle_zh_CN.properties
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-5-6" name="sec-1-3-5-6"></a>Extract file to current directory<br  /><div class="outline-text-5" id="text-1-3-5-6">
+<div id="outline-container-sec-2-5-6" class="outline-4">
+<h4 id="sec-2-5-6"><span class="section-number-4">2.5.6</span> Extract file to current directory</h4>
+<div class="outline-text-4" id="text-2-5-6">
 <ul class="org-ul">
 <li>jarget jar -extract [jar] [file]
 </li>
@@ -1437,11 +2121,10 @@ Extract file from jar to current directory.
 
 <div class="org-src-container">
 
-<pre class="src src-sh">$ jarget jar-ex
+<pre class="src src-sh">$ jarget jar-ex -h
 Extract &lt;file&gt; from jar file &lt;FILE.jar&gt; to current directory.
 
  Usage: jar-ex &lt;FILE.jar&gt; &lt;file&gt;
-
 
 $ jarget jar-ex lib/jfreechart-1.0.17.jar META-INF/MANIFEST.MF
 
@@ -1458,10 +2141,12 @@ $ cat MANIFEST.MF
 </pre>
 </div>
 </div>
-</li>
-<li><a id="sec-1-3-5-7" name="sec-1-3-5-7"></a>Convert a jar file to executable jar file<br  /><div class="outline-text-5" id="text-1-3-5-7">
+</div>
+<div id="outline-container-sec-2-5-7" class="outline-4">
+<h4 id="sec-2-5-7"><span class="section-number-4">2.5.7</span> Convert a jar file to executable jar file</h4>
+<div class="outline-text-4" id="text-2-5-7">
 <p>
-Help: 
+Show Help: 
 </p>
 
 <div class="org-src-container">
@@ -1471,35 +2156,32 @@ Embed Uber jar into Unix executable or Windows Executable (experimental)<span cl
 
  Usage: jar-to-exe [OPTIONS] &lt;FILE.jar&gt;
 
-  -exe=&lt;EXE&gt;      -e=&lt;EXE&gt;   Executable type &lt;EXE&gt; can be uexe for Unix executable, wcli -&gt; Windows CLI Program ...
-  -output=<span class="org-keyword">&lt;FILE&gt;</span>  -o=<span class="org-keyword">&lt;FILE&gt;</span>  Output file, default &lt;FILE&gt; without extension + .sh or .exe.
+<span class="org-function-name">OPTIONS</span>:
+  -exe=&lt;EXE&gt;,       -e  Executable type.
+  -output=<span class="org-keyword">&lt;FILE&gt;,</span>   -o  Output file, default &lt;FILE&gt; without extension + .sh or .exe.
+
+
+ Note - &lt;EXE&gt; can be:
+   + uexe - for Unix executable - Shell script with embedded uber-jar payload.
+   + wcli - for Windows CLI command line executable. *.exe file.
+   + wgui - for Windows GUI with user interface. -&gt; *.exe file.
 </pre>
 </div>
 
+<p>
+Examples:
+</p>
+
 <ul class="org-ul">
-<li>$ jarget jar-to-exe application.jar -o=application 
+<li>$ jarget jar-to-exe application.jar 
 </li>
 </ul>
 
 <p>
-Generates an *nix executable ./application.jsh from the file
-application.jar that can be run with <code>$ java -jar application.jar</code>
+Generates an Unix shell script with a jar payload, named ./application
+from the file application.jar that can be run with <code>$ java -jar application.jar</code>
 </p>
 
-<ul class="org-ul">
-<li><code>$ jaget uber -exjar [application.jar]</code> 
-</li>
-</ul>
-
-<p>
-Generates the *nix executable ./application from application.jar file.
-</p>
-
-<p>
-Note: Those commands create a unix shell script with a jar payload
-that can be run as an ordinary unix executable with ./app instead of
-<code>$ java -jar app.jar</code>.
-</p>
 
 <p>
 Example: Generate a *nix executable (runnable or self-executable jar
@@ -1513,11 +2195,10 @@ ProGuard, version 5.3.3
 <span class="org-function-name">Usage</span>: java proguard.ProGuard [options ...]
 
 <span class="org-comment-delimiter"># </span><span class="org-comment">Builds Unix executable with embedded shell script </span>
-$ jarget jar-to-exe proguard.jar 
-Built proguard
-Run it with ./proguard
+$ jarget jar-to-exe proguard.jar
+Built file ./proguard
 
-<span class="org-comment-delimiter"># </span><span class="org-comment">Build Windows executable with proguard embedded - (Experimental)</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">Build Windows executable with proguard embedded - (Note: Experimental)</span>
 $  jarget jar-to-exe -exe=wcli proguard.jar
 Built file ./proguard.exe
 
@@ -1554,11 +2235,11 @@ $ head -n 7 proguard
 </pre>
 </div>
 </div>
-</li></ol>
 </div>
-<div id="outline-container-sec-1-3-6" class="outline-4">
-<h4 id="sec-1-3-6"><span class="section-number-4">1.3.6</span> Build fatjar, uber Jar or executable uber jar</h4>
-<div class="outline-text-4" id="text-1-3-6">
+</div>
+<div id="outline-container-sec-2-6" class="outline-3">
+<h3 id="sec-2-6"><span class="section-number-3">2.6</span> Build fatjar, uber Jar or executable uber jar</h3>
+<div class="outline-text-3" id="text-2-6">
 <p>
 Help: 
 </p>
@@ -1568,15 +2249,23 @@ Help:
 <pre class="src src-text">$ jarget uber
 Build uber jar file for deployment by bundling dependencies and resource files.
 
+
+    Note - &lt;EXE&gt; can be:
+      + empty - (default) for jar file without any executable wrapper.
+      + uexe  - for Unix executable - Shell script with embedded uber-jar payload.
+      + wcli  - for Windows CLI command line executable. *.exe file.
+      + wgui  - for Windows GUI with user interface. -&gt; *.exe file.
+
  Usage: uber [OPTIONS] &lt;MAIN-JAR&gt; [&lt;JARFILE1.jar&gt; &lt;JARFILE2.jar&gt; ...]
 
-  -output=&lt;file&gt;      -o=&lt;file&gt;     Output file, default out.jar
-  -scala              -s            Bundle Scala runtime library scala-runtime.jar
-  -package=&lt;pack&gt;     -p=&lt;pack&gt;     MVN Coordinates of a java package -  &lt;group&gt;/&lt;artifact&gt;/&lt;version&gt;.
-  -file=&lt;file&gt;        -f=&lt;file&gt;     Jar files to be added to the package.
-  -resource=&lt;folder&gt;  -r=&lt;folder&gt;   Resource directory
-  -jardir=&lt;folder&gt;    -jd=&lt;folder&gt;  Directory containing jar files to be bundled into the uber jar.
-  -exe=&lt;EXE&gt;          -e=&lt;EXE&gt;
+OPTIONS:
+  -output=&lt;file&gt;,       -o   Output file, default out.jar
+  -scala,               -s   Bundle Scala runtime library scala-runtime.jar
+  -package=&lt;pack&gt;,      -p   MVN Coordinates of a java package -  &lt;group&gt;/&lt;artifact&gt;/&lt;version&gt;.
+  -file=&lt;file&gt;,         -f   Jar files to be added to the package.
+  -resource=&lt;folder&gt;,   -r   Resource directory
+  -jardir=&lt;folder&gt;,     -jd  Directory containing jar files to be bundled into the uber jar.
+  -exe=&lt;EXE&gt;,           -e   Executable wrapper - default (empty).
 </pre>
 </div>
 
@@ -1636,12 +2325,17 @@ $ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scalac scripts/chartTest.scala -
 <span class="org-comment-delimiter">#</span>
 $ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scala chartTest.jar 
 
-<span class="org-comment-delimiter"># </span><span class="org-comment">Step 3 - Compile it to an uber-jar by packing dependencies.</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">Step 3 - Make uber-jar by packing dependencies into a single jar.</span>
 
-<span class="org-comment-delimiter"># </span><span class="org-comment">-- Compile for UNIX, Linux, MacOSX ... </span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">-- Create an ordinary uber jar that can be run with java -jar or by clicking on it, </span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">if the application is a GUI.</span>
+$ jarget uber chartTest.jar -scala -p=org.jfree/jfreechart/1.0.17
+Built file: chartTest-out.jar
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">-- Embedding in a shell script for running on UNIX, Linux, MacOSX, BSD ... </span>
 $ jarget uber chartTest.jar -o=<span class="org-keyword">chartTest.sh</span> -scala -exe=uexe -p=org.jfree/jfreechart/1.0.17
 
-<span class="org-comment-delimiter">#</span><span class="org-comment">--- Compile for Windows embedding into an Windows Executable</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">--- Embedding Uber jar into an Windows Executable</span>
 $ jarget uber chartTest.jar -o=<span class="org-keyword">chartTest.exe</span> -scala -exe=wgui -p=org.jfree/jfreechart/1.0.17
 
 $ file chartTest.exe
@@ -1675,10 +2369,12 @@ $ ./jarget
 </div>
 </div>
 
-<div id="outline-container-sec-1-3-7" class="outline-4">
-<h4 id="sec-1-3-7"><span class="section-number-4">1.3.7</span> System Information</h4>
-<div class="outline-text-4" id="text-1-3-7">
-</div><ol class="org-ol"><li><a id="sec-1-3-7-1" name="sec-1-3-7-1"></a>Show Enviroment Variables<br  /><div class="outline-text-5" id="text-1-3-7-1">
+<div id="outline-container-sec-2-7" class="outline-3">
+<h3 id="sec-2-7"><span class="section-number-3">2.7</span> System Information</h3>
+<div class="outline-text-3" id="text-2-7">
+</div><div id="outline-container-sec-2-7-1" class="outline-4">
+<h4 id="sec-2-7-1"><span class="section-number-4">2.7.1</span> Show Enviroment Variables</h4>
+<div class="outline-text-4" id="text-2-7-1">
 <p>
 Command help:
 </p>
@@ -1779,9 +2475,11 @@ On Windows:
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-7-2" name="sec-1-3-7-2"></a>Show PATH Environment Variable<br  /><div class="outline-text-5" id="text-1-3-7-2">
+<div id="outline-container-sec-2-7-2" class="outline-4">
+<h4 id="sec-2-7-2"><span class="section-number-4">2.7.2</span> Show PATH Environment Variable</h4>
+<div class="outline-text-4" id="text-2-7-2">
 <ul class="org-ul">
 <li><code>$ jarget utils -path</code>
 </li>
@@ -1826,9 +2524,11 @@ C:\Users\archbox\AppData\Local\Microsoft\WindowsApps
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-7-3" name="sec-1-3-7-3"></a>Show Java Properties<br  /><div class="outline-text-5" id="text-1-3-7-3">
+<div id="outline-container-sec-2-7-3" class="outline-4">
+<h4 id="sec-2-7-3"><span class="section-number-4">2.7.3</span> Show Java Properties</h4>
+<div class="outline-text-4" id="text-2-7-3">
 <ul class="org-ul">
 <li><code>$ jarget utils -prop</code>
 </li>
@@ -1973,9 +2673,11 @@ On Windows:
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-7-4" name="sec-1-3-7-4"></a>Show Path to Program<br  /><div class="outline-text-5" id="text-1-3-7-4">
+<div id="outline-container-sec-2-7-4" class="outline-4">
+<h4 id="sec-2-7-4"><span class="section-number-4">2.7.4</span> Show Path to Program</h4>
+<div class="outline-text-4" id="text-2-7-4">
 <ul class="org-ul">
 <li><code>$ jarget utils expath &lt;program&gt;</code>
 </li>
@@ -1991,9 +2693,11 @@ $ jarget utils expath jarget
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="sec-1-3-7-5" name="sec-1-3-7-5"></a>Show Platform Information<br  /><div class="outline-text-5" id="text-1-3-7-5">
+<div id="outline-container-sec-2-7-5" class="outline-4">
+<h4 id="sec-2-7-5"><span class="section-number-4">2.7.5</span> Show Platform Information</h4>
+<div class="outline-text-4" id="text-2-7-5">
 <ul class="org-ul">
 <li>jarget utils -info
 </li>
@@ -2059,288 +2763,13 @@ Java Runtime
 </pre>
 </div>
 </div>
-</li></ol>
-</div>
-</div>
-
-<div id="outline-container-sec-1-4" class="outline-3">
-<h3 id="sec-1-4"><span class="section-number-3">1.4</span> Building Instructions</h3>
-<div class="outline-text-3" id="text-1-4">
-</div><div id="outline-container-sec-1-4-1" class="outline-4">
-<h4 id="sec-1-4-1"><span class="section-number-4">1.4.1</span> Build Standalone app</h4>
-<div class="outline-text-4" id="text-1-4-1">
-<p>
-Build a standalone jarget by running 
-</p>
-
-<ul class="org-ul">
-<li><code>$ make sh</code> 
-</li>
-</ul>
-
-<div class="org-src-container">
-
-<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">Build </span>
-$ make sh
-scala jarget.jar uber -scala -sh -o <span class="org-keyword">bin/jarget</span> -m jarget.jar -j /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.jar
-Built file:  bin/jarget ok
-Run it with: $ java -jar bin/jarget
-
-<span class="org-comment-delimiter"># </span><span class="org-comment">Run it with </span>
-$ ./bin/jarget 
-
-<span class="org-comment-delimiter"># </span><span class="org-comment">Or run it with </span>
-$ java -jar bin/jarget
-
-<span class="org-comment-delimiter"># </span><span class="org-comment">Or run it with </span>
-$ sh ./bin/jarget doc
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-sec-1-4-2" class="outline-4">
-<h4 id="sec-1-4-2"><span class="section-number-4">1.4.2</span> Build standalone app and shrink its size with proguard</h4>
-<div class="outline-text-4" id="text-1-4-2">
-<p>
-Build a standalone jarget redeucing the app size with proguard. 
-</p>
-
-<ul class="org-ul">
-<li>$ make pgd-unix 
-</li>
-</ul>
-
-<div class="org-src-container">
-
-<pre class="src src-sh"><span class="org-comment-delimiter"># </span><span class="org-comment">Build </span>
-$ make pgd-unix -k <span class="org-variable-name">CC</span>=scalac
-
-<span class="org-function-name">Makefile</span>:63: warning: overriding recipe for target <span class="org-string">'bin/jarget'</span>
-<span class="org-function-name">Makefile</span>:58: warning: ignoring old recipe for target <span class="org-string">'bin/jarget'</span>
-scalac src/logger.scala src/main.scala src/mvn.scala src/utils.scala src/reader.scala src/utils.JarBuilder.scala src/optPa
-rser.scala src/crypto.scala -d jarget.jar
-<span class="org-function-name">warning</span>: there were 6 deprecation warnings (since 2.12.0); re-run with -deprecation for details
-<span class="org-function-name">warning</span>: there were 5 feature warnings; re-run with -feature for details
-two warnings found
-mkdir -p bin
-cp -v exeLoaders/loaderCLI.exe exeLoaders/loaderGUI.exe assets || true
-<span class="org-string">'exeLoaders/loaderCLI.exe'</span> -&gt; <span class="org-string">'assets/loaderCLI.exe'</span>
-<span class="org-string">'exeLoaders/loaderGUI.exe'</span> -&gt; <span class="org-string">'assets/loaderGUI.exe'</span>
-scala jarget.jar uber -scala -r=assets -o=<span class="org-keyword">bin/jarget-uber.jar</span> jarget.jar /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.
-jar
-java -jar proguard.jar @config.pro
-ProGuard, version 5.3.3
-Reading input...
-Reading program jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-uber.jar]
-Reading library jar [/home/archbox/opt/java/jre/lib/rt.jar]
-Initializing...
-
-... .... ...
-
-  Final number of program classes:    1123
-Inlining subroutines...
-Preverifying...
-Writing output...
-Preparing output jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-pro.jar]
-  Copying resources from program jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-uber.jar]
-rm -rf bin/jarget-uber.jar
-scala jarget.jar jar-to-exe -exe=uexe bin/jarget-pro.jar bin/jarget
-Built file ./bin/jarget-pro
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-sec-1-4-3" class="outline-4">
-<h4 id="sec-1-4-3"><span class="section-number-4">1.4.3</span> Install jarget tool in ~/bin</h4>
-<div class="outline-text-4" id="text-1-4-3">
-<ul class="org-ul">
-<li>make pgd-unix -k CC=scalac &amp;&amp; make install
-</li>
-</ul>
-</div>
-</div>
-</div>
-
-<div id="outline-container-sec-1-5" class="outline-3">
-<h3 id="sec-1-5"><span class="section-number-3">1.5</span> Getting a Binary Release</h3>
-<div class="outline-text-3" id="text-1-5">
-<p>
-An fat-jar executable binary release can be downloaded from this link:
-</p>
-
-<ul class="org-ul">
-<li>Most update Snapshot <a href="https://github.com/caiorss/jarget/raw/gh-pages/jarget">jarget Download</a>
-</li>
-
-<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.0-release/jarget">jarget v1.0</a>
-</li>
-
-<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.1-release/jarget">jarget v1.1</a>
-</li>
-
-<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.2-release/jarget">jarget v1.2</a>
-</li>
-
-<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.3-release/jarget">jarget v1.3</a>
-</li>
-
-<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.3.1-release/jarget">jarget v1.3.1</a>
-</li>
-
-<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.3.2-release/jarget">jarget v1.3.2</a>
-</li>
-
-<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.4-release/jarget">jarget v1.4.0</a> (5.7 MB)
-</li>
-</ul>
-
-<p>
-From version &gt;= 1.5 jarget will be shrunk with proguard.
-</p>
-
-<ul class="org-ul">
-<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.5-release/jarget">jarget v1.5.0</a> (1.7 MB)
-</li>
-
-<li>Release <a href="https://github.com/caiorss/jarget/raw/v1.5.1-release/jarget">jarget v1.5.1</a> 
-</li>
-
-<li>Release <a href="https://github.com/caiorss/jarget/raw/v2.0-beta-release/jarget">jarget v2.0-beta</a>   - Added pacakge caching feature.
-</li>
-
-<li>Release <a href="https://github.com/caiorss/jarget/raw/v2.0.1-beta/jarget">jarget v2.0.1-beta</a> - Allows scripting with dependencies (maven coordinates).
-</li>
-
-<li>Release <a href="https://github.com/caiorss/jarget/raw/v2.1.0-beta-release/jarget">jarget v2.1.0-beta</a> - Uber-jars can be built with maven
-coordinates specifications and added more examples to
-documentation.
-</li>
-
-<li>Release <a href="https://github.com/caiorss/jarget/raw/v2.0.2-beta-release/jarget">jarget-v2.2.0-beta</a> - Fixed uber-jars shell script header
-edge-case bug and also added command jarget utils -info to show
-platform informations such as number of processors, version of
-operating system, default line separator '\r', '\n', '\r\n', path
-separator and so on.
-</li>
-
-<li>Release <a href="https://github.com/caiorss/jarget/blob/554a56e4bcc42d3b8fa3ce134bf7f0984f9e1701/jarget?raw=true">jarget-v3.0</a>
-
-<ul class="org-ul">
-<li>Improved command line handling allowing future scalability and
-implementation of new functionalities.
-</li>
-
-<li>Improved user interface. Now jarget has git-like
-subcommands. Each command works as it was a separated command
-line application in similar fashion to git and busybox.
-</li>
-
-<li>Implemented generation of uber jars embedded in Windows' native
-executables. - (Still experimental.)
-</li>
-</ul>
-</li>
-</ul>
-
-
-<p>
-Or it can be downloaded with those shell commands below: 
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-sh">$ curl -O -L https://github.com/caiorss/jarget/raw/gh-pages/jarget
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100   130  100   130    0     0     28      0  0:00:04  0:00:04 --:--:--    32
-100 5675k  100 5675k    0     0   490k      0  0:00:11  0:00:11 --:--:-- 1011k
-
-$ chmod +x jarget
-
-$ ./jarget 
-jarget - Tool to download jar packages.
-
- -show [package]                 - Show package<span class="org-string">'s information</span>
-
-<span class="org-string"> -pom  [package]                 - Show package'</span>s pom file
-
-... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
-</pre>
-</div>
-
-<p>
-Or 
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-sh">$ curl -O -L https://github.com/caiorss/jarget/raw/gh-pages/jarget &amp;&amp; chmod +x jarget &amp;&amp; ./jarget
-</pre>
-</div>
-
-<p>
-On Windows the application can be executed with: 
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-sh">$ java -jar jarget 
-
-jarget - Tool to download jar packages.
-
- -show [package]                 - Show package<span class="org-string">'s information</span>
-
-<span class="org-string"> -pom  [package]                 - Show package'</span>s pom file
-
- -get  [package]                 - Download package and dependencies to ./lib
-
- -get  [package] -dir [path]     - Download package and dependencies to [path] directory.
-
-... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-sec-1-6" class="outline-3">
-<h3 id="sec-1-6"><span class="section-number-3">1.6</span> <span class="todo TODO">TODO</span> Tasks</h3>
-<div class="outline-text-3" id="text-1-6">
-<ul class="org-ul">
-<li><code>[&#xa0;]</code> - Add search in console feature.  
-</li>
-<li><code>[X]</code> - Add search in browser feature.
-</li>
-<li><code>[X]</code> - Add package cache 
-</li>
-<li><code>[&#xa0;]</code> - Show all versions of a given package available in the repository.
-</li>
-<li><code>[&#xa0;]</code> - Support multiple repositories. 
-</li>
-<li><code>[&#xa0;]</code> - Support project configuration file. 
-</li>
-<li><code>[X]</code> - Improve command line handling 
-</li>
-<li><code>[X]</code> - Improve error handling. 
-</li>
-<li><code>[X]</code> - Feature to make Uber Jar 
-</li>
-<li><code>[X]</code> - Shrink the generated uber jar using Pro-guard. 
-</li>
-<li><code>[X]</code> - Create a Windows exe wrapper
-</li>
-<li><code>[X]</code> - Crypto Hash commands such as md5sum, sha256sum &#x2026; 
-</li>
-<li><code>[X]</code> - Improve project's web site design.
-</li>
-</ul>
 </div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues - caiorss.rodrigues@gmail.com</p>
-<p class="date">Created: 2018-04-08 Sun 16:51</p>
+<p class="date">Created: 2018-04-20 Fri 23:20</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
