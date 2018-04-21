@@ -132,38 +132,56 @@ Now the app adopts git subcommands:
 
  - =$ jarget=
 
-#+BEGIN_SRC text 
+#+BEGIN_SRC text
   $ jarget
 
-   Jarget 3.0 - command line toolbox for Java Platform.
+   Jarget 3.2 - command line toolbox for Scala and the Java Platform.
 
   Usage: $  [COMMAND] [OPTIONS] [<ARGS> ...]
 
   Commands:
 
-    uber            Build uber jar file for deployment by bundling dependencies and resource files.
-    exec            Execute a shell command and pass -cp <CLASSPATH> of packages downloaded to it.
-    script          Run a scala script with a given set of packages from cache.
-    mvn-show        Show package's information.
-    mvn-search      Search for a package at the site https://mvnrepository.com
-    mvn-doc         Open package documentation in the web browser.
-    mvn-pom         Show package's pom.xml file.
-    mvn-pull        Show package's pom.xml file.
-    mvn-copy        Copy jar packages from cache directory to ./lib downloading them if not available.
-    cache           Show packages in cache directory.
-    jar-to-exe      Embed Uber jar into Unix executable or Windows Executable (experimental).
-    jar-man         Show manifest of a jar file.
-    jar-main-class  Show main class of a jar file.
-    jar-ls          Show contents of a jar file.
-    jar-rs          Show resources of a jar file ignoring *.class files.
-    jar-cat         Show content of a file in a jar package.
-    jar-ex          Extract <file> from jar file <FILE.jar> to current directory.
-    utils           General utilities helpers for platform information and debugging.
-    digest-s        Compute crypto hash of string. - Algorithm: [md5 | sha1 | sha256 ]
-    digest-f        Compute crypto hash of a file. - Algorithm: [md5 | sha1 | sha256 ]
+
+  [Main Commands]
+
+    uber               Build uber jar file for deployment by bundling dependencies and resource files.
+    exec               Execute a shell command and pass -cp <CLASSPATH> of packages downloaded to it.
+    script             Run a scala script with a given set of packages from cache.
+    scala              Run Scala REPL (scala) passing the class of packages from the repository.
+    run                Run a main class from a set of jar file passing the classpath of packages in repository.
+
+  [Mvn Commands]
+
+    mvn-show           Show package's information.
+    mvn-search         Search for a package at the site https://mvnrepository.com
+    mvn-doc            Open package documentation in the web browser.
+    mvn-run-jar        Run main method of executable jar package in repository.
+    mvn-run-cls        Run a main class of a java package (class with main static method).
+    mvn-pom            Show package's pom.xml file.
+    mvn-pull           Download package to cache directory.
+    mvn-copy           Copy jar packages from cache directory to ./lib downloading them if not available.
+    cache              Show packages in cache directory.
+
+  [Jar Commands]
+
+    jar-to-exe         Embed Uber jar into Unix executable or Windows Executable (experimental).
+    jar-man            Show manifest of a jar file.
+    jar-main-class     Show main class of a jar file.
+    jar-ls             Show contents of a jar file.
+    jar-rs             Show resources of a jar file ignoring *.class files.
+    jar-cat            Show content of a file in a jar package.
+    jar-ex             Extract <file> from jar file <FILE.jar> to current directory.
+
+  [Misc Commands]
+
+    utils              General utilities helpers for platform information and debugging.
+    digest-s           Compute crypto hash of string. - Algorithm: [md5 | sha1 | sha256 ]
+    digest-f           Compute crypto hash of a file. - Algorithm: [md5 | sha1 | sha256 ]
+
+
 #+END_SRC
 
-Each subcommand has its own help text: 
+Each sub-command has its own help: 
 
  - Example: subcommand uber to build uber jars.
 
@@ -171,14 +189,23 @@ Each subcommand has its own help text:
   $ jarget uber
   Build uber jar file for deployment by bundling dependencies and resource files.
 
+
+      Note - <EXE> can be:
+        + empty - (default) for jar file without any executable wrapper.
+        + uexe  - for Unix executable - Shell script with embedded uber-jar payload.
+        + wcli  - for Windows CLI command line executable. *.exe file.
+        + wgui  - for Windows GUI with user interface. -> *.exe file.
+
    Usage: uber [OPTIONS] <MAIN-JAR> [<JARFILE1.jar> <JARFILE2.jar> ...]
 
-    -output=<file>      -o=<file>     Output file, default out.jar
-    -scala              -s            Bundle Scala runtime library scala-runtime.jar
-    -package=<pack>     -p=<pack>     MVN Coordinates of a java package -  <group>/<artifact>/<version>.
-    -file=<file>        -f=<file>     Jar files to be added to the package.
-    -resource=<folder>  -r=<folder>   Resource directory
-    -jardir=<folder>    -jd=<folder>  Directory containing jar files to be bundled into the uber jar.
+  OPTIONS:
+    -output=<file>,       -o   Output file, default out.jar
+    -scala,               -s   Bundle Scala runtime library scala-runtime.jar
+    -package=<pack>,      -p   MVN Coordinates of a java package -  <group>/<artifact>/<version>.
+    -file=<file>,         -f   Jar files to be added to the package.
+    -resource=<folder>,   -r   Resource directory
+    -jardir=<folder>,     -jd  Directory containing jar files to be bundled into the uber jar.
+    -exe=<EXE>,           -e   Executable wrapper - default (empty).
 
 #+END_SRC
 
@@ -190,20 +217,17 @@ Each subcommand has its own help text:
 
    Usage: cache <ACTION>
 
-    -path  -  Show cache's directory path.
-    -pack  -  Show packages in cache directory
-    -jars  -  Show all jar files in cache directory
-
-  $ jarget cache -pack
-  org.jfree/jcommon
-  org.jfree/jfreechart
-  xml-apis/xml-apis
+  OPTIONS:
+    -path,    -  Show cache's directory path.
+    -pack,    -  Show packages in cache directory
+    -jars,    -  Show all jar files in cache directory
+    -clean,   -  Clean cache directory freeing space.
 #+END_SRC
 
 *** Maven / Packages Commands
 **** Show package information 
 
- - $ jarget mvn -show org.jfree/jfreechart/1.0.17
+ - $ jarget mvn-show org.jfree/jfreechart/1.0.17
 
 #+BEGIN_SRC text 
   $ jarget mvn-show
@@ -235,7 +259,7 @@ Each subcommand has its own help text:
 #+END_SRC
 **** Show package's POM file 
 
- - $ jarget mvn -pom org.jfree/jfreechart/1.0.17
+ - $ jarget mvn-pom org.jfree/jfreechart/1.0.17
 
 #+BEGIN_SRC sh 
   $ jarget mvn-pom
@@ -284,23 +308,29 @@ This command installs/downloads all packages to jarget cache directory: file:~/.
 Example: Get teh packages org.jfree/jfreechart/1.0.17 and org.scalaz/scalaz-core_2.11/7.3.0-M15.
 
 #+BEGIN_SRC text 
-$ jarget mvn -pull org.jfree/jfreechart/1.0.17,org.scalaz/scalaz-core_2.11/7.3.0-M15
-Downloading ---------------------
-PackData(org.jfree,jfreechart,1.0.17)
-PackData(org.jfree,jcommon,1.0.21)
-PackData(xml-apis,xml-apis,1.3.04)
-----------------------------------
-Package path = PackData(org.jfree,jfreechart,1.0.17)
-Downloading file /home/archbox/.jarget/cache/org/jfree/jfreechart/1.0.17/jfreechart-1.0.17.pom.
-Package path = PackData(org.jfree,jcommon,1.0.21)
-Package path = PackData(xml-apis,xml-apis,1.3.04)
-Downloading file /home/archbox/.jarget/cache/org/jfree/jcommon/1.0.21/jcommon-1.0.21.pom.
-Downloading file /home/archbox/.jarget/cache/xml-apis/xml-apis/1.3.04/xml-apis-1.3.04.pom.
-File /home/archbox/.jarget/cache/org/jfree/jfreechart/1.0.17/jfreechart-1.0.17.pom downloaded. Ok.
-Downloading file /home/archbox/.jarget/cache/org/jfree/jfreechart/1.0.17/jfreechart-1.0.17.jar.
-File /home/archbox/.jarget/cache/xml-apis/xml-apis/1.3.04/xml-apis-1.3.04.pom downloaded. Ok.
-.... ... ... 
-Download Successful
+  $ jarget mvn-pull
+  Download package to cache directory.
+
+  Note: Packages are in the the format <group>/<artifact>/<version>
+   Usage: mvn-pull <PACKAGE1> [<PACKAGE2> ...]
+
+
+     Example:
+      $ jarget mvn-pull org.scalaz/scalaz-core_2.11/7.3.0-M15 org.jfree/jfreechart/1.0.17
+
+
+  $ jarget mvn-pull org.scalaz/scalaz-core_2.11/7.3.0-M15 org.jfree/jfreechart/1.0.17
+  Downloading ---------------------
+  PackData(org.scalaz,scalaz-core_2.11,7.3.0-M15)
+  PackData(org.scala-lang,scala-library,2.11.11)
+  PackData(org.scala-lang.modules,scala-java8-compat_2.11,0.7.0)
+
+  ... ... ...  ... ... ...  ... ... ...  ... 
+
+  File /home/archbox/.jarget/cache/org/jfree/jcommon/1.0.21/jcommon-1.0.21.jar downloaded. Ok.
+  File /home/archbox/.jarget/cache/org/jfree/jfreechart/1.0.17/jfreechart-1.0.17.jar downloaded. Ok.
+  Download Successful
+
 #+END_SRC
 
 Show packages in cache: 
@@ -320,8 +350,6 @@ org.jfree/jfreechart
 
 This command copies a package from cache to ./lib directory. The
 packages are downloaded if not available in the cache directory yet.
-
- - =$ jarget mvn -copy <pack1,pack2,pack3...>=
 
 #+BEGIN_SRC sh 
   $ jarget mvn-copy org.jfree/jfreechart/1.0.17 org.scalaz/scalaz-core_2.11/7.3.0-M15
@@ -354,7 +382,7 @@ packages are downloaded if not available in the cache directory yet.
 
 #+END_SRC
 
-# When the command is run the second time, the packages are copied from cache to ./lib.
+When the command is run the second time, the packages are copied from cache to ./lib.
 
 #+BEGIN_SRC sh 
   $ jarget mvn-copy org.jfree/jfreechart/1.0.17 org.scalaz/scalaz-core_2.11/7.3.0-M15
@@ -368,7 +396,7 @@ packages are downloaded if not available in the cache directory yet.
 
 **** TODO Clean cache removing all packages 
 
- - =$ jarget mvn -clear=
+ - $ jarget mvn -clear
 
 #+BEGIN_SRC sh 
 $ jarget mvn -clear 
@@ -567,9 +595,9 @@ Show command help:
 
    Usage: script [OPTIONS] -- <SCRIPT.scala> [<SCRIPT ARGS> ...]
 
-    -package=<PACK>                  -p=<PACK>               Package maven's coordinate
-    -package-str=<PACK1>,<PACK2>...  -ps=<PACK1>,<PACK2>...  Package's separated by command <pack1>,<pack2>...<packN>
-
+  OPTIONS:
+    -package=<PACK>,                   -p   Package maven's coordinate
+    -package-str=<PACK1>,<PACK2>...,   -ps  Package's separated by command <pack1>,<pack2>...<packN>
 #+END_SRC
 
 **** Example 1 - Script with JFreeChart 
@@ -582,7 +610,7 @@ Example: [[file:scripts/chartScript.sh]]
 #+BEGIN_SRC scala :tangle scripts/chartScript.sh
   #!/bin/sh
   DEPS=org.jfree/jfreechart/1.0.17
-  exec jarget script -p="$DEPS" -- "$0" "$@"
+  exec jarget script -ps="$DEPS" -- "$0" "$@"
   !#
 
   import org.jfree.chart.{ChartPanel, ChartFactory, JFreeChart, ChartUtilities}
@@ -833,30 +861,48 @@ Generating QRcode image file images/qrcodeTest.png for testing URL: https://msdn
 The commands to manipulate jars are listed below: 
 
 #+BEGIN_SRC text 
-$  jarget | grep jar
-  uber            Build uber jar file for deployment by bundling dependencies and resource files.
-  mvn-copy        Copy jar packages from cache directory to ./lib downloading them if not available.
-  jar-to-exe      Embed Uber jar into Unix executable or Windows Executable (experimental).
-  jar-man         Show manifest of a jar file.
-  jar-main-class  Show main class of a jar file.
-  jar-ls          Show contents of a jar file.
-  jar-rs          Show resources of a jar file ignoring *.class files.
-  jar-cat         Show content of a file in a jar package.
-  jar-ex          Extract <file> from jar file <FILE.jar> to current directory.
+  $ jarget | grep jar
+    uber               Build uber jar file for deployment by bundling dependencies and resource files.
+    run                Run a main class from a set of jar file passing the classpath of packages in repository.
+    mvn-run-jar        Run main method of executable jar package in repository.
+    mvn-copy           Copy jar packages from cache directory to ./lib downloading them if not available.
+    jar-to-exe         Embed Uber jar into Unix executable or Windows Executable (experimental).
+    jar-man            Show manifest of a jar file.
+    jar-main-class     Show main class of a jar file.
+    jar-ls             Show contents of a jar file.
+    jar-rs             Show resources of a jar file ignoring *.class files.
+    jar-cat            Show content of a file in a jar package.
+    jar-ex             Extract <file> from jar file <FILE.jar> to current directory.
 #+END_SRC
 
 Those commands are simple and self-explanatory and easier to remember.
 
-#+BEGIN_SRC text 
-  $  jarget jar-man
-  Show manifest of a jar file.
+#+BEGIN_SRC sh
+  $ jarget jar-ls -h
+  Show contents of a jar file.
 
-   Usage: jar-man <FILE.jar>
+   Usage: jar-ls <FILE.jar>
 
-  $  jarget jar-main-class
-  Show main class of a jar file.
+  $ jarget jar-ex -h
+  Extract <file> from jar file <FILE.jar> to current directory.
 
-   Usage: jar-main-class <FILE.jar>
+   Usage: jar-ex <FILE.jar> <file>
+
+  $ jarget jar-to-exe
+  Embed Uber jar into Unix executable or Windows Executable (experimental).
+
+   Usage: jar-to-exe [OPTIONS] <FILE.jar>
+
+  OPTIONS:
+    -exe=<EXE>,       -e  Executable type.
+    -output=<FILE>,   -o  Output file, default <FILE> without extension + .sh or .exe.
+
+
+   Note - <EXE> can be:
+     + uexe - for Unix executable - Shell script with embedded uber-jar payload.
+     + wcli - for Windows CLI command line executable. *.exe file.
+     + wgui - for Windows GUI with user interface. -> *.exe file.
+
 
 #+END_SRC
 
@@ -982,11 +1028,10 @@ org/jfree/chart/plot/LocalizationBundle_zh_CN.properties
 Extract file from jar to current directory.
 
 #+BEGIN_SRC sh 
-  $ jarget jar-ex
+  $ jarget jar-ex -h
   Extract <file> from jar file <FILE.jar> to current directory.
 
    Usage: jar-ex <FILE.jar> <file>
-
 
   $ jarget jar-ex lib/jfreechart-1.0.17.jar META-INF/MANIFEST.MF
 
@@ -1003,7 +1048,7 @@ Extract file from jar to current directory.
 #+END_SRC
 **** Convert a jar file to executable jar file 
 
-Help: 
+Show Help: 
 
 #+BEGIN_SRC sh 
   $ jarget jar-to-exe
@@ -1011,23 +1056,25 @@ Help:
 
    Usage: jar-to-exe [OPTIONS] <FILE.jar>
 
-    -exe=<EXE>      -e=<EXE>   Executable type <EXE> can be uexe for Unix executable, wcli -> Windows CLI Program ...
-    -output=<FILE>  -o=<FILE>  Output file, default <FILE> without extension + .sh or .exe.
+  OPTIONS:
+    -exe=<EXE>,       -e  Executable type.
+    -output=<FILE>,   -o  Output file, default <FILE> without extension + .sh or .exe.
+
+
+   Note - <EXE> can be:
+     + uexe - for Unix executable - Shell script with embedded uber-jar payload.
+     + wcli - for Windows CLI command line executable. *.exe file.
+     + wgui - for Windows GUI with user interface. -> *.exe file.
 
 #+END_SRC
 
- - $ jarget jar-to-exe application.jar -o=application 
+Examples:
 
-Generates an *nix executable ./application.jsh from the file
-application.jar that can be run with =$ java -jar application.jar=
+ - $ jarget jar-to-exe application.jar 
 
- - =$ jaget uber -exjar [application.jar]= 
+Generates an Unix shell script with a jar payload, named ./application
+from the file application.jar that can be run with =$ java -jar application.jar=
 
-Generates the *nix executable ./application from application.jar file.
-
-Note: Those commands create a unix shell script with a jar payload
-that can be run as an ordinary unix executable with ./app instead of
-=$ java -jar app.jar=.
 
 Example: Generate a *nix executable (runnable or self-executable jar
 file) named proguard from proguard.jar.
@@ -1038,11 +1085,10 @@ file) named proguard from proguard.jar.
   Usage: java proguard.ProGuard [options ...]
 
   # Builds Unix executable with embedded shell script 
-  $ jarget jar-to-exe proguard.jar 
-  Built proguard
-  Run it with ./proguard
+  $ jarget jar-to-exe proguard.jar
+  Built file ./proguard
 
-  # Build Windows executable with proguard embedded - (Experimental)
+  # Build Windows executable with proguard embedded - (Note: Experimental)
   $  jarget jar-to-exe -exe=wcli proguard.jar
   Built file ./proguard.exe
 
@@ -1086,16 +1132,23 @@ Help:
   $ jarget uber
   Build uber jar file for deployment by bundling dependencies and resource files.
 
+
+      Note - <EXE> can be:
+        + empty - (default) for jar file without any executable wrapper.
+        + uexe  - for Unix executable - Shell script with embedded uber-jar payload.
+        + wcli  - for Windows CLI command line executable. *.exe file.
+        + wgui  - for Windows GUI with user interface. -> *.exe file.
+
    Usage: uber [OPTIONS] <MAIN-JAR> [<JARFILE1.jar> <JARFILE2.jar> ...]
 
-    -output=<file>      -o=<file>     Output file, default out.jar
-    -scala              -s            Bundle Scala runtime library scala-runtime.jar
-    -package=<pack>     -p=<pack>     MVN Coordinates of a java package -  <group>/<artifact>/<version>.
-    -file=<file>        -f=<file>     Jar files to be added to the package.
-    -resource=<folder>  -r=<folder>   Resource directory
-    -jardir=<folder>    -jd=<folder>  Directory containing jar files to be bundled into the uber jar.
-    -exe=<EXE>          -e=<EXE>
-    
+  OPTIONS:
+    -output=<file>,       -o   Output file, default out.jar
+    -scala,               -s   Bundle Scala runtime library scala-runtime.jar
+    -package=<pack>,      -p   MVN Coordinates of a java package -  <group>/<artifact>/<version>.
+    -file=<file>,         -f   Jar files to be added to the package.
+    -resource=<folder>,   -r   Resource directory
+    -jardir=<folder>,     -jd  Directory containing jar files to be bundled into the uber jar.
+    -exe=<EXE>,           -e   Executable wrapper - default (empty).
 #+END_SRC
 
 The parameter <EXE> from -exe=<EXE> can be: 
@@ -1144,12 +1197,17 @@ Example: Make a scala uber-jar from the program [[file:scripts/chartTest.scala][
   #
   $ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scala chartTest.jar 
 
-  # Step 3 - Compile it to an uber-jar by packing dependencies.
+  # Step 3 - Make uber-jar by packing dependencies into a single jar.
 
-  # -- Compile for UNIX, Linux, MacOSX ... 
+  #-- Create an ordinary uber jar that can be run with java -jar or by clicking on it, 
+  # if the application is a GUI.
+  $ jarget uber chartTest.jar -scala -p=org.jfree/jfreechart/1.0.17
+  Built file: chartTest-out.jar
+  
+  # -- Embedding in a shell script for running on UNIX, Linux, MacOSX, BSD ... 
   $ jarget uber chartTest.jar -o=chartTest.sh -scala -exe=uexe -p=org.jfree/jfreechart/1.0.17
 
-  #--- Compile for Windows embedding into an Windows Executable
+  #--- Embedding Uber jar into an Windows Executable
   $ jarget uber chartTest.jar -o=chartTest.exe -scala -exe=wgui -p=org.jfree/jfreechart/1.0.17
 
   $ file chartTest.exe
