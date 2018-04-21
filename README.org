@@ -125,8 +125,97 @@ scala>
 
 #+END_SRC
 
-** User Guide
-*** Info commands
+** TODO Tasks 
+
+ - [ ]  - Add search in console feature.  
+ - [X]  - Add search in browser feature.
+ - [X]  - Add package cache 
+ - [ ]  - Show all versions of a given package available in the repository.
+ - [ ]  - Support multiple repositories. 
+ - [ ]  - Support project configuration file. 
+ - [X]  - Improve command line handling 
+ - [X]  - Improve error handling. 
+ - [X]  - Feature to make Uber Jar 
+ - [X]  - Shrink the generated uber jar using Pro-guard. 
+ - [X]  - Create a Windows exe wrapper
+ - [X]  - Crypto Hash commands such as md5sum, sha256sum ... 
+ - [X]  - Improve project's web site design.
+
+** Building Instructions 
+*** Build Standalone app 
+
+Build a standalone jarget by running 
+
+ - =$ make sh= 
+
+#+BEGIN_SRC sh 
+# Build 
+$ make sh
+scala jarget.jar uber -scala -sh -o bin/jarget -m jarget.jar -j /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.jar
+Built file:  bin/jarget ok
+Run it with: $ java -jar bin/jarget
+
+# Run it with 
+$ ./bin/jarget 
+
+# Or run it with 
+$ java -jar bin/jarget
+
+# Or run it with 
+$ sh ./bin/jarget doc
+
+#+END_SRC
+
+*** Build standalone app and shrink its size with proguard
+
+Build a standalone jarget redeucing the app size with proguard. 
+
+ - $ make pgd-unix 
+
+#+BEGIN_SRC sh
+  # Build 
+  $ make pgd-unix -k CC=scalac
+
+  Makefile:63: warning: overriding recipe for target 'bin/jarget'
+  Makefile:58: warning: ignoring old recipe for target 'bin/jarget'
+  scalac src/logger.scala src/main.scala src/mvn.scala src/utils.scala src/reader.scala src/utils.JarBuilder.scala src/optPa
+  rser.scala src/crypto.scala -d jarget.jar
+  warning: there were 6 deprecation warnings (since 2.12.0); re-run with -deprecation for details
+  warning: there were 5 feature warnings; re-run with -feature for details
+  two warnings found
+  mkdir -p bin
+  cp -v exeLoaders/loaderCLI.exe exeLoaders/loaderGUI.exe assets || true
+  'exeLoaders/loaderCLI.exe' -> 'assets/loaderCLI.exe'
+  'exeLoaders/loaderGUI.exe' -> 'assets/loaderGUI.exe'
+  scala jarget.jar uber -scala -r=assets -o=bin/jarget-uber.jar jarget.jar /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.
+  jar
+  java -jar proguard.jar @config.pro
+  ProGuard, version 5.3.3
+  Reading input...
+  Reading program jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-uber.jar]
+  Reading library jar [/home/archbox/opt/java/jre/lib/rt.jar]
+  Initializing...
+
+  ... .... ...
+
+    Final number of program classes:    1123
+  Inlining subroutines...
+  Preverifying...
+  Writing output...
+  Preparing output jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-pro.jar]
+    Copying resources from program jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-uber.jar]
+  rm -rf bin/jarget-uber.jar
+  scala jarget.jar jar-to-exe -exe=uexe bin/jarget-pro.jar bin/jarget
+  Built file ./bin/jarget-pro
+
+
+#+END_SRC
+
+*** Install jarget tool in ~/bin 
+
+ - make pgd-unix -k CC=scalac && make install
+* User Guide
+** Info commands
 
 Now the app adopts git subcommands:
 
@@ -224,8 +313,8 @@ Each sub-command has its own help:
     -clean,   -  Clean cache directory freeing space.
 #+END_SRC
 
-*** Maven / Packages Commands
-**** Show package information 
+** Maven / Packages Commands
+*** Show package information 
 
  - $ jarget mvn-show org.jfree/jfreechart/1.0.17
 
@@ -257,7 +346,7 @@ Each sub-command has its own help:
 
 
 #+END_SRC
-**** Show package's POM file 
+*** Show package's POM file 
 
  - $ jarget mvn-pom org.jfree/jfreechart/1.0.17
 
@@ -284,7 +373,7 @@ Each sub-command has its own help:
       
 
 #+END_SRC
-**** Open package Documentation Online 
+*** Open package Documentation Online 
 
  - $ jarget mvn-doc org.jfree/jfreechart/1.0.17
 
@@ -299,7 +388,7 @@ It will open the package's documentation at https://mvnrepository.com.
   $ jarget mvn-doc org.jfree/jfreechart/1.0.17
 #+END_SRC
 
-**** TODO Install packages in the cache 
+*** TODO Install packages in the cache 
 
 This command installs/downloads all packages to jarget cache directory: file:~/.jarget/cache
 
@@ -346,7 +435,7 @@ org.jfree/jfreechart
 
 #+END_SRC
 
-**** Copy packages from cache to local directory 
+*** Copy packages from cache to local directory 
 
 This command copies a package from cache to ./lib directory. The
 packages are downloaded if not available in the cache directory yet.
@@ -394,7 +483,7 @@ When the command is run the second time, the packages are copied from cache to .
   Copying scala-java8-compat_2.11-0.7.0.jar to ./lib
 #+END_SRC
 
-**** TODO Clean cache removing all packages 
+*** TODO Clean cache removing all packages 
 
  - $ jarget mvn -clear
 
@@ -412,8 +501,8 @@ Deleting directory: /home/archbox/.jarget/cache/xml-apis
 Deleting directory: /home/archbox/.jarget/cache
 #+END_SRC
 
-**** Execute program with classpath for packages from cache 
-***** Command 
+*** Execute program with classpath for packages from cache 
+**** Command 
 
  - $ jarget exec -p=pack1 -p=pack2  ...  -- program arg1 arg2 arg2 ...
 
@@ -438,7 +527,7 @@ Command help:
     -package=<PACK>  -p=<PACK>  Package maven's coordinate
 #+END_SRC
 
-***** Example: Running scala with a set of packages in classpath
+**** Example: Running scala with a set of packages in classpath
 
 Example: Run Scala with [[https://mvnrepository.com/artifact/org.typelevel/cats-core_2.12/0.9.0][org.typelevel/cats-core_2.12/0.9.0]]
 
@@ -472,7 +561,7 @@ Example: Run Scala with [[https://mvnrepository.com/artifact/org.typelevel/cats-
 
 #+END_SRC
 
-***** Example: Running scalac with ase packages in classpath 
+**** Example: Running scalac with ase packages in classpath 
 
 *Run script with scala and dependencies*
 
@@ -502,8 +591,8 @@ $ jarget exec -p=org.jfree/jfreechart/1.0.17 -- scala chart.jar
 
 #+END_SRC
 
-*** Cache commands 
-**** Show cache path 
+** Cache commands 
+*** Show cache path 
 
  - $ jarget cache -path
 
@@ -547,7 +636,7 @@ $ tree $(jarget cache -path)
                 └── machinist_2.12-0.6.1.pom
 #+END_SRC
 
-**** Show all packages in cache 
+*** Show all packages in cache 
 
  - $ jarget cache -pack
 
@@ -562,8 +651,8 @@ com.github.mpilquist/simulacrum_2.12
 
 #+END_SRC
 
-**** TODO Show all versions of a given package in cache 
-**** Show all jar files in the cache folder
+*** TODO Show all versions of a given package in cache 
+*** Show all jar files in the cache folder
 
 #+BEGIN_SRC sh 
 $ jarget cache -jars
@@ -576,11 +665,11 @@ $ jarget cache -jars
 
 #+END_SRC
 
-*** Scripting with jarget 
-    :PROPERTIES:
-    :ID:       b900cee2-b19f-41ae-8ad6-006ab37b9dfc
-    :END:
-**** Overview 
+** Scripting with jarget 
+   :PROPERTIES:
+   :ID:       b900cee2-b19f-41ae-8ad6-006ab37b9dfc
+   :END:
+*** Overview 
 
 Jarget can be used to run scala scripts with java packages
 dependencies by downloading them if they are not available in the
@@ -600,7 +689,7 @@ Show command help:
     -package-str=<PACK1>,<PACK2>...,   -ps  Package's separated by command <pack1>,<pack2>...<packN>
 #+END_SRC
 
-**** Example 1 - Script with JFreeChart 
+*** Example 1 - Script with JFreeChart 
      :PROPERTIES:
      :ID:       cbb743e4-f9a8-4784-be27-b8c0e9599f8b
      :END:
@@ -686,7 +775,7 @@ listed in '$PATH' variable.
   #
   $ ./chartScript.sh
 #+END_SRC
-**** Example 2 - Script that generates QRCode 
+*** Example 2 - Script that generates QRCode 
      :PROPERTIES:
      :ID:       121d73f6-37d4-4a7d-9774-9092d7bf23a9
      :END:
@@ -855,8 +944,8 @@ $  scripts/qrcode.sh -test2
 Generating QRcode image file images/qrcodeTest.png for testing URL: https://msdn.microsoft.com/en-us/library/ff798384.aspx
 #+END_SRC
 
-*** Command to manipulate Jar packages
-**** Overview 
+** Command to manipulate Jar packages
+*** Overview 
 
 The commands to manipulate jars are listed below: 
 
@@ -906,7 +995,7 @@ Those commands are simple and self-explanatory and easier to remember.
 
 #+END_SRC
 
-**** Show manifest file 
+*** Show manifest file 
 
  - $ jarget jar-man JARFILE.jar 
 
@@ -924,7 +1013,7 @@ Those commands are simple and self-explanatory and easier to remember.
 
 #+END_SRC
 
-**** Show contents of single file 
+*** Show contents of single file 
 
  - $ jarget jar-cat [jar] [file]
 
@@ -974,7 +1063,7 @@ Those commands are simple and self-explanatory and easier to remember.
 
 #+END_SRC
 
-**** List all files 
+*** List all files 
  
  - $ jarget jar-ls [jar]
 
@@ -999,7 +1088,7 @@ Packget$$anonfun$downloadPackage$5.class
 
 #+END_SRC
 
-**** List resource/asset files 
+*** List resource/asset files 
 
  - $ jarget jar-rs [jar]
 
@@ -1021,7 +1110,7 @@ org/jfree/chart/plot/LocalizationBundle_ru.properties
 org/jfree/chart/plot/LocalizationBundle_zh_CN.properties
 #+END_SRC
 
-**** Extract file to current directory
+*** Extract file to current directory
 
  - jarget jar -extract [jar] [file]
 
@@ -1046,7 +1135,7 @@ Extract file from jar to current directory.
   Implementation-Version: 1.0.17
   Implementation-Vendor: jfree.org
 #+END_SRC
-**** Convert a jar file to executable jar file 
+*** Convert a jar file to executable jar file 
 
 Show Help: 
 
@@ -1124,7 +1213,7 @@ file) named proguard from proguard.jar.
       if [ -f  "$JAVA_HOME/bin/java" ] ;
 
 #+END_SRC
-*** Build fatjar, uber Jar or executable uber jar 
+** Build fatjar, uber Jar or executable uber jar 
 
 Help: 
 
@@ -1235,8 +1324,8 @@ Run it with: $ java -jar jarget
 $ ./jarget 
 #+END_SRC
 
-*** System Information 
-**** Show Enviroment Variables 
+** System Information 
+*** Show Enviroment Variables 
 
 Command help:
 
@@ -1327,7 +1416,7 @@ On Windows:
 
 #+END_SRC
 
-**** Show PATH Environment Variable 
+*** Show PATH Environment Variable 
 
  - =$ jarget utils -path=
 
@@ -1364,7 +1453,7 @@ On Windows:
 
 #+END_SRC
 
-**** Show Java Properties 
+*** Show Java Properties 
 
  - =$ jarget utils -prop=
 
@@ -1499,7 +1588,7 @@ On Windows:
 
 #+END_SRC
 
-**** Show Path to Program 
+*** Show Path to Program 
 
  - =$ jarget utils expath <program>=
 
@@ -1512,7 +1601,7 @@ $ jarget utils expath jarget
 
 #+END_SRC
 
-**** Show Platform Information
+*** Show Platform Information
 
  - jarget utils -info
 
@@ -1570,81 +1659,6 @@ Output on Windows 10:
   - java.home                     = C:\Program Files\Java\jdk1.8.0_162\jre
 
 #+END_SRC
-
-** Building Instructions 
-*** Build Standalone app 
-
-Build a standalone jarget by running 
-
- - =$ make sh= 
-
-#+BEGIN_SRC sh 
-# Build 
-$ make sh
-scala jarget.jar uber -scala -sh -o bin/jarget -m jarget.jar -j /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.jar
-Built file:  bin/jarget ok
-Run it with: $ java -jar bin/jarget
-
-# Run it with 
-$ ./bin/jarget 
-
-# Or run it with 
-$ java -jar bin/jarget
-
-# Or run it with 
-$ sh ./bin/jarget doc
-
-#+END_SRC
-
-*** Build standalone app and shrink its size with proguard
-
-Build a standalone jarget redeucing the app size with proguard. 
-
- - $ make pgd-unix 
-
-#+BEGIN_SRC sh
-  # Build 
-  $ make pgd-unix -k CC=scalac
-
-  Makefile:63: warning: overriding recipe for target 'bin/jarget'
-  Makefile:58: warning: ignoring old recipe for target 'bin/jarget'
-  scalac src/logger.scala src/main.scala src/mvn.scala src/utils.scala src/reader.scala src/utils.JarBuilder.scala src/optPa
-  rser.scala src/crypto.scala -d jarget.jar
-  warning: there were 6 deprecation warnings (since 2.12.0); re-run with -deprecation for details
-  warning: there were 5 feature warnings; re-run with -feature for details
-  two warnings found
-  mkdir -p bin
-  cp -v exeLoaders/loaderCLI.exe exeLoaders/loaderGUI.exe assets || true
-  'exeLoaders/loaderCLI.exe' -> 'assets/loaderCLI.exe'
-  'exeLoaders/loaderGUI.exe' -> 'assets/loaderGUI.exe'
-  scala jarget.jar uber -scala -r=assets -o=bin/jarget-uber.jar jarget.jar /home/archbox/opt/scala/lib/scala-xml_2.12-1.0.6.
-  jar
-  java -jar proguard.jar @config.pro
-  ProGuard, version 5.3.3
-  Reading input...
-  Reading program jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-uber.jar]
-  Reading library jar [/home/archbox/opt/java/jre/lib/rt.jar]
-  Initializing...
-
-  ... .... ...
-
-    Final number of program classes:    1123
-  Inlining subroutines...
-  Preverifying...
-  Writing output...
-  Preparing output jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-pro.jar]
-    Copying resources from program jar [/home/archbox/Documents/projects/jarget.scala/bin/jarget-uber.jar]
-  rm -rf bin/jarget-uber.jar
-  scala jarget.jar jar-to-exe -exe=uexe bin/jarget-pro.jar bin/jarget
-  Built file ./bin/jarget-pro
-
-
-#+END_SRC
-
-*** Install jarget tool in ~/bin 
-
- - make pgd-unix -k CC=scalac && make install
-
 ** Getting a Binary Release 
 
 An fat-jar executable binary release can be downloaded from this link:
@@ -1742,19 +1756,4 @@ jarget - Tool to download jar packages.
 
 ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... 
 #+END_SRC
-** TODO Tasks 
-
- - [ ]  - Add search in console feature.  
- - [X]  - Add search in browser feature.
- - [X]  - Add package cache 
- - [ ]  - Show all versions of a given package available in the repository.
- - [ ]  - Support multiple repositories. 
- - [ ]  - Support project configuration file. 
- - [X]  - Improve command line handling 
- - [X]  - Improve error handling. 
- - [X]  - Feature to make Uber Jar 
- - [X]  - Shrink the generated uber jar using Pro-guard. 
- - [X]  - Create a Windows exe wrapper
- - [X]  - Crypto Hash commands such as md5sum, sha256sum ... 
- - [X]  - Improve project's web site design.
    
