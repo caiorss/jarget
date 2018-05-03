@@ -112,36 +112,30 @@ class OptResult(
 
   /** Get command line switch as string.
     * Note: if the command line switch is not provided, returns a default value.
-    */
-  def getStr(name: String, default: String): String = {
-    // val namet = options.find(n => n.getSize() )
-    val res = switches.get(name)
-    res.map{ r => r(0) }.getOrElse(default)
-  }
+    */  
+  def getStr(name: String, default: String): String = 
+    this.getValueOfSwitch(name, default){ x => x}
+  
 
   /** Get command line switch as integer.
     * Note: if the command line switch is not provided, returns a default value.
     */
-  def getInt(name: String, default: Int): Int = {
-    val res = switches.get(name)
-    res.map{ r => r(0).toInt } getOrElse default
-  }
+  def getInt(name: String, default: Int): Int =
+    this.getValueOfSwitch(name, default){_.toInt}
 
   /** Get command line switch as Boolean.
     * Note: if the command line switch is not provided, returns a default value.
-    */
+    */  
   def getFlag(name: String, default: Boolean = false) = {
     val res = switches.get(name)
     if(!res.isEmpty) true else default
   }
 
   /** Get command line switch value as file (java.io.File). */
-  def getFile(name: String): Option[java.io.File] = {
-    val res = switches.get(name)
-    res.map{ r => new java.io.File(r(0)) }
-  }
-
-
+  def getFile(name: String): Option[java.io.File] =
+    this.getValueOfSwitch(name, None: Option[java.io.File]){ value =>
+      Some(new java.io.File(value))
+    }
 
   override def toString() = {
     val sw = new java.io.StringWriter()
@@ -167,7 +161,7 @@ trait IOptCommand{
 
 } /* End of trait IOptCommand */
 
-
+/** Pseudo command for grouping subcommands. */
 class Separator(name: String) extends IOptCommand{
   def getCommandName()  = s"\n[$name]\n"
   def getCommandDesc()  = ""
