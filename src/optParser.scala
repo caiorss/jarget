@@ -90,17 +90,26 @@ class OptResult(
   def getListStr(name: String) = 
     switches.get(name) getOrElse List()
 
+  /** Get command line switch as string.
+    * Note: if the command line switch is not provided, returns a default value.
+    */
   def getStr(name: String, default: String): String = {
     // val namet = options.find(n => n.getSize() )
     val res = switches.get(name)
     res.map{ r => r(0) }.getOrElse(default)
   }
 
+  /** Get command line switch as integer.
+    * Note: if the command line switch is not provided, returns a default value.
+    */
   def getInt(name: String, default: Int): Int = {
     val res = switches.get(name)
     res.map{ r => r(0).toInt } getOrElse default
   }
 
+  /** Get command line switch as Boolean.
+    * Note: if the command line switch is not provided, returns a default value.
+    */
   def getFlag(name: String, default: Boolean = false) = {
     val res = switches.get(name)
     if(!res.isEmpty) true else default
