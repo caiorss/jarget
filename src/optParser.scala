@@ -90,8 +90,8 @@ class OptResult(
           => parser(value)
       case _
           =>
-        throw new RuntimeException(
-          "Error: command line switch expected to have only one value."
+        throw new CommandLineParsingException(
+          s"Error: command line switch <$name> expected to have only one value."
         )
     }
   }
