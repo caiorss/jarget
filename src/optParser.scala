@@ -354,7 +354,7 @@ class OptCommand (
 
 
   def parseRun(argList: List[String]): Unit =
-    argList match {
+    try argList match {
       case List()
           => if(this.helpFlag)
             this.showHelp()
@@ -363,7 +363,12 @@ class OptCommand (
       case _
           =>
         _action(this.parse(argList))
-  }
+    } catch {
+      case ex: CommandLineParsingException => {
+        println(ex.getMessage())
+        System.exit(1)
+      }
+    }
 
 
 } // ---- End of class OptCommand ---- // 
