@@ -1,5 +1,20 @@
 package jarget.optParser
 
+/** Custom exception used to indicate command line option parsing errors.
+  *
+  * Note: This exception is thrown whenever there is an command line parsing error,
+  * for instance:
+  *  - Not allowed command line option.
+  *
+  *  - When it is expected an integer, for instance -n=10, but an
+  *    invalid value is passed such as -n=p6sd.
+  *
+  *  - When more than one command line switch, such
+  *    as -o=file1 -o=file2, are passed, but only one is expected.
+  *
+  */
+class CommandLineParsingException(msg: String) extends Exception(msg){}
+
 private object OptFun{
   /** Print Table of rows (list of strings) as table */
   def printTableOfRows(xs: Seq[List[String]], space: Int = 1, left: Int = 2) = {
