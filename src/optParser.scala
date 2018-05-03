@@ -131,20 +131,28 @@ class OptResult(
   def getStr(name: String, default: String): String = 
     this.getValueOfSwitch(name, default){ x => x}
   
-
   /** Get command line switch as integer.
     * Note: if the command line switch is not provided, returns a default value.
     */
   def getInt(name: String, default: Int): Int =
-    this.getValueOfSwitch(name, default){_.toInt}
+    this.getValueOfSwitch(name, default){ x =>
+      try x.toInt
+      catch {
+        case ex: java.lang.NumberFormatException
+            => throw new CommandLineParsingException(s"Error: switch <$name> expected number.")
+      }
+    }
 
   /** Get command line switch as Boolean.
     * Note: if the command line switch is not provided, returns a default value.
     */  
-  def getFlag(name: String, default: Boolean = false) = {
-    val res = switches.get(name)
-    if(!res.isEmpty) true else default
-  }
+  def getFlag(name: String, default: Boolean = false) =
+    this.getValueOfSwitch(name, default){ x =>
+      if (x != "")
+        throw new CommandLineParsingException(s"Error: switch $name is a flag.")
+      true
+    }
+
 
   /** Get command line switch value as file (java.io.File). */
   def getFile(name: String): Option[java.io.File] =
