@@ -61,6 +61,26 @@ class OptResult(
   properties: Map[String, String]
 ){
 
+  /** Try to get value of switch.
+    *
+    */
+  def getValueOfSwitch[A](name: String, default: A)(parser: String => A): A = {
+    val opt: Option[List[String]] = switches.get(name)
+    opt match {
+      case None
+          => default
+      case Some(List())
+          => default
+      case Some(List(value))
+          => parser(value)
+      case _
+          =>
+        throw new RuntimeException(
+          "Error: command line switch expected to have only one value."
+        )
+    }
+  }
+
   /** Get operands that are arguments without command line switches and 
       are also not Java properties (which starts with -D<prop>=<value>) 
     */
