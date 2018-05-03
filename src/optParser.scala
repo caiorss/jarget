@@ -344,7 +344,9 @@ class OptCommand (
     val diff = switchKeys.diff(keys)
 
     if(!(diff.isEmpty || diff == keys))
-      throw new RuntimeException("Error: invalid options " + diff)
+      throw new CommandLineParsingException(
+        "Error: invalid command line switche(s): " + diff.map(s => "<" + s + ">" ).mkString(", ")
+      )
 
     new OptResult(operands, switches, properties)
 
