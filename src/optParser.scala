@@ -1,5 +1,20 @@
 package jarget.optParser
 
+/** Custom exception used to indicate command line option parsing errors.
+  *
+  * Note: This exception is thrown whenever there is an command line parsing error,
+  * for instance:
+  *  - Not allowed command line option.
+  *
+  *  - When it is expected an integer, for instance -n=10, but an
+  *    invalid value is passed such as -n=p6sd.
+  *
+  *  - When more than one command line switch, such
+  *    as -o=file1 -o=file2, are passed, but only one is expected.
+  *
+  */
+class CommandLineParsingException(msg: String) extends Exception(msg){}
+
 private object OptFun{
   /** Print Table of rows (list of strings) as table */
   def printTableOfRows(xs: Seq[List[String]], space: Int = 1, left: Int = 2) = {
@@ -61,6 +76,26 @@ class OptResult(
   properties: Map[String, String]
 ){
 
+  /** Try to get value of switch.
+    *
+    */
+  def getValueOfSwitch[A](name: String, default: A)(parser: String => A): A = {
+    val opt: Option[List[String]] = switches.get(name)
+    opt match {
+      case None
+          => default
+      case Some(List())
+          => default
+      case Some(List(value))
+          => parser(value)
+      case _
+          =>
+        throw new CommandLineParsingException(
+          s"Error: command line switch <$name> expected to have only one value."
+        )
+    }
+  }
+
   /** Get operands that are arguments without command line switches and 
       are also not Java properties (which starts with -D<prop>=<value>) 
     */
@@ -92,36 +127,38 @@ class OptResult(
 
   /** Get command line switch as string.
     * Note: if the command line switch is not provided, returns a default value.
-    */
-  def getStr(name: String, default: String): String = {
-    // val namet = options.find(n => n.getSize() )
-    val res = switches.get(name)
-    res.map{ r => r(0) }.getOrElse(default)
-  }
-
+    */  
+  def getStr(name: String, default: String): String = 
+    this.getValueOfSwitch(name, default){ x => x}
+  
   /** Get command line switch as integer.
     * Note: if the command line switch is not provided, returns a default value.
     */
-  def getInt(name: String, default: Int): Int = {
-    val res = switches.get(name)
-    res.map{ r => r(0).toInt } getOrElse default
-  }
+  def getInt(name: String, default: Int): Int =
+    this.getValueOfSwitch(name, default){ x =>
+      try x.toInt
+      catch {
+        case ex: java.lang.NumberFormatException
+            => throw new CommandLineParsingException(s"Error: switch <$name> expected number.")
+      }
+    }
 
   /** Get command line switch as Boolean.
     * Note: if the command line switch is not provided, returns a default value.
-    */
-  def getFlag(name: String, default: Boolean = false) = {
-    val res = switches.get(name)
-    if(!res.isEmpty) true else default
-  }
+    */  
+  def getFlag(name: String, default: Boolean = false) =
+    this.getValueOfSwitch(name, default){ x =>
+      if (x != "")
+        throw new CommandLineParsingException(s"Error: switch $name is a flag.")
+      true
+    }
+
 
   /** Get command line switch value as file (java.io.File). */
-  def getFile(name: String): Option[java.io.File] = {
-    val res = switches.get(name)
-    res.map{ r => new java.io.File(r(0)) }
-  }
-
-
+  def getFile(name: String): Option[java.io.File] =
+    this.getValueOfSwitch(name, None: Option[java.io.File]){ value =>
+      Some(new java.io.File(value))
+    }
 
   override def toString() = {
     val sw = new java.io.StringWriter()
@@ -147,7 +184,7 @@ trait IOptCommand{
 
 } /* End of trait IOptCommand */
 
-
+/** Pseudo command for grouping subcommands. */
 class Separator(name: String) extends IOptCommand{
   def getCommandName()  = s"\n[$name]\n"
   def getCommandDesc()  = ""
@@ -307,7 +344,9 @@ class OptCommand (
     val diff = switchKeys.diff(keys)
 
     if(!(diff.isEmpty || diff == keys))
-      throw new RuntimeException("Error: invalid options " + diff)
+      throw new CommandLineParsingException(
+        "Error: invalid command line switche(s): " + diff.map(s => "<" + s + ">" ).mkString(", ")
+      )
 
     new OptResult(operands, switches, properties)
 
@@ -315,7 +354,7 @@ class OptCommand (
 
 
   def parseRun(argList: List[String]): Unit =
-    argList match {
+    try argList match {
       case List()
           => if(this.helpFlag)
             this.showHelp()
@@ -324,7 +363,12 @@ class OptCommand (
       case _
           =>
         _action(this.parse(argList))
-  }
+    } catch {
+      case ex: CommandLineParsingException => {
+        println(ex.getMessage())
+        System.exit(1)
+      }
+    }
 
 
 } // ---- End of class OptCommand ---- // 
