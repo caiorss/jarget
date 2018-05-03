@@ -115,6 +115,14 @@ class OptResult(
     if(!res.isEmpty) true else default
   }
 
+  /** Get command line switch value as file (java.io.File). */
+  def getFile(name: String): Option[java.io.File] = {
+    val res = switches.get(name)
+    res.map{ r => new java.io.File(r(0)) }
+  }
+
+
+
   override def toString() = {
     val sw = new java.io.StringWriter()
     val pw = new java.io.PrintWriter(sw)
