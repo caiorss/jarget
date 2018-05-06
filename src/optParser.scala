@@ -165,10 +165,10 @@ class OptResult(
     }
 
 
-  /** Get command line switch value as file (java.io.File). */
-  def getFile(name: String): Option[java.io.File] =
-    this.getValueOfSwitch(name, None: Option[java.io.File]){ value =>
-      Some(new java.io.File(value))
+  /** Get command line switch value as file (File). */
+  def getFile(name: String): Option[File] =
+    this.getValueOfSwitch(name, None: Option[File]){ value =>
+      Some(new File(value))
     }
 
   override def toString() = {
