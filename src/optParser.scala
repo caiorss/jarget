@@ -171,6 +171,14 @@ class OptResult(
       Some(new File(value))
     }
 
+  /** Try to get a file and throw an command line exception if doesn't exist. */
+  def getExistingFile(name: String): Option[File] =
+    this.getValueOfSwitch(name, None: Option[File]){ value =>
+      val file = new File(value)
+      if(!file.isFile())
+        throw new CommandLineParsingException(s"Error: file <$file> does not exist.")
+      Some(file)
+    }
   override def toString() = {
     val sw = new java.io.StringWriter()
     val pw = new java.io.PrintWriter(sw)
