@@ -179,6 +179,17 @@ class OptResult(
         throw new CommandLineParsingException(s"Error: file <$file> does not exist.")
       Some(file)
     }
+
+  /** Try to get a existing directory. Throws a command line exception if doesn't exist. */
+  def getExistingDirectory(name: String): Option[File] =
+    this.getValueOfSwitch(name, None: Option[File]){ value =>
+      val file = new File(value)
+      if(!file.isDirectory())
+        throw new CommandLineParsingException(s"Error: directory <$file> does not exist.")
+      Some(file)
+    }
+  
+
   override def toString() = {
     val sw = new java.io.StringWriter()
     val pw = new java.io.PrintWriter(sw)
