@@ -755,15 +755,22 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
   val digestFileOpt = new OptCommand(
     name  = "digest-f",
     usage = " <ALGORITHM> <FILE>",
-    desc  = "Compute crypto hash of a file. - Algorithm: [md5 | sha1 | sha256 ]"
+    desc  = "Compute crypto hash of a file. - Algorithm: [md5 | sha1 | sha256 ]",
+    example = """ 
+  $ jarget digest-f md5 jarget.jar 
+  7d4515999a55857eeaf36e5fcbab39cd
+
+  $ jarget digest-f sha256 config.pro 
+  5f262848ee35add54a84c2c7e4413d45308d29210d4fe284c7d5730a252aed96
+  """
   ).setAction{ res =>
     import jarget.crypto.Digest
     val algorithms = Map("md5" -> "MD5", "sha1" -> "SHA1", "sha256" -> "SHA-256")
     val op0 = res.getOperandOrError(0, "Error: missing algorithm: md5, sha1, or sha256.")
-    val op1 = res.getOperandOrError(1, "Error: missing file.")
+    val op1 = res.getOperandExistingFile(1, "Error: missing file parameter.")
     val alg = algorithms.get(op0) match {
       case Some(a) =>
-        println(Digest.fileDigestSum(a, op1))              
+        println(Digest.fileDigestSum(a, op1.getPath))              
       case None => {
         println("Error: algorithm not found.")
         System.exit(1)
