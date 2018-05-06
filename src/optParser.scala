@@ -75,6 +75,7 @@ class OptResult(
   switches:   Map[String, List[String]],
   properties: Map[String, String]
 ){
+  import java.io.File
 
   /** Try to get value of switch.
     *
