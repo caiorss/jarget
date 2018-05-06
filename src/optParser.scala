@@ -309,6 +309,7 @@ class OptCommand (
     OptFun.printTableOfRows(rows)
     if(example != "") {
       println()
+      println("EXAMPLES:")
       println(example)
     }
 
