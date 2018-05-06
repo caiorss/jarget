@@ -124,6 +124,15 @@ class OptResult(
     operands(index)
   }
 
+  /** Get operand as an existing file at a specific position given by the index. */
+  def getOperandExistingFile(index: Int, errorMsg: String = "") = {
+    val fileName = this.getOperandOrError(index, errorMsg)
+    val file     = new File(fileName)
+    if(!file.isFile())
+      throw new CommandLineParsingException(s"Error: file <$fileName> does not exist.")
+    file
+  }
+
   def getListStr(name: String) = 
     switches.get(name) getOrElse List()
 

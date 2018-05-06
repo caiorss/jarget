@@ -613,8 +613,11 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
     usage = "<FILE.jar>",
     desc = "Show manifest of a jar file."
   ).setAction{ (res: OptResult) =>
-    val file = res.getOperandOrExit(0, "Error: missing package. Use -h or -help to show help.")
-    JarUtils.showManifest(file)
+    val file = res.getOperandExistingFile(
+      0,
+      "Error expected jar file. Use (-h) to show command help."
+    )
+    JarUtils.showManifest(file.getPath)
   }
 
   val jarMainClass = new OptCommand(
@@ -622,8 +625,11 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
     usage = "<FILE.jar>",
     desc  = "Show main class of a jar file."
   ).setAction{ (res: OptResult) =>
-    val file = res.getOperandOrExit(0, "Error: missing package. Use -h or -help to show help.")
-    JarUtils.getMainClass(file) foreach println
+    val file = res.getOperandExistingFile(
+      0,
+      "Error expected jar file. Use (-h) to show command help."
+    )
+    JarUtils.getMainClass(file.getPath) foreach println
   }
 
   val jarShowFiles = new OptCommand(
@@ -631,8 +637,11 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
     usage = "<FILE.jar>",
     desc  = "Show contents of a jar file."
   ).setAction{ (res: OptResult) =>
-    val file = res.getOperandOrExit(0, "Error: missing jar file.")
-    JarUtils.showFiles(file) 
+    val file = res.getOperandExistingFile(
+      0,
+      "Error expected jar file. Use (-h) to show command help."
+    )
+    JarUtils.showFiles(file.getPath)
   }
 
   val jarResources = new OptCommand(
@@ -640,8 +649,11 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
     usage = "<FILE.jar>",
     desc = "Show resources of a jar file ignoring *.class files."
   ).setAction{ res =>
-    val file = res.getOperandOrExit(0, "Error: missing jar file. Use -h or -help to show help.")
-    JarUtils.getAssetFiles(file) foreach println    
+    val file = res.getOperandExistingFile(
+      0,
+      "Error expected jar file. Use (-h) to show command help."
+    )
+    JarUtils.getAssetFiles(file.getPath) foreach println
   }
 
   val jarCat = new OptCommand(
