@@ -115,11 +115,12 @@ class OptResult(
       operands(index)
   }
 
-  def getOperandOrExit(index: Int, errorMsg: String = "") = {
-    if(index >= operands.size || index < 0){
-      println(if (errorMsg == "") s"Error: expected operand $index" else errorMsg)
-      System.exit(1)
-    }
+  /** Try to get operand at specific position given by index or throw exception. */
+  def getOperandOrError(index: Int, errorMsg: String = "") = {
+    if(index >= operands.size || index < 0)
+      throw new CommandLineParsingException (
+        if (errorMsg == "") s"Error: expected operand <$index>" else errorMsg
+      )
     operands(index)
   }
 

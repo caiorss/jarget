@@ -245,7 +245,7 @@ object Main{
     desc  = "Show package's information.",
     helpFlag = true 
   ).setAction{ res => 
-    val pstr = res.getOperandOrExit(0, "Error: missing package. Use -h or -help to show help.")
+    val pstr = res.getOperandOrError(0, "Error: missing package. Use -h or -help to show help.")
     showPackageInfo(parsePack(pstr)) run repoUrl 
   }
 
@@ -255,7 +255,7 @@ object Main{
     desc  = "Search for a package at the site https://mvnrepository.com",
     helpFlag = true
   ).setAction{ res =>
-    val query = res.getOperandOrExit(0, "Error: missing query. Use -h to show help.")
+    val query = res.getOperandOrError(0, "Error: missing query. Use -h to show help.")
     Utils.openUrl("https://mvnrepository.com/search?q=" + query)
   }
 
@@ -266,7 +266,7 @@ object Main{
     desc  = "Show package's pom.xml file.",
     helpFlag = true
   ).setAction{ res => 
-    val pstr = res.getOperandOrExit(0, "Error: missing package. Use -h or -help to show help.")
+    val pstr = res.getOperandOrError(0, "Error: missing package. Use -h or -help to show help.")
     showPom(parsePack(pstr)) run repoUrl
   }
   
@@ -306,7 +306,7 @@ object Main{
    """
   ).setAction{ res =>
     tryMVNGet{
-      val pack = parsePack(res.getOperandOrExit(0, "Error: missing package."))
+      val pack = parsePack(res.getOperandOrError(0, "Error: missing package."))
       val args = res.getListStr("--")
       val jarPath = Packget.getPackJarsFromCache(List(pack), cachePath, config.repoUrl).head
       // println("cpath = " + jarPath + "\n")
@@ -334,8 +334,8 @@ object Main{
     helpFlag = true
   ).setAction{ res =>
     tryMVNGet{      
-      val pack = parsePack(res.getOperandOrExit(0, "Error: missing package."))
-      val cls  = res.getOperandOrExit(1, "Error: missing main class.")
+      val pack = parsePack(res.getOperandOrError(0, "Error: missing package."))
+      val cls  = res.getOperandOrError(1, "Error: missing main class.")
       val args = res.getListStr("--")
       val properties = res.getProperties()
         .toList
@@ -351,7 +351,7 @@ object Main{
     desc  = "Open package documentation in the web browser.",
     helpFlag = true
   ).setAction{ res => 
-    val pstr = res.getOperandOrExit(0, "Error: missing query. Use -h to show help.")
+    val pstr = res.getOperandOrError(0, "Error: missing query. Use -h to show help.")
     val pack = parsePack(pstr)
     val url  = s"https://mvnrepository.com/artifact/${pack.group}/${pack.artifact}/${pack.version}"
     Utils.openUrl(url)
@@ -424,7 +424,7 @@ object Main{
     val packages      = res.getListStr("package")
     val files         = res.getListStr("file")
     val resourcesDirs = res.getListStr("resource")
-    val mainJarFile   = res.getOperandOrExit(0, "Error: missing main jar file.")
+    val mainJarFile   = res.getOperandOrError(0, "Error: missing main jar file.")
     val jarFiles      = res.getOperands.tail
 
     val exe         = JarBuilder.parseWrapper(res.getStr("exe", "empty"))
@@ -545,8 +545,8 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
     desc      = "MVN Coordinates of a java package -  <group>/<artifact>/<version>."      
   ).setAction{ res =>
     tryMVNGet{
-      val cls   = res.getOperandOrExit(0, "Error: missing main class.")
-      val jar0  = res.getOperandOrExit(1, "Error: missing jar package 0.")
+      val cls   = res.getOperandOrError(0, "Error: missing main class.")
+      val jar0  = res.getOperandOrError(1, "Error: missing jar package 0.")
       val otherJars = res.getOperands().drop(2)
       val packages  = res.getListStr("package") map parsePack
       val args = res.getListStr("--")
@@ -649,8 +649,8 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
     usage = "<FILE.jar> <FILE>",
     desc = "Show content of a file in a jar package."
   ).setAction{ res =>
-    val jarFile = res.getOperandOrExit(0, "Error: missing jar file.")
-    val file    = res.getOperandOrExit(1, "Error: missing file name.")
+    val jarFile = res.getOperandOrError(0, "Error: missing jar file.")
+    val file    = res.getOperandOrError(1, "Error: missing file name.")
     JarUtils.printFile(jarFile, file)
   }
 
@@ -659,8 +659,8 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
     usage =  "<FILE.jar> <file>",
     desc  = "Extract <file> from jar file <FILE.jar> to current directory."
   ).setAction{ res =>
-    val jarFile = res.getOperandOrExit(0, "Error: missing jar file. Use -h to show help.")
-    val file    = res.getOperandOrExit(1, "Error: missing file name. Use -h to show help.")
+    val jarFile = res.getOperandOrError(0, "Error: missing jar file. Use -h to show help.")
+    val file    = res.getOperandOrError(1, "Error: missing file name. Use -h to show help.")
     JarUtils.extractFile(jarFile, file, ".")
   }
 
@@ -669,7 +669,7 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
     usage = "<FILE.jar>",
     desc  = "Extract contents of <FILE.jar> to ·/<FILE> directory."
   ).setAction{ res =>
-    val jarFile = res.getOperandOrExit(0, "Error: missing jar file. Use -h or -help to show help.")
+    val jarFile = res.getOperandOrError(0, "Error: missing jar file. Use -h or -help to show help.")
     val path = new java.io.File(jarFile)
       .getName()
       .stripSuffix(".jar")
@@ -701,7 +701,7 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
     desc      = "Output file, default <FILE> without extension + .sh or .exe."
   ).setAction{ res =>
     val wrapper   = JarBuilder.parseWrapper(res.getStr("exe", "uexe"))
-    val inputJar  = res.getOperandOrExit(0,
+    val inputJar  = res.getOperandOrError(0,
       "Error: missing input jar file. Use option -h to show help."
     )
     val defaultName = wrapper match {
@@ -727,8 +727,8 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
   ).setAction{ res =>
     import jarget.crypto.Digest
     val algorithms = Map("md5" -> "MD5", "sha1" -> "SHA1", "sha256" -> "SHA-256")
-    val op0 = res.getOperandOrExit(0, "Error: missing algorithm: md5, sha1, or sha256.")
-    val op1 = res.getOperandOrExit(1, "Error: missing string.")
+    val op0 = res.getOperandOrError(0, "Error: missing algorithm: md5, sha1, or sha256.")
+    val op1 = res.getOperandOrError(1, "Error: missing string.")
     val alg = algorithms.get(op0) match {
       case Some(a) => {
          println(Digest.stringDigestSum(a, op1))
@@ -747,8 +747,8 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
   ).setAction{ res =>
     import jarget.crypto.Digest
     val algorithms = Map("md5" -> "MD5", "sha1" -> "SHA1", "sha256" -> "SHA-256")
-    val op0 = res.getOperandOrExit(0, "Error: missing algorithm: md5, sha1, or sha256.")
-    val op1 = res.getOperandOrExit(1, "Error: missing file.")
+    val op0 = res.getOperandOrError(0, "Error: missing algorithm: md5, sha1, or sha256.")
+    val op1 = res.getOperandOrError(1, "Error: missing file.")
     val alg = algorithms.get(op0) match {
       case Some(a) =>
         println(Digest.fileDigestSum(a, op1))              
