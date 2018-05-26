@@ -324,29 +324,52 @@ object Main{
     name  = "mvn-run-cls",
     desc  = "Run a main class of a java package (class with main static method).",
     longDesc = "Note: this command is useful to run packages with multiple entry points.",
-    usage = "<PACKAGE> <CLASS> [<JAVA-PROPERTIES> ...] --  [<ARGS>...]",
+    usage = "<MAIN-CLASS> [OPTIONS] [<JAVA-PROPERTIES> ...] --  [<ARGS>...]",
     example = """
  Example 1: Run scala compiler and invokes -help by calling class scala.tools.nsc.Main.
  If the scala compiler packages are not in the cache, they will be downloaded. Further 
  commands needing those packages will no longer downloaded them.
-  >>> $ jarget mvn-run-cls org.scala-lang.virtualized/scala-compiler/2.11.2  \
-      scala.tools.nsc.Main -Dscala.usejavacp=true -- -help 
+  >>> $ jarget mvn-run-cls scala.tools.nsc.Main \
+       -p=org.scala-lang.virtualized/scala-compiler/2.11.2 -Dscala.usejavacp=true -- -help 
 
  Example 2: It will run the Scala REPL.
-  >>> $ jarget mvn-run-cls org.scala-lang.virtualized/scala-compiler/2.11.2  \
+  >>> $ jarget mvn-run-cls -p=org.scala-lang.virtualized/scala-compiler/2.11.2  \
        scala.tools.nsc.MainGenericRunner -Dscala.usejavacp=true 
  """,
     helpFlag = true
+  ).addOpt(
+    name      = "package",
+    shortName = "p",
+    argName   = "<pack>",
+    desc      = "MVN Coordinates of a java package -  <group>/<artifact>/<version>."      
+  ).addOpt(
+    name      = "package-str",
+    argName   = "<PACK1>,<PACK2>...",
+    shortName = "ps",
+    desc      = "Package's separated by command <pack1>,<pack2>...<packN> "
+  ).addOpt( 
+    name      = "classpath",
+    argName   = "<CLASSPATH>",
+    shortName = "cp",
+    desc      = "Additional classpath (default '.')"
   ).setAction{ res =>
-    tryMVNGet{      
-      val pack = parsePack(res.getOperandOrError(0, "Error: missing package."))
-      val cls  = res.getOperandOrError(1, "Error: missing main class.")
+    tryMVNGet{
+      val sep = System.getProperty("path.separator")
+      val cpath = res.getStr("classpath", ".")
+      val cls  = res.getOperandOrError(0, "Error: missing main class.")
+      val packages1 = res.getListStr("package") map parsePack
+      val packages2 = res.getStr("package-str", "").split(",") match {
+        case Array("") => List()
+        case xs        => xs.map(parsePack).toList
+      }
       val args = res.getListStr("--")
       val properties = res.getProperties()
         .toList
         .map{ case (k, v) => "-D" + k + "=" + v }
-      val classPath  = Packget.getPackCPathFromCache(List(pack), cachePath, config.repoUrl)
-      Utils.execl("java", properties ++ List("-cp", classPath, cls) ++ args)
+      val classPath = Packget.getPackCPathFromCache(
+        packages1 ++ packages2, cachePath, config.repoUrl
+      )
+      Utils.execl("java", properties ++ List("-cp", classPath + sep + cpath, cls) ++ args)
     }
   }
 
