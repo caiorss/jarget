@@ -161,6 +161,9 @@ object Main{
 
   import MainUtils._
 
+  def onDebug(action: => Unit) =
+    if(System.getProperty("jarget.debug") != null) action
+
   def tryMVNGet(action: => Unit) = 
     try {
       action
@@ -169,12 +172,14 @@ object Main{
       case ex: java.io.FileNotFoundException
           => {
             println("Error: package not found.")
+            onDebug{ print(Console.RED); ex.printStackTrace(); print(Console.RESET) }
             System.exit(1)
           }
 
       case ex: java.net.UnknownHostException
           => {
             println("Error: DNS Failure")
+            onDebug{ print(Console.RED); ex.printStackTrace(); print(Console.RESET) }
             System.exit(1)
           }
 
