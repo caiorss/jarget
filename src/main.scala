@@ -326,15 +326,27 @@ object Main{
     longDesc = "Note: this command is useful to run packages with multiple entry points.",
     usage = "<MAIN-CLASS> [OPTIONS] [<JAVA-PROPERTIES> ...] --  [<ARGS>...]",
     example = """
- Example 1: Run scala compiler and invokes -help by calling class scala.tools.nsc.Main.
+ Example 1: Run scala compiler and invokes -help by calling the class scala.tools.nsc.Main.
  If the scala compiler packages are not in the cache, they will be downloaded. Further 
  commands needing those packages will no longer downloaded them.
+
   >>> $ jarget mvn-run-cls scala.tools.nsc.Main \
        -p=org.scala-lang.virtualized/scala-compiler/2.11.2 -Dscala.usejavacp=true -- -help 
 
  Example 2: It will run the Scala REPL.
+
   >>> $ jarget mvn-run-cls -p=org.scala-lang.virtualized/scala-compiler/2.11.2  \
        scala.tools.nsc.MainGenericRunner -Dscala.usejavacp=true 
+
+ Example 3: Run Groovy REPL. 
+
+  >>> $ jarget mvn-run-cls org.codehaus.groovy.tools.shell.Main \
+    -ps=org.codehaus.groovy/groovy-all/2.4.15,jline/jline/2.11,commons-cli/commons-cli/1.2 
+
+ Example 4: Run Bean Shell Console and Interpreter
+
+   >>> $ jarget mvn-run-cls bsh.Console -p=org.beanshell/bsh/2.0b5
+   >>> $ jarget mvn-run-cls bsh.Interpreter -p=org.beanshell/bsh/2.0b5
  """,
     helpFlag = true
   ).addOpt(
