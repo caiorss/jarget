@@ -297,13 +297,17 @@ object Main{
  Example 1 :  This command download the file proguard-base-6.0.2.jar
  to the cache repository and runs the command java -jar <path-to-jar>/proguard-base-6.0.2.jar
  Once the file was downloaded, it will be run from cache repository.
-  >> $ jarget mvn-run-jar net.sf.proguard/proguard-base/6.0.2
+  >> $ {program-cmd} net.sf.proguard/proguard-base/6.0.2
 
  Example 2 :
-   >> $ jarget mvn-run-jar org.codehaus.groovy/groovy/2.5.0-rc-1 -- file1.groovy
+   >> $ {program-cmd} org.codehaus.groovy/groovy/2.5.0-rc-1 -- file1.groovy
 
- Example 3:  Show Clojure help, to run the repl remove (--help) switch.
-  >> $ jarget mvn-run-jar org.clojure/clojure/1.8.0 -- --help
+ Example 3: Show Clojure help.
+  >> $ {program-cmd} org.clojure/clojure/1.8.0 -- --help
+
+ Example 4: Run Clojure help.
+  >> $ {program-cmd} org.clojure/clojure/1.8.0 
+
    """
   ).setAction{ res =>
     tryMVNGet{
@@ -325,27 +329,27 @@ object Main{
  If the scala compiler packages are not in the cache, they will be downloaded. Further 
  commands needing those packages will no longer downloaded them.
 
-  >>> $ jarget mvn-run-cls scala.tools.nsc.Main \
+  >>> $ {program-cmd} scala.tools.nsc.Main \
        -p=org.scala-lang.virtualized/scala-compiler/2.11.2 -Dscala.usejavacp=true -- -help 
 
  Example 2: It will run the Scala REPL.
 
-  >>> $ jarget mvn-run-cls -p=org.scala-lang.virtualized/scala-compiler/2.11.2  \
+  >>> $ {program-cmd} -p=org.scala-lang.virtualized/scala-compiler/2.11.2  \
        scala.tools.nsc.MainGenericRunner -Dscala.usejavacp=true 
 
  Example 4: Run Groovy REPL. 
 
-  >>> $ jarget mvn-run-cls org.codehaus.groovy.tools.shell.Main \
+  >>> $ {program-cmd} org.codehaus.groovy.tools.shell.Main \
     -ps=org.codehaus.groovy/groovy-all/2.4.15,jline/jline/2.11,commons-cli/commons-cli/1.2 
 
  Example 5: Run Groovy UI.
 
-  >> $ jarget mvn-run-cls groovy.ui.Console -p=org.codehaus.groovy/groovy-all/2.4.15
+  >> $ {program-cmd} groovy.ui.Console -p=org.codehaus.groovy/groovy-all/2.4.15
 
  Example 6: Run Bean Shell Console and Interpreter
 
-   >>> $ jarget mvn-run-cls bsh.Console -p=org.beanshell/bsh/2.0b5
-   >>> $ jarget mvn-run-cls bsh.Interpreter -p=org.beanshell/bsh/2.0b5 
+   >>> $ {program-cmd} bsh.Console -p=org.beanshell/bsh/2.0b5
+   >>> $ {program-cmd} bsh.Interpreter -p=org.beanshell/bsh/2.0b5 
  """,
     helpFlag = true
   ).addOpt(
@@ -577,7 +581,7 @@ object Main{
  the property swing.defaultlaf that changes to Java Swing default look
  and feel theme.
  
-$  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
+ $ {program-cmd} Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
    -Dswing.defaultlaf=com.jtattoo.plaf.hifi.HiFiLookAndFeel
     """,
     helpFlag = true
@@ -800,10 +804,10 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
     usage = " <ALGORITHM> <FILE>",
     desc  = "Compute crypto hash of a file. - Algorithm: [md5 | sha1 | sha256 ]",
     example = """ 
-  $ jarget digest-f md5 jarget.jar 
+  $ {program-cmd} md5 jarget.jar 
   7d4515999a55857eeaf36e5fcbab39cd
 
-  $ jarget digest-f sha256 config.pro 
+  $ {program-cmd} sha256 config.pro 
   5f262848ee35add54a84c2c7e4413d45308d29210d4fe284c7d5730a252aed96
   """
   ).setAction{ res =>
@@ -835,8 +839,7 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
    + path       - Show path variable
    + info       - Show platform information.
 
-  Example: $ jarget utils info
-
+  Example: $ {program-cmd} info
    """
   ).setAction{ res =>
     val args = res.getOperands()
