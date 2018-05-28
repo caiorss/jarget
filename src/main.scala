@@ -471,27 +471,22 @@ object Main{
     shortName = "e",
     argName   = "<EXE>",
     desc      = "Executable wrapper - default (empty)."
-  ).setAction{ (res: OptResult) =>
-    
+  ).setAction{ (res: OptResult) =>   
     val scalaFlag     = res.getFlag("scala")
     val packages      = res.getListStr("package")
     val files         = res.getListStr("file")
     val resourcesDirs = res.getListStr("resource")
     val mainJarFile   = res.getOperandOrError(0, "Error: missing main jar file.")
     val jarFiles      = res.getOperands.tail
-
     val exe         = JarBuilder.parseWrapper(res.getStr("exe", "empty"))
-
     // Output file
     val output =  res.getStr("output", mainJarFile.stripSuffix(".jar") + "-out" + exe.getExt())
-
     val packFiles =
       Packget.getPackJarsFromCache(
         packages map parsePack,
         cachePath,
         config.repoUrl
       )
-
     JarBuilder.makeUberJar(
       cls       = getClass(),
       output    = output,  
@@ -501,7 +496,6 @@ object Main{
       jarFiles  = jarFiles ++ packFiles,
       wrapper   = exe 
     )
-
     println("Built file: "  + output )
   }
 
@@ -529,6 +523,7 @@ object Main{
     desc = "Run a scala script with a given set of packages from cache.",
     usage = "[OPTIONS] -- <SCRIPT.scala> [<SCRIPT ARGS> ...]"
   ){ res =>
+    
     val packList1 = res.getListStr("package").map(parsePack).toList
     val packList2 = res.getStr("package-str", "").split(",") match {
       case Array("") => List()
@@ -886,6 +881,99 @@ object Main{
     }
   }
 
+  //---- Project commands ---- //
+  import jarget.project.{ProjectBuilder}  
+
+  val defaultProjFile = "build.conf"
+
+  val projShowCommand = new OptCommand(
+    name = "pj-show",
+    desc = "Show project configuration"
+  ).setAction{ res =>
+    val proj = ProjectBuilder.ofFile(defaultProjFile)
+    proj.show()
+  }
+
+  val projMakeCommand = new OptCommand(
+    name     = "pj-make",
+    usage    = "",
+    desc     = "Create development build.",
+    // helpFlag = true,
+    longDesc = """
+ Note: the development build is the project compiled without 
+       any dependency bundled with object file.
+ """
+  ).addOpt(
+    name = "verbose",
+    desc = "Turn verbosity on."
+  ).setAction{ res => 
+    val proj = ProjectBuilder.ofFile(defaultProjFile)
+      .setVerbose(res.getFlag("verbose"))
+    proj.buildDev()
+  }
+
+  val projReleaseCommand = new OptCommand(
+    name     = "pj-release",
+    usage    = "",
+    desc     = "Compile project building uber jar in executable wrapper.",
+    // helpFlag = true,
+    longDesc = """-"""
+  ).addOpt(
+    name = "verbose",
+    desc = "Turn verbosity on."
+  ).addOpt(
+    name      = "exe",
+    shortName = "e",
+    argName   = "<EXE>",
+    desc      = "Executable wrapper - [empty, uexe, wcli, wgui] - default (empty)"
+  ).addOpt(
+    name  = "show",
+    desc  = "Show project configuration before building."
+  ).addOpt(
+    name      = "output",
+    shortName = "o",
+    argName   = "<FILE>",
+    desc      = "Output file, default <FILE> without extension + .sh or .exe."
+  ).setAction{ res =>
+    val proj = ProjectBuilder.ofFile(defaultProjFile)
+      .setVerbose(res.getFlag("verbose"))
+    if(res.getFlag("show"))
+      proj.show()
+    val exe = res.getStr("exe", "empty")    
+    proj.buildRelease(exe)
+  }
+
+  val projRunCommand = new OptCommand(
+    name     = "pj-run",
+    usage    = "pj-run -- [<PROGRAM ARG> ...]",
+    desc     = "Run development build, compiling it if out of sync with sources.",
+    // helpFlag = true,
+    longDesc = """-"""
+  ).addOpt(
+    name      = "exe",
+    shortName = "e",
+    argName   = "<EXE>",
+    desc      = "Executable wrapper - [empty, uexe, wcli, wgui] - default (empty)"
+  ).addOpt(
+    name  = "show",
+    desc  = "Show project configuration before building."
+  ).addOpt(
+    name      = "output",
+    shortName = "o",
+    argName   = "<FILE>",
+    desc      = "Output file, default <FILE> without extension + .sh or .exe."
+  ).setAction{ res =>
+    val proj = ProjectBuilder.ofFile(defaultProjFile)
+    if(res.getFlag("show"))
+      proj.show()
+    val exe = res.getStr("exe", "empty")
+    val args = res.getListStr("--")
+    proj.run(args)
+  }
+
+
+  //----- Main command line Parser Assembly -------- // 
+
   val parser = new OptParser(
     program     = "jptk",
     version     = "v3.2",
@@ -914,6 +1002,11 @@ object Main{
     .add(jarResources)
     .add(jarCat)
     .add(jarExtract)
+    .add(new OptSeparator("Project Commands"))
+    .add(projShowCommand)
+    .add(projMakeCommand)
+    .add(projRunCommand)
+    .add(projReleaseCommand)
     .add(new OptSeparator("Misc Commands"))
     .add(utilsOpt)
     .add(digestStrOpt)
