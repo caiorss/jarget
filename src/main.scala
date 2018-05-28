@@ -215,9 +215,6 @@ object Main{
 
   val cachePath = PackCache.getCacheHome(".jarget")
 
-  def getLibPath(path: String) = Option(System.getenv("jarget.path")) getOrElse path
-
-
   def makeCommandWithCPATH(
     name:      String,
     desc:      String = "",
