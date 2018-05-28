@@ -266,7 +266,6 @@ class OptCommand (
       .replaceAll("\\{program-cmd\\}", s"$program $name")
   }
 
-
   def getCommandName()  = name
   def getCommandDesc()  = desc
   def getCommandUsage() = usage
@@ -300,7 +299,7 @@ class OptCommand (
       println()
     }
     if(longDesc != "") println(this.replaceTemplate(longDesc, program))    
-    if(name != "") println(s" Usage: $name $usage")
+    if(name != "") println(s"USAGE: $$ $program $name $usage")
 
     if(!options.isEmpty){
       println() ; println("OPTIONS:")
@@ -437,8 +436,7 @@ class OptParser(
       .replaceAll("\\{program\\}", program)
       .replaceAll("\\{version\\}", version)
       .replaceAll("\\{license\\}", license)
-  }
-  
+  }  
 
   /** Add sub command. */
   def add(opt: IOptCommand) = {
