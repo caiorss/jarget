@@ -224,7 +224,7 @@ class OptSeparator(name: String) extends IOptCommand{
 }
 
 /** Sub command action that executes without any switch. */
-class OptCommandAction(name: String, desc: String)(action: => Unit){
+class OptSimple(name: String, desc: String)(action: => Unit){
   def getCommandName()  = name
   def getCommandDesc()  = desc 
   def getCommandUsage() = ""
