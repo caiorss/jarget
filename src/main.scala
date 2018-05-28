@@ -243,7 +243,6 @@ object Main{
     ).setAction(action)
 
 
-
   val mvnShow = new OptCommand(
     name  = "mvn-show",
     usage = "<PACKAGE>",
@@ -319,7 +318,6 @@ object Main{
     }
   }
 
-
   val mvnRunCls = new OptCommand(
     name  = "mvn-run-cls",
     desc  = "Run a main class of a java package (class with main static method).",
@@ -338,15 +336,19 @@ object Main{
   >>> $ jarget mvn-run-cls -p=org.scala-lang.virtualized/scala-compiler/2.11.2  \
        scala.tools.nsc.MainGenericRunner -Dscala.usejavacp=true 
 
- Example 3: Run Groovy REPL. 
+ Example 4: Run Groovy REPL. 
 
   >>> $ jarget mvn-run-cls org.codehaus.groovy.tools.shell.Main \
     -ps=org.codehaus.groovy/groovy-all/2.4.15,jline/jline/2.11,commons-cli/commons-cli/1.2 
 
- Example 4: Run Bean Shell Console and Interpreter
+ Example 5: Run Groovy UI.
+
+  >> $ jarget mvn-run-cls groovy.ui.Console -p=org.codehaus.groovy/groovy-all/2.4.15
+
+ Example 6: Run Bean Shell Console and Interpreter
 
    >>> $ jarget mvn-run-cls bsh.Console -p=org.beanshell/bsh/2.0b5
-   >>> $ jarget mvn-run-cls bsh.Interpreter -p=org.beanshell/bsh/2.0b5
+   >>> $ jarget mvn-run-cls bsh.Interpreter -p=org.beanshell/bsh/2.0b5 
  """,
     helpFlag = true
   ).addOpt(
