@@ -80,7 +80,7 @@ bin/jarget-pro.jar: $(target) $(assetfiles) config.pro
 	@# Try to copy Windows CLI and GUI Loaders
 	cp -v $(exeloaders) assets || true 
 	@# Generate uber jar
-	scala jarget.jar uber -scala -r=assets -o=bin/jarget-uber.jar jarget.jar $(SCALA_XML_PATH) 
+	scala jarget.jar uber -scala -r=assets -o=bin/jarget-uber.jar jarget.jar $(jars)
 	@# Shrink app with proguard 
 	java -jar proguard.jar @config.pro
 	rm -rf bin/jarget-uber.jar
