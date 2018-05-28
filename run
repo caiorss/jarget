@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+# 
+# Unix shell script wrapper to run the application during development. 
+# Usage: 
+#   + $ chmod + x run  # Make script executable 
+#   + $ ./jarget       # Run script 
+#
+#=========================================================================#
+make && scala jarget.jar "$@"
