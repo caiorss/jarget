@@ -215,7 +215,7 @@ trait IOptCommand{
 } /* End of trait IOptCommand */
 
 /** Pseudo command for grouping subcommands. */
-class Separator(name: String) extends IOptCommand{
+class OptSeparator(name: String) extends IOptCommand{
   def getCommandName()  = s"\n[$name]\n"
   def getCommandDesc()  = ""
   def getCommandUsage() = ""

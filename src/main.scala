@@ -203,7 +203,7 @@ object Main{
   }// -- End of function parseArgs() --- //
 
 
-  import jarget.optParser.{OptResult, OptParser, OptCommand, Separator}
+  import jarget.optParser.{OptResult, OptParser, OptCommand, OptSeparator}
 
 
   val config =
@@ -881,13 +881,13 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
 """
 
   val parser = new OptParser(desc = desc)
-    .add(new Separator("Main Commands"))
+    .add(new OptSeparator("Main Commands"))
     .add(uberOptCommand)
     .add(execCommand)
     .add(scriptCommand)
     .add(scalaCommand)
     .add(runCommand)
-    .add(new Separator("Mvn Commands"))
+    .add(new OptSeparator("Mvn Commands"))
     .add(mvnShow)
     .add(mvnSearch)
     .add(mvnDoc)
@@ -897,7 +897,7 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
     .add(mvnPull)
     .add(mvnCopy)
     .add(cacheCommand)
-    .add(new Separator("Jar Commands"))
+    .add(new OptSeparator("Jar Commands"))
     .add(jarToEXE)
     .add(jarManOpt)
     .add(jarMainClass)
@@ -905,7 +905,7 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
     .add(jarResources)
     .add(jarCat)
     .add(jarExtract)
-    .add(new Separator("Misc Commands"))
+    .add(new OptSeparator("Misc Commands"))
     .add(utilsOpt)
     .add(digestStrOpt)
     .add(digestFileOpt)
