@@ -38,8 +38,8 @@ class ProjectBuilder(
   private val repoUrl   = "http://repo1.maven.org/maven2"
   private val cachePath = PackCache.getCacheHome(".jarget")
 
-  val confw = new ConfigWrapper(conf)
-  val scalaVersion: String =
+  private val confw = new ConfigWrapper(conf)
+  private val scalaVersion: String =
     confw.getString("scalaVersion", "2.12")
   // Directory containing sources that will be compiled
   private val src: String = confw.getString("src", "./src")
@@ -50,7 +50,7 @@ class ProjectBuilder(
   // Output directory
   private val outputDir: String =
     confw.getString("output", "./out")
-  
+
   private val outputFile =
     new File(outputDir, appname + "-dev.jar")
   
@@ -119,7 +119,7 @@ class ProjectBuilder(
     val classpath = Packget.getPackCPathFromCache(packList, cachePath, repoUrl)
     // Get default separator (:) for Unix or (;) for Windows 
     val sep = System.getProperty("path.separator")
-    classpath + sep + this.getLibJars().mkString(sep)
+    "./" + sep + classpath + sep + this.getLibJars().mkString(sep)
   }
 
   /** Check whether output file exists. */
@@ -148,7 +148,7 @@ class ProjectBuilder(
     new java.io.File(outputDir).mkdirs()        
     Utils.execl(
       if (this.outputExists()) "fsc" else "scalac",
-      args = List("-d", outputFile.getPath(), "-cp", this.getClasspath()) ++ sources,
+      args = List("-d", outputFile.getPath(), "-cp",  this.getClasspath()) ++ sources,
       env = List(),
       verbose = this.verbose
     )
@@ -165,7 +165,7 @@ class ProjectBuilder(
       output    = outputBuild,
       main      = outputFile.getPath(),
       scalaLib  = true,
-      // resources = resourcesDirs,
+      resources = resources,
       jarFiles  = this.getAllJars(),
       wrapper   = exe
     )
