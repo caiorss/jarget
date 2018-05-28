@@ -975,8 +975,8 @@ object Main{
   //----- Main command line Parser Assembly -------- // 
 
   val parser = new OptParser(
-    program     = "jptk",
-    version     = "v3.2",
+    program     = "jarget",
+    version     = "v4.0",
     brief        = "{program} {version} - command line toolbox for Scala and the Java Platform.",
    ).add(new OptSeparator("Main Commands"))
     .add(uberOptCommand)
