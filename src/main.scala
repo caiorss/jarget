@@ -222,9 +222,9 @@ object Main{
     longDesc:  String = ""
   )(action: OptResult => Unit) =
     new OptCommand(
-      name = name,
-      desc = desc,
-      usage = usage,
+      name     = name,
+      desc     = desc,
+      usage    = usage,
       longDesc = longDesc,
       helpFlag = true
       ).addOpt(
@@ -237,6 +237,11 @@ object Main{
         argName   = "<PACK1>,<PACK2>...",
         shortName = "ps",
         desc      = "Package's separated by command <pack1>,<pack2>...<packN> "
+    ).addOpt( 
+      name      = "classpath",
+      argName   = "<CLASSPATH>",
+      shortName = "cp",
+      desc      = "Additional classpath (default '.')"
     ).setAction(action)
 
 
@@ -558,10 +563,12 @@ object Main{
     val scalaArgs = res.getListStr("--")
     // println("args = " + scalaArgs)
     tryMVNGet {
-      val cpath = Packget.getPackCPathFromCache(packList1 ++ packList2, cachePath, config.repoUrl)
+      val sep = System.getProperty("path.separator")
+      val cpath1 = Packget.getPackCPathFromCache(packList1 ++ packList2, cachePath, config.repoUrl)
+      val cpath2 =  res.getStr("classpath", ".")
       // println("cpath = " + cpath)
       //println(s"Script = ${script} args = ${args}")
-      JarUtils.runWithClassPath2("scala", scalaArgs, cpath)
+      JarUtils.runWithClassPath2("scala", scalaArgs, cpath1 + sep + cpath2)
     }
   }
 
@@ -880,7 +887,7 @@ object Main{
   }
 
   val parser = new OptParser(
-    program     = "jarget",
+    program     = "jptk",
     version     = "v3.2",
     brief        = "{program} {version} - command line toolbox for Scala and the Java Platform.",
    ).add(new OptSeparator("Main Commands"))
