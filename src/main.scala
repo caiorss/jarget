@@ -403,13 +403,18 @@ object Main{
     usage = "<PACKAGE1> [<PACKAGE2> ...]",
     desc  = "Copy jar packages from cache directory to ./lib downloading them if not available.",
     helpFlag = true
-  ).setAction{ res => 
+  ).addOpt(
+    name = "directory",
+    shortName = "d",
+    argName = "<dir>",
+    desc   = "Directory which packages will be copied to. Default ./lib"
+  ).setAction{ res =>
     val packs = res.getOperands() map parsePack
+    val dir   = res.getStr("directory", "./lib")    
      tryMVNGet {
-       Packget.copyPackageFromCache(packs, cachePath, repoUrl, getLibPath("./lib"))
+       Packget.copyPackageFromCache(packs, cachePath, repoUrl, dir)
      }
   }
-
 
   val uberOptCommand = new OptCommand(
     name  = "uber",
@@ -555,7 +560,6 @@ object Main{
       JarUtils.runWithClassPath2("scala", scalaArgs, cpath)
     }
   }
-
 
 
   val runCommand = new OptCommand(
