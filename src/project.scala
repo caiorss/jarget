@@ -29,9 +29,15 @@ class ConfigWrapper(config: TConfig){
     }
 }
 
-class ProjectBuilder(conf: TConfig){
+class ProjectBuilder(
+  conf:  TConfig,
+ ){
   import java.io.File
-  
+
+  private var verbose = false
+  private val repoUrl   = "http://repo1.maven.org/maven2"
+  private val cachePath = PackCache.getCacheHome(".jarget")
+
   val confw = new ConfigWrapper(conf)
   val scalaVersion: String =
     confw.getString("scalaVersion", "2.12")
@@ -70,6 +76,11 @@ class ProjectBuilder(conf: TConfig){
       .map(_.toFile)
       .filter{f => pred(f) }
   }
+
+  def setVerbose(verbose: Boolean) = {
+    this.verbose = verbose
+    this
+  }
   
   /** Get source files from src directory recursively */
   def getSources() =
@@ -91,9 +102,7 @@ class ProjectBuilder(conf: TConfig){
 
   /** Get list with abosulte path of all jar files used by the application. */
   def getAllJars(): List[String] = {
-    val repoUrl   = "http://repo1.maven.org/maven2"
-    val packList  = this.getPackages()
-    val cachePath = PackCache.getCacheHome(".jarget")
+    val packList  = this.getPackages()    
     // val classpath = Packget.getPackCPathFromCache(packList, cachePath, repoUrl)    
     val packFiles =
       Packget.getPackJarsFromCache(
@@ -106,9 +115,7 @@ class ProjectBuilder(conf: TConfig){
 
   /** Get overall classpath from packages in lib directory and from mvn repository. */
   def getClasspath() = {
-    val repoUrl   = "http://repo1.maven.org/maven2"
     val packList  = this.getPackages()
-    val cachePath = PackCache.getCacheHome(".jarget")  
     val classpath = Packget.getPackCPathFromCache(packList, cachePath, repoUrl)
     // Get default separator (:) for Unix or (;) for Windows 
     val sep = System.getProperty("path.separator")
@@ -143,7 +150,7 @@ class ProjectBuilder(conf: TConfig){
       if (this.outputExists()) "fsc" else "scalac",
       args = List("-d", outputFile.getPath(), "-cp", this.getClasspath()) ++ sources,
       env = List(),
-      verbose = true
+      verbose = this.verbose
     )
   }
 
@@ -174,7 +181,7 @@ class ProjectBuilder(conf: TConfig){
       "scala",
       args = List("-cp", this.getClasspath(),  outputFile.getPath()) ++ args,
       env = List(),
-      verbose = true
+      verbose = this.verbose
     )
   }
 
