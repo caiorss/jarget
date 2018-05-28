@@ -405,11 +405,19 @@ class OptCommand (
 } // ---- End of class OptCommand ---- // 
 
 
-/** Command line parser with git and busybox like sub-commands or services. */
+/** Command line parser with sub-commands or services similar to git and busybox.  
+  * @param program - Application name. 
+  * @param version - Application version string. 
+  * @param brief   - Single-line brief description about what the application does.
+  * @param usage   - Single-line usage string.
+  * @param license - Application license, example: GPL-v3.0, BSD, Public Domain .... 
+  */
 class OptParser(
-  programName: String = "",
+  program:     String,
+  version:     String = "",
+  brief:       String = "",
   usage:       String = "",
-  desc:        String = "",
+  license:     String = "",
   ){
   import scala.collection.mutable.{Map, ListBuffer}
   private val commands = ListBuffer[String]()
@@ -421,28 +429,35 @@ class OptParser(
       .replaceAll("\\{version\\}", version)
       .replaceAll("\\{license\\}", license)
   }
+  
 
+  /** Add sub command. */
   def add(opt: IOptCommand) = {
     commands.append(opt.getCommandName())
     parsers += opt.getCommandName() -> opt
     this 
-  }
+  }  
 
+  /** Show user help. */
   def showHelp() = {
+    // Print program description 
+    println(this.replaceTemplate(brief))
+    // Print usage
+    if(usage == "")
+      println(s"Usage: $$ $program [COMMAND] [OPTIONS] [<ARGS> ...]")
+    else
+      println(this.replaceTemplate(usage))
+    println()
+    //-- Print sub commands --- //
+    println("Commands:\n")
     val rows = commands.toList map {name =>
       val c = parsers(name)
       List(c.getCommandName(), c.getCommandDesc())
     }
-    println(desc)
-    if(usage == "")
-      println(s"Usage: $$ $programName [COMMAND] [OPTIONS] [<ARGS> ...]")
-    else
-      println(usage)
-    println()
-    println("Commands:\n")
     OptFun.printTableOfRows(rows)
   }
 
+  /** Parse command line arguments. */
   def parse(args: List[String]) =
     args match {
       case List()
@@ -489,6 +504,7 @@ class OptParser(
                 System.exit(1)
               }
         }
-    }
+    } /* -- End of .parse()  -*/
+
 }
 
