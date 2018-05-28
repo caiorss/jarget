@@ -207,10 +207,10 @@ trait IOptCommand{
   def getCommandUsage():  String
 
   /** Show command help */
-  def showHelp():         Unit
+  def showHelp(program: String): Unit
 
   /** Parse command line and execute action */
-  def parseRun(argList: List[String]): Unit
+  def parseRun(prorgram: String, argList: List[String]): Unit
 
 } /* End of trait IOptCommand */
 
@@ -219,8 +219,8 @@ class OptSeparator(name: String) extends IOptCommand{
   def getCommandName()  = s"\n[$name]\n"
   def getCommandDesc()  = ""
   def getCommandUsage() = ""
-  def showHelp() = ()
-  def parseRun(argList: List[String]) = ()
+  def showHelp(program: String) = ()
+  def parseRun(program: String, argList: List[String]) = ()
 }
 
 /** Sub command action that executes without any switch. */
@@ -258,6 +258,15 @@ class OptCommand (
   private var operands = List[String]()
   private var _action = (res: OptResult) => println("results  = " + res)
 
+  private def replaceTemplate(text: String, program: String): String = {
+    text
+      .replaceAll("\\{program\\}", program)
+      .replaceAll("\\{command\\}", name)
+      .replaceAll("\\{cmd\\}",     name)
+      .replaceAll("\\{program-cmd\\}", s"$program $name")
+  }
+
+
   def getCommandName()  = name
   def getCommandDesc()  = desc
   def getCommandUsage() = usage
@@ -282,15 +291,15 @@ class OptCommand (
     options.toList
 
   /** Print help information for the user. */
-  def showHelp() = {
+  def showHelp(program: String) = {
     val name  = this.getCommandName()
     val desc  = this.getCommandDesc()
     val usage = this.getCommandUsage()
     if(desc != "") {
-      println(desc)
+      println(this.replaceTemplate(desc, program))
       println()
     }
-    if(longDesc != "") println(longDesc)    
+    if(longDesc != "") println(this.replaceTemplate(longDesc, program))    
     if(name != "") println(s" Usage: $name $usage")
 
     if(!options.isEmpty){
@@ -310,7 +319,7 @@ class OptCommand (
     if(example != "") {
       println()
       println("EXAMPLES:")
-      println(example)
+      println(this.replaceTemplate(example, program))
     }
 
   } // --- EoF func showHelp() ---- //
@@ -384,11 +393,11 @@ class OptCommand (
   } // -- EoF fun. parse ---- //
 
 
-  def parseRun(argList: List[String]): Unit =
+  def parseRun(program: String, argList: List[String]): Unit =
     try argList match {
       case List()
           => if(this.helpFlag)
-            this.showHelp()
+            this.showHelp(program)
           else
             _action(this.parse(argList))
       case _
@@ -468,7 +477,7 @@ class OptParser(
 
       case List("-h") | List("-help")
           => {           
-            showHelp()
+            this.showHelp()
             System.exit(0)
           }        
 
@@ -476,10 +485,10 @@ class OptParser(
       case List(command, "-h") 
           => parsers.get(command) match {
             case Some(cmd) =>
-              cmd.showHelp()
+              cmd.showHelp(program)
             case None => {
               println(s"Error: invalid command: $command.")
-              System.exit(1)
+              System.exit(-1)
             }
           }
 
@@ -487,7 +496,7 @@ class OptParser(
       case List(command, "-help") 
           => parsers.get(command) match {
             case Some(cmd) =>
-              cmd.showHelp()
+              cmd.showHelp(program)
             case None => {
               println(s"Error: invalid command: $command.")
               System.exit(1)
@@ -497,7 +506,7 @@ class OptParser(
       case command::rest 
         => parsers.get(command) match {
           case Some(cmd)
-              => cmd.parseRun(rest)
+              => cmd.parseRun(program, rest)
           case None
               => {
                 println(s"Error: invalid command: $command")
