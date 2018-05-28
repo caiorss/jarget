@@ -415,6 +415,13 @@ class OptParser(
   private val commands = ListBuffer[String]()
   private val parsers = Map[String, IOptCommand]()
 
+  private def replaceTemplate(text: String): String = {
+    text
+      .replaceAll("\\{program\\}", program)
+      .replaceAll("\\{version\\}", version)
+      .replaceAll("\\{license\\}", license)
+  }
+
   def add(opt: IOptCommand) = {
     commands.append(opt.getCommandName())
     parsers += opt.getCommandName() -> opt
