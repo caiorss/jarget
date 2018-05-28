@@ -876,12 +876,11 @@ $  jarget run Main demoImageViewer.jar -p=com.jtattoo/JTattoo/1.6.11 \
     }
   }
 
-  val desc = """
- Jarget 3.2 - command line toolbox for Scala and the Java Platform.
-"""
-
-  val parser = new OptParser(desc = desc)
-    .add(new OptSeparator("Main Commands"))
+  val parser = new OptParser(
+    program     = "jarget",
+    version     = "v3.2",
+    brief        = "{program} {version} - command line toolbox for Scala and the Java Platform.",
+   ).add(new OptSeparator("Main Commands"))
     .add(uberOptCommand)
     .add(execCommand)
     .add(scriptCommand)
