@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Jarget - Command Line Toolbox for Java Platform</title>
-<!-- 2018-04-20 Fri 23:20 -->
+<!-- 2018-05-29 Tue 07:14 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Caio Rodrigues - caiorss.rodrigues@gmail.com" />
@@ -249,13 +249,14 @@ for the JavaScript code in this tag.
 </ul>
 </li>
 <li><a href="#sec-2-6">2.6. Build fatjar, uber Jar or executable uber jar</a></li>
-<li><a href="#sec-2-7">2.7. System Information</a>
+<li><a href="#sec-2-7">2.7. Build Automation - Project file</a></li>
+<li><a href="#sec-2-8">2.8. System Information</a>
 <ul>
-<li><a href="#sec-2-7-1">2.7.1. Show Enviroment Variables</a></li>
-<li><a href="#sec-2-7-2">2.7.2. Show PATH Environment Variable</a></li>
-<li><a href="#sec-2-7-3">2.7.3. Show Java Properties</a></li>
-<li><a href="#sec-2-7-4">2.7.4. Show Path to Program</a></li>
-<li><a href="#sec-2-7-5">2.7.5. Show Platform Information</a></li>
+<li><a href="#sec-2-8-1">2.8.1. Show Enviroment Variables</a></li>
+<li><a href="#sec-2-8-2">2.8.2. Show PATH Environment Variable</a></li>
+<li><a href="#sec-2-8-3">2.8.3. Show Java Properties</a></li>
+<li><a href="#sec-2-8-4">2.8.4. Show Path to Program</a></li>
+<li><a href="#sec-2-8-5">2.8.5. Show Platform Information</a></li>
 </ul>
 </li>
 </ul>
@@ -669,6 +670,16 @@ to run jars with multiple entry points (main classes).
 </li>
 </ul>
 </li>
+
+<li>Release: <a href="https://github.com/caiorss/jarget/blob/d9913b519220d9237bcf1eab7826b00f078bc7dd/jarget?raw=true">jarget-v4.0</a>
+<ul class="org-ul">
+<li>Improve command line handling.
+</li>
+<li>Create build automation feature - to build project from
+configuration file. 
+</li>
+</ul>
+</li>
 </ul>
 
 <p>
@@ -763,7 +774,7 @@ named jarget.bat with the contents below.
 </ul>
 
 <p>
-File: jarget.batch 
+File: jarget.bat
 </p>
 
 <div class="org-src-container">
@@ -830,49 +841,54 @@ Now the app adopts git subcommands:
 <div class="org-src-container">
 
 <pre class="src src-text">$ jarget
-
- Jarget 3.2 - command line toolbox for Scala and the Java Platform.
-
-Usage: $  [COMMAND] [OPTIONS] [&lt;ARGS&gt; ...]
+jarget v4.0 - command line toolbox for Scala and the Java Platform.
+Usage: $ jarget [COMMAND] [OPTIONS] [&lt;ARGS&gt; ...]
 
 Commands:
 
 
 [Main Commands]
 
-  uber               Build uber jar file for deployment by bundling dependencies and resource files.
-  exec               Execute a shell command and pass -cp &lt;CLASSPATH&gt; of packages downloaded to it.
-  script             Run a scala script with a given set of packages from cache.
-  scala              Run Scala REPL (scala) passing the class of packages from the repository.
-  run                Run a main class from a set of jar file passing the classpath of packages in repository.
+  uber                  Build uber jar file for deployment by bundling dependencies and resource files.
+  exec                  Execute a shell command and pass -cp &lt;CLASSPATH&gt; of packages downloaded to it.
+  script                Run a scala script with a given set of packages from cache.
+  scala                 Run Scala REPL (scala) passing the class of packages from the repository.
+  run                   Run a main class from a set of jar file passing the classpath of packages in repository.
 
 [Mvn Commands]
 
-  mvn-show           Show package's information.
-  mvn-search         Search for a package at the site https://mvnrepository.com
-  mvn-doc            Open package documentation in the web browser.
-  mvn-run-jar        Run main method of executable jar package in repository.
-  mvn-run-cls        Run a main class of a java package (class with main static method).
-  mvn-pom            Show package's pom.xml file.
-  mvn-pull           Download package to cache directory.
-  mvn-copy           Copy jar packages from cache directory to ./lib downloading them if not available.
-  cache              Show packages in cache directory.
+  mvn-show              Show package's information.
+  mvn-search            Search for a package at the site https://mvnrepository.com
+  mvn-doc               Open package documentation in the web browser.
+  mvn-run-jar           Run main method of executable jar package in repository.
+  mvn-run-cls           Run a main class of a java package (class with main static method).
+  mvn-pom               Show package's pom.xml file.
+  mvn-pull              Download package to cache directory.
+  mvn-copy              Copy jar packages from cache directory to ./lib downloading them if not available.
+  cache                 Show packages in cache directory.
 
 [Jar Commands]
 
-  jar-to-exe         Embed Uber jar into Unix executable or Windows Executable (experimental).
-  jar-man            Show manifest of a jar file.
-  jar-main-class     Show main class of a jar file.
-  jar-ls             Show contents of a jar file.
-  jar-rs             Show resources of a jar file ignoring *.class files.
-  jar-cat            Show content of a file in a jar package.
-  jar-ex             Extract &lt;file&gt; from jar file &lt;FILE.jar&gt; to current directory.
+  jar-to-exe            Embed Uber jar into Unix executable or Windows Executable (experimental).
+  jar-man               Show manifest of a jar file.
+  jar-main-class        Show main class of a jar file.
+  jar-ls                Show contents of a jar file.
+  jar-rs                Show resources of a jar file ignoring *.class files.
+  jar-cat               Show content of a file in a jar package.
+  jar-ex                Extract &lt;file&gt; from jar file &lt;FILE.jar&gt; to current directory.
+
+[Project Commands]
+
+  pj-show               Show project configuration
+  pj-make               Create development build.
+  pj-run                Run development build, compiling it if out of sync with sources.
+  pj-release            Compile project building uber jar in executable wrapper.
 
 [Misc Commands]
 
-  utils              General utilities helpers for platform information and debugging.
-  digest-s           Compute crypto hash of string. - Algorithm: [md5 | sha1 | sha256 ]
-  digest-f           Compute crypto hash of a file. - Algorithm: [md5 | sha1 | sha256 ]
+  utils                 General utilities helpers for platform information and debugging.
+  digest-s              Compute crypto hash of string. - Algorithm: [md5 | sha1 | sha256 ]
+  digest-f              Compute crypto hash of a file. - Algorithm: [md5 | sha1 | sha256 ]
 </pre>
 </div>
 
@@ -2370,11 +2386,273 @@ $ ./jarget
 </div>
 
 <div id="outline-container-sec-2-7" class="outline-3">
-<h3 id="sec-2-7"><span class="section-number-3">2.7</span> System Information</h3>
+<h3 id="sec-2-7"><span class="section-number-3">2.7</span> Build Automation - Project file</h3>
 <div class="outline-text-3" id="text-2-7">
-</div><div id="outline-container-sec-2-7-1" class="outline-4">
-<h4 id="sec-2-7-1"><span class="section-number-4">2.7.1</span> Show Enviroment Variables</h4>
-<div class="outline-text-4" id="text-2-7-1">
+<p>
+WARNING: Experimental feature. 
+</p>
+
+<p>
+Jarget has the ability build small or simple projects with a simple
+configuration file with a declarative json-like syntax provided by
+the parser library <a href="https://github.com/lightbend/config">https://github.com/lightbend/config</a>.
+</p>
+
+<p>
+Example:
+</p>
+
+<ul class="org-ul">
+<li>File: build.conf 
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-conf"><span class="org-variable-name">scalaVersion</span> = 2.12
+<span class="org-comment-delimiter"># </span><span class="org-comment">Name of the library, program or application without extension. </span>
+<span class="org-variable-name">app</span> = jptk 
+<span class="org-comment-delimiter"># </span><span class="org-comment">Directories containing source that will be compiled </span>
+<span class="org-variable-name">src</span> = ./proejct/src
+<span class="org-comment-delimiter"># </span><span class="org-comment">Output file - destination of object files</span>
+<span class="org-variable-name">output</span> = ./out
+<span class="org-comment-delimiter"># </span><span class="org-comment">Depdencies in the format (com.typesafe/config/1.3.3) </span>
+<span class="org-variable-name">packages</span> = [
+  org.typelevel/cats-core_2.12/0.9.0,
+  org.beanshell/bsh/2.0b5,
+  org.codehaus.groovy/groovy-all/2.4.15
+]
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">List of resource directories that will be appended to release build</span>
+<span class="org-variable-name">resources</span> = [
+  ./assets 
+]
+</pre>
+</div>
+
+<p>
+Explanation: 
+</p>
+
+<ul class="org-ul">
+<li>app = &lt;name of application&gt;
+</li>
+
+<li>src = &lt;directory which contains source code&gt; *.scala files.
+<ul class="org-ul">
+<li>Default value: ./src 
+</li>
+</ul>
+</li>
+
+<li>output = &lt;output directory&gt;
+<ul class="org-ul">
+<li>Default value: ./bin
+</li>
+</ul>
+</li>
+
+<li>packages 
+</li>
+</ul>
+
+<p>
+<b>Project Commands:</b>
+</p>
+
+<ul class="org-ul">
+<li>Show project file: 
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ cat build.conf
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Jarget configuration file</span>
+scalaVersion = 2.12
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Program name without any extension</span>
+app = jmhttp
+<span class="org-comment-delimiter"># </span><span class="org-comment">Main class</span>
+mainclass = JargetMain
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Directories that will be compiled  (default ./src)</span>
+src = src
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Output Directory (default ./bin)</span>
+output = ./bin
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Depdencies</span>
+packages = [
+   javax.jmdns/jmdns/3.4.1
+]
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">resources = [</span>
+<span class="org-comment-delimiter">#     </span><span class="org-comment">./assets</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">]</span>
+</pre>
+</div>
+
+
+<ul class="org-ul">
+<li>Show build details.
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ jarget pj-show -h
+Show project configuration
+
+<span class="org-function-name">USAGE</span>: $ jarget pj-show
+
+<span class="org-function-name">OPTIONS</span>:
+  -file=&lt;FILE&gt;,   -f  Project file. (default build.conf)
+
+
+$ jarget pj-show
+
+Source directory = src
+Development build output file = ./bin/jmhttp-dev.jar
+Output directory              = ./bin
+Scala Version    = 2.12
+
+Source files:
+ ------------------------------------
+ - src/server.scala
+ - src/utils.Utils.scala
+ - src/utils.ImageUtils.scala
+ - src/main.scala
+ - src/optParse.scala
+
+<span class="org-function-name">Dependencies</span>:
+ ------------------------------------
+ - javax.jmdns/jmdns/3.4.1
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Carry out development build (build without any bundled
+dependency and cannot be run as standalone app.)
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ jarget pj-make -h
+Create development build.
+
+
+ Note: the development build is the project compiled without
+       any dependency bundled with object file.
+
+<span class="org-function-name">USAGE</span>: $ jarget pj-make
+
+<span class="org-function-name">OPTIONS</span>:
+  -file=&lt;FILE&gt;,   -f  Project file. (default build.conf)
+  -verbose,       -   Turn verbosity on.
+
+$ jarget pj-make
+Downloading ---------------------
+<span class="org-function-name">PackData</span>(javax.jmdns,jmdns,3.4.1)
+----------------------------------
+Package path = PackData(javax.jmdns,jmdns,3.4.1)
+Downloading file /home/archbox/.jarget/cache/javax/jmdns/jmdns/3.4.1/jmdns-3.4.1.pom.
+File /home/archbox/.jarget/cache/javax/jmdns/jmdns/3.4.1/jmdns-3.4.1.pom downloaded. Ok.
+Downloading file /home/archbox/.jarget/cache/javax/jmdns/jmdns/3.4.1/jmdns-3.4.1.jar.
+File /home/archbox/.jarget/cache/javax/jmdns/jmdns/3.4.1/jmdns-3.4.1.jar downloaded. Ok.
+Download Successful
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Generates: </span>
+$ ls bin/jmhttp-dev.jar
+bin/jmhttp-dev.jar
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Run the develpment build. 
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"> $ jarget pj-run -h
+ Run development build, compiling it if out of sync with sources.
+
+ -
+ USAGE: $ jarget pj-run pj-run -- [&lt;PROGRAM ARG&gt; ...]
+
+ OPTIONS:
+   -file=&lt;FILE&gt;,   -f  Project file. (default build.conf)
+
+$ jarget pj-run
+A micro Java/Scala http server to share files on the local network
+
+<span class="org-function-name">Usage</span>: jmhttp [OPTIONS] ... [[DIRECTORY] | [URL:DIRECTORY] [URL:DIRECTORY] ...]
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">=============================================</span>
+$ jarget pj-run -- --version
+jmhttp - v1.3
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Perform release build - the object code is bundled with all
+dependencies and the scala runtime library. 
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ jarget pj-release -h
+Compile project building uber jar<span class="org-keyword"> in</span> executable wrapper.
+
+-
+<span class="org-function-name">USAGE</span>: $ jarget pj-release
+
+<span class="org-function-name">OPTIONS</span>:
+  -file=&lt;FILE&gt;,     -f  Project file. (default build.conf)
+  -verbose,         -   Turn verbosity on.
+  -exe=&lt;EXE&gt;,       -e  Executable wrapper - [empty, uexe, wcli, wgui] - default (empty)
+  -show,            -   Show project configuration before building.
+  -output=<span class="org-keyword">&lt;FILE&gt;,</span>   -o  Output file, default &lt;FILE&gt; without extension + .sh or .exe.
+
+ <span class="org-comment-delimiter"># </span><span class="org-comment">Build uber jar ready to use </span>
+ $ jarget pj-release
+ Built file: ./bin/jmhttp-release.jar
+
+ $ java -jar bin/jmhttp-release.jar --version
+ jmhttp - v1.3
+
+ <span class="org-comment-delimiter"># </span><span class="org-comment">Build uber jar embed in Unix shell script (non native executable)</span>
+ $ jarget pj-release -exe=uexe
+ Built file: ./bin/jmhttp-release.sh
+
+ $ bin/jmhttp-release.sh --version
+ jmhttp - v1.3
+
+ <span class="org-comment-delimiter"># </span><span class="org-comment">Build uber jar embedded in Windows console native executable (.exe)</span>
+ $ jarget pj-release -exe=wcli
+ Built file: ./bin/jmhttp-release.exe
+
+ <span class="org-comment-delimiter"># </span><span class="org-comment">Build uber jar embedded in Windows GUI native executable (*.exe)</span>
+ $ jarget pj-release -exe=wgui
+ Built file: ./bin/jmhttp-release.exe
+
+ $ file bin/jmhttp-release.exe
+ bin/jmhttp-release.exe: PE32 executable (GUI) Intel 80386, for MS Windows
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-8" class="outline-3">
+<h3 id="sec-2-8"><span class="section-number-3">2.8</span> System Information</h3>
+<div class="outline-text-3" id="text-2-8">
+</div><div id="outline-container-sec-2-8-1" class="outline-4">
+<h4 id="sec-2-8-1"><span class="section-number-4">2.8.1</span> Show Enviroment Variables</h4>
+<div class="outline-text-4" id="text-2-8-1">
 <p>
 Command help:
 </p>
@@ -2477,9 +2755,9 @@ On Windows:
 </div>
 </div>
 
-<div id="outline-container-sec-2-7-2" class="outline-4">
-<h4 id="sec-2-7-2"><span class="section-number-4">2.7.2</span> Show PATH Environment Variable</h4>
-<div class="outline-text-4" id="text-2-7-2">
+<div id="outline-container-sec-2-8-2" class="outline-4">
+<h4 id="sec-2-8-2"><span class="section-number-4">2.8.2</span> Show PATH Environment Variable</h4>
+<div class="outline-text-4" id="text-2-8-2">
 <ul class="org-ul">
 <li><code>$ jarget utils -path</code>
 </li>
@@ -2526,9 +2804,9 @@ C:\Users\archbox\AppData\Local\Microsoft\WindowsApps
 </div>
 </div>
 
-<div id="outline-container-sec-2-7-3" class="outline-4">
-<h4 id="sec-2-7-3"><span class="section-number-4">2.7.3</span> Show Java Properties</h4>
-<div class="outline-text-4" id="text-2-7-3">
+<div id="outline-container-sec-2-8-3" class="outline-4">
+<h4 id="sec-2-8-3"><span class="section-number-4">2.8.3</span> Show Java Properties</h4>
+<div class="outline-text-4" id="text-2-8-3">
 <ul class="org-ul">
 <li><code>$ jarget utils -prop</code>
 </li>
@@ -2675,9 +2953,9 @@ On Windows:
 </div>
 </div>
 
-<div id="outline-container-sec-2-7-4" class="outline-4">
-<h4 id="sec-2-7-4"><span class="section-number-4">2.7.4</span> Show Path to Program</h4>
-<div class="outline-text-4" id="text-2-7-4">
+<div id="outline-container-sec-2-8-4" class="outline-4">
+<h4 id="sec-2-8-4"><span class="section-number-4">2.8.4</span> Show Path to Program</h4>
+<div class="outline-text-4" id="text-2-8-4">
 <ul class="org-ul">
 <li><code>$ jarget utils expath &lt;program&gt;</code>
 </li>
@@ -2695,9 +2973,9 @@ $ jarget utils expath jarget
 </div>
 </div>
 
-<div id="outline-container-sec-2-7-5" class="outline-4">
-<h4 id="sec-2-7-5"><span class="section-number-4">2.7.5</span> Show Platform Information</h4>
-<div class="outline-text-4" id="text-2-7-5">
+<div id="outline-container-sec-2-8-5" class="outline-4">
+<h4 id="sec-2-8-5"><span class="section-number-4">2.8.5</span> Show Platform Information</h4>
+<div class="outline-text-4" id="text-2-8-5">
 <ul class="org-ul">
 <li>jarget utils -info
 </li>
@@ -2769,7 +3047,7 @@ Java Runtime
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Caio Rodrigues - caiorss.rodrigues@gmail.com</p>
-<p class="date">Created: 2018-04-20 Fri 23:20</p>
+<p class="date">Created: 2018-05-29 Tue 07:14</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
