@@ -886,6 +886,10 @@ object Main{
 
   val defaultProjFile = "build.conf"
 
+  def getProjectFile(res: OptResult) =
+    res.getExistingFile("file").map(_.getPath())
+      .getOrElse(defaultProjFile)
+
   val projShowCommand = new OptCommand(
     name = "pj-show",
     desc = "Show project configuration"
