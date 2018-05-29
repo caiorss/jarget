@@ -207,24 +207,24 @@ trait IOptCommand{
   def getCommandUsage():  String
 
   /** Show command help */
-  def showHelp():         Unit
+  def showHelp(program: String): Unit
 
   /** Parse command line and execute action */
-  def parseRun(argList: List[String]): Unit
+  def parseRun(prorgram: String, argList: List[String]): Unit
 
 } /* End of trait IOptCommand */
 
 /** Pseudo command for grouping subcommands. */
-class Separator(name: String) extends IOptCommand{
+class OptSeparator(name: String) extends IOptCommand{
   def getCommandName()  = s"\n[$name]\n"
   def getCommandDesc()  = ""
   def getCommandUsage() = ""
-  def showHelp() = ()
-  def parseRun(argList: List[String]) = ()
+  def showHelp(program: String) = ()
+  def parseRun(program: String, argList: List[String]) = ()
 }
 
 /** Sub command action that executes without any switch. */
-class OptCommandAction(name: String, desc: String)(action: => Unit){
+class OptSimple(name: String, desc: String)(action: => Unit){
   def getCommandName()  = name
   def getCommandDesc()  = desc 
   def getCommandUsage() = ""
@@ -258,6 +258,14 @@ class OptCommand (
   private var operands = List[String]()
   private var _action = (res: OptResult) => println("results  = " + res)
 
+  private def replaceTemplate(text: String, program: String): String = {
+    text
+      .replaceAll("\\{program\\}", program)
+      .replaceAll("\\{command\\}", name)
+      .replaceAll("\\{cmd\\}",     name)
+      .replaceAll("\\{program-cmd\\}", s"$program $name")
+  }
+
   def getCommandName()  = name
   def getCommandDesc()  = desc
   def getCommandUsage() = usage
@@ -282,16 +290,16 @@ class OptCommand (
     options.toList
 
   /** Print help information for the user. */
-  def showHelp() = {
+  def showHelp(program: String) = {
     val name  = this.getCommandName()
     val desc  = this.getCommandDesc()
     val usage = this.getCommandUsage()
     if(desc != "") {
-      println(desc)
+      println(this.replaceTemplate(desc, program))
       println()
     }
-    if(longDesc != "") println(longDesc)    
-    if(name != "") println(s" Usage: $name $usage")
+    if(longDesc != "") println(this.replaceTemplate(longDesc, program))    
+    if(name != "") println(s"USAGE: $$ $program $name $usage")
 
     if(!options.isEmpty){
       println() ; println("OPTIONS:")
@@ -310,7 +318,7 @@ class OptCommand (
     if(example != "") {
       println()
       println("EXAMPLES:")
-      println(example)
+      println(this.replaceTemplate(example, program))
     }
 
   } // --- EoF func showHelp() ---- //
@@ -384,11 +392,11 @@ class OptCommand (
   } // -- EoF fun. parse ---- //
 
 
-  def parseRun(argList: List[String]): Unit =
+  def parseRun(program: String, argList: List[String]): Unit =
     try argList match {
       case List()
           => if(this.helpFlag)
-            this.showHelp()
+            this.showHelp(program)
           else
             _action(this.parse(argList))
       case _
@@ -405,37 +413,58 @@ class OptCommand (
 } // ---- End of class OptCommand ---- // 
 
 
-/** Command line parser with git and busybox like sub-commands or services. */
+/** Command line parser with sub-commands or services similar to git and busybox.  
+  * @param program - Application name. 
+  * @param version - Application version string. 
+  * @param brief   - Single-line brief description about what the application does.
+  * @param usage   - Single-line usage string.
+  * @param license - Application license, example: GPL-v3.0, BSD, Public Domain .... 
+  */
 class OptParser(
-  programName: String = "",
+  program:     String,
+  version:     String = "",
+  brief:       String = "",
   usage:       String = "",
-  desc:        String = "",
+  license:     String = "",
   ){
   import scala.collection.mutable.{Map, ListBuffer}
   private val commands = ListBuffer[String]()
   private val parsers = Map[String, IOptCommand]()
 
+  private def replaceTemplate(text: String): String = {
+    text
+      .replaceAll("\\{program\\}", program)
+      .replaceAll("\\{version\\}", version)
+      .replaceAll("\\{license\\}", license)
+  }  
+
+  /** Add sub command. */
   def add(opt: IOptCommand) = {
     commands.append(opt.getCommandName())
     parsers += opt.getCommandName() -> opt
     this 
-  }
+  }  
 
+  /** Show user help. */
   def showHelp() = {
+    // Print program description 
+    println(this.replaceTemplate(brief))
+    // Print usage
+    if(usage == "")
+      println(s"Usage: $$ $program [COMMAND] [OPTIONS] [<ARGS> ...]")
+    else
+      println(this.replaceTemplate(usage))
+    println()
+    //-- Print sub commands --- //
+    println("Commands:\n")
     val rows = commands.toList map {name =>
       val c = parsers(name)
       List(c.getCommandName(), c.getCommandDesc())
     }
-    println(desc)
-    if(usage == "")
-      println(s"Usage: $$ $programName [COMMAND] [OPTIONS] [<ARGS> ...]")
-    else
-      println(usage)
-    println()
-    println("Commands:\n")
     OptFun.printTableOfRows(rows)
   }
 
+  /** Parse command line arguments. */
   def parse(args: List[String]) =
     args match {
       case List()
@@ -446,7 +475,7 @@ class OptParser(
 
       case List("-h") | List("-help")
           => {           
-            showHelp()
+            this.showHelp()
             System.exit(0)
           }        
 
@@ -454,10 +483,10 @@ class OptParser(
       case List(command, "-h") 
           => parsers.get(command) match {
             case Some(cmd) =>
-              cmd.showHelp()
+              cmd.showHelp(program)
             case None => {
               println(s"Error: invalid command: $command.")
-              System.exit(1)
+              System.exit(-1)
             }
           }
 
@@ -465,7 +494,7 @@ class OptParser(
       case List(command, "-help") 
           => parsers.get(command) match {
             case Some(cmd) =>
-              cmd.showHelp()
+              cmd.showHelp(program)
             case None => {
               println(s"Error: invalid command: $command.")
               System.exit(1)
@@ -475,13 +504,14 @@ class OptParser(
       case command::rest 
         => parsers.get(command) match {
           case Some(cmd)
-              => cmd.parseRun(rest)
+              => cmd.parseRun(program, rest)
           case None
               => {
                 println(s"Error: invalid command: $command")
                 System.exit(1)
               }
         }
-    }
+    } /* -- End of .parse()  -*/
+
 }
 

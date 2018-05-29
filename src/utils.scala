@@ -295,8 +295,11 @@ object Utils{
   def execl(
     program: String,                           // Program that will be run
     args:    List[String] = List(),            // Program arguments
-    env:     List[(String, String)] = List()   // Environment variables
+    env:     List[(String, String)] = List(),  // Environment variables
+    verbose: Boolean = false 
   ) = {
+    if(verbose)
+      println(s"""Running: $$ $program ${args.mkString(" ")}""")
     val builder = new java.lang.ProcessBuilder()
     val evars    = builder.environment()
     builder.command(program)
@@ -305,7 +308,8 @@ object Utils{
     // set process' enviroment variables
     env foreach { case (k, v) => evars.put(k, v) }
     val iostat = builder.inheritIO().start()
-    System.exit(iostat.waitFor())
+    // Return sub-process status code
+    iostat.waitFor()
   }
 
   /** Print file contents */

@@ -34,6 +34,9 @@ assetfiles	:= $(wildcard assets/*)
 SCALA_XML=scala-xml_2.12-1.0.6.jar
 SCALA_XML_PATH=$(shell dirname $(shell dirname $(shell which scala)))/lib/$(SCALA_XML)
 
+# Additional jar files in ./lib
+jars := $(wildcard lib/*.jar)
+
 exeloaders := exeLoaders/loaderCLI.exe exeLoaders/loaderGUI.exe
 
 CC := fsc 
@@ -52,12 +55,12 @@ check:
 
 
 $(target) : $(src)
-	$(CC) $(src) -d jarget.jar
+	$(CC) $(src) -cp "lib/*" -d jarget.jar
 
 bin/jarget.sh: $(target) $(assetfiles)
 	mkdir -p bin
 	cp -v $(exeloaders) assets || true 
-	scala jarget.jar uber -scala -exe=uexe -r=./assets -o=bin/jarget.sh  jarget.jar $(SCALA_XML_PATH) 
+	scala jarget.jar uber -scala -exe=uexe -r=./assets -o=bin/jarget.sh  jarget.jar $(jars)
 
 # bin/jarget.sh: $(target) $(assetfiles)
 # 	mkdir -p bin
@@ -77,7 +80,7 @@ bin/jarget-pro.jar: $(target) $(assetfiles) config.pro
 	@# Try to copy Windows CLI and GUI Loaders
 	cp -v $(exeloaders) assets || true 
 	@# Generate uber jar
-	scala jarget.jar uber -scala -r=assets -o=bin/jarget-uber.jar jarget.jar $(SCALA_XML_PATH) 
+	scala jarget.jar uber -scala -r=assets -o=bin/jarget-uber.jar jarget.jar $(jars)
 	@# Shrink app with proguard 
 	java -jar proguard.jar @config.pro
 	rm -rf bin/jarget-uber.jar

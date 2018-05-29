@@ -1,0 +1,8 @@
+Native Code Jar Loaders for Microsoft Windows.
+
+ - A Jar loader is a Windows native executable program which the sole
+   purpose is to embed a java uber-jar application making easier for
+   end-users to discover and run those applications.
+
+
+
