@@ -886,15 +886,21 @@ object Main{
 
   val defaultProjFile = "build.conf"
 
-  def getProjectFile(res: OptResult) =
+  def getProjectFile(res: OptResult) = 
     res.getExistingFile("file").map(_.getPath())
       .getOrElse(defaultProjFile)
 
   val projShowCommand = new OptCommand(
     name = "pj-show",
     desc = "Show project configuration"
-  ).setAction{ res =>
-    val proj = ProjectBuilder.ofFile(defaultProjFile)
+  ).addOpt(
+    name = "file",
+    shortName = "f",
+    argName = "<FILE>",
+    desc = "Project file. (default build.conf)"
+  ).setAction{ res =>    
+    val proj = ProjectBuilder.ofFile(
+      res.getExistingFile("file").map(_.getPath()) getOrElse defaultProjFile)
     proj.show()
   }
 
@@ -908,10 +914,15 @@ object Main{
        any dependency bundled with object file.
  """
   ).addOpt(
+    name = "file",
+    shortName = "f",
+    argName = "<FILE>",
+    desc = "Project file. (default build.conf)"
+  ).addOpt(
     name = "verbose",
     desc = "Turn verbosity on."
-  ).setAction{ res => 
-    val proj = ProjectBuilder.ofFile(defaultProjFile)
+  ).setAction{ res =>
+    val proj = ProjectBuilder.ofFile(getProjectFile(res))     
       .setVerbose(res.getFlag("verbose"))
     proj.buildDev()
   }
@@ -922,6 +933,11 @@ object Main{
     desc     = "Compile project building uber jar in executable wrapper.",
     // helpFlag = true,
     longDesc = """-"""
+  ).addOpt(
+    name = "file",
+    shortName = "f",
+    argName = "<FILE>",
+    desc = "Project file. (default build.conf)"
   ).addOpt(
     name = "verbose",
     desc = "Turn verbosity on."
@@ -939,7 +955,7 @@ object Main{
     argName   = "<FILE>",
     desc      = "Output file, default <FILE> without extension + .sh or .exe."
   ).setAction{ res =>
-    val proj = ProjectBuilder.ofFile(defaultProjFile)
+    val proj = ProjectBuilder.ofFile(getProjectFile(res))
       .setVerbose(res.getFlag("verbose"))
     if(res.getFlag("show"))
       proj.show()
@@ -954,23 +970,13 @@ object Main{
     // helpFlag = true,
     longDesc = """-"""
   ).addOpt(
-    name      = "exe",
-    shortName = "e",
-    argName   = "<EXE>",
-    desc      = "Executable wrapper - [empty, uexe, wcli, wgui] - default (empty)"
-  ).addOpt(
-    name  = "show",
-    desc  = "Show project configuration before building."
-  ).addOpt(
-    name      = "output",
-    shortName = "o",
-    argName   = "<FILE>",
-    desc      = "Output file, default <FILE> without extension + .sh or .exe."
+    name = "file",
+    shortName = "f",
+    argName = "<FILE>",
+    desc = "Project file. (default build.conf)"
   ).setAction{ res =>
-    val proj = ProjectBuilder.ofFile(defaultProjFile)
-    if(res.getFlag("show"))
-      proj.show()
-    val exe = res.getStr("exe", "empty")
+    val proj = ProjectBuilder.ofFile(getProjectFile(res))
+      .setVerbose(res.getFlag("verbose"))
     val args = res.getListStr("--")
     proj.run(args)
   }
