@@ -282,6 +282,11 @@ From version >= 1.5 jarget will be shrunk with proguard.
      package. It is similar to mvn-run-jar, but mvn-run-cls is useful
      to run jars with multiple entry points (main classes).
 
+ - Release: [[https://github.com/caiorss/jarget/blob/d9913b519220d9237bcf1eab7826b00f078bc7dd/jarget?raw%3Dtrue][jarget-v4.0]]
+   + Improve command line handling.
+   + Create build automation feature - to build project from
+     configuration file. 
+
 Or it can be downloaded with those shell commands below: 
 
 #+BEGIN_SRC sh
@@ -350,7 +355,7 @@ setx PATH=%PATH%;%USERPROFILE%\bin
  - Step 3 - Create a batch script to load the app at this directory,
    named jarget.bat with the contents below.
 
-File: jarget.batch 
+File: jarget.bat
 
 #+BEGIN_SRC sh 
   @echo off
@@ -396,51 +401,56 @@ Now the app adopts git subcommands:
 
  - =$ jarget=
 
-#+BEGIN_SRC text
+#+BEGIN_SRC text 
   $ jarget
-
-   Jarget 3.2 - command line toolbox for Scala and the Java Platform.
-
-  Usage: $  [COMMAND] [OPTIONS] [<ARGS> ...]
+  jarget v4.0 - command line toolbox for Scala and the Java Platform.
+  Usage: $ jarget [COMMAND] [OPTIONS] [<ARGS> ...]
 
   Commands:
 
 
   [Main Commands]
 
-    uber               Build uber jar file for deployment by bundling dependencies and resource files.
-    exec               Execute a shell command and pass -cp <CLASSPATH> of packages downloaded to it.
-    script             Run a scala script with a given set of packages from cache.
-    scala              Run Scala REPL (scala) passing the class of packages from the repository.
-    run                Run a main class from a set of jar file passing the classpath of packages in repository.
+    uber                  Build uber jar file for deployment by bundling dependencies and resource files.
+    exec                  Execute a shell command and pass -cp <CLASSPATH> of packages downloaded to it.
+    script                Run a scala script with a given set of packages from cache.
+    scala                 Run Scala REPL (scala) passing the class of packages from the repository.
+    run                   Run a main class from a set of jar file passing the classpath of packages in repository.
 
   [Mvn Commands]
 
-    mvn-show           Show package's information.
-    mvn-search         Search for a package at the site https://mvnrepository.com
-    mvn-doc            Open package documentation in the web browser.
-    mvn-run-jar        Run main method of executable jar package in repository.
-    mvn-run-cls        Run a main class of a java package (class with main static method).
-    mvn-pom            Show package's pom.xml file.
-    mvn-pull           Download package to cache directory.
-    mvn-copy           Copy jar packages from cache directory to ./lib downloading them if not available.
-    cache              Show packages in cache directory.
+    mvn-show              Show package's information.
+    mvn-search            Search for a package at the site https://mvnrepository.com
+    mvn-doc               Open package documentation in the web browser.
+    mvn-run-jar           Run main method of executable jar package in repository.
+    mvn-run-cls           Run a main class of a java package (class with main static method).
+    mvn-pom               Show package's pom.xml file.
+    mvn-pull              Download package to cache directory.
+    mvn-copy              Copy jar packages from cache directory to ./lib downloading them if not available.
+    cache                 Show packages in cache directory.
 
   [Jar Commands]
 
-    jar-to-exe         Embed Uber jar into Unix executable or Windows Executable (experimental).
-    jar-man            Show manifest of a jar file.
-    jar-main-class     Show main class of a jar file.
-    jar-ls             Show contents of a jar file.
-    jar-rs             Show resources of a jar file ignoring *.class files.
-    jar-cat            Show content of a file in a jar package.
-    jar-ex             Extract <file> from jar file <FILE.jar> to current directory.
+    jar-to-exe            Embed Uber jar into Unix executable or Windows Executable (experimental).
+    jar-man               Show manifest of a jar file.
+    jar-main-class        Show main class of a jar file.
+    jar-ls                Show contents of a jar file.
+    jar-rs                Show resources of a jar file ignoring *.class files.
+    jar-cat               Show content of a file in a jar package.
+    jar-ex                Extract <file> from jar file <FILE.jar> to current directory.
+
+  [Project Commands]
+
+    pj-show               Show project configuration
+    pj-make               Create development build.
+    pj-run                Run development build, compiling it if out of sync with sources.
+    pj-release            Compile project building uber jar in executable wrapper.
 
   [Misc Commands]
 
-    utils              General utilities helpers for platform information and debugging.
-    digest-s           Compute crypto hash of string. - Algorithm: [md5 | sha1 | sha256 ]
-    digest-f           Compute crypto hash of a file. - Algorithm: [md5 | sha1 | sha256 ]
+    utils                 General utilities helpers for platform information and debugging.
+    digest-s              Compute crypto hash of string. - Algorithm: [md5 | sha1 | sha256 ]
+    digest-f              Compute crypto hash of a file. - Algorithm: [md5 | sha1 | sha256 ]
 
 
 #+END_SRC
@@ -1646,6 +1656,220 @@ Run it with: $ java -jar jarget
 
 # Run it 
 $ ./jarget 
+#+END_SRC
+
+** Build Automation - Project file
+
+WARNING: Experimental feature. 
+
+Jarget has the ability build small or simple projects with a simple
+configuration file with a declarative json-like syntax provided by
+the parser library https://github.com/lightbend/config.
+
+Example:
+
+ - File: build.conf 
+
+#+BEGIN_SRC conf 
+  scalaVersion = 2.12
+  # Name of the library, program or application without extension. 
+  app = jptk 
+  # Directories containing source that will be compiled 
+  src = ./proejct/src
+  # Output file - destination of object files
+  output = ./out
+  # Depdencies in the format (com.typesafe/config/1.3.3) 
+  packages = [
+    org.typelevel/cats-core_2.12/0.9.0,
+    org.beanshell/bsh/2.0b5,
+    org.codehaus.groovy/groovy-all/2.4.15
+  ]
+
+  # List of resource directories that will be appended to release build
+  resources = [
+    ./assets 
+  ]
+#+END_SRC
+
+Explanation: 
+
+ + app = <name of application>
+
+ + src = <directory which contains source code> *.scala files.
+   + Default value: ./src 
+
+ + output = <output directory>
+   + Default value: ./bin
+
+ + packages 
+
+ *Project Commands:*
+
+ - Show project file: 
+
+#+BEGIN_SRC sh 
+  $ cat build.conf
+
+  # Jarget configuration file
+  scalaVersion = 2.12
+
+  # Program name without any extension
+  app = jmhttp
+  # Main class
+  mainclass = JargetMain
+
+  # Directories that will be compiled  (default ./src)
+  src = src
+
+  # Output Directory (default ./bin)
+  output = ./bin
+
+  # Depdencies
+  packages = [
+     javax.jmdns/jmdns/3.4.1
+  ]
+
+  # resources = [
+  #     ./assets
+  # ]
+#+END_SRC
+
+
+ - Show build details.
+
+#+BEGIN_SRC sh 
+  $ jarget pj-show -h
+  Show project configuration
+
+  USAGE: $ jarget pj-show
+
+  OPTIONS:
+    -file=<FILE>,   -f  Project file. (default build.conf)
+
+
+  $ jarget pj-show
+
+  Source directory = src
+  Development build output file = ./bin/jmhttp-dev.jar
+  Output directory              = ./bin
+  Scala Version    = 2.12
+
+  Source files:
+   ------------------------------------
+   - src/server.scala
+   - src/utils.Utils.scala
+   - src/utils.ImageUtils.scala
+   - src/main.scala
+   - src/optParse.scala
+
+  Dependencies:
+   ------------------------------------
+   - javax.jmdns/jmdns/3.4.1
+
+
+#+END_SRC
+
+ - Carry out development build (build without any bundled
+   dependency and cannot be run as standalone app.)
+
+#+BEGIN_SRC sh
+  $ jarget pj-make -h
+  Create development build.
+
+
+   Note: the development build is the project compiled without
+         any dependency bundled with object file.
+
+  USAGE: $ jarget pj-make
+
+  OPTIONS:
+    -file=<FILE>,   -f  Project file. (default build.conf)
+    -verbose,       -   Turn verbosity on.
+
+  $ jarget pj-make
+  Downloading ---------------------
+  PackData(javax.jmdns,jmdns,3.4.1)
+  ----------------------------------
+  Package path = PackData(javax.jmdns,jmdns,3.4.1)
+  Downloading file /home/archbox/.jarget/cache/javax/jmdns/jmdns/3.4.1/jmdns-3.4.1.pom.
+  File /home/archbox/.jarget/cache/javax/jmdns/jmdns/3.4.1/jmdns-3.4.1.pom downloaded. Ok.
+  Downloading file /home/archbox/.jarget/cache/javax/jmdns/jmdns/3.4.1/jmdns-3.4.1.jar.
+  File /home/archbox/.jarget/cache/javax/jmdns/jmdns/3.4.1/jmdns-3.4.1.jar downloaded. Ok.
+  Download Successful
+
+  # Generates: 
+  $ ls bin/jmhttp-dev.jar
+  bin/jmhttp-dev.jar
+
+
+#+END_SRC
+
+ - Run the develpment build. 
+
+#+BEGIN_SRC sh 
+   $ jarget pj-run -h
+   Run development build, compiling it if out of sync with sources.
+
+   -
+   USAGE: $ jarget pj-run pj-run -- [<PROGRAM ARG> ...]
+
+   OPTIONS:
+     -file=<FILE>,   -f  Project file. (default build.conf)
+
+  $ jarget pj-run
+  A micro Java/Scala http server to share files on the local network
+
+  Usage: jmhttp [OPTIONS] ... [[DIRECTORY] | [URL:DIRECTORY] [URL:DIRECTORY] ...]
+
+  #=============================================
+  $ jarget pj-run -- --version
+  jmhttp - v1.3
+
+
+#+END_SRC
+
+ - Perform release build - the object code is bundled with all
+   dependencies and the scala runtime library. 
+
+#+BEGIN_SRC sh 
+  $ jarget pj-release -h
+  Compile project building uber jar in executable wrapper.
+
+  -
+  USAGE: $ jarget pj-release
+
+  OPTIONS:
+    -file=<FILE>,     -f  Project file. (default build.conf)
+    -verbose,         -   Turn verbosity on.
+    -exe=<EXE>,       -e  Executable wrapper - [empty, uexe, wcli, wgui] - default (empty)
+    -show,            -   Show project configuration before building.
+    -output=<FILE>,   -o  Output file, default <FILE> without extension + .sh or .exe.
+
+   # Build uber jar ready to use 
+   $ jarget pj-release
+   Built file: ./bin/jmhttp-release.jar
+
+   $ java -jar bin/jmhttp-release.jar --version
+   jmhttp - v1.3
+
+   # Build uber jar embed in Unix shell script (non native executable)
+   $ jarget pj-release -exe=uexe
+   Built file: ./bin/jmhttp-release.sh
+
+   $ bin/jmhttp-release.sh --version
+   jmhttp - v1.3
+
+   # Build uber jar embedded in Windows console native executable (.exe)
+   $ jarget pj-release -exe=wcli
+   Built file: ./bin/jmhttp-release.exe
+
+   # Build uber jar embedded in Windows GUI native executable (*.exe)
+   $ jarget pj-release -exe=wgui
+   Built file: ./bin/jmhttp-release.exe
+
+   $ file bin/jmhttp-release.exe
+   bin/jmhttp-release.exe: PE32 executable (GUI) Intel 80386, for MS Windows
+
 #+END_SRC
 
 ** System Information 
