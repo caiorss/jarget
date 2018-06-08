@@ -158,8 +158,17 @@ case class PackData(
 
   /** Get package's pom XML */
   def getPomXML() = 
-    this.getPomURI map scala.xml.XML.load
-  
+    this.getPomURI map { (url: String) =>
+      try scala.xml.XML.load(url)
+       catch {
+        case ex: java.io.FileNotFoundException =>
+          throw new PackageFetchException(
+            s"Error: failed to download package <${this.format()}> from <$url>"
+          )
+        case ex: java.net.UnknownHostException =>
+          throw new PackageFetchException(s"Error: could not locate server <$url>")
+      }
+    }
 
 } //---------- End of object PackData ------------- // 
 
@@ -219,7 +228,6 @@ object Pom{
     )  
   }
 
-
   /** Extract package data from pom xml file. */
   def getPomPackData(pom: scala.xml.Node): Option[PackData] = {
     val nodes   = pom.child
@@ -230,7 +238,6 @@ object Pom{
       version   <- getText("version")
     } yield PackData(group, artifact, version)
   }
-
 
   /**  Get a XML node like this:
 
@@ -373,18 +380,18 @@ object PackCache {
 
 object Packget {
   
-  //import Pom
+
   import jarget.reader._
 
   def getAllDependencies(pack: PackData):  Reader[String, Set[PackData]] = {
     var packlist = Set[PackData](pack)
     //packlist += pack
-    for {    
+    for {
       xml  <- pack.getPomXML
       deps = Pom.getPomDependencies(xml)
       _    <- Reader.liftIO{ deps foreach (d => packlist += d)}
     } yield packlist
-  }
+  } // --- Eof getAllDependencies --- //
 
 
   def getAllDependenciesFromCache(cache: String, pack: PackData) = {
