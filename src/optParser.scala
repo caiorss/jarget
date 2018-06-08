@@ -508,28 +508,17 @@ class OptParser(
           }        
 
       // Show sub-command help 
-      case List(command, "-h") 
+      case List(command, h) if (h == "-help" || h == "-h" )
           => parsers.get(command) match {
             case Some(cmd) =>
               cmd.showHelp(program)
             case None => {
-              println(s"Error: invalid command: $command.")
-              System.exit(-1)
-            }
-          }
-
-      // Show sub-command help         
-      case List(command, "-help") 
-          => parsers.get(command) match {
-            case Some(cmd) =>
-              cmd.showHelp(program)
-            case None => {
-              println(s"Error: invalid command: $command.")
+              println(s"Error: invalid command <$command>")
               System.exit(1)
             }
           }
 
-      case command::rest 
+      case command::rest
         => parsers.get(command) match {
           case Some(cmd)
               => cmd.parseRun(program, rest)
