@@ -44,18 +44,17 @@ case class PomData(
   packaging:   String
 ) 
 
-
 case class RepoConf(
   cache:   String,
   repoUrl: String
 )
 
+class PackageFetchException(msg: String) extends Exception(msg){}
 
 /** Encodes java package specification.
 
    Example: The package org.jfree:jfreechart:1.0.17 is encoded as 
    PackData("org.jfree", "jfreechart", "1.0.17")
-
 
    Example: Package's operations. 
 
