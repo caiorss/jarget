@@ -45,7 +45,7 @@ object MainUtils {
   def parsePack(pstr: String) = {
     val p = PackData.read(pstr, "/")
     if (p.isEmpty) {
-      println("Error: Invalid package format")
+      println(s"Error: Invalid package format: <$pstr>")
       System.exit(1)
     }
     p.get 
@@ -59,9 +59,8 @@ object MainUtils {
       case _
           => None
     }
-
     if (p.isEmpty) {
-      println("Error: Invalid package format")
+      println(s"Error: Invalid package format: <$pstr>")
       System.exit(1)
     }
     p.get
