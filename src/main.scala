@@ -160,6 +160,7 @@ object Main{
 
   import MainUtils._
 
+
   def onDebug(action: => Unit) =
     if(System.getProperty("jarget.debug") != null) action
 
@@ -168,22 +169,12 @@ object Main{
       action
       System.exit(0)
     } catch {
-      case ex: java.io.FileNotFoundException
+      case ex: jarget.mvn.PackageFetchException
           => {
-            println("Error: package not found.")
-            onDebug{ print(Console.RED); ex.printStackTrace(); print(Console.RESET) }
+            println(Console.RED + ex.getMessage() + Console.RESET)
+            onDebug(ex.printStackTrace())
             System.exit(1)
           }
-
-      case ex: java.net.UnknownHostException
-          => {
-            println("Error: DNS Failure")
-            onDebug{ print(Console.RED); ex.printStackTrace(); print(Console.RESET) }
-            System.exit(1)
-          }
-
-      // Throw unknown exception again  
-      case ex: Throwable => throw ex 
     }
 
   def parseArgs(args: Array[String]) : Unit = {
