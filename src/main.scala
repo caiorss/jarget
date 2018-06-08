@@ -159,6 +159,7 @@ Java Runtime
 object Main{
 
   import MainUtils._
+  
 
   def onDebug(action: => Unit) =
     if(System.getProperty("jarget.debug") != null) action
@@ -168,22 +169,12 @@ object Main{
       action
       System.exit(0)
     } catch {
-      case ex: java.io.FileNotFoundException
+      case ex: jarget.mvn.PackageFetchException
           => {
-            println("Error: package not found.")
-            onDebug{ print(Console.RED); ex.printStackTrace(); print(Console.RESET) }
+            println(Console.RED + ex.getMessage() + Console.RESET)
+            onDebug(ex.printStackTrace())
             System.exit(1)
           }
-
-      case ex: java.net.UnknownHostException
-          => {
-            println("Error: DNS Failure")
-            onDebug{ print(Console.RED); ex.printStackTrace(); print(Console.RESET) }
-            System.exit(1)
-          }
-
-      // Throw unknown exception again  
-      case ex: Throwable => throw ex 
     }
 
   def parseArgs(args: Array[String]) : Unit = {
@@ -254,6 +245,58 @@ object Main{
     showPackageInfo(parsePack(pstr)) run repoUrl 
   }
 
+  val mvnVersion = new OptCommand(
+    name  = "mvn-version",
+    usage = "<GROUP-ID>/<ARTIFACT-ID> [<GROUP-ID>/<ARTIFACT-ID> ...]",
+    desc  = "Show all versions available of a package.",
+    helpFlag = true,
+    example = """
+ $ jraget mvn-version org.apache.commons/commons-lang3
+ $ jarget mvn-version org.jfree/jfreechart org.beanshell/bsh org.eclipse.persistence/javax.persistence
+ """,
+  ).setAction{ res =>    
+    def showVersion(packStr: String) = {
+      val p = packStr.split("/") match {
+        case Array(g, a) => Some((g, a))
+         case _           => None 
+      }
+      if(p.isEmpty) {
+        println(s"Error: invalid package format <$packStr>")
+        System.exit(1)
+       }
+      val (groupID, artifactID) = p.get
+      val url = (repoUrl
+         + "/" + groupID.replace(".", "/")
+        + "/" + artifactID + "/" + "maven-metadata.xml"
+       )
+       try {
+         val xml = scala.xml.XML.load(url)
+         val repoGroupID    = (xml \\ "groupId").text
+         val repoArtifactID = (xml \\ "artifactId").text
+         val latestVersion  = (xml \\ "versioning" \\ "latest").text
+         val releaseVersion = (xml \\ "versioning" \\ "release").text
+         val allVersions    = (xml \\ "versioning" \\ "versions")
+           .head.child.map(_.text.trim).filter(_ != "")
+       println(s""" 
+    Package        = $repoGroupID/$repoArtifactID
+    Group ID       = $repoGroupID
+    Artifact ID    = $repoArtifactID
+    Latest Version = $latestVersion 
+    Release        = $releaseVersion 
+    All Version    = ${allVersions.mkString("; ")}
+   """)
+       } catch {
+         case ex: java.io.FileNotFoundException
+             => println(s"Error: package <$groupID/$artifactID> not found.")
+       }
+    } // --- End of showVersion --- //
+    val pack0 = res.getOperandOrError(0,
+      "Error: missing package. Use -h or -help to show help.")
+    val rest = res.getOperands().tail
+    showVersion(pack0)
+    rest foreach showVersion
+  }
+
   val mvnSearch = new OptCommand(
     name  = "mvn-search",
     usage = "<QUERY>",
@@ -263,7 +306,6 @@ object Main{
     val query = res.getOperandOrError(0, "Error: missing query. Use -h to show help.")
     Utils.openUrl("https://mvnrepository.com/search?q=" + query)
   }
-
 
   val mvnPom = new OptCommand(
     name  = "mvn-pom",
@@ -285,10 +327,14 @@ object Main{
    Example:
     $ jarget mvn-pull org.scalaz/scalaz-core_2.11/7.3.0-M15 org.jfree/jfreechart/1.0.17
     """
+  ).addOpt(
+    name = "repo",
+    desc = s"Alternative repository URL - default ${repoUrl}"
   ).setAction{ res =>
     tryMVNGet{
       val packs = res.getOperands() map parsePack
-      Packget.getPackJarsFromCache(packs, cachePath, repoUrl)
+      val repoUrln = res.getStr("repo", repoUrl)
+      Packget.getPackJarsFromCache(packs, cachePath, repoUrln)
     }
   }
 
@@ -985,7 +1031,7 @@ object Main{
 
   val parser = new OptParser(
     program     = "jarget",
-    version     = "v4.0",
+    version     = "v4.1",
     brief        = "{program} {version} - command line toolbox for Scala and the Java Platform.",
    ).add(new OptSeparator("Main Commands"))
     .add(uberOptCommand)
@@ -995,6 +1041,7 @@ object Main{
     .add(runCommand)
     .add(new OptSeparator("Mvn Commands"))
     .add(mvnShow)
+    .add(mvnVersion)
     .add(mvnSearch)
     .add(mvnDoc)
     .add(mvnRunJar)

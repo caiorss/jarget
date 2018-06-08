@@ -54,12 +54,45 @@ object Utils{
   def dirExists(dir: String) =
     new java.io.File(dir).isDirectory()
 
-
-  def downloadFile(fileUrl: String, file: String) = {
-    val url = new java.net.URL(fileUrl)
-    val rbc = java.nio.channels.Channels.newChannel(url.openStream())
-    val fos = new java.io.FileOutputStream(file)
-    fos.getChannel().transferFrom(rbc, 0, java.lang.Long.MAX_VALUE)
+  /** Download file from a URL with user feedback. */
+  def downloadFile(
+    fileUrl:    String,
+    file:       String,
+    bufferSize: Int = 1024,
+    verbose:    Boolean = false
+  ){
+    def copyStream(
+      from:     java.io.InputStream,
+      to:       java.io.OutputStream,
+      fileSize: Long = -1L
+    ) = {
+      val buffer = new Array[Byte](bufferSize)
+      // number of bytes read
+      var nbytes = 0
+      var total: Long = 0L
+      val sizeInMB = fileSize.toDouble / (1024 * 1024)
+      while({ nbytes = from.read(buffer) ; nbytes} > 0){
+        total = total + nbytes
+        if(verbose)
+          print(f"Downloading file = $file - ${100.0 * total / fileSize }%.0f%% of $sizeInMB%.2f MB\r")
+        to.write(buffer, 0, nbytes)
+      }
+    }
+    val u   = new java.net.URL(fileUrl)
+    val os = new java.io.FileOutputStream(file)
+    var is: java.io.InputStream  = null
+    try {
+      val conn = u.openConnection()
+      conn.connect()
+      is = conn.getInputStream()
+      val fileSize = conn.getHeaderFieldLong("Content-Length", -1L)
+      copyStream(is, os, fileSize)
+    } finally {
+      // Ensure that file handlers are closed
+      // in order to avoid resource leaking.
+      if(is != null) is.close()
+      os.close()
+    }
   }
 
   /** 

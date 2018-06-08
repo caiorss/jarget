@@ -44,18 +44,17 @@ case class PomData(
   packaging:   String
 ) 
 
-
 case class RepoConf(
   cache:   String,
   repoUrl: String
 )
 
+class PackageFetchException(msg: String) extends Exception(msg){}
 
 /** Encodes java package specification.
 
    Example: The package org.jfree:jfreechart:1.0.17 is encoded as 
    PackData("org.jfree", "jfreechart", "1.0.17")
-
 
    Example: Package's operations. 
 
@@ -67,31 +66,20 @@ case class RepoConf(
  
     scala> val p = PackData("org.jfree", "jfreechart", "1.0.17")
     p: jarget.mvn.PackData = PackData(org.jfree,jfreechart,1.0.17)
-
     scala> p.group
     res0: String = org.jfree
-
     scala> p.artifact
     res1: String = jfreechart
-
     scala> p.version
     res2: String = 1.0.17
-
-
     scala> p.format 
     res3: String = org.jfree/jfreechart/1.0.17
-
-
     scala> p.getArtifactFile("jar")
     res4: String = jfreechart-1.0.17.jar
-
     scala> p.getArtifactFile("pom")
     res5: String = jfreechart-1.0.17.pom
-
     scala> p.getArtifactFile("md5")
     res6: String = jfreechart-1.0.17.md5
-
-
    }}} 
 
    @param group    - Package's groupID. 
@@ -170,8 +158,17 @@ case class PackData(
 
   /** Get package's pom XML */
   def getPomXML() = 
-    this.getPomURI map scala.xml.XML.load
-  
+    this.getPomURI map { (url: String) =>
+      try scala.xml.XML.load(url)
+       catch {
+        case ex: java.io.FileNotFoundException =>
+          throw new PackageFetchException(
+            s"Error: Package <${this.format()}> not found at repository <$url>"
+          )
+        case ex: java.net.UnknownHostException =>
+          throw new PackageFetchException(s"Error: could not locate server <$url>")
+      }
+    }
 
 } //---------- End of object PackData ------------- // 
 
@@ -231,7 +228,6 @@ object Pom{
     )  
   }
 
-
   /** Extract package data from pom xml file. */
   def getPomPackData(pom: scala.xml.Node): Option[PackData] = {
     val nodes   = pom.child
@@ -242,7 +238,6 @@ object Pom{
       version   <- getText("version")
     } yield PackData(group, artifact, version)
   }
-
 
   /**  Get a XML node like this:
 
@@ -384,26 +379,24 @@ object PackCache {
 
 
 object Packget {
-  
-  import Pom._
   import jarget.reader._
 
   def getAllDependencies(pack: PackData):  Reader[String, Set[PackData]] = {
     var packlist = Set[PackData](pack)
     //packlist += pack
-    for {    
+    for {
       xml  <- pack.getPomXML
-      deps = getPomDependencies(xml)
+      deps = Pom.getPomDependencies(xml)
       _    <- Reader.liftIO{ deps foreach (d => packlist += d)}
     } yield packlist
-  }
+  } // --- Eof getAllDependencies --- //
 
 
   def getAllDependenciesFromCache(cache: String, pack: PackData) = {
     var packlist = Set[PackData](pack)
     val pomFile = PackCache.getArtifactPath(cache, "pom", pack)
     val xml = scala.xml.XML.loadFile(pomFile)
-    val deps = getPomDependencies(xml)
+    val deps = Pom.getPomDependencies(xml)
     deps foreach (d => packlist += d)
     packlist
   } 
@@ -428,12 +421,21 @@ object Packget {
                        ext: String,
                        path: String): Reader[String, Unit] =
     for (url <- pack.getArtifactURI(ext)){
-      val file  = Utils.join(path, pack.getArtifactFile(ext))
-      println(s"Downloading file ${file}.")
-      Utils.downloadFile(url, file)
-      println(s"File ${file} downloaded. Ok.")
+      val file      = pack.getArtifactFile(ext)
+      val filePath  = Utils.join(path, file)      
+      try {
+        println(s"Downloading $url.")
+        Utils.downloadFile(url, filePath)
+        println(s"Download OK: ${file}.")
+      } catch {
+        case ex: java.io.FileNotFoundException =>
+          throw new PackageFetchException(
+            s"Error: failed to download file <$file> from <$url>"
+          )
+        case ex: java.net.UnknownHostException =>
+          throw new PackageFetchException(s"Error: could not locate server <$url>")
+      }
     }
-
 
   /** Download package from cache directory if it is not downloaded yet.*/
   def downloadPackageToCache(cache: String, pack: PackData):  Reader[String, Unit] = {
@@ -447,35 +449,30 @@ object Packget {
     
     for(repoURL  <- Reader.ask[String])
       if (!Utils.fileExists(packJar)){
-
         // Create package's directory
         Utils.mkdir(packDir)
-
         // Select package that aren't in the cache yet.
         val packlist = getAllDependencies(pack) run (repoURL) filter { p =>
           val path = PackCache.getPackagePath(cache, p)
           !Utils.fileExists(Utils.join(path, p.getArtifactFile("jar")))
         }
-
-        println("Downloading ---------------------")
-        packlist foreach println
-        println("----------------------------------")
-
+        println()
+        println(s"Downloading dependencies from: ${pack.format()} ")
+        packlist foreach {p => println(p.format())}
+        println("--------------------------------------------")
         val result = Future.traverse(packlist){ p =>
           // 1println("Downloading package " + p)
           val path = PackCache.getPackagePath(cache, p)
           Utils.mkdir(path)
           println("Package path = " + p)
-
           val fut = Future {
             downloadArtifact(p, "pom", path).run(repoURL)
             downloadArtifact(p, "jar", path).run(repoURL)
           }
           fut
         }
-
-        result.onSuccess { case _ => println("Download Successful") }
-        result.onFailure { case _ => println("Download Failed") }
+        result.onSuccess { case _ => println(Console.BLUE + "Download Successful" + Console.RESET) }
+        result.onFailure { case _ => println(Console.RED  + "Download Failed" + Console.RESET) }
         scala.concurrent.Await.result(result, Duration.Inf)
       }
 
