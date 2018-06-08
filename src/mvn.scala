@@ -67,31 +67,20 @@ case class RepoConf(
  
     scala> val p = PackData("org.jfree", "jfreechart", "1.0.17")
     p: jarget.mvn.PackData = PackData(org.jfree,jfreechart,1.0.17)
-
     scala> p.group
     res0: String = org.jfree
-
     scala> p.artifact
     res1: String = jfreechart
-
     scala> p.version
     res2: String = 1.0.17
-
-
     scala> p.format 
     res3: String = org.jfree/jfreechart/1.0.17
-
-
     scala> p.getArtifactFile("jar")
     res4: String = jfreechart-1.0.17.jar
-
     scala> p.getArtifactFile("pom")
     res5: String = jfreechart-1.0.17.pom
-
     scala> p.getArtifactFile("md5")
     res6: String = jfreechart-1.0.17.md5
-
-
    }}} 
 
    @param group    - Package's groupID. 
@@ -385,7 +374,7 @@ object PackCache {
 
 object Packget {
   
-  import Pom._
+  //import Pom
   import jarget.reader._
 
   def getAllDependencies(pack: PackData):  Reader[String, Set[PackData]] = {
@@ -393,7 +382,7 @@ object Packget {
     //packlist += pack
     for {    
       xml  <- pack.getPomXML
-      deps = getPomDependencies(xml)
+      deps = Pom.getPomDependencies(xml)
       _    <- Reader.liftIO{ deps foreach (d => packlist += d)}
     } yield packlist
   }
@@ -403,7 +392,7 @@ object Packget {
     var packlist = Set[PackData](pack)
     val pomFile = PackCache.getArtifactPath(cache, "pom", pack)
     val xml = scala.xml.XML.loadFile(pomFile)
-    val deps = getPomDependencies(xml)
+    val deps = Pom.getPomDependencies(xml)
     deps foreach (d => packlist += d)
     packlist
   } 
