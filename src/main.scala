@@ -976,7 +976,7 @@ object Main{
 
   val parser = new OptParser(
     program     = "jarget",
-    version     = "v4.0",
+    version     = "v4.1",
     brief        = "{program} {version} - command line toolbox for Scala and the Java Platform.",
    ).add(new OptSeparator("Main Commands"))
     .add(uberOptCommand)
