@@ -379,8 +379,6 @@ object PackCache {
 
 
 object Packget {
-  
-
   import jarget.reader._
 
   def getAllDependencies(pack: PackData):  Reader[String, Set[PackData]] = {
@@ -451,35 +449,30 @@ object Packget {
     
     for(repoURL  <- Reader.ask[String])
       if (!Utils.fileExists(packJar)){
-
         // Create package's directory
         Utils.mkdir(packDir)
-
         // Select package that aren't in the cache yet.
         val packlist = getAllDependencies(pack) run (repoURL) filter { p =>
           val path = PackCache.getPackagePath(cache, p)
           !Utils.fileExists(Utils.join(path, p.getArtifactFile("jar")))
         }
-
-        println("Downloading packages ---------------------")
+        println()
+        println(s"Downloading dependencies from: ${pack.format()} ")
         packlist foreach {p => println(p.format())}
         println("--------------------------------------------")
-
         val result = Future.traverse(packlist){ p =>
           // 1println("Downloading package " + p)
           val path = PackCache.getPackagePath(cache, p)
           Utils.mkdir(path)
           println("Package path = " + p)
-
           val fut = Future {
             downloadArtifact(p, "pom", path).run(repoURL)
             downloadArtifact(p, "jar", path).run(repoURL)
           }
           fut
         }
-
-        result.onSuccess { case _ => println("Download Successful") }
-        result.onFailure { case _ => println("Download Failed") }
+        result.onSuccess { case _ => println(Console.BLUE + "Download Successful" + Console.RESET) }
+        result.onFailure { case _ => println(Console.RED  + "Download Failed" + Console.RESET) }
         scala.concurrent.Await.result(result, Duration.Inf)
       }
 
