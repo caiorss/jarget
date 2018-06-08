@@ -163,7 +163,7 @@ case class PackData(
        catch {
         case ex: java.io.FileNotFoundException =>
           throw new PackageFetchException(
-            s"Error: failed to download package <${this.format()}> from <$url>"
+            s"Error: Package <${this.format()}> not found at repository <$url>"
           )
         case ex: java.net.UnknownHostException =>
           throw new PackageFetchException(s"Error: could not locate server <$url>")
