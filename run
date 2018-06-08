@@ -6,4 +6,4 @@
 #   + $ ./jarget       # Run script 
 #
 #=========================================================================#
-make && scala -cp .:"lib/*" jarget.jar "$@"
+make && scala -Djarget.debug=true -cp .:"lib/*" jarget.jar "$@"
