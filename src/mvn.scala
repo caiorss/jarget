@@ -423,7 +423,7 @@ object Packget {
                        ext: String,
                        path: String): Reader[String, Unit] =
     for (url <- pack.getArtifactURI(ext)){
-      val file  = Utils.join(path, pack.getArtifactFile(ext))
+      val file  = Utils.join(path, pack.getArtifactFile(ext))      
       try {
         println(s"Downloading file ${file}.")
         Utils.downloadFile(url, file)
@@ -460,9 +460,9 @@ object Packget {
           !Utils.fileExists(Utils.join(path, p.getArtifactFile("jar")))
         }
 
-        println("Downloading ---------------------")
-        packlist foreach println
-        println("----------------------------------")
+        println("Downloading packages ---------------------")
+        packlist foreach {p => println(p.format())}
+        println("--------------------------------------------")
 
         val result = Future.traverse(packlist){ p =>
           // 1println("Downloading package " + p)
