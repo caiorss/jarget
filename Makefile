@@ -119,12 +119,16 @@ page:
 tags: $(src)
 	ctags src/*.scala 
 
+# Load app in the REPL for experimentation 
+load: $(target)
+	scala -cp .:"lib":$(target) 
+
 # -------- Test Commands ----------- #
 
 
 test1: jarget.jar 
 	echo "Downloading JFreechart"
-	scala jarget.jar -get org.jfree/jfreechart/1.0.19 
+	scala jarget.jar mvn-pull org.jfree/jfreechart/1.0.19 
 
 test2: jarget.jar 
-	scala jarget.jar -get org.jmdns/jmdns/3.5.1
+	scala jarget.jar mvn-pull org.jmdns/jmdns/3.5.1
