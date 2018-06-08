@@ -424,11 +424,19 @@ object Packget {
                        path: String): Reader[String, Unit] =
     for (url <- pack.getArtifactURI(ext)){
       val file  = Utils.join(path, pack.getArtifactFile(ext))
-      println(s"Downloading file ${file}.")
-      Utils.downloadFile(url, file)
-      println(s"File ${file} downloaded. Ok.")
+      try {
+        println(s"Downloading file ${file}.")
+        Utils.downloadFile(url, file)
+        println(s"File ${file} downloaded. Ok.")
+      } catch {
+        case ex: java.io.FileNotFoundException =>
+          throw new PackageFetchException(
+            s"Error: failed to download file <${pack.getArtifactFile(ext)}> from <$url>"
+          )
+        case ex: java.net.UnknownHostException =>
+          throw new PackageFetchException(s"Error: could not locate server <$url>")
+      }
     }
-
 
   /** Download package from cache directory if it is not downloaded yet.*/
   def downloadPackageToCache(cache: String, pack: PackData):  Reader[String, Unit] = {
